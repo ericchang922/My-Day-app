@@ -7,11 +7,10 @@ import 'forgetPassword.dart';
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: <String, WidgetBuilder> {
-        '/home': (BuildContext context) => new HomePageWidget(),
-      },
-        debugShowCheckedModeBanner: false, home: LoginWidget());
+    return MaterialApp(routes: <String, WidgetBuilder>{
+      '/login' : (BuildContext context) => new LoginPage(),
+      '/home': (BuildContext context) => new HomePageWidget(),
+    }, debugShowCheckedModeBanner: false, home: LoginWidget());
   }
 }
 
@@ -20,9 +19,8 @@ class LoginWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('登入',
-              style:
-                  TextStyle(color: Colors.white,fontSize: 22)),
+          title:
+              Text('登入', style: TextStyle(color: Colors.white, fontSize: 22)),
           backgroundColor: PrimaryColor,
         ),
         body: Login(),
@@ -85,7 +83,6 @@ class Login extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
             resizeToAvoidBottomInset: false,
-            
             body: ListView(
               children: <Widget>[
                 Padding(
@@ -156,8 +153,8 @@ class Login extends StatelessWidget {
                     color: Color(0xffF86D67),
                     textColor: Colors.white,
                     onPressed: () {
-                Navigator.pushReplacementNamed(context, '/home');
-              },
+                      Navigator.pushReplacementNamed(context, '/home');
+                    },
                   ),
                 ),
               ],
