@@ -1,45 +1,70 @@
+// Copyright 2018 The Flutter team. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'group.dart';
-import 'learn.dart';
-import 'login.dart';
+import 'main.dart';
 
-void main() {
-  runApp(MyApp());
-}
+const PrimaryColor = const Color(0xFFF86D67);
 
-class MyApp extends StatelessWidget {
+// void main() {runApp(MyApp());}
+
+class LearnPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, 
-      home: HomePageWidget(),
       routes: <String, WidgetBuilder> {
         '/home': (BuildContext context) => new HomePageWidget(),
         '/group' : (BuildContext context) => new GroupPageWidget(),
-        '/login' : (BuildContext context) => new LoginPage(),
         '/learn' : (BuildContext context) => new LearnPage(),
       },
-      );
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Learn(),
+      ),
+    );
   }
 }
 
-class HomePageWidget extends StatelessWidget {
+class Learn extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    const items = <String>[
+      '讀書計畫',
+      '筆記',
+    ];
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Myday',
+      home: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
-          title: Text('首頁',style: TextStyle(fontSize: 22)),
-          actions: [
-            IconButton(
-              onPressed: () {
-                  Navigator.pushReplacementNamed(context,'/login');
-                },
-              icon: Icon(Icons.login),)
-            ],
+          title: Text('學習', style: TextStyle(fontSize: 22)),
         ),
-        body: HomePage(),
+        body: ListView.separated(
+      itemCount: items.length,
+      itemBuilder: (context, index) => Container(
+        margin: EdgeInsets.only(
+          top: 5,
+          left: 10,
+        ),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(
+                items[index],
+                style: TextStyle(fontSize: 20),
+              ),
+              trailing: Icon(Icons.chevron_right,color: Color(0xffCCCCCC),),
+            ),
+          ],
+        )    
+      ),
+        separatorBuilder: (context, index) => Divider(),
+        ),
         bottomNavigationBar: Container(
           child: Row(children: <Widget>[
             Expanded(
@@ -50,11 +75,13 @@ class HomePageWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(0)),
                 child: Text(
                   '首頁',
-                  style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,),
+                  style: TextStyle(fontSize: 20,),
                 ),
                 color: Color(0xffF86D67),
-                textColor: Color(0xffF6CA07),
-                onPressed: () {},
+                textColor: Colors.white,
+                onPressed: () {
+                Navigator.pushReplacementNamed(context, '/home');
+              },
               ),
             ),
             Expanded(
@@ -97,25 +124,24 @@ class HomePageWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(0)),
                 child: Text(
                   '學習',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                 ),
                 color: Color(0xffF86D67),
-                textColor: Colors.white,
+                textColor: Color(0xffF6CA07),
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context,'/learn');
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LearnPage()));
                 },
               ),
             ),
-            
-        ])));
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('這是首頁，正在開發中...'),
-    );
+          ]
+        
+        
+        ))
+        
+        )
+        
+        );
+      
+          
   }
 }
