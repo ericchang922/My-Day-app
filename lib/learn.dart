@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'group.dart';
 import 'main.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
