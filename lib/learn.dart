@@ -3,168 +3,126 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'group.dart';
-import 'main.dart';
 
+import 'main.dart';
+import 'notes.dart';
+import 'readplan.dart';
 const PrimaryColor = const Color(0xFFF86D67);
 
-// void main() {runApp(MyApp());}
+void main() {runApp(MyApp());}
 
-// class LearnPage extends StatelessWidget {
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       routes: <String, WidgetBuilder> {
-//         '/home': (BuildContext context) => new HomePageWidget(),
-//         '/group' : (BuildContext context) => new GroupPageWidget(),
-//         '/learn' : (BuildContext context) => new LearnPage(),
-//       },
-//       debugShowCheckedModeBanner: false,
-//       home: Scaffold(
-//         body: Learn(),
-//       ),
-//     );
-//   }
-// }
-
-class Learn extends StatelessWidget {
+class LearnPage extends StatelessWidget {
+  
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const items = <String>[
-      '讀書計畫',
-      '筆記',
-    ];
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xffF86D67),
-          title: Text('學習', style: TextStyle(fontSize: 22)),
+    return MaterialApp(
+      theme: ThemeData(
+          platform: TargetPlatform.iOS,
         ),
-        body: ListView.separated(
-          itemCount: items.length,
-          itemBuilder: (context, index) => Container(
-              margin: EdgeInsets.only(
-                top: 5,
-                left: 10,
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                      items[index],
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: Color(0xffCCCCCC),
+      routes: <String, WidgetBuilder> {
+        '/home': (BuildContext context) => new HomePageWidget(),
+        '/learn' : (BuildContext context) => new LearnPage(),
+      },
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Learn(),
+      ),
+    );
+  }
+}
+
+class Learn extends StatelessWidget {
+  get child => null;
+  get left => null;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      
+      appBar: AppBar( 
+        backgroundColor: Color(0xffF86D67),
+        title:Text('讀書',style: TextStyle(fontSize: 20)),
+        leading:IconButton(
+          icon: Icon(Icons.chevron_left),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyApp()));
+                
+          },
+        ) 
+      ),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+            // ignore: deprecated_member_use
+            child: FlatButton(
+              height: 60,
+              minWidth: double.infinity,
+              onPressed: (){
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ReadPlanPage()));
+                
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    '讀書計畫',
+                    style: TextStyle(fontSize: 20,
                     ),
                   ),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Color(0xffE3E3E3),
+                  )
                 ],
-              )),
-          separatorBuilder: (context, index) => Divider(),
-        ));
-    // return MaterialApp(
-    //     debugShowCheckedModeBanner: false,
-    //     title: 'Myday',
-    //     home: Scaffold(
-    //         appBar: AppBar(
-    //           backgroundColor: Color(0xffF86D67),
-    //           title: Text('學習', style: TextStyle(fontSize: 22)),
-    //         ),
-    //         body: ListView.separated(
-    //           itemCount: items.length,
-    //           itemBuilder: (context, index) => Container(
-    //               margin: EdgeInsets.only(
-    //                 top: 5,
-    //                 left: 10,
-    //               ),
-    //               child: Column(
-    //                 children: [
-    //                   ListTile(
-    //                     title: Text(
-    //                       items[index],
-    //                       style: TextStyle(fontSize: 20),
-    //                     ),
-    //                     trailing: Icon(
-    //                       Icons.chevron_right,
-    //                       color: Color(0xffCCCCCC),
-    //                     ),
-    //                   ),
-    //                 ],
-    //               )),
-    //           separatorBuilder: (context, index) => Divider(),
-    //         ),
-    //         bottomNavigationBar: Container(
-    //             child: Row(children: <Widget>[
-    //           Expanded(
-    //             // ignore: deprecated_member_use
-    //             child: FlatButton(
-    //               height: 50,
-    //               shape: RoundedRectangleBorder(
-    //                   borderRadius: BorderRadius.circular(0)),
-    //               child: Text(
-    //                 '首頁',
-    //                 style: TextStyle(
-    //                   fontSize: 20,
-    //                 ),
-    //               ),
-    //               color: Color(0xffF86D67),
-    //               textColor: Colors.white,
-    //               onPressed: () {
-    //                 Navigator.pushReplacementNamed(context, '/home');
-    //               },
-    //             ),
-    //           ),
-    //           Expanded(
-    //             // ignore: deprecated_member_use
-    //             child: FlatButton(
-    //               height: 50,
-    //               shape: RoundedRectangleBorder(
-    //                   borderRadius: BorderRadius.circular(0)),
-    //               child: Text(
-    //                 '群組',
-    //                 style: TextStyle(fontSize: 20),
-    //               ),
-    //               color: Color(0xffF86D67),
-    //               textColor: Colors.white,
-    //               onPressed: () {
-    //                 Navigator.pushReplacementNamed(context, '/group');
-    //               },
-    //             ),
-    //           ),
-    //           Expanded(
-    //             // ignore: deprecated_member_use
-    //             child: FlatButton(
-    //               height: 50,
-    //               shape: RoundedRectangleBorder(
-    //                   borderRadius: BorderRadius.circular(0)),
-    //               child: Text(
-    //                 '玩聚',
-    //                 style: TextStyle(fontSize: 20),
-    //               ),
-    //               color: Color(0xffF86D67),
-    //               textColor: Colors.white,
-    //               onPressed: () {},
-    //             ),
-    //           ),
-    //           Expanded(
-    //             // ignore: deprecated_member_use
-    //             child: FlatButton(
-    //               height: 50,
-    //               shape: RoundedRectangleBorder(
-    //                   borderRadius: BorderRadius.circular(0)),
-    //               child: Text(
-    //                 '學習',
-    //                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-    //               ),
-    //               color: Color(0xffF86D67),
-    //               textColor: Color(0xffF6CA07),
-    //               onPressed: () {
-    //                 Navigator.push(context,
-    //                     MaterialPageRoute(builder: (context) => LearnPage()));
-    //               },
-    //             ),
-    //           ),
-    //         ]))));
+              ),
+            ),
+          ),
+          Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Container(
+                  margin: EdgeInsets.only(top: 4.0),
+                  color: Color(0xffE3E3E3),
+                  constraints: BoxConstraints.expand(height: 1.0),
+                )),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+            // ignore: deprecated_member_use
+            child: FlatButton(
+              height: 60,
+              minWidth: double.infinity,
+              onPressed: (){
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => NotesPage()));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    '筆記',
+                    style: TextStyle(fontSize: 20,
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Color(0xffE3E3E3),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Container(
+              margin: EdgeInsets.only(top: 4.0),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            )),
+        ],
+      ),
+    );
   }
 }
