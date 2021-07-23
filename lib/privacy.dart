@@ -7,48 +7,45 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'notes.dart';
 import 'readplan.dart';
+import 'learn.dart';
+import 'settings.dart';
 const PrimaryColor = const Color(0xFFF86D67);
 
 void main() {runApp(MyApp());}
 
-class LearnPage extends StatelessWidget {
-  
+class PrivacyPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          platform: TargetPlatform.iOS,
-        ),
       routes: <String, WidgetBuilder> {
         '/home': (BuildContext context) => new HomePageWidget(),
+  
         '/learn' : (BuildContext context) => new LearnPage(),
       },
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Learn(),
+        body: Privacy(),
       ),
     );
   }
 }
 
-class Learn extends StatelessWidget {
+class Privacy extends StatelessWidget {
   get child => null;
   get left => null;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar( 
         backgroundColor: Color(0xffF86D67),
-        title:Text('讀書',style: TextStyle(fontSize: 20)),
+        title:Text('隱私',style: TextStyle(fontSize: 20)),
         leading:IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MyApp()));
-                
+                MaterialPageRoute(builder: (context) => SettingsPage()));
           },
         ) 
       ),
@@ -63,13 +60,12 @@ class Learn extends StatelessWidget {
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ReadPlanPage()));
-                
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    '讀書計畫',
+                    '公開課表',
                     style: TextStyle(fontSize: 20,
                     ),
                   ),
@@ -102,7 +98,7 @@ class Learn extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    '筆記',
+                    '好友隱私設定',
                     style: TextStyle(fontSize: 20,
                     ),
                   ),
