@@ -8,14 +8,14 @@ import 'package:flutter/services.dart';
 
 import 'customer_check_box.dart';
 
-class GroupCreatePage extends StatelessWidget {
+class GroupInvitePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
-        title: Text('建立群組', style: TextStyle(fontSize: 22)),
+        title: Text('邀請好友', style: TextStyle(fontSize: 22)),
         leading: Container(
           margin: EdgeInsets.only(left: 5),
           child: GestureDetector(
@@ -26,42 +26,25 @@ class GroupCreatePage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(children: [Expanded(child: GroupCreateWidget())]),
+      body: Column(children: [Expanded(child: GroupInviteWidget())]),
     );
   }
 }
 
-class GroupCreateWidget extends StatefulWidget {
+class GroupInviteWidget extends StatefulWidget {
   @override
-  State<GroupCreateWidget> createState() => new _GroupCreateState();
+  State<GroupInviteWidget> createState() => new _GroupInviteState();
 }
 
-class _GroupCreateState extends State<GroupCreateWidget> {
-  var typeNameList = <String>['讀書', '工作', '會議', '休閒', '社團', '吃飯', '班級'];
-
-  List typeColor = <int>[
-    0xffF78787,
-    0xffFFD51B,
-    0xffFFA800,
-    0xffB6EB3A,
-    0xff53DAF0,
-    0xff4968BA,
-    0xffCE85E4
-  ];
-
-  final _groupNameController = TextEditingController();
+class _GroupInviteState extends State<GroupInviteWidget> {
   final _friendNameController = TextEditingController();
 
-  int _type = 1;
-  String _groupName = "";
   String _searchText = "";
-  String dropdownValue = '讀書';
   String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
 
-  List _inviteFriendList = [];
   List _filteredFriend = [];
   List _filteredBestFriend = [];
   FriendModel _friendModel = null;
@@ -99,7 +82,7 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   void _getFriendRequest() async {
-    // var jsonString = await rootBundle.loadString('assets/json/friends.json');
+    // var reponse = await rootBundle.loadString('assets/json/friends.json');
 
     var httpClient = HttpClient();
     var request = await httpClient.getUrl(
@@ -121,7 +104,7 @@ class _GroupCreateState extends State<GroupCreateWidget> {
     });
   }
 
-  _GroupCreateState() {
+  _GroupInviteState() {
     _friendNameController.addListener(() {
       if (_friendNameController.text.isEmpty) {
         setState(() {
@@ -141,116 +124,12 @@ class _GroupCreateState extends State<GroupCreateWidget> {
       margin: EdgeInsets.only(top: 20),
       child: Column(
         children: [
-          _buildGroupName(context),
-          _buildType(context),
-          SizedBox(height: 10),
-          Divider(),
-          SizedBox(height: 10),
-          _buildChooseFriendText(context),
           _buildSearch(context),
           _buildCheckAll(context),
           Expanded(child: _buildList(context)),
           _buildCheckButtom(context)
         ],
       ),
-    );
-  }
-
-  Widget _buildGroupName(BuildContext context) {
-    return Column(children: [
-      Container(
-        margin: EdgeInsets.only(bottom: 10, left: 20, right: 20),
-        child: Row(
-          children: [
-            Text('群組名稱：', style: TextStyle(fontSize: 18)),
-            Flexible(
-              child: Container(
-                height: 40.0,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Color(0xff7AAAD8)),
-                      )),
-                  controller: _groupNameController,
-                  onChanged: (text) {
-                    setState(() {
-                      _groupName = _groupNameController.text;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ]);
-  }
-
-  Widget _buildType(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        children: [
-          Text('類別：', style: TextStyle(fontSize: 18)),
-          Container(
-            height: 40.0,
-            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                  color: Color(0xff707070),
-                  style: BorderStyle.solid,
-                  width: 0.80),
-            ),
-            child: DropdownButton<String>(
-              icon: Icon(
-                Icons.expand_more,
-                color: Color(0xffcccccc),
-              ),
-              value: dropdownValue,
-              iconSize: 24,
-              elevation: 16,
-              underline: Container(height: 0),
-              onChanged: (String newValue) {
-                print(typeNameList.indexOf(newValue) + 1);
-                setState(() {
-                  dropdownValue = newValue;
-                });
-              },
-              items: typeNameList.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                    value: value,
-                    child: Row(
-                      children: [
-                        Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: CircleAvatar(
-                              radius: 10.0,
-                              backgroundColor:
-                                  Color(typeColor[typeNameList.indexOf(value)]),
-                            )),
-                        Text(value),
-                      ],
-                    ));
-              }).toList(),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChooseFriendText(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15, left: 20, right: 20),
-      alignment: Alignment.centerLeft,
-      child: Text('選擇好友', style: TextStyle(fontSize: 18)),
     );
   }
 
@@ -562,44 +441,22 @@ class _GroupCreateState extends State<GroupCreateWidget> {
             ),
           ),
           Expanded(
-              // ignore: deprecated_member_use
-              child: Builder(builder: (context) {
-            return FlatButton(
-                height: 50,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0)),
-                child: Image.asset(
-                  'assets/images/confirm.png',
-                  width: 25,
-                ),
-                color: Theme.of(context).primaryColor,
-                textColor: Colors.white,
-                onPressed: () {
-                  if (_groupNameController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("群組名稱不能為空值"),
-                      action: SnackBarAction(
-                        label: '確認',
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        },
-                      ),
-                    ));
-                  } else {
-                    print(_groupName);
-                    print(_type);
-                    for (int i = 0; i < _friendCheck.length; i++) {
-                      if (_friendCheck[_friendModel.friend[i].friendId] ==
-                          false) {
-                        _inviteFriendList
-                            .add({"friendId": _friendModel.friend[i].friendId});
-                      }
-                    }
-                    print(_inviteFriendList);
-                    Navigator.of(context).pop();
-                  }
-                });
-          }))
+            // ignore: deprecated_member_use
+            child: FlatButton(
+              height: 50,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+              child: Image.asset(
+                'assets/images/confirm.png',
+                width: 25,
+              ),
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          )
         ]));
   }
 }

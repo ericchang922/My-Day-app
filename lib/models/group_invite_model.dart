@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final groupModel = groupModelFromJson(jsonString);
+//     final groupInviteModel = groupInviteModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GroupModel groupModelFromJson(String str) => GroupModel.fromJson(json.decode(str));
+GroupInviteModel groupInviteModelFromJson(String str) => GroupInviteModel.fromJson(json.decode(str));
 
-String groupModelToJson(GroupModel data) => json.encode(data.toJson());
+String groupInviteModelToJson(GroupInviteModel data) => json.encode(data.toJson());
 
-class GroupModel {
-    GroupModel({
+class GroupInviteModel {
+    GroupInviteModel({
         this.groupContent,
     });
 
     List<GroupContent> groupContent;
 
-    factory GroupModel.fromJson(Map<String, dynamic> json) => GroupModel(
+    factory GroupInviteModel.fromJson(Map<String, dynamic> json) => GroupInviteModel(
         groupContent: List<GroupContent>.from(json["groupContent"].map((x) => GroupContent.fromJson(x))),
     );
 
@@ -29,25 +29,29 @@ class GroupContent {
         this.groupId,
         this.title,
         this.typeId,
-        this.peopleCount,
+        this.inviterPhoto,
+        this.inviterName,
     });
 
     int groupId;
     String title;
     int typeId;
-    int peopleCount;
+    String inviterPhoto;
+    String inviterName;
 
     factory GroupContent.fromJson(Map<String, dynamic> json) => GroupContent(
-        groupId: json["groupID"],
+        groupId: json["groupId"],
         title: json["title"],
         typeId: json["typeId"],
-        peopleCount: json["peopleCount"],
+        inviterPhoto: json["inviterPhoto"],
+        inviterName: json["inviterName"],
     );
 
     Map<String, dynamic> toJson() => {
-        "groupID": groupId,
+        "groupId": groupId,
         "title": title,
         "typeId": typeId,
-        "peopleCount": peopleCount,
+        "inviterPhoto": inviterPhoto,
+        "inviterName": inviterName,
     };
 }
