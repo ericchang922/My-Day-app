@@ -1,0 +1,16 @@
+{
+    "title": "課業討論",
+    "typeId": 1,
+    "vote": [
+        {
+            "title": "吃甚麼",
+            "voteNum": 13,
+            "isVoteType": 0
+        },
+        {
+            "title": "去哪玩？",
+            "voteNum": 14,
+            "isVoteType": 1
+        }
+    ]
+}

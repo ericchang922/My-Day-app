@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'group.dart';
+import 'group/group_list_page.dart';
 import 'learn.dart';
 import 'login.dart';
 
@@ -12,13 +12,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Color(0xffF86D67),  //主色
+        primaryColorLight: Color(0xffFFAAA6),  //次色
+        primaryColorDark: Color(0xffFFF5F5), //淡色
+        accentColor: Color(0xffF86D67), 
+      ),
       debugShowCheckedModeBanner: false,
       home: HomePageWidget(),
       routes: <String, WidgetBuilder>{
-        // '/home': (BuildContext context) => new HomePageWidget(),
-        // '/group' : (BuildContext context) => new GroupPageWidget(),
         '/login': (BuildContext context) => new LoginPage(),
-        // '/learn' : (BuildContext context) => new LearnPage(),
       },
     );
   }
@@ -31,7 +34,7 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidget extends State<HomePageWidget> {
   int _selectedIndex = 0;
-  final pages = [HomePage('首頁'), GroupPageWidget(), HomePage('玩聚'), Learn()];
+  final pages = [HomePage('首頁'), GroupListPage('群組'), HomePage('玩聚'), Learn()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -42,17 +45,6 @@ class _HomePageWidget extends State<HomePageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: Color(0xffF86D67),
-        //   title: Text('首頁',style: TextStyle(fontSize: 22)),
-        //   actions: [
-        //     IconButton(
-        //       onPressed: () {
-        //           Navigator.pushReplacementNamed(context,'/login');
-        //         },
-        //       icon: Icon(Icons.login),)
-        //     ],
-        // ),
         body: Center(
           child: pages[_selectedIndex],
         ),
@@ -92,7 +84,6 @@ class _HomePageWidget extends State<HomePageWidget> {
               textColor: Colors.white,
               onPressed: () {
                 _onItemTapped(1);
-                // Navigator.pushReplacementNamed(context,'/group');
               },
             ),
           ),
@@ -127,7 +118,6 @@ class _HomePageWidget extends State<HomePageWidget> {
               textColor: Colors.white,
               onPressed: () {
                 _onItemTapped(3);
-                // Navigator.pushReplacementNamed(context,'/learn');
               },
             ),
           ),

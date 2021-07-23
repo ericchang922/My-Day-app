@@ -1,0 +1,62 @@
+[
+    {
+        "groupID": 1,
+        "title":"學生會",
+        "typeId":1,
+        "peopleCount":10
+    },
+    {
+        "groupID": 2,
+        "title":"吃晚餐",
+        "typeId":2,
+        "peopleCount":3
+    },
+    {
+        "groupID": 2,
+        "title":"午餐群",
+        "typeId":2,
+        "peopleCount":3
+    },
+    {
+        "groupID": 6,
+        "title":"下午茶",
+        "typeId":3,
+        "peopleCount":3
+    },
+    {
+        "groupID": 3,
+        "title":"學生會",
+        "typeId":4,
+        "peopleCount":3
+    },
+    {
+        "groupID": 98,
+        "title": "學餐",
+        "typeId": 2,
+        "peopleCount": 3
+    },
+    {
+        "groupID": 34,
+        "title": "吃晚餐",
+        "typeId": 2,
+        "peopleCount": 10
+    },
+    {
+        "groupID": 2,
+        "title":"吃晚餐",
+        "typeId":2,
+        "peopleCount":3
+    },
+    {
+        "groupID": 2,
+        "title":"吃晚餐",
+        "typeId":2,
+        "peopleCount":3
+    },
+    {
+        "groupID": 2,
+        "title":"吃晚餐",
+        "typeId":2,
+        "peopleCount":3
+    }
+]
