@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/common_note/common_note_list.dart';
-import 'package:My_Day_app/common_schedule/common_schedul_list_page.dart';
+import 'package:My_Day_app/common_note/common_note_list_page.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/common_studyplan/common_studyplan_list_page.dart';
 import 'package:My_Day_app/models/get_group_model.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
