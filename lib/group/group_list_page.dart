@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:My_Day_app/group/group_detail_page.dart';
-import 'package:My_Day_app/models/group_invite_model.dart';
+import 'package:My_Day_app/models/group_invite_list_model.dart';
 
-import 'package:My_Day_app/models/group_model.dart';
+import 'package:My_Day_app/models/group_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'group_create_page.dart';
@@ -29,27 +29,34 @@ class GroupListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: Text(g, style: TextStyle(fontSize: 22)),
+          title: Text(g, style: TextStyle(fontSize: screenSize.width * 0.052)),
           actions: [
             PopupMenuButton<int>(
               offset: Offset(50, 50),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(screenSize.height * 0.01)),
               icon: Icon(Icons.add),
               itemBuilder: (context) => [
                 PopupMenuItem<int>(
                     value: 0,
                     child: Container(
-                        alignment: Alignment.center, child: Text("建立群組"))),
+                        alignment: Alignment.center,
+                        child: Text("建立群組",
+                            style: TextStyle(
+                                fontSize: screenSize.width * 0.035)))),
                 PopupMenuDivider(
                   height: 1,
                 ),
                 PopupMenuItem<int>(
                     value: 1,
                     child: Container(
-                        alignment: Alignment.center, child: Text("加入群組"))),
+                        alignment: Alignment.center,
+                        child: Text("加入群組",
+                            style: TextStyle(
+                                fontSize: screenSize.width * 0.035)))),
               ],
               onSelected: (item) => selectedItem(context, item),
             ),
@@ -81,18 +88,18 @@ class _GroupListState extends State<GroupListWidget> {
     0xffCE85E4
   ];
 
-  GroupModel _groupModel = null;
-  GroupInviteModel _groupInviteModel = null;
+  GroupListModel _groupListModel = null;
+  GroupInviteListModel _groupInviteListModel = null;
 
   @override
   void initState() {
-    _getGroupListRequest();
-    _getGroupInviteRequest();
     super.initState();
+    _groupListRequest();
+    _groupInviteListRequest();
   }
 
-  _getGroupListRequest() async {
-    // var jsonString = await rootBundle.loadString('assets/json/groups.json');
+  _groupListRequest() async {
+    // var jsonString = await rootBundle.loadString('assets/json/group_list.json');
 
     var httpClient = HttpClient();
     var request = await httpClient.getUrl(
@@ -103,63 +110,69 @@ class _GroupListState extends State<GroupListWidget> {
 
     var jsonMap = json.decode(jsonString);
 
-    var groupModel = GroupModel.fromJson(jsonMap);
+    var groupListModel = GroupListModel.fromJson(jsonMap);
     setState(() {
-      _groupModel = groupModel;
+      _groupListModel = groupListModel;
     });
   }
 
-  _getGroupInviteRequest() async {
+  _groupInviteListRequest() async {
     // var jsonString =
-    //     await rootBundle.loadString('assets/json/groups_invite.json')
+    //     await rootBundle.loadString('assets/json/group_invite_list.json')
 
     var httpClient = HttpClient();
     var request = await httpClient.getUrl(
         Uri.http('myday.sytes.net', '/group/invite_list/', {'uid': uid}));
     var response = await request.close();
     var jsonString = await response.transform(utf8.decoder).join();
-
     httpClient.close();
+    
     var jsonMap = json.decode(jsonString);
 
-    var groupInviteModel = GroupInviteModel.fromJson(jsonMap);
+    var groupInviteListModel = GroupInviteListModel.fromJson(jsonMap);
     setState(() {
-      _groupInviteModel = groupInviteModel;
+      _groupInviteListModel = groupInviteListModel;
     });
-    print('邀約群組個數：${groupInviteModel.groupContent.length}');
+    print('邀約群組個數：${groupInviteListModel.groupContent.length}');
   }
 
   Widget build(BuildContext context) {
-    if (_groupModel != null) {
-      if (_groupInviteModel.groupContent.length != 0) {
-        return _buildGroupInviteWidget(context);
+    if (_groupListModel != null && _groupInviteListModel != null) {
+      if (_groupInviteListModel.groupContent.length != 0) {
+        return _buildGroupInviteListWidget(context);
       } else {
-        if (_groupModel.groupContent.length != 0) {
-          return _buildGroupList(context);
-        }
-        else{
-          return _buildNoGroup(context);
-        }
+        return _buildGroupList(context);
       }
     } else {
       return Center(child: CircularProgressIndicator());
     }
   }
 
-  Widget _buildGroupInviteWidget(BuildContext context) {
-    if (_groupModel != null) {
+  Widget _buildGroupInviteListWidget(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    if (_groupListModel != null) {
       return ListView(
         children: [
           Container(
-            margin: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+            margin: EdgeInsets.only(
+                left: screenSize.height * 0.03,
+                bottom: screenSize.height * 0.02,
+                top: screenSize.height * 0.02),
             child: Text('邀約',
-                style: TextStyle(fontSize: 16, color: Color(0xff7AAAD8))),
+                style: TextStyle(
+                    fontSize: screenSize.width * 0.041,
+                    color: Color(0xff7AAAD8))),
           ),
           _buildGroupInviteList(context),
           Container(
-            margin: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+            margin: EdgeInsets.only(
+                left: screenSize.height * 0.03,
+                bottom: screenSize.height * 0.02,
+                top: screenSize.height * 0.02),
             child: Text('已加入',
-                style: TextStyle(fontSize: 16, color: Color(0xff7AAAD8))),
+                style: TextStyle(
+                    fontSize: screenSize.width * 0.041,
+                    color: Color(0xff7AAAD8))),
           ),
           _buildGroupList(context)
         ],
@@ -179,26 +192,31 @@ class _GroupListState extends State<GroupListWidget> {
       0xff4968BA,
       0xffCE85E4
     ];
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: _groupInviteModel.groupContent.length,
+        itemCount: _groupInviteListModel.groupContent.length,
         itemBuilder: (BuildContext context, int index) {
-          var groupContent = _groupInviteModel.groupContent[index];
+          var groupContent = _groupInviteListModel.groupContent[index];
           return Column(
             children: [
               ListTile(
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+                contentPadding: EdgeInsets.symmetric(
+                    horizontal: screenSize.height * 0.04, vertical: 0.0),
                 onTap: () {},
                 title: Text(
                   '${groupContent.title}',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: screenSize.width * 0.045),
                 ),
-                subtitle: Text('邀請人：${groupContent.inviterName}'),
+                subtitle: Container(
+                    margin: EdgeInsets.only(top: screenSize.height * 0.005),
+                    child: Text('邀請人：${groupContent.inviterName}',
+                        style: TextStyle(fontSize: screenSize.width * 0.032, color: Color(0xff959595)))),
                 leading: Container(
+                  margin: EdgeInsets.only(bottom: screenSize.width * 0.01),
                   child: CircleAvatar(
-                    radius: 20.0,
+                    radius: screenSize.width * 0.045,
                     backgroundColor: Color(typeColor[groupContent.typeId - 1]),
                   ),
                 ),
@@ -212,15 +230,18 @@ class _GroupListState extends State<GroupListWidget> {
                         minWidth: 0,
                         padding: EdgeInsets.all(0),
                         onPressed: () {
-                          _getGroupInviteRequest();
-                          _getGroupListRequest();
+                          _groupInviteListRequest();
+                          _groupListRequest();
                           print('已加入${groupContent.groupId}');
                         },
                         child: Text('加入',
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: screenSize.width * 0.041,
                                 color: Theme.of(context).primaryColor)),
                       ),
+                    ),
+                    SizedBox(
+                      height: screenSize.width * 0.01,
                     ),
                     // ignore: deprecated_member_use
                     Expanded(
@@ -229,14 +250,15 @@ class _GroupListState extends State<GroupListWidget> {
                       height: 0,
                       minWidth: 0,
                       onPressed: () {
-                        _getGroupInviteRequest();
-                        _getGroupListRequest();
+                        _groupInviteListRequest();
+                        _groupListRequest();
                         print('已拒絕${groupContent.groupId}');
                       },
                       child: Text(
                         '拒絕',
-                        style:
-                            TextStyle(fontSize: 16, color: Color(0xffAAAAAA)),
+                        style: TextStyle(
+                            fontSize: screenSize.width * 0.041,
+                            color: Color(0xff959595)),
                       ),
                     ))
                   ],
@@ -256,14 +278,16 @@ class _GroupListState extends State<GroupListWidget> {
   }
 
   Widget _buildGroupList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: _groupModel.groupContent.length,
+      itemCount: _groupListModel.groupContent.length,
       itemBuilder: (BuildContext context, int index) {
-        var groupContent = _groupModel.groupContent[index];
+        var groupContent = _groupListModel.groupContent[index];
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.height * 0.04, vertical: 0.0),
           onTap: () {
             Navigator.push(
                 context,
@@ -273,11 +297,11 @@ class _GroupListState extends State<GroupListWidget> {
           },
           title: Text(
             '${groupContent.title} (${groupContent.peopleCount})',
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: screenSize.width * 0.045),
           ),
           leading: Container(
             child: CircleAvatar(
-              radius: 20.0,
+              radius: screenSize.width * 0.045,
               backgroundColor: Color(typeColor[groupContent.typeId - 1]),
             ),
           ),

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/models/best_friend_model.dart';
-import 'package:My_Day_app/models/friend_model.dart';
+import 'package:My_Day_app/models/best_friend_list_model.dart';
+import 'package:My_Day_app/models/friend_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,13 +11,15 @@ import 'customer_check_box.dart';
 class GroupCreatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
-        title: Text('建立群組', style: TextStyle(fontSize: 22)),
+        title:
+            Text('建立群組', style: TextStyle(fontSize: screenSize.width * 0.052)),
         leading: Container(
-          margin: EdgeInsets.only(left: 5),
+          margin: EdgeInsets.only(left: screenSize.height * 0.02),
           child: GestureDetector(
             child: Icon(Icons.chevron_left),
             onTap: () {
@@ -64,19 +66,22 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   List _inviteFriendList = [];
   List _filteredFriend = [];
   List _filteredBestFriend = [];
-  FriendModel _friendModel = null;
-  BestFriendModel _bestFriendModel = null;
+  FriendListModel _friendListModel = null;
+  BestFriendListModel _bestFriendListModel = null;
+
+  bool _isEnabled;
 
   @override
   void initState() {
     super.initState();
 
-    _getFriendRequest();
-    _getBestFriendRequest();
+    _friendListRequest();
+    _bestFriendListRequest();
+    _buttonIsOnpressed();
   }
 
-  void _getBestFriendRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friends.json');
+  void _bestFriendListRequest() async {
+    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
 
     var httpClient = HttpClient();
     var request = await httpClient.getUrl(
@@ -87,19 +92,19 @@ class _GroupCreateState extends State<GroupCreateWidget> {
 
     var jsonBody = json.decode(jsonString);
 
-    var bestFriendModel = BestFriendModel.fromJson(jsonBody);
+    var bestFriendListModel = BestFriendListModel.fromJson(jsonBody);
 
     setState(() {
-      _bestFriendModel = bestFriendModel;
+      _bestFriendListModel = bestFriendListModel;
 
-      for (int i = 0; i < bestFriendModel.friend.length; i++) {
-        _bestFriendCheck[bestFriendModel.friend[i].friendId] = false;
+      for (int i = 0; i < bestFriendListModel.friend.length; i++) {
+        _bestFriendCheck[bestFriendListModel.friend[i].friendId] = false;
       }
     });
   }
 
-  void _getFriendRequest() async {
-    // var jsonString = await rootBundle.loadString('assets/json/friends.json');
+  void _friendListRequest() async {
+    // var jsonString = await rootBundle.loadString('assets/json/friend_list.json');
 
     var httpClient = HttpClient();
     var request = await httpClient.getUrl(
@@ -110,13 +115,13 @@ class _GroupCreateState extends State<GroupCreateWidget> {
 
     var jsonBody = json.decode(jsonString);
 
-    var friendModel = FriendModel.fromJson(jsonBody);
+    var friendListModel = FriendListModel.fromJson(jsonBody);
 
     setState(() {
-      _friendModel = friendModel;
+      _friendListModel = friendListModel;
 
-      for (int i = 0; i < friendModel.friend.length; i++) {
-        _friendCheck[friendModel.friend[i].friendId] = false;
+      for (int i = 0; i < friendListModel.friend.length; i++) {
+        _friendCheck[friendListModel.friend[i].friendId] = false;
       }
     });
   }
@@ -135,17 +140,30 @@ class _GroupCreateState extends State<GroupCreateWidget> {
     });
   }
 
+  _buttonIsOnpressed() {
+    if (_groupNameController.text.isEmpty) {
+      setState(() {
+        _isEnabled = false;
+      });
+    } else {
+      setState(() {
+        _isEnabled = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: screenSize.height * 0.02),
       child: Column(
         children: [
           _buildGroupName(context),
           _buildType(context),
-          SizedBox(height: 10),
+          SizedBox(height: screenSize.height * 0.01),
           Divider(),
-          SizedBox(height: 10),
+          SizedBox(height: screenSize.height * 0.01),
           _buildChooseFriendText(context),
           _buildSearch(context),
           _buildCheckAll(context),
@@ -157,19 +175,27 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   Widget _buildGroupName(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Column(children: [
       Container(
-        margin: EdgeInsets.only(bottom: 10, left: 20, right: 20),
+        margin: EdgeInsets.only(
+          left: screenSize.height * 0.02,
+          bottom: screenSize.height * 0.02,
+          top: screenSize.height * 0.02,
+          right: screenSize.height * 0.02,
+        ),
         child: Row(
           children: [
-            Text('群組名稱：', style: TextStyle(fontSize: 18)),
+            Text('群組名稱：', style: TextStyle(fontSize: screenSize.width * 0.041)),
             Flexible(
               child: Container(
                 height: 40.0,
-                child: TextFormField(
+                child: TextField(
+                  style: TextStyle(fontSize: screenSize.width * 0.041),
                   decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: screenSize.height * 0.01,
+                          vertical: screenSize.height * 0.01),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
@@ -182,6 +208,7 @@ class _GroupCreateState extends State<GroupCreateWidget> {
                     setState(() {
                       _groupName = _groupNameController.text;
                     });
+                    _buttonIsOnpressed();
                   },
                 ),
               ),
@@ -193,20 +220,23 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   Widget _buildType(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      margin: EdgeInsets.only(
+          left: screenSize.height * 0.02, right: screenSize.height * 0.02),
       child: Row(
         children: [
-          Text('類別：', style: TextStyle(fontSize: 18)),
+          Text('類別：', style: TextStyle(fontSize: screenSize.width * 0.041)),
           Container(
-            height: 40.0,
-            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 0),
+            height: screenSize.height * 0.04683,
+            padding: EdgeInsets.symmetric(
+                horizontal: screenSize.width * 0.02, vertical: 0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(screenSize.height * 0.01),
               border: Border.all(
                   color: Color(0xff707070),
                   style: BorderStyle.solid,
-                  width: 0.80),
+                  width: screenSize.width * 0.0015),
             ),
             child: DropdownButton<String>(
               icon: Icon(
@@ -214,7 +244,7 @@ class _GroupCreateState extends State<GroupCreateWidget> {
                 color: Color(0xffcccccc),
               ),
               value: dropdownValue,
-              iconSize: 24,
+              iconSize: screenSize.width * 0.05,
               elevation: 16,
               underline: Container(height: 0),
               onChanged: (String newValue) {
@@ -229,13 +259,16 @@ class _GroupCreateState extends State<GroupCreateWidget> {
                     child: Row(
                       children: [
                         Container(
-                            margin: EdgeInsets.only(right: 10),
+                            margin: EdgeInsets.only(
+                                right: screenSize.height * 0.01),
                             child: CircleAvatar(
-                              radius: 10.0,
+                              radius: screenSize.height * 0.01,
                               backgroundColor:
                                   Color(typeColor[typeNameList.indexOf(value)]),
                             )),
-                        Text(value),
+                        Text(value,
+                            style:
+                                TextStyle(fontSize: screenSize.width * 0.041)),
                       ],
                     ));
               }).toList(),
@@ -247,44 +280,54 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   Widget _buildChooseFriendText(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(bottom: 15, left: 20, right: 20),
+      margin: EdgeInsets.only(
+          bottom: screenSize.height * 0.02,
+          left: screenSize.height * 0.02,
+          right: screenSize.height * 0.02),
       alignment: Alignment.centerLeft,
-      child: Text('選擇好友', style: TextStyle(fontSize: 18)),
+      child: Text('選擇好友', style: TextStyle(fontSize: screenSize.width * 0.041)),
     );
   }
 
   Widget _buildSearch(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(right: 20, left: 10),
+      margin: EdgeInsets.only(
+          right: screenSize.height * 0.02, left: screenSize.height * 0.01),
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.only(right: 10),
+            margin: EdgeInsets.only(right: screenSize.height * 0.01),
             child: IconButton(
               icon: Image.asset(
                 'assets/images/search.png',
-                width: 25,
+                width: screenSize.width * 0.05,
               ),
               onPressed: () {},
             ),
           ),
           Flexible(
             child: Container(
-              height: 40.0,
+              height: screenSize.height * 0.04683,
               child: TextField(
+                style: TextStyle(fontSize: screenSize.width * 0.041),
                 decoration: InputDecoration(
                     hintText: '輸入好友名稱搜尋',
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                    contentPadding: EdgeInsets.symmetric(
+                        horizontal: screenSize.height * 0.01,
+                        vertical: screenSize.height * 0.01),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(screenSize.height * 0.01)),
                       borderSide: BorderSide(
                         color: Color(0xff070707),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(screenSize.height * 0.01)),
                       borderSide: BorderSide(color: Color(0xff7AAAD8)),
                     )),
                 controller: _friendNameController,
@@ -299,7 +342,7 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   Widget _buildCheckAll(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(right: screenSize.width*0.03),
+      margin: EdgeInsets.only(right: screenSize.width * 0.03),
       alignment: Alignment.centerRight,
       child: FlatButton(
         highlightColor: Colors.transparent,
@@ -307,15 +350,16 @@ class _GroupCreateState extends State<GroupCreateWidget> {
         padding: EdgeInsets.zero,
         height: 6,
         minWidth: 5,
-        child: Text('全選', style: TextStyle(fontSize: 16)),
+        child: Text('全選', style: TextStyle(fontSize: screenSize.width * 0.035)),
         onPressed: () {
           setState(() {
             if (_friendNameController.text.isEmpty) {
-              for (int i = 0; i < _friendModel.friend.length; i++) {
-                _friendCheck[_friendModel.friend[i].friendId] = true;
+              for (int i = 0; i < _friendListModel.friend.length; i++) {
+                _friendCheck[_friendListModel.friend[i].friendId] = true;
               }
-              for (int i = 0; i < _bestFriendModel.friend.length; i++) {
-                _bestFriendCheck[_bestFriendModel.friend[i].friendId] = true;
+              for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
+                _bestFriendCheck[_bestFriendListModel.friend[i].friendId] =
+                    true;
               }
             } else {
               if (_filteredFriend.length != 0) {
@@ -336,20 +380,27 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   Widget _buildList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     if (_searchText.isEmpty) {
-      if (_friendModel != null && _bestFriendModel != null) {
+      if (_friendListModel != null && _bestFriendListModel != null) {
         return ListView(
           children: [
             Container(
-              margin: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+              margin: EdgeInsets.only(
+                  left: screenSize.width * 0.04,
+                  bottom: screenSize.width * 0.02,
+                  top: screenSize.width * 0.02),
               child: Text('摯友',
-                  style: TextStyle(fontSize: 16, color: Color(0xff7AAAD8))),
+                  style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
             ),
             _buildBestFriendList(context),
             Container(
-              margin: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+              margin: EdgeInsets.only(
+                  left: screenSize.width * 0.04,
+                  bottom: screenSize.width * 0.02,
+                  top: screenSize.width * 0.02),
               child: Text('好友',
-                  style: TextStyle(fontSize: 16, color: Color(0xff7AAAD8))),
+                  style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
             ),
             _buildFriendList(context)
           ],
@@ -361,18 +412,18 @@ class _GroupCreateState extends State<GroupCreateWidget> {
       _filteredBestFriend = [];
       _filteredFriend = [];
 
-      for (int i = 0; i < _friendModel.friend.length; i++) {
-        if (_friendModel.friend[i].friendName
+      for (int i = 0; i < _friendListModel.friend.length; i++) {
+        if (_friendListModel.friend[i].friendName
             .toLowerCase()
             .contains(_searchText.toLowerCase())) {
-          _filteredFriend.add(_friendModel.friend[i]);
+          _filteredFriend.add(_friendListModel.friend[i]);
         }
       }
-      for (int i = 0; i < _bestFriendModel.friend.length; i++) {
-        if (_bestFriendModel.friend[i].friendName
+      for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
+        if (_bestFriendListModel.friend[i].friendName
             .toLowerCase()
             .contains(_searchText.toLowerCase())) {
-          _filteredBestFriend.add(_bestFriendModel.friend[i]);
+          _filteredBestFriend.add(_bestFriendListModel.friend[i]);
         }
       }
 
@@ -387,17 +438,19 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   Widget _buildBestFriendList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: _bestFriendModel.friend.length,
+      itemCount: _bestFriendListModel.friend.length,
       itemBuilder: (BuildContext context, int index) {
-        var friends = _bestFriendModel.friend[index];
+        var friends = _bestFriendListModel.friend[index];
         const Base64Codec base64 = Base64Codec();
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.055, vertical: 0.0),
           leading: ClipOval(
-            child: Image.memory(base64.decode(friends.photo), width: 40),
+            child: getImage(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -424,22 +477,48 @@ class _GroupCreateState extends State<GroupCreateWidget> {
     );
   }
 
+  Image getImage(String imageString) {
+    var screenSize = MediaQuery.of(context).size;
+    bool isGetImage;
+    Image friendImage = Image.asset(
+      'assets/images/friend_choose.png',
+      width: screenSize.height * 0.04683,
+    );
+    const Base64Codec base64 = Base64Codec();
+    Image image = Image.memory(base64.decode(imageString),
+        width: screenSize.height * 0.04683, height: screenSize.height * 0.04683, fit: BoxFit.fill);
+    var resolve = image.image.resolve(ImageConfiguration.empty);
+    resolve.addListener(ImageStreamListener((_, __) {
+      isGetImage = true;
+    }, onError: (Object exception, StackTrace stackTrace) {
+      isGetImage = false;
+      print('error');
+    }));
+
+    if (isGetImage == true) {
+      return image;
+    } else {
+      return friendImage;
+    }
+  }
+
   Widget _buildFriendList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: _friendModel.friend.length,
+      itemCount: _friendListModel.friend.length,
       itemBuilder: (BuildContext context, int index) {
-        var friends = _friendModel.friend[index];
-        const Base64Codec base64 = Base64Codec();
+        var friends = _friendListModel.friend[index];
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.055, vertical: 0.0),
           leading: ClipOval(
-            child: Image.memory(base64.decode(friends.photo), width: 40),
+            child: getImage(friends.photo),
           ),
           title: Text(
             friends.friendName,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: screenSize.width * 0.041),
           ),
           trailing: CustomerCheckBox(
             value: _friendCheck[friends.friendId],
@@ -463,6 +542,7 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -471,13 +551,14 @@ class _GroupCreateState extends State<GroupCreateWidget> {
         var friends = _filteredBestFriend[index];
         const Base64Codec base64 = Base64Codec();
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.055, vertical: 0.0),
           leading: ClipOval(
-            child: Image.memory(base64.decode(friends.photo), width: 40),
+            child: getImage(friends.photo),
           ),
           title: Text(
             friends.friendName,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: screenSize.width * 0.041),
           ),
           trailing: CustomerCheckBox(
             value: _bestFriendCheck[friends.friendId],
@@ -502,6 +583,7 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -510,13 +592,14 @@ class _GroupCreateState extends State<GroupCreateWidget> {
         var friends = _filteredFriend[index];
         const Base64Codec base64 = Base64Codec();
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.055, vertical: 0.0),
           leading: ClipOval(
-            child: Image.memory(base64.decode(friends.photo), width: 40),
+            child: getImage(friends.photo),
           ),
           title: Text(
             friends.friendName,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: screenSize.width * 0.041),
           ),
           trailing: CustomerCheckBox(
             value: _friendCheck[friends.friendId],
@@ -541,18 +624,34 @@ class _GroupCreateState extends State<GroupCreateWidget> {
   }
 
   Widget _buildCheckButtom(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    var _onPressed;
+    if (_isEnabled == true) {
+      _onPressed = () {
+        print("groupName:${_groupName}");
+        print("type:${_type}");
+        for (int i = 0; i < _friendCheck.length; i++) {
+          if (_friendCheck[_friendListModel.friend[i].friendId] == false) {
+            _inviteFriendList
+                .add({"friendId": _friendListModel.friend[i].friendId});
+          }
+        }
+        print(_inviteFriendList);
+        Navigator.of(context).pop();
+      };
+    }
     return Container(
         alignment: Alignment.bottomCenter,
         child: Row(children: <Widget>[
           Expanded(
             // ignore: deprecated_member_use
             child: FlatButton(
-              height: 50,
+              height: screenSize.height * 0.07,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0)),
               child: Image.asset(
                 'assets/images/cancel.png',
-                width: 25,
+                width: screenSize.width * 0.05,
               ),
               color: Theme.of(context).primaryColorLight,
               textColor: Colors.white,
@@ -565,40 +664,17 @@ class _GroupCreateState extends State<GroupCreateWidget> {
               // ignore: deprecated_member_use
               child: Builder(builder: (context) {
             return FlatButton(
-                height: 50,
+                disabledColor: Color(0xffCCCCCC),
+                height: screenSize.height * 0.07,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0)),
                 child: Image.asset(
                   'assets/images/confirm.png',
-                  width: 25,
+                  width: screenSize.width * 0.05,
                 ),
                 color: Theme.of(context).primaryColor,
                 textColor: Colors.white,
-                onPressed: () {
-                  if (_groupNameController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("群組名稱不能為空值"),
-                      action: SnackBarAction(
-                        label: '確認',
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        },
-                      ),
-                    ));
-                  } else {
-                    print(_groupName);
-                    print(_type);
-                    for (int i = 0; i < _friendCheck.length; i++) {
-                      if (_friendCheck[_friendModel.friend[i].friendId] ==
-                          false) {
-                        _inviteFriendList
-                            .add({"friendId": _friendModel.friend[i].friendId});
-                      }
-                    }
-                    print(_inviteFriendList);
-                    Navigator.of(context).pop();
-                  }
-                });
+                onPressed: _onPressed);
           }))
         ]));
   }
