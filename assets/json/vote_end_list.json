@@ -1,0 +1,29 @@
+{
+    "vote": [
+        {
+            "title": "吃飯",
+            "result": [
+                {
+                    "voteResultNum": 1,
+                    "resultContent": "學餐"
+                }
+            ],
+            "resultCount": 3
+        },
+        {
+            "title": "喝什麼",
+            "result": [
+                {
+                    "voteResultNum": 1,
+                    "resultContent": "五十嵐"
+                },
+                {
+                    "voteResultNum": 4,
+                    "resultContent": "八十嵐"
+                }
+            ],
+            "resultCount": 3
+        }
+    ],
+    "response": true
+}
