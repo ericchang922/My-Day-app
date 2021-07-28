@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:My_Day_app/models/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend_list_model.dart';
-import 'package:My_Day_app/models/group_member_list.dart';
+import 'package:My_Day_app/models/group_member_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
