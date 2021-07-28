@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:My_Day_app/common_note/common_note_list_page.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
+import 'package:My_Day_app/common_studyplan/common_studyplan_list_page.dart';
 import 'package:My_Day_app/models/get_group_model.dart';
+import 'package:My_Day_app/vote/vote_page.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -10,7 +14,7 @@ import 'package:flutter/services.dart';
 import 'group_invite_page.dart';
 import 'group_member_page.dart';
 import 'group_setting_page.dart';
-import 'group_votes_page.dart';
+import '../vote/vote_list_page.dart';
 
 class GroupDetailPage extends StatefulWidget {
   int groupNum;
@@ -30,6 +34,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
 
   @override
   void initState() {
+    print(groupNum);
     _getGroupRequest();
     super.initState();
   }
@@ -90,34 +95,46 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
                     PopupMenuItem<int>(
                         value: 0,
                         child: Container(
-                            alignment: Alignment.center, child: Text("邀請", style: TextStyle(fontSize: screenSize.width * 0.041)))),
+                            alignment: Alignment.center,
+                            child: Text("邀請",
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.041)))),
                     PopupMenuDivider(
                       height: 1,
                     ),
                     PopupMenuItem<int>(
                         value: 1,
                         child: Container(
-                            alignment: Alignment.center, child: Text("成員", style: TextStyle(fontSize: screenSize.width * 0.041)))),
+                            alignment: Alignment.center,
+                            child: Text("成員",
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.041)))),
                     PopupMenuDivider(
                       height: 1,
                     ),
                     PopupMenuItem<int>(
                         value: 2,
                         child: Container(
-                            alignment: Alignment.center, child: Text("設定",style: TextStyle(fontSize: screenSize.width * 0.041)))),
+                            alignment: Alignment.center,
+                            child: Text("設定",
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.041)))),
                     PopupMenuDivider(
                       height: 1,
                     ),
                     PopupMenuItem<int>(
                         value: 3,
                         child: Container(
-                            alignment: Alignment.center, child: Text("退出", style: TextStyle(fontSize: screenSize.width * 0.041)))),
+                            alignment: Alignment.center,
+                            child: Text("退出",
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.041)))),
                   ],
                   onSelected: (item) => selectedItem(context, item),
                 ),
               ],
               leading: Container(
-                margin: EdgeInsets.only(left: 5),
+                margin: EdgeInsets.only(left: screenSize.height * 0.02),
                 child: GestureDetector(
                   child: Icon(Icons.chevron_left),
                   onTap: () {
@@ -125,8 +142,8 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
                   },
                 ),
               ),
-              title:
-                  Text(_getGroupModel.title, style: TextStyle(fontSize: screenSize.width * 0.052))),
+              title: Text(_getGroupModel.title,
+                  style: TextStyle(fontSize: screenSize.width * 0.052))),
           body: _buildGroup(context));
     } else {
       return Center(child: CircularProgressIndicator());
@@ -150,16 +167,27 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
     );
   }
 
-  Widget _buildVoteState(bool isVoteType) {
+  Widget _buildVoteState(bool isVoteType, int voteNum) {
     var screenSize = MediaQuery.of(context).size;
-    if (isVoteType == true)
+    if (isVoteType == true) {
       return Container(
-        margin: EdgeInsets.only(right: 10),
-        child: Text('投票',
-            style:
-                TextStyle(fontSize: screenSize.width * 0.041, color: Theme.of(context).primaryColor)),
+        margin: EdgeInsets.only(right: screenSize.height * 0.01),
+        child: InkWell(
+          child: Text('投票',
+              style: TextStyle(
+                  fontSize: screenSize.width * 0.041,
+                  color: Theme.of(context).primaryColor)),
+          onTap: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => VotePage(voteNum)));
+          },
+        ),
       );
-    if (isVoteType == false) return Text('已投票', style: TextStyle(fontSize: screenSize.width * 0.041));
+    }
+    if (isVoteType == false)
+      return Text('已投票',
+          style: TextStyle(
+              fontSize: screenSize.width * 0.041, color: Color(0xff959595)));
   }
 
   Widget _buildVote(BuildContext context) {
@@ -172,15 +200,16 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
           ListTile(
               contentPadding: EdgeInsets.symmetric(
                   horizontal: screenSize.width * 0.05, vertical: 0.0),
-              title: Text(votes.title, style: TextStyle(fontSize: screenSize.width * 0.041)),
+              title: Text(votes.title,
+                  style: TextStyle(fontSize: screenSize.width * 0.041)),
               leading: Container(
-                margin: EdgeInsets.only(left: 10),
+                margin: EdgeInsets.only(left: screenSize.height * 0.01),
                 child: Image.asset(
                   'assets/images/vote.png',
                   width: screenSize.width * 0.06,
                 ),
               ),
-              trailing: _buildVoteState(votes.isVoteType)),
+              trailing: _buildVoteState(votes.isVoteType, votes.voteNum)),
         );
       }
     });
@@ -204,11 +233,14 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
                   width: screenSize.width * 0.16,
                   decoration: new BoxDecoration(
                     color: Color(0xffEFB208),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(screenSize.height * 0.01)),
                   ),
                   child: Text(
                     '進行中',
-                    style: TextStyle(fontSize: screenSize.width * 0.033, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: screenSize.width * 0.033,
+                        color: Colors.white),
                   ),
                 ),
                 backgroundColor: Theme.of(context).primaryColorDark,
@@ -243,7 +275,8 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
             contentPadding: EdgeInsets.symmetric(
                 horizontal: screenSize.width * 0.08,
                 vertical: screenSize.height * 0.01),
-            title: Text('投票', style: TextStyle(fontSize: screenSize.width * 0.052)),
+            title: Text('投票',
+                style: TextStyle(fontSize: screenSize.width * 0.052)),
             leading: Image.asset(
               'assets/images/vote.png',
               width: screenSize.width * 0.08,
@@ -254,7 +287,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
             ),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => GroupVotesPage(groupNum)));
+                  builder: (context) => VoteListPage(groupNum)));
             },
           ),
           Divider(height: 1),
@@ -262,7 +295,8 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
             contentPadding: EdgeInsets.symmetric(
                 horizontal: screenSize.width * 0.08,
                 vertical: screenSize.height * 0.01),
-            title: Text('共同行程', style: TextStyle(fontSize: screenSize.width * 0.052)),
+            title: Text('共同行程',
+                style: TextStyle(fontSize: screenSize.width * 0.052)),
             leading: Image.asset(
               'assets/images/share_schedule.png',
               width: screenSize.width * 0.08,
@@ -271,21 +305,30 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
               Icons.arrow_forward_ios,
               color: Color(0xffE3E3E3),
             ),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CommonScheduleListPage(groupNum)));
+            },
           ),
           Divider(height: 1),
           ListTile(
             contentPadding: EdgeInsets.symmetric(
                 horizontal: screenSize.width * 0.08,
                 vertical: screenSize.height * 0.01),
-            title: Text('共同讀書計畫', style: TextStyle(fontSize: screenSize.width * 0.052)),
+            title: Text('共同讀書計畫',
+                style: TextStyle(fontSize: screenSize.width * 0.052)),
             leading: Image.asset(
-              'assets/images/share_study_plan.png',
+              'assets/images/share_studyplan.png',
               width: screenSize.width * 0.08,
             ),
             trailing: Icon(
               Icons.arrow_forward_ios,
               color: Color(0xffE3E3E3),
             ),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CommonStudyPlanListPage(groupNum)));
+            },
           ),
           Divider(height: 1),
           ListTile(
@@ -296,11 +339,16 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
               'assets/images/note.png',
               width: screenSize.width * 0.08,
             ),
-            title: Text('共同筆記', style: TextStyle(fontSize: screenSize.width * 0.052)),
+            title: Text('共同筆記',
+                style: TextStyle(fontSize: screenSize.width * 0.052)),
             trailing: Icon(
               Icons.arrow_forward_ios,
               color: Color(0xffE3E3E3),
             ),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CommonNoteListPage(groupNum)));
+            },
           ),
         ],
       ),

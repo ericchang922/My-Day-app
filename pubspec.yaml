@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_pickers: ^1.0.0
+  date_format: ^2.0.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -69,14 +71,20 @@ flutter:
     - assets/images/vote.png
     - assets/images/note.png
     - assets/images/share_schedule.png
-    - assets/images/share_study_plan.png
+    - assets/images/share_studyplan.png
 
-    - assets/json/friends.json
-    - assets/json/best_friends.json
-    - assets/json/groups.json
-    - assets/json/groups_invite.json
-    - assets/json/group_members.json
+    - assets/json/friend_list.json
+    - assets/json/best_friend_list.json
+    - assets/json/group_list.json
+    - assets/json/group_invite_list.json
+    - assets/json/group_member_list.json
     - assets/json/get_group.json
+    - assets/json/get_vote.json
+    - assets/json/vote_list.json
+    - assets/json/vote_end_list.json
+    - assets/json/note_list.json
+    - assets/json/studyplan_list.json
+    - assets/json/common_schedule_list.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -1,0 +1,34 @@
+{
+    "groupContent": [
+        {
+            "groupID": 12,
+            "title": "課業討論",
+            "typeId": 1,
+            "peopleCount": 2
+        },
+        {
+            "groupID": 15,
+            "title": "學會",
+            "typeId": 2,
+            "peopleCount": 1
+        },
+        {
+            "groupID": 20,
+            "title": "作業討論",
+            "typeId": 1,
+            "peopleCount": 1
+        },
+        {
+            "groupID": 11,
+            "title": "學生會",
+            "typeId": 2,
+            "peopleCount": 4
+        },
+        {
+            "groupID": 16,
+            "title": "作業討論",
+            "typeId": 1,
+            "peopleCount": 2
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "title": "午餐",
+    "voteItems": [
+        {
+            "voteItemNum": 1,
+            "voteItemName": "2021-08-01T10:00:00"
+        },
+        {
+            "voteItemNum": 2,
+            "voteItemName": "2021-08-02T10:00:00"
+        },
+        {
+            "voteItemNum": 3,
+            "voteItemName": "2021-08-03T10:00:00"
+        }
+    ],
+    "addItemPermit": false,
+    "deadline": "2021-08-03 10:00:00",
+    "anonymous": true,
+    "chooseVoteQuantity": 1,
+    "voteCount": 0,
+    "response": true
+}

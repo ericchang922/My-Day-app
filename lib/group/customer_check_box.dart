@@ -14,10 +14,11 @@ class CustomerCheckBox extends StatefulWidget {
 
 class _CustomerCheckBox extends State<CustomerCheckBox> {
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return InkWell(
       child: Container(
-        width: 20,
-        height: 20,
+        width: screenSize.width*0.05,
+        height: screenSize.width*0.05,
         decoration: BoxDecoration(
             border: Border.all(
                 width: 1, color: widget.value ? Theme.of(context).primaryColor : Color(0xff999999)),
