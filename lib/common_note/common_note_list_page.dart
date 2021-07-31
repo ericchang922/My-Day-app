@@ -52,6 +52,7 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text('共同筆記',
                 style: TextStyle(fontSize: screenSize.width * 0.052)),
             leading: Container(

@@ -85,6 +85,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
     if (_getGroupModel != null) {
       return Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
               actions: [
                 PopupMenuButton<int>(
                   offset: Offset(50, 50),

@@ -74,6 +74,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             leading: Container(
               margin: EdgeInsets.only(left: 5),
               child: GestureDetector(

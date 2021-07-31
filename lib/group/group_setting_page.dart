@@ -33,6 +33,7 @@ class _GroupSettingWidget extends State<GroupSettingPage> {
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
             leading: Container(
               margin: EdgeInsets.only(left: screenSize.height * 0.02),
               child: GestureDetector(

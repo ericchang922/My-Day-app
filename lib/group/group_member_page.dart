@@ -19,7 +19,7 @@ class GroupMemberPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Color(0xffF86D67),
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text('群組成員', style: TextStyle(fontSize: screenSize.width * 0.052)),
         leading: Container(
           margin: EdgeInsets.only(left: screenSize.height * 0.02),

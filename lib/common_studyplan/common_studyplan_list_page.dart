@@ -54,6 +54,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text('共同讀書計畫',
                 style: TextStyle(fontSize: screenSize.width * 0.052)),
             leading: Container(
@@ -69,8 +70,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
               IconButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            ShareStudyPlanPage(groupNum)));
+                        builder: (context) => ShareStudyPlanPage(groupNum)));
                   },
                   icon: Icon(Icons.add))
             ],
