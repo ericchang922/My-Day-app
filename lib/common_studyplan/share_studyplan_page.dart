@@ -11,12 +11,10 @@ class ShareStudyPlanPage extends StatefulWidget {
   ShareStudyPlanPage(this.groupNum);
 
   @override
-  _ShareStudyPlanWidget createState() =>
-      new _ShareStudyPlanWidget(groupNum);
+  _ShareStudyPlanWidget createState() => new _ShareStudyPlanWidget(groupNum);
 }
 
-class _ShareStudyPlanWidget
-    extends State<ShareStudyPlanPage> {
+class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
   int groupNum;
   _ShareStudyPlanWidget(this.groupNum);
 
@@ -67,9 +65,7 @@ class _ShareStudyPlanWidget
     var shareStudyPlanModel = StudyPlanListModel.fromJson(jsonMap);
     setState(() {
       _shareStudyPlanModel = shareStudyPlanModel;
-      for (int i = 0;
-          i < _shareStudyPlanModel.studyplan.length;
-          i++) {
+      for (int i = 0; i < _shareStudyPlanModel.studyplan.length; i++) {
         _studyplanCheck.add(false);
       }
     });
@@ -83,6 +79,7 @@ class _ShareStudyPlanWidget
         length: 2,
         child: Scaffold(
             appBar: AppBar(
+              backgroundColor: Theme.of(context).primaryColor,
               title: Text('選擇讀書計畫',
                   style: TextStyle(fontSize: screenSize.width * 0.052)),
               leading: Container(

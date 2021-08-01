@@ -53,6 +53,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text('共同行程',
                 style: TextStyle(fontSize: screenSize.width * 0.052)),
             leading: Container(
@@ -173,11 +174,11 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
                       child: Column(
                         children: [
                           Text(schedule.startTime.month.toString() + "月",
-                              style:
-                                  TextStyle(fontSize: screenSize.width * 0.035)),
+                              style: TextStyle(
+                                  fontSize: screenSize.width * 0.035)),
                           Text(schedule.startTime.day.toString() + "日",
-                              style:
-                                  TextStyle(fontSize: screenSize.width * 0.046)),
+                              style: TextStyle(
+                                  fontSize: screenSize.width * 0.046)),
                         ],
                       )),
                   title: Container(
@@ -308,11 +309,11 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
                       child: Column(
                         children: [
                           Text(schedule.startTime.month.toString() + "月",
-                              style:
-                                  TextStyle(fontSize: screenSize.width * 0.035)),
+                              style: TextStyle(
+                                  fontSize: screenSize.width * 0.035)),
                           Text(schedule.startTime.day.toString() + "日",
-                              style:
-                                  TextStyle(fontSize: screenSize.width * 0.046)),
+                              style: TextStyle(
+                                  fontSize: screenSize.width * 0.046)),
                         ],
                       )),
                   title: Container(

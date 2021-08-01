@@ -77,6 +77,7 @@ class _ShareNoteWidget extends State<ShareNotePage> {
         length: 2,
         child: Scaffold(
             appBar: AppBar(
+              backgroundColor: Theme.of(context).primaryColor,
               title: Text('選擇筆記',
                   style: TextStyle(fontSize: screenSize.width * 0.052)),
               leading: Container(

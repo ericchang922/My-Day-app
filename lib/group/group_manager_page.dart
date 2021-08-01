@@ -18,7 +18,7 @@ class GroupManagerPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Color(0xffF86D67),
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text('管理者', style: TextStyle(fontSize: 22)),
         leading: Container(
           margin: EdgeInsets.only(left: 5),
