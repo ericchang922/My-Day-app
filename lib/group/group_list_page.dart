@@ -24,6 +24,7 @@ selectedItem(BuildContext context, item) async {
 AppBar groupListAppBar(context) {
   var screenSize = MediaQuery.of(context).size;
   return AppBar(
+    backgroundColor: Theme.of(context).primaryColor,
     title: Text('群組', style: TextStyle(fontSize: screenSize.width * 0.052)),
     actions: [
       PopupMenuButton<int>(
