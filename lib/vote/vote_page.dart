@@ -82,6 +82,15 @@ class _VoteWidget extends State<VotePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('投票', style: TextStyle(fontSize: screenSize.width * 0.052)),
+        leading: Container(
+          margin: EdgeInsets.only(left: screenSize.height * 0.02),
+          child: GestureDetector(
+            child: Icon(Icons.chevron_left),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
       ),
       body: _buildVoteWidget(context),
     );
@@ -248,7 +257,8 @@ class _VoteWidget extends State<VotePage> {
           contentPadding: EdgeInsets.symmetric(
               horizontal: screenSize.height * 0.04,
               vertical: screenSize.height * 0.02),
-          title: Text(voteAddItemName, style: TextStyle(fontSize: screenSize.width * 0.041)),
+          title: Text(voteAddItemName,
+              style: TextStyle(fontSize: screenSize.width * 0.041)),
           leading: CustomerCheckBox(
             value: _voteAddItemCheck[index],
             onTap: (value) {
@@ -363,16 +373,18 @@ class _VoteWidget extends State<VotePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      "新增選項",
-                      style: TextStyle(fontSize: screenSize.width * 0.041),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      Text(
+                        "新增選項",
+                        style: TextStyle(fontSize: screenSize.width * 0.041),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                     height: screenSize.height * 0.04683,

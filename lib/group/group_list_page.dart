@@ -32,6 +32,7 @@ class GroupListPage extends StatelessWidget {
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text(g, style: TextStyle(fontSize: screenSize.width * 0.052)),
           actions: [
             PopupMenuButton<int>(

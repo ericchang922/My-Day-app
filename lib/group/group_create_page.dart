@@ -15,7 +15,7 @@ class GroupCreatePage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Color(0xffF86D67),
+        backgroundColor: Theme.of(context).primaryColor,
         title:
             Text('建立群組', style: TextStyle(fontSize: screenSize.width * 0.052)),
         leading: Container(

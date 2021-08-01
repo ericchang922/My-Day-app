@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'forgetPassword.dart';
 import 'learn.dart';
-import 'forget_password.dart';
 import 'login.dart';
 
 class ChangepwPage extends StatelessWidget {
