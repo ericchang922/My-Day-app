@@ -9,64 +9,61 @@ import 'package:flutter/services.dart';
 import 'group_create_page.dart';
 import 'group_join_page.dart';
 
+selectedItem(BuildContext context, item) async {
+  switch (item) {
+    case 0:
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
+      break;
+    case 1:
+      bool action = await groupJoinDialog(context);
+      break;
+  }
+}
+
+AppBar groupListAppBar(context) {
+  var screenSize = MediaQuery.of(context).size;
+  return AppBar(
+    title: Text('群組', style: TextStyle(fontSize: screenSize.width * 0.052)),
+    actions: [
+      PopupMenuButton<int>(
+        offset: Offset(50, 50),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(screenSize.height * 0.01)),
+        icon: Icon(Icons.add),
+        itemBuilder: (context) => [
+          PopupMenuItem<int>(
+              value: 0,
+              child: Container(
+                  alignment: Alignment.center,
+                  child: Text("建立群組",
+                      style: TextStyle(fontSize: screenSize.width * 0.035)))),
+          PopupMenuDivider(
+            height: 1,
+          ),
+          PopupMenuItem<int>(
+              value: 1,
+              child: Container(
+                  alignment: Alignment.center,
+                  child: Text("加入群組",
+                      style: TextStyle(fontSize: screenSize.width * 0.035)))),
+        ],
+        onSelected: (item) => selectedItem(context, item),
+      ),
+    ],
+  );
+}
+
 class GroupListPage extends StatelessWidget {
-  String g;
-  GroupListPage(String g) {
-    this.g = g;
-  }
-
-  selectedItem(BuildContext context, item) async {
-    switch (item) {
-      case 0:
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
-        break;
-      case 1:
-        bool action = await groupJoinDialog(context);
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(
-          title: Text(g, style: TextStyle(fontSize: screenSize.width * 0.052)),
-          actions: [
-            PopupMenuButton<int>(
-              offset: Offset(50, 50),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(screenSize.height * 0.01)),
-              icon: Icon(Icons.add),
-              itemBuilder: (context) => [
-                PopupMenuItem<int>(
-                    value: 0,
-                    child: Container(
-                        alignment: Alignment.center,
-                        child: Text("建立群組",
-                            style: TextStyle(
-                                fontSize: screenSize.width * 0.035)))),
-                PopupMenuDivider(
-                  height: 1,
-                ),
-                PopupMenuItem<int>(
-                    value: 1,
-                    child: Container(
-                        alignment: Alignment.center,
-                        child: Text("加入群組",
-                            style: TextStyle(
-                                fontSize: screenSize.width * 0.035)))),
-              ],
-              onSelected: (item) => selectedItem(context, item),
-            ),
-          ],
-        ),
         body: SafeArea(
             child: Container(
-          color: Theme.of(context).primaryColor,
-          child: Container(color: Colors.white, child: GroupListWidget()),
-        )));
+      color: Theme.of(context).primaryColor,
+      child: Container(color: Colors.white, child: GroupListWidget()),
+    )));
   }
 }
 
@@ -126,7 +123,7 @@ class _GroupListState extends State<GroupListWidget> {
     var response = await request.close();
     var jsonString = await response.transform(utf8.decoder).join();
     httpClient.close();
-    
+
     var jsonMap = json.decode(jsonString);
 
     var groupInviteListModel = GroupInviteListModel.fromJson(jsonMap);
@@ -212,7 +209,9 @@ class _GroupListState extends State<GroupListWidget> {
                 subtitle: Container(
                     margin: EdgeInsets.only(top: screenSize.height * 0.005),
                     child: Text('邀請人：${groupContent.inviterName}',
-                        style: TextStyle(fontSize: screenSize.width * 0.032, color: Color(0xff959595)))),
+                        style: TextStyle(
+                            fontSize: screenSize.width * 0.032,
+                            color: Color(0xff959595)))),
                 leading: Container(
                   margin: EdgeInsets.only(bottom: screenSize.width * 0.01),
                   child: CircleAvatar(
