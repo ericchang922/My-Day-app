@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'learn.dart';
-import 'main.dart';
+import 'home.dart';
 import 'notes.dart';
 
 class NotesAddPage extends StatelessWidget {
@@ -11,7 +11,7 @@ class NotesAddPage extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new HomePageWidget(),
+        '/home': (BuildContext context) => new Home(),
        
         '/learn' : (BuildContext context) => new LearnPage(),
       },

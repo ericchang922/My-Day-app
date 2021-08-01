@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'learn.dart';
-import 'main.dart';
+import 'home.dart';
 import 'register.dart';
 import 'forgetPassword.dart';
 
@@ -9,7 +9,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(routes: <String, WidgetBuilder>{
       '/login' : (BuildContext context) => new LoginPage(),
-      '/home': (BuildContext context) => new HomePageWidget(),
+      '/home': (BuildContext context) => new Home(),
     }, debugShowCheckedModeBanner: false, home: LoginWidget());
   }
 }

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'learn.dart';
-import 'main.dart';
+import 'home.dart';
 import 'friends_add.dart';
 import 'bestfriend.dart';
 import 'friends_invitation.dart';
@@ -13,7 +13,7 @@ class FriendsPage extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new HomePageWidget(),
+        '/home': (BuildContext context) => new Home(),
         
         '/learn' : (BuildContext context) => new LearnPage(),
       },

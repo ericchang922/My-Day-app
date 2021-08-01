@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 
-
+import 'home.dart';
 import 'main.dart';
 import 'friends.dart';
 import 'learn.dart';
@@ -22,7 +22,7 @@ class FriendInvitationPage extends StatelessWidget {
           platform: TargetPlatform.iOS,
         ),
       routes: <String, WidgetBuilder> {
-        '/home': (BuildContext context) => new HomePageWidget(),
+        '/home': (BuildContext context) => new Home(),
         
         '/learn' : (BuildContext context) => new LearnPage(),
       },

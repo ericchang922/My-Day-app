@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 
 import 'main.dart';
+import 'home.dart';
 import 'settings.dart';
 import 'learn.dart';
 
@@ -20,7 +21,7 @@ class ThemePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new HomePageWidget(),
+        '/home': (BuildContext context) => new Home(),
         '/learn': (BuildContext context) => new LearnPage(),
       },
       debugShowCheckedModeBanner: false,

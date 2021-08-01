@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 
 import 'main.dart';
+import 'home.dart';
 import 'notes.dart';
 import 'readplan.dart';
 import 'learn.dart';
@@ -19,7 +20,7 @@ class PrivacyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: <String, WidgetBuilder> {
-        '/home': (BuildContext context) => new HomePageWidget(),
+        '/home': (BuildContext context) => new Home(),
   
         '/learn' : (BuildContext context) => new LearnPage(),
       },

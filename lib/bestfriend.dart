@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'learn.dart';
-import 'main.dart';
+import 'home.dart';
 import 'notes_add.dart';
 import 'friends.dart';
 class BestFriendPage extends StatelessWidget {
@@ -11,7 +11,7 @@ class BestFriendPage extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new HomePageWidget(),
+        '/home': (BuildContext context) => new Home(),
         
         '/learn' : (BuildContext context) => new LearnPage(),
       },

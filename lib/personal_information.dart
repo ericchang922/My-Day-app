@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'home.dart';
 import 'settings.dart';
 import 'learn.dart';
 import 'change_password_personal.dart';
@@ -22,7 +23,7 @@ class PersonalInformationPage extends StatelessWidget {
           platform: TargetPlatform.iOS,
         ),
       routes: <String, WidgetBuilder> {
-        '/home': (BuildContext context) => new HomePageWidget(),
+        '/home': (BuildContext context) => new Home(),
         '/learn' : (BuildContext context) => new LearnPage(),
       },
       debugShowCheckedModeBanner: false,
