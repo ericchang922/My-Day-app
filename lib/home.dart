@@ -1,12 +1,10 @@
-import 'dart:ffi';
-
 import 'package:animations/animations.dart';
 // flutter
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 // my day
 import 'package:My_Day_app/learn.dart';
-import 'package:My_Day_app/my_day_icon_icons.dart';
+import 'package:My_Day_app/my_day_icon.dart';
 import 'group/group_list_page.dart';
 import 'home_page.dart';
 
@@ -38,7 +36,7 @@ class _Home extends State<Home> {
     var size = MediaQuery.of(context).size;
     double width = size.width;
     double height = size.height;
-    double iconSize = width * 0.07;
+    double iconSize = width * 0.08;
 
     return Container(
       color: color,
@@ -83,6 +81,8 @@ class _Home extends State<Home> {
                     label: '學習',
                   ),
                 ],
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
                 currentIndex: _index,
                 selectedIconTheme: IconThemeData(color: Colors.white),
                 onTap: _onTapped,
