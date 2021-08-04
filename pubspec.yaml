@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter  
   flutter_pickers: ^1.0.0
   date_format: ^2.0.2
   animations: ^2.0.1
@@ -42,7 +44,7 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   fonts:
-    - family: My_day_icon
+    - family: MyDayIcon
       fonts:
         - asset: fonts/MyDayIcon.ttf
 

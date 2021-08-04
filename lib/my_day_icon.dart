@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/My_day_icon.ttf
 ///
-/// 
+///
 /// * Material Design Icons, Copyright (C) Google, Inc
 ///         Author:    Google
 ///         License:   Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
@@ -22,7 +22,7 @@ import 'package:flutter/widgets.dart';
 class MyDayIcon {
   MyDayIcon._();
 
-  static const _kFontFam = 'My_day_icon';
+  static const _kFontFam = 'MyDayIcon';
 
   static const IconData home = IconData(0xe901, fontFamily: _kFontFam);
   static const IconData group = IconData(0xe900, fontFamily: _kFontFam);
