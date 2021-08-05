@@ -92,12 +92,8 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                 ),
               ),
             ),
-            body: Column(
-              children: [
-                Expanded(child: _buildShareGroupStudyPlanList(context)),
-                _buildCheckButtom(context)
-              ],
-            )));
+            body: Container(color: Colors.white, child: _buildShareGroupStudyPlanListWidget(context))
+            ));
   }
 
   int _studyplanCount() {
@@ -108,6 +104,14 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
       }
     }
     return _studyplanCount;
+  }
+
+  Widget _buildShareGroupStudyPlanListWidget(BuildContext context){
+    return Column(
+      children: [
+        Expanded(child: _buildShareGroupStudyPlanList(context)),
+        _buildCheckButtom(context)
+      ]);
   }
 
   Widget _buildShareGroupStudyPlanList(BuildContext context) {

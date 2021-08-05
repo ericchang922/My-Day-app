@@ -28,7 +28,7 @@ class GroupCreatePage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(children: [Expanded(child: GroupCreateWidget())]),
+      body: Container(color: Colors.white, child: GroupCreateWidget()),
     );
   }
 }
@@ -391,7 +391,9 @@ class _GroupCreateState extends State<GroupCreateWidget> {
                   bottom: screenSize.width * 0.02,
                   top: screenSize.width * 0.02),
               child: Text('摯友',
-                  style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
+                  style: TextStyle(
+                      fontSize: screenSize.width * 0.041,
+                      color: Color(0xff7AAAD8))),
             ),
             _buildBestFriendList(context),
             Container(
@@ -400,7 +402,9 @@ class _GroupCreateState extends State<GroupCreateWidget> {
                   bottom: screenSize.width * 0.02,
                   top: screenSize.width * 0.02),
               child: Text('好友',
-                  style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
+                  style: TextStyle(
+                      fontSize: screenSize.width * 0.041,
+                      color: Color(0xff7AAAD8))),
             ),
             _buildFriendList(context)
           ],
@@ -486,7 +490,9 @@ class _GroupCreateState extends State<GroupCreateWidget> {
     );
     const Base64Codec base64 = Base64Codec();
     Image image = Image.memory(base64.decode(imageString),
-        width: screenSize.height * 0.04683, height: screenSize.height * 0.04683, fit: BoxFit.fill);
+        width: screenSize.height * 0.04683,
+        height: screenSize.height * 0.04683,
+        fit: BoxFit.fill);
     var resolve = image.image.resolve(ImageConfiguration.empty);
     resolve.addListener(ImageStreamListener((_, __) {
       isGetImage = true;
@@ -495,7 +501,7 @@ class _GroupCreateState extends State<GroupCreateWidget> {
       print('error');
     }));
 
-    if (isGetImage == true) {
+    if (isGetImage == null) {
       return image;
     } else {
       return friendImage;

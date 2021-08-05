@@ -75,7 +75,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
                   icon: Icon(Icons.add))
             ],
           ),
-          body: _buildGroupStudyPlanList(context)),
+          body: Container(color: Colors.white, child: _buildGroupStudyPlanList(context))),
     );
   }
 

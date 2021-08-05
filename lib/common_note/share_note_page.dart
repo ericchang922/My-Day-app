@@ -90,12 +90,7 @@ class _ShareNoteWidget extends State<ShareNotePage> {
                 ),
               ),
             ),
-            body: Column(
-              children: [
-                Expanded(child: _buildShareNoteList(context)),
-                _buildCheckButtom(context)
-              ],
-            )));
+            body: Container(color: Colors.white, child: _buildShareNoteListWidget(context))));
   }
 
   int _noteCount() {
@@ -106,6 +101,15 @@ class _ShareNoteWidget extends State<ShareNotePage> {
       }
     }
     return _noteCount;
+  }
+
+  Widget _buildShareNoteListWidget(BuildContext context){
+    return Column(
+      children: [
+        Expanded(child: _buildShareNoteList(context)),
+        _buildCheckButtom(context)
+      ],
+    );
   }
 
   Widget _buildShareNoteList(BuildContext context) {

@@ -1,11 +1,12 @@
 import 'package:My_Day_app/vote/vote_setting_page.dart';
 import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pickers/pickers.dart';
-import 'package:flutter_pickers/style/picker_style.dart';
-import 'package:flutter_pickers/time_picker/model/date_mode.dart';
-import 'package:flutter_pickers/time_picker/model/pduration.dart';
-import 'package:flutter_pickers/time_picker/model/suffix.dart';
+// import 'package:flutter_pickers/pickers.dart';
+// import 'package:flutter_pickers/style/picker_style.dart';
+// import 'package:flutter_pickers/time_picker/model/date_mode.dart';
+// import 'package:flutter_pickers/time_picker/model/pduration.dart';
+// import 'package:flutter_pickers/time_picker/model/suffix.dart';
 
 class VoteCreatePage extends StatefulWidget {
   int groupNum;
@@ -24,16 +25,18 @@ class _VoteCreateWidget extends State<VoteCreatePage>
 
   final _voteTitleController = TextEditingController();
   final _voteDateTitleController = TextEditingController();
+  
   List _voteValues = List.generate(2, (index) => "");
   List _voteDateValues = List.generate(2, (index) => "");
   List _voteDateFormat = List.generate(2, (index) => "");
   List _voteItems = [];
   List _voteItemsName = [];
-  List _voteDateItems = [];
-  List _voteDateItemsName = [];
+
+  DateTime _dateTime = DateTime.now();
 
   String _value = '';
   String _dateValue = '';
+
   TextEditingController get _voteItemController =>
       TextEditingController(text: _value);
 
@@ -98,6 +101,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text('建立投票',
               style: TextStyle(fontSize: screenSize.width * 0.052)),
           leading: Container(
@@ -145,8 +149,8 @@ class _VoteCreateWidget extends State<VoteCreatePage>
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
-            _buildCreateVote(context),
-            _buildCreateDateVote(context)
+            Container(color: Colors.white, child: _buildCreateVote(context)),
+            Container(color: Colors.white, child: _buildCreateDateVote(context))
           ],
         ),
         bottomNavigationBar: _buildCheckButtom(context));
@@ -196,58 +200,53 @@ class _VoteCreateWidget extends State<VoteCreatePage>
       itemCount: _voteValues.length,
       itemBuilder: (BuildContext context, int index) {
         _value = _voteValues[index];
-        return Row(
+        return Column(
           children: [
-            Container(
-                padding: EdgeInsets.all(screenSize.height * 0.0131),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xffCCCCCC)),
+            Row(
+              children: [
+                Container(
+                    padding: EdgeInsets.all(screenSize.height * 0.0131),
+                    margin: EdgeInsets.only(top: screenSize.height * 0.032),
+                    child: Text('${index + 1}.',
+                        style: TextStyle(fontSize: screenSize.width * 0.05))),
+                Flexible(
+                  child: Container(
+                    margin: EdgeInsets.only(top: screenSize.height * 0.028),
+                    child: TextField(
+                      controller: _voteItemController,
+                      cursorColor: Colors.black,
+                      style: TextStyle(fontSize: screenSize.width * 0.05),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(screenSize.width * 0.02),
+                        hintText: '輸入選項',
+                        hintStyle: TextStyle(
+                            color: Color(0xffCCCCCC),
+                            fontSize: screenSize.width * 0.05),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                      ),
+                      onChanged: (text) {
+                        setState(() {
+                          _voteValues[index] = text;
+                        });
+                        _buttonIsOnpressed();
+                        for (int i = 0; i < _voteValues.length; i++) {
+                          if (_voteValues[i] == "") {
+                            count++;
+                          }
+                        }
+                        if (count == 0) {
+                          setState(() {
+                            _voteValues.add("");
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
-                margin: EdgeInsets.only(top: screenSize.height * 0.032),
-                child: Text('${index + 1}.',
-                    style: TextStyle(fontSize: screenSize.width * 0.05))),
-            Flexible(
-              child: Container(
-                margin: EdgeInsets.only(top: screenSize.height * 0.028),
-                child: TextField(
-                  controller: _voteItemController,
-                  cursorColor: Colors.black,
-                  style: TextStyle(fontSize: screenSize.width * 0.05),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(screenSize.width * 0.02),
-                    hintText: '輸入選項',
-                    hintStyle: TextStyle(
-                        color: Color(0xffCCCCCC),
-                        fontSize: screenSize.width * 0.05),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffCCCCCC)),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffCCCCCC)),
-                      //  when the TextFormField in focused
-                    ),
-                  ),
-                  onChanged: (text) {
-                    setState(() {
-                      _voteValues[index] = text;
-                    });
-                    _buttonIsOnpressed();
-                    for (int i = 0; i < _voteValues.length; i++) {
-                      if (_voteValues[i] == "") {
-                        count++;
-                      }
-                    }
-                    if (count == 0) {
-                      setState(() {
-                        _voteValues.add("");
-                      });
-                    }
-                  },
-                ),
-              ),
+              ],
             ),
+            Divider(color: Color(0xffCCCCCC))
           ],
         );
       },
@@ -298,120 +297,106 @@ class _VoteCreateWidget extends State<VoteCreatePage>
       itemCount: _voteDateValues.length,
       itemBuilder: (BuildContext context, int index) {
         _dateValue = _voteDateValues[index];
-        return Row(
+        return Column(
           children: [
-            Container(
-                padding: EdgeInsets.all(screenSize.height * 0.0131),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xffCCCCCC)),
-                  ),
-                ),
-                margin: EdgeInsets.only(top: screenSize.height * 0.032),
-                child: Text('${index + 1}.',
-                    style: TextStyle(fontSize: screenSize.width * 0.05))),
-            Flexible(
-              child: Container(
-                margin: EdgeInsets.only(top: screenSize.height * 0.028),
-                child: TextField(
-                  focusNode: _contentFocusNode,
-                  controller: _voteDateItemController,
-                  cursorColor: Colors.black,
-                  style: TextStyle(fontSize: screenSize.width * 0.05),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(screenSize.width * 0.02),
-                    hintText: '選擇日期',
-                    hintStyle: TextStyle(
-                        color: Color(0xffCCCCCC),
-                        fontSize: screenSize.width * 0.05),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffCCCCCC)),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffCCCCCC)),
-                      //  when the TextFormField in focused
-                    ),
-                  ),
-                  onTap: () {
-                    _contentFocusNode.unfocus();
-                    Pickers.showDatePicker(
-                      context,
-                      pickerStyle: customizeStyle(),
-                      mode: DateMode.YMDHM,
-                      suffix: Suffix(
-                        years: '年',
-                        month: '月',
-                        days: '日',
-                        hours: ' 時',
-                        minutes: ' 分',
+            Row(
+              children: [
+                Container(
+                    padding: EdgeInsets.all(screenSize.height * 0.0131),
+                    margin: EdgeInsets.only(top: screenSize.height * 0.032),
+                    child: Text('${index + 1}.',
+                        style: TextStyle(fontSize: screenSize.width * 0.05))),
+                Flexible(
+                  child: Container(
+                    margin: EdgeInsets.only(top: screenSize.height * 0.028),
+                    child: TextField(
+                      focusNode: _contentFocusNode,
+                      controller: _voteDateItemController,
+                      cursorColor: Colors.black,
+                      style: TextStyle(fontSize: screenSize.width * 0.05),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(screenSize.width * 0.02),
+                        hintText: '選擇日期',
+                        hintStyle: TextStyle(
+                            color: Color(0xffCCCCCC),
+                            fontSize: screenSize.width * 0.05),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
                       ),
-                      selectDate: PDuration.now(),
-                      onConfirm: (p) {
-                        setState(() {
-                          int count = 0;
-                          String dateTime = formatDate(
-                              DateTime(
-                                  p.year, p.month, p.day, p.hour, p.minute),
-                              [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
-                          _voteDateValues[index] = dateTime;
-                          _voteDateFormat[index] = DateTime(
-                            p.year,
-                            p.month,
-                            p.day,
-                            p.hour,
-                            p.minute,
-                          ).toString();
-
-                          _buttonIsOnpressed();
-
-                          for (int i = 0; i < _voteDateValues.length; i++) {
-                            if (_voteDateValues[i] == "") {
-                              count++;
-                            }
-                          }
-                          if (count == 0) {
-                            setState(() {
-                              _voteDateValues.add("");
-                              _voteDateFormat.add("");
-                            });
-                          }
-                        });
+                      onTap: () {
+                        _contentFocusNode.unfocus();
+                        _datePicker(context, index);
                       },
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
+            Divider(color: Color(0xffCCCCCC))
           ],
         );
       },
     );
   }
 
-  PickerStyle customizeStyle() {
-    var screenSize = MediaQuery.of(context).size;
+  String _dateFormat(dateTime) {
+    String dateString = formatDate(
+        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+            dateTime.minute),
+        [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
+    return dateString;
+  }
 
-    Widget _cancelButton = Container(
-        margin: EdgeInsets.only(left: screenSize.width * 0.03),
-        child: Text(
-          '取消',
-          style: TextStyle(
-            fontSize: screenSize.width * 0.041,
-            color: Color(0xffb4b4b4),
-          ),
-        ));
-    Widget _commitButton = Container(
-      margin: EdgeInsets.only(right: screenSize.width * 0.03),
-      child: Text(
-        '確認',
-        style: TextStyle(
-            fontSize: screenSize.width * 0.041,
-            color: Theme.of(context).primaryColor),
+  void _datePicker(contex, index) {
+    var screenSize = MediaQuery.of(context).size;
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => Container(
+        height: screenSize.height * 0.35,
+        color: Colors.white,
+        child: Column(
+          children: [
+            Container(
+              height: screenSize.height * 0.065,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: CupertinoButton(
+                    child: Text('確定'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        int count = 0;
+                        _voteDateValues[index] = _dateFormat(_dateTime);
+                        _voteDateFormat[index] = _dateTime;
+                        for (int i = 0; i < _voteValues.length; i++) {
+                          if (_voteDateValues[i] == "") {
+                            count++;
+                          }
+                        }
+                        print(count);
+                        if (count == 0) {
+                          _voteDateValues.add("");
+                          _voteDateFormat.add("");
+                        }
+                      });
+                      _buttonIsOnpressed();
+                    }),
+              ),
+            ),
+            Container(
+              height: screenSize.height * 0.28,
+              child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  initialDateTime: DateTime.now(),
+                  onDateTimeChanged: (value) {
+                    setState(() {
+                      _dateTime = value;
+                    });
+                  }),
+            ),
+          ],
+        ),
       ),
-    );
-    return PickerStyle(
-      cancelButton: _cancelButton,
-      commitButton: _commitButton,
     );
   }
 
@@ -424,42 +409,28 @@ class _VoteCreateWidget extends State<VoteCreatePage>
         setState(() {
           _voteItems = new List();
           _voteItemsName = new List();
-          _voteDateItems = new List();
-          _voteDateItemsName = new List();
           if (_tabController.index == 0) {
             for (int i = 0; i < _voteValues.length; i++) {
               if (_voteValues[i] != "") {
                 _voteItemsName.add(_voteValues[i]);
               }
             }
-            for (int i = 0; i < _voteItemsName.length; i++) {
-              _voteItems.add(
-                  {"voteItemNum": i + 1, "voteItemName": _voteItemsName[i]});
-            }
-            print(_voteTitleController.text);
-            print(_voteItems);
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => VoteSettingPage(
-                    groupNum, _voteTitleController.text, _voteItems)));
-          }
-          if (_tabController.index == 1) {
+          } else {
             for (int i = 0; i < _voteDateFormat.length; i++) {
               if (_voteDateFormat[i] != "") {
-                _voteDateItemsName.add(_voteDateFormat[i]);
+                _voteItemsName.add(_voteDateFormat[i]);
               }
             }
-            for (int i = 0; i < _voteDateItemsName.length; i++) {
-              _voteDateItems.add({
-                "voteItemNum": i + 1,
-                "voteItemName": _voteDateItemsName[i]
-              });
-            }
-            print(_voteDateTitleController);
-            print(_voteDateItems);
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => VoteSettingPage(
-                    groupNum, _voteDateTitleController.text, _voteDateItems)));
           }
+          for (int i = 0; i < _voteItemsName.length; i++) {
+            _voteItems
+                .add({"voteItemNum": i + 1, "voteItemName": _voteItemsName[i]});
+          }
+          print(_voteTitleController.text);
+          print(_voteItems);
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => VoteSettingPage(
+                  groupNum, _voteTitleController.text, _voteItems)));
         });
       };
     }

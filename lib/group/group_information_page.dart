@@ -36,7 +36,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
 
   GetGroupModel _getGroupModel = null;
 
-  final _groupNameController = TextEditingController();
+  TextEditingController get _groupNameController =>
+      TextEditingController(text: _groupName);
 
   int groupNum;
   _GroupInformationWidget(this.groupNum);
@@ -72,11 +73,12 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
             leading: Container(
-              margin: EdgeInsets.only(left: 5),
+              margin: EdgeInsets.only(left: screenSize.height * 0.02),
               child: GestureDetector(
                 child: Icon(Icons.chevron_left),
                 onTap: () {
@@ -84,31 +86,34 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                 },
               ),
             ),
-            title: Text('群組資訊', style: TextStyle(fontSize: 20))),
-        body: _buildInformationItem(context));
+            title: Text('群組資訊', style: TextStyle(fontSize: screenSize.width * 0.052))),
+        body: Container(color: Colors.white, child: _buildInformationItem(context)));
   }
 
   Widget _buildInformationItem(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     if (_getGroupModel != null) {
       return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: EdgeInsets.only(top: screenSize.height * 0.01),
         child: ListView(
           children: [
             ListTile(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-              title: Text('名稱', style: TextStyle(fontSize: 20)),
-              subtitle: Text(_groupName, style: TextStyle(fontSize: 16)),
+              contentPadding: EdgeInsets.symmetric(
+                      horizontal: screenSize.height * 0.04,
+                      vertical: 0.0),
+              title: Text('名稱', style: TextStyle(fontSize: screenSize.width * 0.045)),
+              subtitle: Text(_groupName, style: TextStyle(fontSize: screenSize.width * 0.032)),
               onTap: () async {
                 await groupUpdateNameDialog(context);
               },
             ),
             Divider(),
             ListTile(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-              title: Text('類別', style: TextStyle(fontSize: 20)),
-              subtitle: Text(_groupTypeName, style: TextStyle(fontSize: 16)),
+              contentPadding: EdgeInsets.symmetric(
+                      horizontal: screenSize.height * 0.04,
+                      vertical: 0.0),
+              title: Text('類別', style: TextStyle(fontSize: screenSize.width * 0.045)),
+              subtitle: Text(_groupTypeName, style: TextStyle(fontSize: screenSize.width * 0.032)),
               onTap: () {
                 groupUpdateTypeDialog(context);
               },
@@ -127,6 +132,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
       builder: (BuildContext context) {
         var screenSize = MediaQuery.of(context).size;
         return AlertDialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius:
                   BorderRadius.all(Radius.circular(screenSize.height * 0.03))),
@@ -195,7 +201,12 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                   borderSide:
                                       BorderSide(color: Color(0xff7AAAD8)),
                                 )),
-                            controller: _groupNameController..text = _groupName,
+                            controller: _groupNameController,
+                            onChanged: (text) {
+                              setState(() {
+                                _groupName = text;
+                              });
+                            },
                           )),
                     ],
                   ),
@@ -293,6 +304,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
+              backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(
                       Radius.circular(screenSize.height * 0.03))),

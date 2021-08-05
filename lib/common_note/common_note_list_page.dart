@@ -74,7 +74,7 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> {
                   icon: Icon(Icons.add))
             ],
           ),
-          body: _buildGroupNoteList(context)),
+          body: Container(color: Colors.white, child: _buildGroupNoteList(context))),
     );
   }
 

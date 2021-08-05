@@ -44,7 +44,7 @@ class _GroupSettingWidget extends State<GroupSettingPage> {
               ),
             ),
             title: Text('設定', style: TextStyle(fontSize: screenSize.width * 0.052))),
-        body: _buildSettingItem(context));
+        body: Container(color: Colors.white, child: _buildSettingItem(context)));
   }
 
   Widget _buildSettingItem(BuildContext context) {
@@ -52,7 +52,6 @@ class _GroupSettingWidget extends State<GroupSettingPage> {
     return Container(
       margin: EdgeInsets.only(top: screenSize.height * 0.01),
       child: ListView(
-        shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         children: [
           ListTile(

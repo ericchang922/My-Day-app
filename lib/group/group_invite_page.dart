@@ -9,14 +9,18 @@ import 'package:flutter/services.dart';
 import 'customer_check_box.dart';
 
 class GroupInvitePage extends StatelessWidget {
+  int groupNum;
+  GroupInvitePage(this.groupNum);
+
   @override
   Widget build(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text('邀請好友', style: TextStyle(fontSize: screenSize.width * 0.052)),
+        title:
+            Text('邀請好友', style: TextStyle(fontSize: screenSize.width * 0.052)),
         leading: Container(
           margin: EdgeInsets.only(left: screenSize.height * 0.02),
           child: GestureDetector(
@@ -27,17 +31,23 @@ class GroupInvitePage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(children: [Expanded(child: GroupInviteWidget())]),
+      body: Container(color: Colors.white, child: GroupInviteWidget(groupNum)),
     );
   }
 }
 
 class GroupInviteWidget extends StatefulWidget {
+  int groupNum;
+  GroupInviteWidget(this.groupNum);
+
   @override
-  State<GroupInviteWidget> createState() => new _GroupInviteState();
+  State<GroupInviteWidget> createState() => new _GroupInviteState(groupNum);
 }
 
 class _GroupInviteState extends State<GroupInviteWidget> {
+  int groupNum;
+  _GroupInviteState(this.groupNum);
+
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
@@ -55,6 +65,18 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   void initState() {
     super.initState();
 
+    _friendNameController.addListener(() {
+      if (_friendNameController.text.isEmpty) {
+        setState(() {
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _searchText = _friendNameController.text;
+        });
+      }
+    });
+
     _getFriendRequest();
     _getBestFriendRequest();
   }
@@ -63,8 +85,12 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     // var reponse = await rootBundle.loadString('assets/json/best_friends.json');
 
     var httpClient = HttpClient();
-    var request = await httpClient.getUrl(
-        Uri.http('myday.sytes.net', '/friend/best_list/', {'uid': uid}));
+    var request = await httpClient.getUrl(Uri.http(
+        'myday.sytes.net', '/group/invite_friend_list/', {
+      'uid': uid,
+      "groupNum": groupNum.toString(),
+      "friendStatusId": 2.toString()
+    }));
     var response = await request.close();
     var jsonString = await response.transform(utf8.decoder).join();
     httpClient.close();
@@ -86,8 +112,12 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
 
     var httpClient = HttpClient();
-    var request = await httpClient.getUrl(
-        Uri.http('myday.sytes.net', '/friend/friend_list/', {'uid': uid}));
+    var request = await httpClient.getUrl(Uri.http(
+        'myday.sytes.net', '/group/invite_friend_list/', {
+      'uid': uid,
+      "groupNum": groupNum.toString(),
+      "friendStatusId": 1.toString()
+    }));
     var response = await request.close();
     var jsonString = await response.transform(utf8.decoder).join();
     httpClient.close();
@@ -105,23 +135,9 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     });
   }
 
-  _GroupInviteState() {
-    _friendNameController.addListener(() {
-      if (_friendNameController.text.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
-      } else {
-        setState(() {
-          _searchText = _friendNameController.text;
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.only(top: 20),
       child: Column(
@@ -136,7 +152,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildSearch(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.only(
           right: screenSize.height * 0.02, left: screenSize.height * 0.01),
@@ -202,7 +218,8 @@ class _GroupInviteState extends State<GroupInviteWidget> {
                 _friendCheck[_friendListModel.friend[i].friendId] = true;
               }
               for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
-                _bestFriendCheck[_bestFriendListModel.friend[i].friendId] = true;
+                _bestFriendCheck[_bestFriendListModel.friend[i].friendId] =
+                    true;
               }
             } else {
               if (_filteredFriend.length != 0) {
@@ -223,7 +240,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildList(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     if (_searchText.isEmpty) {
       if (_friendListModel != null && _bestFriendListModel != null) {
         return ListView(
@@ -234,7 +251,9 @@ class _GroupInviteState extends State<GroupInviteWidget> {
                   bottom: screenSize.width * 0.02,
                   top: screenSize.width * 0.02),
               child: Text('摯友',
-                  style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
+                  style: TextStyle(
+                      fontSize: screenSize.width * 0.041,
+                      color: Color(0xff7AAAD8))),
             ),
             _buildBestFriendList(context),
             Container(
@@ -243,7 +262,9 @@ class _GroupInviteState extends State<GroupInviteWidget> {
                   bottom: screenSize.width * 0.02,
                   top: screenSize.width * 0.02),
               child: Text('好友',
-                  style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
+                  style: TextStyle(
+                      fontSize: screenSize.width * 0.041,
+                      color: Color(0xff7AAAD8))),
             ),
             _buildFriendList(context)
           ],
@@ -281,7 +302,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Image getImage(String imageString) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     bool isGetImage;
     Image friendImage = Image.asset(
       'assets/images/friend_choose.png',
@@ -289,7 +310,9 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     );
     const Base64Codec base64 = Base64Codec();
     Image image = Image.memory(base64.decode(imageString),
-        width: screenSize.height * 0.04683, height: screenSize.height * 0.04683, fit: BoxFit.fill);
+        width: screenSize.height * 0.04683,
+        height: screenSize.height * 0.04683,
+        fit: BoxFit.fill);
     var resolve = image.image.resolve(ImageConfiguration.empty);
     resolve.addListener(ImageStreamListener((_, __) {
       isGetImage = true;
@@ -298,7 +321,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
       print('error');
     }));
 
-    if (isGetImage == true) {
+    if (isGetImage == null) {
       return image;
     } else {
       return friendImage;
@@ -306,7 +329,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildBestFriendList(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -346,7 +369,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildFriendList(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -386,7 +409,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -427,7 +450,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -468,7 +491,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildCheckButtom(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     return Container(
         alignment: Alignment.bottomCenter,
         child: Row(children: <Widget>[
