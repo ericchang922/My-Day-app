@@ -1,0 +1,20 @@
+{
+    "temporaryContent": [
+        {
+            "groupId": 25,
+            "typeId": 1,
+            "title": "去郊遊",
+            "startTime": "2019-05-02T09:00:00",
+            "endTime": "2022-06-02T09:00:00",
+            "peopleCount": 1
+        },
+        {
+            "groupId": 4,
+            "typeId": 1,
+            "title": "BDE",
+            "startTime": "2019-06-02T17:00:00",
+            "endTime": "2022-06-02T17:00:00",
+            "peopleCount": 2
+        }
+    ]
+}
