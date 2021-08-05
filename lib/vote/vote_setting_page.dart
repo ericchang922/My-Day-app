@@ -1,11 +1,12 @@
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pickers/pickers.dart';
-import 'package:flutter_pickers/style/picker_style.dart';
-import 'package:flutter_pickers/time_picker/model/date_mode.dart';
-import 'package:flutter_pickers/time_picker/model/pduration.dart';
-import 'package:flutter_pickers/time_picker/model/suffix.dart';
+// import 'package:flutter_pickers/pickers.dart';
+// import 'package:flutter_pickers/style/picker_style.dart';
+// import 'package:flutter_pickers/time_picker/model/date_mode.dart';
+// import 'package:flutter_pickers/time_picker/model/pduration.dart';
+// import 'package:flutter_pickers/time_picker/model/suffix.dart';
 
 class VoteSettingPage extends StatefulWidget {
   int groupNum;
@@ -25,20 +26,12 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
   _VoteSettingWidget(this.groupNum, this.title, this.voteItems);
 
   Map _voteSettingCheck = {1: false, 2: false, 3: false, 4: false};
-  String _deadLine = formatDate(
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 8,
-              0)
-          .add(Duration(days: 3)),
-      [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
 
-  String _deadLineFormat = DateTime(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day, 8, 0)
-      .add(Duration(days: 3))
-      .toString();
-
-  DateTime _presetTime = DateTime(
+  DateTime _deadLine = DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day, 8, 0)
       .add(Duration(days: 3));
+
+  String _deadLineValue = "";
 
   var chooseVoteQuantityList = <String>[
     '2',
@@ -57,6 +50,22 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
   bool _visibleChooseVoteQuantity = false;
 
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _deadLineValue = _dateFormat(_deadLine);
+    });
+  }
+
+  String _dateFormat(dateTime) {
+    String dateString = formatDate(
+        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+            dateTime.minute),
+        [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
+    return dateString;
+  }
+
+  @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -73,7 +82,8 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
           ),
         ),
       ),
-      body: _buildVoteSettingWidget(context),
+      body: Container(
+          color: Colors.white, child: _buildVoteSettingWidget(context)),
     );
   }
 
@@ -83,6 +93,46 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
         Expanded(child: _buildVoteSettingItem(context)),
         _buildCheckButtom(context)
       ],
+    );
+  }
+
+  void _deadLinePicker(contex) {
+    var screenSize = MediaQuery.of(context).size;
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => Container(
+        height: screenSize.height * 0.35,
+        color: Colors.white,
+        child: Column(
+          children: [
+            Container(
+              height: screenSize.height * 0.065,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: CupertinoButton(
+                    child: Text('確定'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        _deadLineValue = _dateFormat(_deadLine);
+                      });
+                    }),
+              ),
+            ),
+            Container(
+              height: screenSize.height * 0.28,
+              child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  initialDateTime: DateTime.now(),
+                  onDateTimeChanged: (value) {
+                    setState(() {
+                      _deadLine = value;
+                    });
+                  }),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -126,43 +176,10 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
           visible: _visibleDeadLine,
           child: ListTile(
             contentPadding: EdgeInsets.only(left: screenSize.height * 0.08),
-            title: Text(_deadLine,
+            title: Text(_deadLineValue,
                 style: TextStyle(fontSize: screenSize.width * 0.05)),
             onTap: () {
-              Pickers.showDatePicker(
-                context,
-                pickerStyle: customizeStyle(),
-                mode: DateMode.YMDHM,
-                suffix: Suffix(
-                  years: '年',
-                  month: '月',
-                  days: '日',
-                  hours: ' 時',
-                  minutes: ' 分',
-                ),
-                selectDate: PDuration(
-                    year: _presetTime.year,
-                    month: _presetTime.month,
-                    day: _presetTime.day,
-                    hour: 8,
-                    minute: 0),
-                onConfirm: (p) {
-                  setState(() {
-                    _deadLine = formatDate(
-                        DateTime(p.year, p.month, p.day, p.hour, p.minute),
-                        [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
-                    _presetTime =
-                        DateTime(p.year, p.month, p.day, p.hour, p.minute);
-                    _deadLineFormat = DateTime(
-                      p.year,
-                      p.month,
-                      p.day,
-                      p.hour,
-                      p.minute,
-                    ).toString();
-                  });
-                },
-              );
+              _deadLinePicker(context);
             },
           ),
         ),
@@ -331,10 +348,10 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
             color: Theme.of(context).primaryColor,
             textColor: Colors.white,
             onPressed: () {
-              print("title："+title);
+              print("title：" + title);
               print("voteItems：${voteItems}");
               if (_voteSettingCheck[1] == true) {
-                print("deadLine：" + _deadLineFormat);
+                print("deadLine：" + _deadLine.toString());
               } else {
                 print("deadLine：null");
               }
@@ -350,30 +367,30 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
     ]);
   }
 
-  PickerStyle customizeStyle() {
-    var screenSize = MediaQuery.of(context).size;
+  // PickerStyle customizeStyle() {
+  //   var screenSize = MediaQuery.of(context).size;
 
-    Widget _cancelButton = Container(
-        margin: EdgeInsets.only(left: screenSize.width * 0.03),
-        child: Text(
-          '取消',
-          style: TextStyle(
-            fontSize: screenSize.width * 0.041,
-            color: Color(0xffb4b4b4),
-          ),
-        ));
-    Widget _commitButton = Container(
-      margin: EdgeInsets.only(right: screenSize.width * 0.03),
-      child: Text(
-        '確認',
-        style: TextStyle(
-            fontSize: screenSize.width * 0.041,
-            color: Theme.of(context).primaryColor),
-      ),
-    );
-    return PickerStyle(
-      cancelButton: _cancelButton,
-      commitButton: _commitButton,
-    );
-  }
+  //   Widget _cancelButton = Container(
+  //       margin: EdgeInsets.only(left: screenSize.width * 0.03),
+  //       child: Text(
+  //         '取消',
+  //         style: TextStyle(
+  //           fontSize: screenSize.width * 0.041,
+  //           color: Color(0xffb4b4b4),
+  //         ),
+  //       ));
+  //   Widget _commitButton = Container(
+  //     margin: EdgeInsets.only(right: screenSize.width * 0.03),
+  //     child: Text(
+  //       '確認',
+  //       style: TextStyle(
+  //           fontSize: screenSize.width * 0.041,
+  //           color: Theme.of(context).primaryColor),
+  //     ),
+  //   );
+  //   return PickerStyle(
+  //     cancelButton: _cancelButton,
+  //     commitButton: _commitButton,
+  //   );
+  // }
 }
