@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
 import 'package:animations/animations.dart';
 // flutter
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   int _index = 0;
 
-  final _pages = <Widget>[HomePage(), GroupListPage(), HomePage(), Learn()];
+  final _pages = <Widget>[HomePage(), GroupListPage(), TemporaryGroupListPage(), Learn()];
 
   void _onTapped(int index) {
     setState(() {
@@ -31,7 +32,7 @@ class _Home extends State<Home> {
     final _appBars = <Widget>[
       homePageAppBar(context),
       groupListAppBar(context),
-      homePageAppBar(context),
+      temporaryGroupListAppBar(context),
       homePageAppBar(context)
     ];
     Color color = Theme.of(context).primaryColor;
