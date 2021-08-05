@@ -99,8 +99,8 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
           ),
           body: TabBarView(
             children: <Widget>[
-              _buildFutureScheduleList(context),
-              _buildPastScheduleList(context),
+              Container(color: Colors.white, child: _buildFutureScheduleList(context)),
+              Container(color: Colors.white,  child: _buildPastScheduleList(context)),
             ],
           )),
     );
@@ -111,22 +111,6 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
 
     String _futureScheduleTime(index) {
       var schedule = _commonScheduleListModel.futureSchedule[index];
-      String startDate = formatDate(
-          DateTime(
-            schedule.startTime.year,
-            schedule.startTime.month,
-            schedule.startTime.day,
-          ),
-          [yyyy, '年', mm, '月', dd, '日 ']);
-
-      String endDate = formatDate(
-          DateTime(
-            schedule.endTime.year,
-            schedule.endTime.month,
-            schedule.endTime.day,
-          ),
-          [yyyy, '年', mm, '月', dd, '日 ']);
-
       String startTime = formatDate(
           DateTime(
               schedule.startTime.year,
@@ -144,7 +128,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
               schedule.endTime.hour,
               schedule.endTime.minute),
           [HH, ':', nn]);
-      if (startDate == endDate) {
+      if (schedule.startTime.year == schedule.endTime.year) {
         return startTime + " - " + endTime;
       } else {
         return startTime + " - ";
@@ -246,22 +230,6 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
 
     String _pastScheduleTime(index) {
       var schedule = _commonScheduleListModel.pastSchedule[index];
-      String startDate = formatDate(
-          DateTime(
-            schedule.startTime.year,
-            schedule.startTime.month,
-            schedule.startTime.day,
-          ),
-          [yyyy, '年', mm, '月', dd, '日 ']);
-
-      String endDate = formatDate(
-          DateTime(
-            schedule.endTime.year,
-            schedule.endTime.month,
-            schedule.endTime.day,
-          ),
-          [yyyy, '年', mm, '月', dd, '日 ']);
-
       String startTime = formatDate(
           DateTime(
               schedule.startTime.year,
@@ -279,7 +247,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
               schedule.endTime.hour,
               schedule.endTime.minute),
           [HH, ':', nn]);
-      if (startDate == endDate) {
+      if (schedule.startTime.year == schedule.endTime.year) {
         return startTime + " - " + endTime;
       } else {
         return startTime + " - ";
