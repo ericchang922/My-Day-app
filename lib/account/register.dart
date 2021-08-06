@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'learn.dart';
+
 import 'login.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -19,7 +19,7 @@ class RegisterWidget extends StatelessWidget {
            title: Text('註冊',
               style:
                   TextStyle(color: Colors.white,fontSize: 22)),
-          backgroundColor: PrimaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Register(),
         bottomNavigationBar: Container(

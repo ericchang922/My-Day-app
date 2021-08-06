@@ -1,9 +1,7 @@
 // import 'package:My_Day_app/main.dart';
 import 'package:flutter/material.dart';
 
-import 'learn.dart';
-import 'home.dart';
-import 'notes.dart';
+
 
 class NotesAddPage extends StatelessWidget {
   @override

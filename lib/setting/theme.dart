@@ -4,10 +4,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'main.dart';
-import 'home.dart';
-import 'settings.dart';
-import 'learn.dart';
+
 
 const PrimaryColor = const Color(0xFFF86D67);
 

@@ -1,12 +1,13 @@
 import 'dart:ffi';
 
+import 'package:My_Day_app/studyplan/learn.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
 import 'package:animations/animations.dart';
 // flutter
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 // my day
-import 'package:My_Day_app/learn.dart';
+
 import 'package:My_Day_app/my_day_icon.dart';
 import 'group/group_list_page.dart';
 import 'home_page.dart';

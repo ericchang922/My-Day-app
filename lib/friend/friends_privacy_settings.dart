@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'privacy.dart';
+
 
 const PrimaryColor = const Color(0xFFF86D67);
 

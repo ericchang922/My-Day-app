@@ -4,10 +4,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'home.dart';
-import 'main.dart';
-import 'friends.dart';
-import 'learn.dart';
+
 const PrimaryColor = const Color(0xFFF86D67);
 class FriendInvitationPage extends StatelessWidget {
   
