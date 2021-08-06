@@ -11,25 +11,14 @@ import 'change_password_personal.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
-void main() {runApp(MyApp());}
-
 class PersonalInformationPage extends StatelessWidget {
   
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          platform: TargetPlatform.iOS,
-        ),
-      routes: <String, WidgetBuilder> {
-        '/home': (BuildContext context) => new Home(),
-        '/learn' : (BuildContext context) => new LearnPage(),
-      },
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         body: PersonalInformation(),
-      ),
+      
     );
   }
 }
@@ -47,8 +36,7 @@ class PersonalInformation extends StatelessWidget {
         leading:IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SettingsPage()));
+            Navigator.of(context).pop();
           },
         ) 
       ),

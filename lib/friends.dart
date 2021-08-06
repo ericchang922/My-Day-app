@@ -1,25 +1,14 @@
 // import 'package:My_Day_app/main.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'learn.dart';
-import 'home.dart';
 import 'friends_add.dart';
 import 'bestfriend.dart';
 import 'friends_invitation.dart';
-import 'settings.dart';
 class FriendsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new Home(),
-        
-        '/learn' : (BuildContext context) => new LearnPage(),
-      },
-      home: Scaffold(
+    return Scaffold(
         body: FriendsPageWidget(),
-      ),
+      
     );
   }
 }
@@ -37,8 +26,7 @@ class FriendsPageWidget extends StatelessWidget {
         leading:IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
-            Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()));
+            Navigator.of(context).pop();
           },
         ), 
         actions: <Widget>[

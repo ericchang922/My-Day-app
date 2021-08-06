@@ -11,23 +11,15 @@ import 'learn.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
-void main() {
-  runApp(MyApp());
-}
+
 
 class ThemePage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new Home(),
-        '/learn': (BuildContext context) => new LearnPage(),
-      },
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         body: SwitchDemo(),
-      ),
+    
     );
   }
 }
@@ -41,7 +33,7 @@ class Theme extends State {
   get child => null;
   get left => null;
   bool _hasBeenPressed = false;
-  bool _isButtonDisabled;
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +43,7 @@ class Theme extends State {
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()));
+              Navigator.of(context).pop();
             },
           )),
       body: ListView(
