@@ -3,13 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-
 import 'main.dart';
 import 'notes.dart';
 import 'readplan.dart';
 const PrimaryColor = const Color(0xFFF86D67);
-
-void main() {runApp(MyApp());}
 
 class LearnPage extends StatelessWidget {
   
@@ -20,10 +17,6 @@ class LearnPage extends StatelessWidget {
       theme: ThemeData(
           platform: TargetPlatform.iOS,
         ),
-      routes: <String, WidgetBuilder> {
-        '/home': (BuildContext context) => new HomePageWidget(),
-        '/learn' : (BuildContext context) => new LearnPage(),
-      },
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Learn(),
@@ -43,14 +36,7 @@ class Learn extends StatelessWidget {
       appBar: AppBar( 
         backgroundColor: Color(0xffF86D67),
         title:Text('讀書',style: TextStyle(fontSize: 20)),
-        leading:IconButton(
-          icon: Icon(Icons.chevron_left),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MyApp()));
-                
-          },
-        ) 
+        
       ),
       body: ListView(
         children: <Widget>[
@@ -62,7 +48,7 @@ class Learn extends StatelessWidget {
               minWidth: double.infinity,
               onPressed: (){
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ReadPlanPage()));
+                MaterialPageRoute(builder: (context) => ReadPlan()));
                 
               },
               child: Row(
@@ -82,12 +68,12 @@ class Learn extends StatelessWidget {
             ),
           ),
           Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Container(
-                  margin: EdgeInsets.only(top: 4.0),
-                  color: Color(0xffE3E3E3),
-                  constraints: BoxConstraints.expand(height: 1.0),
-                )),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Container(
+              margin: EdgeInsets.only(top: 4.0),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            )),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
             // ignore: deprecated_member_use
@@ -96,7 +82,7 @@ class Learn extends StatelessWidget {
               minWidth: double.infinity,
               onPressed: (){
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => NotesPage()));
+                MaterialPageRoute(builder: (context) => App()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,3 +112,4 @@ class Learn extends StatelessWidget {
     );
   }
 }
+
