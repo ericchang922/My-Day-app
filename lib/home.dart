@@ -34,13 +34,13 @@ class _Home extends State<Home> {
       homePageAppBar(context),
       groupListAppBar(context),
       temporaryGroupListAppBar(context),
-      homePageAppBar(context)
+      learnAppBar
     ];
     Color color = Theme.of(context).primaryColor;
     var size = MediaQuery.of(context).size;
     double width = size.width;
     double height = size.height;
-    double iconSize = width * 0.08;
+    double iconSize = height * 0.04;
 
     return Container(
       color: color,
@@ -60,7 +60,7 @@ class _Home extends State<Home> {
               child: _pages[_index], // 頁面
             ),
             bottomNavigationBar: SizedBox(
-              height: height*0.08,
+              height: height*0.09,
               child: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
                 fixedColor: Colors.white,

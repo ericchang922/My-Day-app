@@ -7,17 +7,20 @@ import 'package:flutter/material.dart';
 import 'notes.dart';
 import 'readplan.dart';
 
-const PrimaryColor = const Color(0xFFF86D67);
+
+AppBar learnAppBar = AppBar(
+  backgroundColor: Color(0xffF86D67),
+  title: Text('讀書', style: TextStyle(fontSize: 20)),
+);
 
 class LearnPage extends StatelessWidget {
-  
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          platform: TargetPlatform.iOS,
-        ),
+        platform: TargetPlatform.iOS,
+      ),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Learn(),
@@ -26,6 +29,8 @@ class LearnPage extends StatelessWidget {
   }
 }
 
+
+
 class Learn extends StatelessWidget {
   get child => null;
   get left => null;
@@ -33,12 +38,6 @@ class Learn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      appBar: AppBar( 
-        backgroundColor: Color(0xffF86D67),
-        title:Text('讀書',style: TextStyle(fontSize: 20)),
-        
-      ),
       body: ListView(
         children: <Widget>[
           Padding(
@@ -47,17 +46,17 @@ class Learn extends StatelessWidget {
             child: FlatButton(
               height: 60,
               minWidth: double.infinity,
-              onPressed: (){
+              onPressed: () {
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ReadPlan()));
-                
+                    MaterialPageRoute(builder: (context) => ReadPlan()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     '讀書計畫',
-                    style: TextStyle(fontSize: 20,
+                    style: TextStyle(
+                      fontSize: 20,
                     ),
                   ),
                   Icon(
@@ -69,28 +68,29 @@ class Learn extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Container(
-              margin: EdgeInsets.only(top: 4.0),
-              color: Color(0xffE3E3E3),
-              constraints: BoxConstraints.expand(height: 1.0),
-            )),
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Container(
+                margin: EdgeInsets.only(top: 4.0),
+                color: Color(0xffE3E3E3),
+                constraints: BoxConstraints.expand(height: 1.0),
+              )),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
             // ignore: deprecated_member_use
             child: FlatButton(
               height: 60,
               minWidth: double.infinity,
-              onPressed: (){
-                Navigator.push(context,
-                MaterialPageRoute(builder: (context) => App()));
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => App()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     '筆記',
-                    style: TextStyle(fontSize: 20,
+                    style: TextStyle(
+                      fontSize: 20,
                     ),
                   ),
                   Icon(
@@ -102,15 +102,14 @@ class Learn extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Container(
-              margin: EdgeInsets.only(top: 4.0),
-              color: Color(0xffE3E3E3),
-              constraints: BoxConstraints.expand(height: 1.0),
-            )),
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Container(
+                margin: EdgeInsets.only(top: 4.0),
+                color: Color(0xffE3E3E3),
+                constraints: BoxConstraints.expand(height: 1.0),
+              )),
         ],
       ),
     );
   }
 }
-
