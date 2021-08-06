@@ -34,8 +34,7 @@ class Settings extends State {
         leading:IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MyApp()));
+            Navigator.of(context).pop();
           },
         ), 
       ),
