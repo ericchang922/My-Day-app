@@ -31,8 +31,7 @@ class Notice extends State {
         leading:IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SettingsPage()));
+            Navigator.of(context).pop();
           },
         ), 
       ),
