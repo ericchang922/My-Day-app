@@ -1,71 +1,75 @@
+import 'package:My_Day_app/home.dart';
 import 'package:flutter/material.dart';
-import 'forgetPassword.dart';
-import 'learn.dart';
-import 'login.dart';
+import 'register.dart';
+import 'forget_password.dart';
 
-class ChangepwPage extends StatelessWidget {
-  // This widget is the root of your application.
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false, home: ChangepwWidget());
+    return MaterialApp(routes: <String, WidgetBuilder>{
+      '/login': (BuildContext context) => new LoginPage(),
+      '/home': (BuildContext context) => new Home(),
+    }, debugShowCheckedModeBanner: false, home: LoginWidget());
   }
 }
 
-class ChangepwWidget extends StatelessWidget {
+class LoginWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('更改密碼',
-            style:
-              TextStyle(color: Colors.white,fontSize: 22)),
-          backgroundColor: PrimaryColor,
+          title:
+              Text('登入', style: TextStyle(color: Colors.white, fontSize: 22)),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
-        body: Changepw(),
+        body: Login(),
         bottomNavigationBar: Container(
             child: Row(children: <Widget>[
           Expanded(
             // ignore: deprecated_member_use
-            child: FlatButton(
-              height: 50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Text(
-                '取消',
-                style: TextStyle(fontSize: 18),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 0, 150),
+              child: FlatButton(
+                height: 60,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+                child: Text(
+                  '忘記密碼',
+                  style: TextStyle(fontSize: 15),
+                ),
+                textColor: Color(0xffF86D67),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ForgetpwPage()));
+                },
               ),
-              color: Color(0xffFFAAA6),
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ForgetpwPage()));
-              },
             ),
           ),
           Expanded(
             // ignore: deprecated_member_use
-            child: FlatButton(
-              height: 50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Text(
-                '確認',
-                style: TextStyle(fontSize: 18),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 150),
+              child: FlatButton(
+                height: 60,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+                child: Text(
+                  '我要註冊',
+                  style: TextStyle(fontSize: 15),
+                ),
+                textColor: Color(0xffF86D67),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => RegisterPage()));
+                },
               ),
-              color: Color(0xffF86D67),
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
-              },
             ),
           ),
         ])));
   }
 }
 
-class Changepw extends StatelessWidget {
+class Login extends StatelessWidget {
   get direction => null;
   get border => null;
   get decoration => null;
@@ -81,9 +85,9 @@ class Changepw extends StatelessWidget {
             body: ListView(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.fromLTRB(35, 50, 35, 0),
+                  padding: EdgeInsets.fromLTRB(35, 150, 35, 0),
                   child: ListTile(
-                    title: Text('新密碼：',style: TextStyle(fontSize: 20)),
+                    title: Text('帳號：', style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 Padding(
@@ -107,11 +111,10 @@ class Changepw extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 Padding(
                   padding: EdgeInsets.fromLTRB(35, 0, 35, 0),
                   child: ListTile(
-                    title: Text('再次輸入密碼：',style: TextStyle(fontSize: 20)),
+                    title: Text('密碼：', style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 Padding(
@@ -134,6 +137,23 @@ class Changepw extends StatelessWidget {
                         ),
                       ),
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(55, 25, 55, 0),
+                  child: FlatButton(
+                    height: 40,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Text(
+                      '登入',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    color: Color(0xffF86D67),
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/home');
+                    },
                   ),
                 ),
               ],

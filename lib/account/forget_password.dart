@@ -1,76 +1,70 @@
+import 'package:My_Day_app/account/change_password.dart';
 import 'package:flutter/material.dart';
-import 'learn.dart';
-import 'home.dart';
-import 'register.dart';
-import 'forgetPassword.dart';
 
-class LoginPage extends StatelessWidget {
+import 'login.dart';
+
+class ForgetpwPage extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(routes: <String, WidgetBuilder>{
-      '/login' : (BuildContext context) => new LoginPage(),
-      '/home': (BuildContext context) => new Home(),
-    }, debugShowCheckedModeBanner: false, home: LoginWidget());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false, home: ForgetpwWidget());
   }
 }
 
-class LoginWidget extends StatelessWidget {
+class ForgetpwWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title:
-              Text('登入', style: TextStyle(color: Colors.white, fontSize: 22)),
-          backgroundColor: PrimaryColor,
+              Text('忘記密碼', style: TextStyle(color: Colors.white, fontSize: 22)),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
-        body: Login(),
+        body: Forgetpw(),
         bottomNavigationBar: Container(
             child: Row(children: <Widget>[
           Expanded(
             // ignore: deprecated_member_use
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 0, 150),
-              child: FlatButton(
-                height: 60,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0)),
-                child: Text(
-                  '忘記密碼',
-                  style: TextStyle(fontSize: 15),
-                ),
-                textColor: Color(0xffF86D67),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ForgetpwPage()));
-                },
+            child: FlatButton(
+              height: 50,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+              child: Text(
+                '取消',
+                style: TextStyle(fontSize: 18),
               ),
+              color: Color(0xffFFAAA6),
+              textColor: Colors.white,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
             ),
           ),
           Expanded(
             // ignore: deprecated_member_use
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 10, 150),
-              child: FlatButton(
-                height: 60,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0)),
-                child: Text(
-                  '我要註冊',
-                  style: TextStyle(fontSize: 15),
-                ),
-                textColor: Color(0xffF86D67),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()));
-                },
+            child: FlatButton(
+              height: 50,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+              child: Text(
+                '確認',
+                style: TextStyle(fontSize: 18),
               ),
+              color: Color(0xffF86D67),
+              textColor: Colors.white,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ChangepwPage()));
+              },
             ),
           ),
         ])));
   }
 }
 
-class Login extends StatelessWidget {
+class Forgetpw extends StatelessWidget {
   get direction => null;
   get border => null;
   get decoration => null;
@@ -86,9 +80,9 @@ class Login extends StatelessWidget {
             body: ListView(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.fromLTRB(35, 150, 35, 0),
+                  padding: EdgeInsets.fromLTRB(35, 50, 35, 0),
                   child: ListTile(
-                    title: Text('帳號：', style: TextStyle(fontSize: 20)),
+                    title: Text('電子信箱：', style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 Padding(
@@ -113,9 +107,23 @@ class Login extends StatelessWidget {
                   ),
                 ),
                 Padding(
+                  padding: EdgeInsets.fromLTRB(155, 0, 45, 0),
+                  child: FlatButton(
+                    height: 30,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                    child: Text(
+                      '發送驗證碼',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    textColor: Color(0xffF86D67),
+                    onPressed: () {},
+                  ),
+                ),
+                Padding(
                   padding: EdgeInsets.fromLTRB(35, 0, 35, 0),
                   child: ListTile(
-                    title: Text('密碼：', style: TextStyle(fontSize: 20)),
+                    title: Text('驗證碼：', style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 Padding(
@@ -138,23 +146,6 @@ class Login extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(55, 25, 55, 0),
-                  child: FlatButton(
-                    height: 40,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                      '登入',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    color: Color(0xffF86D67),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/home');
-                    },
                   ),
                 ),
               ],

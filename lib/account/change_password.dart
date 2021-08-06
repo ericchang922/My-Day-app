@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'learn.dart';
-import 'login.dart';
-import 'changePassword.dart';
+import 'forget_password.dart';
 
-class ForgetpwPage extends StatelessWidget {
+import 'login.dart';
+
+class ChangepwPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false, home: ForgetpwWidget());
+        debugShowCheckedModeBanner: false, home: ChangepwWidget());
   }
 }
 
-class ForgetpwWidget extends StatelessWidget {
+class ChangepwWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('忘記密碼',
-              style: TextStyle( color: Colors.white, fontSize: 22)),
-          backgroundColor: PrimaryColor,
+          title:
+              Text('更改密碼', style: TextStyle(color: Colors.white, fontSize: 22)),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
-        body: Forgetpw(),
+        body: Changepw(),
         bottomNavigationBar: Container(
             child: Row(children: <Widget>[
           Expanded(
@@ -38,7 +38,7 @@ class ForgetpwWidget extends StatelessWidget {
               textColor: Colors.white,
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
+                    MaterialPageRoute(builder: (context) => ForgetpwPage()));
               },
             ),
           ),
@@ -56,7 +56,7 @@ class ForgetpwWidget extends StatelessWidget {
               textColor: Colors.white,
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ChangepwPage()));
+                    MaterialPageRoute(builder: (context) => LoginPage()));
               },
             ),
           ),
@@ -64,7 +64,7 @@ class ForgetpwWidget extends StatelessWidget {
   }
 }
 
-class Forgetpw extends StatelessWidget {
+class Changepw extends StatelessWidget {
   get direction => null;
   get border => null;
   get decoration => null;
@@ -82,7 +82,7 @@ class Forgetpw extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.fromLTRB(35, 50, 35, 0),
                   child: ListTile(
-                    title: Text('電子信箱：', style: TextStyle(fontSize: 20)),
+                    title: Text('新密碼：', style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 Padding(
@@ -107,23 +107,9 @@ class Forgetpw extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(155, 0, 45, 0),
-                  child: FlatButton(
-                    height: 30,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0)),
-                    child: Text(
-                      '發送驗證碼',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: () {},
-                  ),
-                ),
-                Padding(
                   padding: EdgeInsets.fromLTRB(35, 0, 35, 0),
                   child: ListTile(
-                    title: Text('驗證碼：', style: TextStyle(fontSize: 20)),
+                    title: Text('再次輸入密碼：', style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 Padding(

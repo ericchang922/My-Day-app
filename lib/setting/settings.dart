@@ -1,11 +1,12 @@
+import 'package:My_Day_app/account/login.dart';
+import 'package:My_Day_app/friend/friends.dart';
 import 'package:flutter/material.dart';
 import 'personal_information.dart';
-import 'main.dart';
+
 import 'notice.dart';
 import 'privacy.dart';
 import 'theme.dart';
-import 'login.dart';
-import 'friends.dart';
+
 const PrimaryColor = const Color(0xFFF86D67);
 class SettingsPage extends StatefulWidget {
   @override
