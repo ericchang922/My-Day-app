@@ -15,13 +15,15 @@ class GroupManagerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text('管理者', style: TextStyle(fontSize: 22)),
+        title:
+            Text('管理者', style: TextStyle(fontSize: screenSize.width * 0.052)),
         leading: Container(
-          margin: EdgeInsets.only(left: 5),
+          margin: EdgeInsets.only(left: screenSize.height * 0.02),
           child: GestureDetector(
             child: Icon(Icons.chevron_left),
             onTap: () {
@@ -30,7 +32,7 @@ class GroupManagerPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(children: [Expanded(child: GroupManagerWidget(groupNum))]),
+      body: Container(color: Colors.white, child: GroupManagerWidget(groupNum)),
     );
   }
 }
@@ -53,6 +55,8 @@ class _GroupManagerState extends State<GroupManagerWidget> {
 
   int groupNum;
   _GroupManagerState(this.groupNum);
+
+  bool _isManager = false;
 
   @override
   void initState() {
@@ -80,20 +84,16 @@ class _GroupManagerState extends State<GroupManagerWidget> {
         if (_groupMemberListModel.member[i].statusId == 4) {
           _managerList.add(_groupMemberListModel.member[i]);
         }
-      }
-
-      for (int i = 0; i < _groupMemberListModel.member.length; i++) {
         if (_groupMemberListModel.member[i].statusId == 1) {
           _memberList.add(_groupMemberListModel.member[i]);
         }
       }
-
-      // for (int i = 0; i < _groupMemberModel.member.length; i++) {
-      //   if (_groupMemberModel.member[i].memberName == uid) {
-      //     _checkIsManagerList.add(_groupMemberModel.member[i]);
-      //   }
-      // }
-      // print(_checkIsManagerList.length);
+      for (int i = 0; i < _managerList.length; i++) {
+        if (_managerList[i].memberId == uid) {
+          _isManager = true;
+        }
+      }
+      print(_isManager);
     });
   }
 
@@ -105,33 +105,97 @@ class _GroupManagerState extends State<GroupManagerWidget> {
   }
 
   Widget _buildList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     if (_groupMemberListModel != null) {
-      return _buildSettingManagerWidget(context);
+      if (_isManager == true) {
+        return _buildSettingManagerWidget(context);
+      } else {
+        return ListView(
+          children: [
+            Container(
+                margin: EdgeInsets.only(top: screenSize.height * 0.02),
+                child: _buildManagerList(context))
+          ],
+        );
+      }
     } else {
       return Center(child: CircularProgressIndicator());
     }
   }
 
   Widget _buildSettingManagerWidget(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView(
       children: [
         Container(
-          margin: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+          margin: EdgeInsets.only(
+              left: screenSize.height * 0.03,
+              bottom: screenSize.height * 0.02,
+              top: screenSize.height * 0.02),
           child: Text('管理者',
-              style: TextStyle(fontSize: 16, color: Color(0xff7AAAD8))),
+              style: TextStyle(
+                  fontSize: screenSize.width * 0.041,
+                  color: Color(0xff7AAAD8))),
         ),
-        _buildDeleteManagerList(context),
+        _buildManagerList(context),
         Container(
-          margin: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+          margin: EdgeInsets.only(
+              left: screenSize.height * 0.03,
+              bottom: screenSize.height * 0.02,
+              top: screenSize.height * 0.02),
           child: Text('新增管理者',
-              style: TextStyle(fontSize: 16, color: Color(0xff7AAAD8))),
+              style: TextStyle(
+                  fontSize: screenSize.width * 0.041,
+                  color: Color(0xff7AAAD8))),
         ),
         _buildMemberList(context)
       ],
     );
   }
 
+  Image getImage(String imageString) {
+    var screenSize = MediaQuery.of(context).size;
+    bool isGetImage;
+    Image friendImage = Image.asset(
+      'assets/images/friend_choose.png',
+      width: screenSize.height * 0.04683,
+    );
+    const Base64Codec base64 = Base64Codec();
+    Image image = Image.memory(base64.decode(imageString),
+        width: screenSize.height * 0.04683,
+        height: screenSize.height * 0.04683,
+        fit: BoxFit.fill);
+    var resolve = image.image.resolve(ImageConfiguration.empty);
+    resolve.addListener(ImageStreamListener((_, __) {
+      isGetImage = true;
+    }, onError: (Object exception, StackTrace stackTrace) {
+      isGetImage = false;
+      print('error');
+    }));
+    if (isGetImage == null) {
+      return image;
+    } else {
+      return friendImage;
+    }
+  }
+
+  Widget _addManager(memberId) {
+    var screenSize = MediaQuery.of(context).size;
+    if (memberId != uid && _isManager == true) {
+      return InkWell(
+        onTap: () {},
+        child: Text('新增',
+            style: TextStyle(
+                fontSize: screenSize.width * 0.041,
+                color: Theme.of(context).primaryColor)),
+      );
+    } else {
+      return Container(height: 0, width: 0);
+    }
+  }
+
   Widget _buildMemberList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -140,23 +204,16 @@ class _GroupManagerState extends State<GroupManagerWidget> {
         var members = _memberList[index];
         const Base64Codec base64 = Base64Codec();
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.055, vertical: 0.0),
           leading: ClipOval(
-            child: Image.memory(base64.decode(members.memberPhoto), width: 40),
+            child: getImage(members.memberPhoto),
           ),
           title: Text(
             members.memberName,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: screenSize.width * 0.041),
           ),
-          trailing: FlatButton(
-            height: 0,
-            minWidth: 0,
-            padding: EdgeInsets.all(0),
-            onPressed: () {},
-            child: Text('新增',
-                style: TextStyle(
-                    fontSize: 16, color: Theme.of(context).primaryColor)),
-          ),
+          trailing: _addManager(members.memberId),
           onTap: () {},
         );
       },
@@ -166,41 +223,22 @@ class _GroupManagerState extends State<GroupManagerWidget> {
     );
   }
 
-  Widget _buildDeleteManagerList(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _managerList.length,
-      itemBuilder: (BuildContext context, int index) {
-        var members = _managerList[index];
-        const Base64Codec base64 = Base64Codec();
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
-          leading: ClipOval(
-            child: Image.memory(base64.decode(members.memberPhoto), width: 40),
-          ),
-          title: Text(
-            members.memberName,
-            style: TextStyle(fontSize: 18),
-          ),
-          trailing: FlatButton(
-            height: 0,
-            minWidth: 0,
-            padding: EdgeInsets.all(0),
-            onPressed: () {},
-            child: Text('刪除',
-                style: TextStyle(fontSize: 16, color: Color(0xffAAAAAA))),
-          ),
-          onTap: () {},
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Divider();
-      },
-    );
+  Widget _deleteManager(memberId) {
+    var screenSize = MediaQuery.of(context).size;
+    if (memberId != uid && _isManager == true) {
+      return InkWell(
+        onTap: () {},
+        child: Text('刪除',
+            style: TextStyle(
+                fontSize: screenSize.width * 0.041, color: Color(0xffAAAAAA))),
+      );
+    } else {
+      return Container(height: 0, width: 0);
+    }
   }
 
   Widget _buildManagerList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -209,14 +247,16 @@ class _GroupManagerState extends State<GroupManagerWidget> {
         var members = _managerList[index];
         const Base64Codec base64 = Base64Codec();
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.055, vertical: 0.0),
           leading: ClipOval(
-            child: Image.memory(base64.decode(members.memberPhoto), width: 40),
+            child: getImage(members.memberPhoto),
           ),
           title: Text(
             members.memberName,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: screenSize.width * 0.041),
           ),
+          trailing: _deleteManager(members.memberId),
           onTap: () {},
         );
       },

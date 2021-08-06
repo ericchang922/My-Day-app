@@ -9,6 +9,7 @@ Future<bool> groupJoinDialog(BuildContext context) async {
       builder: (BuildContext context) {
         var screenSize = MediaQuery.of(context).size;
         return AlertDialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius:
                   BorderRadius.all(Radius.circular(screenSize.height * 0.03))),

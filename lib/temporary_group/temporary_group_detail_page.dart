@@ -1,43 +1,38 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/common_note/common_note_list_page.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
-import 'package:My_Day_app/common_studyplan/common_studyplan_list_page.dart';
+import 'package:My_Day_app/group/group_invite_page.dart';
+import 'package:My_Day_app/group/group_member_page.dart';
+import 'package:My_Day_app/group/group_setting_page.dart';
 import 'package:My_Day_app/models/get_group_model.dart';
 import 'package:My_Day_app/models/group_log_model.dart';
+import 'package:My_Day_app/vote/vote_list_page.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
 import 'package:date_format/date_format.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'group_invite_page.dart';
-import 'group_member_page.dart';
-import 'group_setting_page.dart';
-import '../vote/vote_list_page.dart';
-
-class GroupDetailPage extends StatefulWidget {
+class TemporaryGroupDetailPage extends StatefulWidget {
   int groupNum;
-  GroupDetailPage(this.groupNum);
+  TemporaryGroupDetailPage(this.groupNum);
 
   @override
-  _GroupDetailWidget createState() => new _GroupDetailWidget(groupNum);
+  _TemporaryGroupDetailWidget createState() =>
+      new _TemporaryGroupDetailWidget(groupNum);
 }
 
-class _GroupDetailWidget extends State<GroupDetailPage> {
+class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage> {
+  int groupNum;
+  _TemporaryGroupDetailWidget(this.groupNum);
+
   GetGroupModel _getGroupModel = null;
   GroupLogModel _groupLogModel = null;
 
-  List<Widget> _votesList = [];
-  List _groupLogDate = [];
-  List _groupLogDateIsShow = [];
-
-  int groupNum;
   String uid = 'lili123';
 
-  _GroupDetailWidget(this.groupNum);
+  List<Widget> votesList = [];
+  List _groupLogDate = [];
+  List _groupLogDateIsShow = [];
 
   @override
   void initState() {
@@ -48,7 +43,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
   }
 
   void _getGroupRequest() async {
-    // var jsonString = await rootBundle.loadString('assets/json/get_group.json');
+    // var reponse = await rootBundle.loadString('assets/json/get_group.json');
 
     var httpClient = HttpClient();
     var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
@@ -247,10 +242,10 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
   Widget _buildVote(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     setState(() {
-      _votesList = [];
+      votesList = [];
       for (int i = 0; i < _getGroupModel.vote.length; i++) {
         var votes = _getGroupModel.vote[i];
-        _votesList.add(
+        votesList.add(
           ListTile(
               contentPadding: EdgeInsets.symmetric(
                   horizontal: screenSize.width * 0.05, vertical: 0.0),
@@ -298,7 +293,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
                   ),
                 ),
                 backgroundColor: Theme.of(context).primaryColorDark,
-                children: _votesList),
+                children: votesList),
           ),
         ),
       ],
@@ -415,46 +410,6 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => CommonScheduleListPage(groupNum)));
-            },
-          ),
-          Divider(height: 1),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(
-                horizontal: screenSize.width * 0.08,
-                vertical: screenSize.height * 0.01),
-            title: Text('共同讀書計畫',
-                style: TextStyle(fontSize: screenSize.width * 0.052)),
-            leading: Image.asset(
-              'assets/images/share_studyplan.png',
-              width: screenSize.width * 0.08,
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: Color(0xffE3E3E3),
-            ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CommonStudyPlanListPage(groupNum)));
-            },
-          ),
-          Divider(height: 1),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(
-                horizontal: screenSize.width * 0.08,
-                vertical: screenSize.height * 0.01),
-            leading: Image.asset(
-              'assets/images/note.png',
-              width: screenSize.width * 0.08,
-            ),
-            title: Text('共同筆記',
-                style: TextStyle(fontSize: screenSize.width * 0.052)),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: Color(0xffE3E3E3),
-            ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CommonNoteListPage(groupNum)));
             },
           ),
         ],

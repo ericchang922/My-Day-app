@@ -35,14 +35,14 @@ class _VoteListWidget extends State<VoteListPage> {
   }
 
   Future<void> _voteListRequest() async {
-    var jsonString = await rootBundle.loadString('assets/json/vote_list.json');
+    // var jsonString = await rootBundle.loadString('assets/json/vote_list.json');
 
-    // var httpClient = HttpClient();
-    // var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-    //     '/vote/get_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
-    // var response = await request.close();
-    // var jsonString = await response.transform(utf8.decoder).join();
-    // httpClient.close();
+    var httpClient = HttpClient();
+    var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
+        '/vote/get_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
+    var response = await request.close();
+    var jsonString = await response.transform(utf8.decoder).join();
+    httpClient.close();
 
     var jsonMap = json.decode(jsonString);
 
@@ -79,6 +79,7 @@ class _VoteListWidget extends State<VoteListPage> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text('投票',
                 style: TextStyle(fontSize: screenSize.width * 0.052)),
             leading: Container(
@@ -132,8 +133,8 @@ class _VoteListWidget extends State<VoteListPage> {
           ),
           body: TabBarView(
             children: <Widget>[
-              _buildVoteList(context),
-              _buildVoteEndList(context),
+              Container(color: Colors.white, child: _buildVoteList(context)),
+              Container(color: Colors.white, child: _buildVoteEndList(context)),
             ],
           )),
     );
@@ -150,20 +151,20 @@ class _VoteListWidget extends State<VoteListPage> {
                   fontSize: screenSize.width * 0.041,
                   color: Theme.of(context).primaryColor)),
           onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => VotePage(voteNum)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => VotePage(voteNum, groupNum)));
           },
         ),
       );
     }
-    if (isVoteType == true) {
+    else {
       return InkWell(
         child: Text('已投票',
             style: TextStyle(
                 fontSize: screenSize.width * 0.041, color: Color(0xff959595))),
         onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => VotePage(voteNum)));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => VotePage(voteNum, groupNum)));
         },
       );
     }
@@ -200,7 +201,8 @@ class _VoteListWidget extends State<VoteListPage> {
                   trailing: _buildVoteState(vote.isVoteType, vote.voteNum),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => VotePage(vote.voteNum)));
+                        builder: (context) =>
+                            VotePage(vote.voteNum, groupNum)));
                   },
                 );
               },

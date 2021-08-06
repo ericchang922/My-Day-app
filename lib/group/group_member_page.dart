@@ -20,7 +20,8 @@ class GroupMemberPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text('群組成員', style: TextStyle(fontSize: screenSize.width * 0.052)),
+        title:
+            Text('群組成員', style: TextStyle(fontSize: screenSize.width * 0.052)),
         leading: Container(
           margin: EdgeInsets.only(left: screenSize.height * 0.02),
           child: GestureDetector(
@@ -31,7 +32,7 @@ class GroupMemberPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(children: [Expanded(child: GroupInviteWidget(groupNum))]),
+      body: Container(color: Colors.white, child: GroupInviteWidget(groupNum)),
     );
   }
 }
@@ -100,35 +101,55 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   Widget _buildList(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     if (_groupMemberListModel != null) {
-      return ListView(
-        children: [
-          Container(
-            margin: EdgeInsets.only(
-                left: screenSize.height * 0.03,
-                bottom: screenSize.height * 0.02,
-                top: screenSize.height * 0.02),
-            child: Text('邀請中',
-                style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
-          ),
-          _buildInviteMemberList(context),
-          Container(
-            margin: EdgeInsets.only(
-                left: screenSize.height * 0.03,
-                bottom: screenSize.height * 0.02,
-                top: screenSize.height * 0.02),
-            child: Text('成員',
-                style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
-          ),
-          _buildMemberList(context)
-        ],
-      );
+      if (_inviteMemberList.length == 0) {
+        return ListView(
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: screenSize.height * 0.02),
+              child: _buildMemberList(context)
+            )
+          ],
+        );
+      } else {
+        return _buildMemberListWidget(context);
+      }
     } else {
       return Center(child: CircularProgressIndicator());
     }
   }
 
+  Widget _buildMemberListWidget(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    return ListView(
+      children: [
+        Container(
+          margin: EdgeInsets.only(
+              left: screenSize.height * 0.03,
+              bottom: screenSize.height * 0.02,
+              top: screenSize.height * 0.02),
+          child: Text('邀請中',
+              style: TextStyle(
+                  fontSize: screenSize.width * 0.041,
+                  color: Color(0xff7AAAD8))),
+        ),
+        _buildInviteMemberList(context),
+        Container(
+          margin: EdgeInsets.only(
+              left: screenSize.height * 0.03,
+              bottom: screenSize.height * 0.02,
+              top: screenSize.height * 0.02),
+          child: Text('成員',
+              style: TextStyle(
+                  fontSize: screenSize.width * 0.041,
+                  color: Color(0xff7AAAD8))),
+        ),
+        _buildMemberList(context)
+      ],
+    );
+  }
+
   Image getImage(String imageString) {
-  var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
     bool isGetImage;
     Image friendImage = Image.asset(
       'assets/images/friend_choose.png',
@@ -136,7 +157,9 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     );
     const Base64Codec base64 = Base64Codec();
     Image image = Image.memory(base64.decode(imageString),
-        width: screenSize.height * 0.04683, height: screenSize.height * 0.04683, fit: BoxFit.fill);
+        width: screenSize.height * 0.04683,
+        height: screenSize.height * 0.04683,
+        fit: BoxFit.fill);
     var resolve = image.image.resolve(ImageConfiguration.empty);
     resolve.addListener(ImageStreamListener((_, __) {
       isGetImage = true;
@@ -145,13 +168,13 @@ class _GroupInviteState extends State<GroupInviteWidget> {
       print('error');
     }));
 
-    if (isGetImage == true) {
+    if (isGetImage == null) {
       return image;
     } else {
       return friendImage;
     }
   }
-  
+
   Widget _buildInviteMemberList(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
@@ -160,7 +183,6 @@ class _GroupInviteState extends State<GroupInviteWidget> {
       itemCount: _inviteMemberList.length,
       itemBuilder: (BuildContext context, int index) {
         var members = _inviteMemberList[index];
-        const Base64Codec base64 = Base64Codec();
         return ListTile(
           contentPadding: EdgeInsets.symmetric(
               horizontal: screenSize.width * 0.055, vertical: 0.0),
@@ -188,7 +210,6 @@ class _GroupInviteState extends State<GroupInviteWidget> {
       itemCount: _memberList.length,
       itemBuilder: (BuildContext context, int index) {
         var members = _memberList[index];
-        const Base64Codec base64 = Base64Codec();
         return ListTile(
           contentPadding: EdgeInsets.symmetric(
               horizontal: screenSize.width * 0.055, vertical: 0.0),

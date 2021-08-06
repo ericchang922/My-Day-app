@@ -1,37 +1,45 @@
 // To parse this JSON data, do
 //
-//     final groupMemberListModel = groupMemberListModelFromJson(jsonString);
+//     final getTemporaryGroupInvitetModel = getTemporaryGroupInvitetModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GroupMemberListModel groupMemberListModelFromJson(String str) => GroupMemberListModel.fromJson(json.decode(str));
+GetTemporaryGroupInvitetModel getTemporaryGroupInvitetModelFromJson(String str) => GetTemporaryGroupInvitetModel.fromJson(json.decode(str));
 
-String groupMemberListModelToJson(GroupMemberListModel data) => json.encode(data.toJson());
+String getTemporaryGroupInvitetModelToJson(GetTemporaryGroupInvitetModel data) => json.encode(data.toJson());
 
-class GroupMemberListModel {
-    GroupMemberListModel({
+class GetTemporaryGroupInvitetModel {
+    GetTemporaryGroupInvitetModel({
+        this.title,
+        this.startTime,
+        this.endTime,
         this.founderPhoto,
         this.founderName,
-        this.founderId,
         this.member,
     });
 
+    String title;
+    DateTime startTime;
+    DateTime endTime;
     String founderPhoto;
     String founderName;
-    String founderId;
     List<Member> member;
 
-    factory GroupMemberListModel.fromJson(Map<String, dynamic> json) => GroupMemberListModel(
+    factory GetTemporaryGroupInvitetModel.fromJson(Map<String, dynamic> json) => GetTemporaryGroupInvitetModel(
+        title: json["title"],
+        startTime: DateTime.parse(json["startTime"]),
+        endTime: DateTime.parse(json["endTime"]),
         founderPhoto: json["founderPhoto"],
         founderName: json["founderName"],
-        founderId: json["founderId"],
         member: List<Member>.from(json["member"].map((x) => Member.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
+        "title": title,
+        "startTime": startTime.toIso8601String(),
+        "endTime": endTime.toIso8601String(),
         "founderPhoto": founderPhoto,
         "founderName": founderName,
-        "founderId": founderId,
         "member": List<dynamic>.from(member.map((x) => x.toJson())),
     };
 }
@@ -40,26 +48,22 @@ class Member {
     Member({
         this.memberPhoto,
         this.memberName,
-        this.memberId,
         this.statusId,
     });
 
     String memberPhoto;
     String memberName;
-    String memberId;
     int statusId;
 
     factory Member.fromJson(Map<String, dynamic> json) => Member(
         memberPhoto: json["memberPhoto"],
         memberName: json["memberName"],
-        memberId: json["memberId"],
         statusId: json["statusId"],
     );
 
     Map<String, dynamic> toJson() => {
         "memberPhoto": memberPhoto,
         "memberName": memberName,
-        "memberId": memberId,
         "statusId": statusId,
     };
 }

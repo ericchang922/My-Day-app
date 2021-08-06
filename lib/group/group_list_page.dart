@@ -135,18 +135,23 @@ class _GroupListState extends State<GroupListWidget> {
   }
 
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     if (_groupListModel != null && _groupInviteListModel != null) {
       if (_groupInviteListModel.groupContent.length != 0) {
-        return _buildGroupInviteListWidget(context);
+        return _buildGroupListWidget(context);
+      } else if (_groupListModel.groupContent.length != 0) {
+        return Container(
+            margin: EdgeInsets.only(top: screenSize.height * 0.01),
+            child: _buildGroupList(context));
       } else {
-        return _buildGroupList(context);
+        return _buildNoGroup(context);
       }
     } else {
       return Center(child: CircularProgressIndicator());
     }
   }
 
-  Widget _buildGroupInviteListWidget(BuildContext context) {
+  Widget _buildGroupListWidget(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     if (_groupListModel != null) {
       return ListView(
@@ -181,15 +186,6 @@ class _GroupListState extends State<GroupListWidget> {
   }
 
   Widget _buildGroupInviteList(BuildContext context) {
-    List typeColor = <int>[
-      0xffF78787,
-      0xffFFD51B,
-      0xffFFA800,
-      0xffB6EB3A,
-      0xff53DAF0,
-      0xff4968BA,
-      0xffCE85E4
-    ];
     var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
         shrinkWrap: true,
