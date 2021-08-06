@@ -5,28 +5,20 @@
 import 'package:flutter/material.dart';
 
 import 'main.dart';
-import 'notes.dart';
-import 'readplan.dart';
+import 'friends_privacy_settings.dart';
+import 'open_class_schedule.dart';
 import 'learn.dart';
 import 'settings.dart';
 const PrimaryColor = const Color(0xFFF86D67);
 
-void main() {runApp(MyApp());}
 
 class PrivacyPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: <String, WidgetBuilder> {
-        '/home': (BuildContext context) => new HomePageWidget(),
-  
-        '/learn' : (BuildContext context) => new LearnPage(),
-      },
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         body: Privacy(),
-      ),
+      
     );
   }
 }
@@ -44,8 +36,7 @@ class Privacy extends StatelessWidget {
         leading:IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SettingsPage()));
+            Navigator.of(context).pop();
           },
         ) 
       ),
@@ -59,7 +50,7 @@ class Privacy extends StatelessWidget {
               minWidth: double.infinity,
               onPressed: (){
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ReadPlanPage()));
+                MaterialPageRoute(builder: (context) => OpenClassSchedulePage()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,7 +83,7 @@ class Privacy extends StatelessWidget {
               minWidth: double.infinity,
               onPressed: (){
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => NotesPage()));
+                MaterialPageRoute(builder: (context) => FriendsPrivacySettingsPage()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
