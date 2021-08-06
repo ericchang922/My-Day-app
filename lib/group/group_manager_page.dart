@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/models/best_friend_model.dart';
-import 'package:My_Day_app/models/friend_model.dart';
-import 'package:My_Day_app/models/group_member_model.dart';
+import 'package:My_Day_app/models/best_friend_list_model.dart';
+import 'package:My_Day_app/models/friend_list_model.dart';
+import 'package:My_Day_app/models/group_member_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,7 +18,7 @@ class GroupManagerPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Color(0xffF86D67),
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text('管理者', style: TextStyle(fontSize: 22)),
         leading: Container(
           margin: EdgeInsets.only(left: 5),
@@ -44,7 +44,7 @@ class GroupManagerWidget extends StatefulWidget {
 }
 
 class _GroupManagerState extends State<GroupManagerWidget> {
-  GroupMemberModel _groupMemberModel = null;
+  GroupMemberListModel _groupMemberListModel = null;
   List _memberList = [];
   List _managerList = [];
   List _checkIsManagerList = [];
@@ -72,19 +72,19 @@ class _GroupManagerState extends State<GroupManagerWidget> {
 
     var jsonBody = json.decode(jsonString);
 
-    var groupMemberModel = GroupMemberModel.fromJson(jsonBody);
+    var groupMemberListModel = GroupMemberListModel.fromJson(jsonBody);
     setState(() {
-      _groupMemberModel = groupMemberModel;
+      _groupMemberListModel = groupMemberListModel;
 
-      for (int i = 0; i < _groupMemberModel.member.length; i++) {
-        if (_groupMemberModel.member[i].statusId == 4) {
-          _managerList.add(_groupMemberModel.member[i]);
+      for (int i = 0; i < _groupMemberListModel.member.length; i++) {
+        if (_groupMemberListModel.member[i].statusId == 4) {
+          _managerList.add(_groupMemberListModel.member[i]);
         }
       }
 
-      for (int i = 0; i < _groupMemberModel.member.length; i++) {
-        if (_groupMemberModel.member[i].statusId == 1) {
-          _memberList.add(_groupMemberModel.member[i]);
+      for (int i = 0; i < _groupMemberListModel.member.length; i++) {
+        if (_groupMemberListModel.member[i].statusId == 1) {
+          _memberList.add(_groupMemberListModel.member[i]);
         }
       }
 
@@ -105,7 +105,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
   }
 
   Widget _buildList(BuildContext context) {
-    if (_groupMemberModel != null) {
+    if (_groupMemberListModel != null) {
       return _buildSettingManagerWidget(context);
     } else {
       return Center(child: CircularProgressIndicator());

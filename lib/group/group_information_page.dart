@@ -74,6 +74,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             leading: Container(
               margin: EdgeInsets.only(left: 5),
               child: GestureDetector(
@@ -124,69 +125,102 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
+        var screenSize = MediaQuery.of(context).size;
         return AlertDialog(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30.0))),
-          contentPadding: EdgeInsets.only(top: 10.0),
+              borderRadius:
+                  BorderRadius.all(Radius.circular(screenSize.height * 0.03))),
+          contentPadding: EdgeInsets.only(top: screenSize.height * 0.02),
           content: Container(
-            width: 300.0,
-            height: 210,
+            width: screenSize.width * 0.2,
+            height: screenSize.height * 0.2459,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      "更改群組名稱",
-                      style: TextStyle(fontSize: 18.0),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-                Container(
-                  margin:
-                      EdgeInsets.only(left: 20, right: 10, bottom: 20, top: 15),
-                  child: Text('群組名稱：', style: TextStyle(fontSize: 18)),
-                ),
-                Container(
-                    height: 40.0,
-                    margin: EdgeInsets.only(left: 20, right: 10, bottom: 33),
-                    child: new TextField(
-                      decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: Color(0xff070707),
-                            ),
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            "更改群組名稱",
+                            style:
+                                TextStyle(fontSize: screenSize.width * 0.041),
+                            textAlign: TextAlign.center,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(color: Color(0xff7AAAD8)),
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: screenSize.height * 0.02,
+                            right: screenSize.height * 0.02,
+                            bottom: screenSize.height * 0.02,
+                            top: screenSize.height * 0.015),
+                        child: Text('群組名稱：',
+                            style:
+                                TextStyle(fontSize: screenSize.width * 0.041)),
+                      ),
+                      Container(
+                          height: screenSize.height * 0.04683,
+                          margin: EdgeInsets.only(
+                            left: screenSize.height * 0.02,
+                            right: screenSize.height * 0.02,
+                            bottom: screenSize.height * 0.0384,
+                          ),
+                          child: new TextField(
+                            style:
+                                TextStyle(fontSize: screenSize.width * 0.041),
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: screenSize.height * 0.01,
+                                    vertical: screenSize.height * 0.01),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          screenSize.height * 0.01)),
+                                  borderSide: BorderSide(
+                                    color: Color(0xff070707),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          screenSize.height * 0.01)),
+                                  borderSide:
+                                      BorderSide(color: Color(0xff7AAAD8)),
+                                )),
+                            controller: _groupNameController..text = _groupName,
                           )),
-                      controller: _groupNameController..text = _groupName,
-                    )),
+                    ],
+                  ),
+                ),
                 Row(
                   children: [
                     Expanded(
                       child: InkWell(
                         child: Container(
-                          height: 50,
-                          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          height: screenSize.height * 0.06,
+                          padding: EdgeInsets.only(
+                              top: screenSize.height * 0.015,
+                              bottom: screenSize.height * 0.015),
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColorLight,
                             borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(30.0),
+                              bottomLeft:
+                                  Radius.circular(screenSize.height * 0.03),
                             ),
                           ),
                           child: Text(
                             "取消",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                fontSize: screenSize.width * 0.035,
+                                color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -198,16 +232,21 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                     Expanded(
                       child: InkWell(
                         child: Container(
-                          height: 50,
-                          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          height: screenSize.height * 0.06,
+                          padding: EdgeInsets.only(
+                              top: screenSize.height * 0.015,
+                              bottom: screenSize.height * 0.015),
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(30.0)),
+                                bottomRight:
+                                    Radius.circular(screenSize.height * 0.03)),
                           ),
                           child: Text(
                             "確認",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                fontSize: screenSize.width * 0.035,
+                                color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -250,81 +289,104 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
+          var screenSize = MediaQuery.of(context).size;
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0))),
-              contentPadding: EdgeInsets.only(top: 10.0),
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(screenSize.height * 0.03))),
+              contentPadding: EdgeInsets.only(top: screenSize.height * 0.02),
               content: Container(
-                width: 300.0,
-                height: 180,
+                width: screenSize.width * 0.2,
+                height: screenSize.height * 0.2098,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          "更改群組類別",
-                          style: TextStyle(fontSize: 18.0),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: 20, right: 10, bottom: 34, top: 30),
-                      child: Row(
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         children: [
-                          Text('群組ID：', style: TextStyle(fontSize: 18)),
-                          Container(
-                            height: 40.0,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 6.0, vertical: 0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                  color: Color(0xff707070),
-                                  style: BorderStyle.solid,
-                                  width: 0.80),
-                            ),
-                            child: DropdownButton<String>(
-                              icon: Icon(
-                                Icons.expand_more,
-                                color: Color(0xffcccccc),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                "更改群組類別",
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.041),
+                                textAlign: TextAlign.center,
                               ),
-                              value: dropdownValue,
-                              iconSize: 24,
-                              elevation: 16,
-                              underline: Container(height: 0),
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  dropdownValue = newValue;
-                                });
-                              },
-                              items: typeNameList.map<DropdownMenuItem<String>>(
-                                  (String value) {
-                                return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            margin: EdgeInsets.only(right: 10),
-                                            child: CircleAvatar(
-                                              radius: 10.0,
-                                              backgroundColor: Color(typeColor[
-                                                  typeNameList.indexOf(value)]),
-                                            )),
-                                        Text(value),
-                                      ],
-                                    ));
-                              }).toList(),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: screenSize.height * 0.02,
+                                right: screenSize.height * 0.02,
+                                bottom: screenSize.height * 0.04,
+                                top: screenSize.height * 0.03),
+                            child: Row(
+                              children: [
+                                Text('群組ID：',
+                                    style: TextStyle(
+                                        fontSize: screenSize.width * 0.041)),
+                                Container(
+                                  height: screenSize.height * 0.04683,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: screenSize.height * 0.01,
+                                      vertical: 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        screenSize.height * 0.01),
+                                    border: Border.all(
+                                        color: Color(0xff707070),
+                                        style: BorderStyle.solid,
+                                        width: screenSize.width * 0.0015),
+                                  ),
+                                  child: DropdownButton<String>(
+                                    icon: Icon(
+                                      Icons.expand_more,
+                                      color: Color(0xffcccccc),
+                                    ),
+                                    value: dropdownValue,
+                                    iconSize: screenSize.width * 0.05,
+                                    elevation: 16,
+                                    underline: Container(height: 0),
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        dropdownValue = newValue;
+                                      });
+                                    },
+                                    items: typeNameList
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                  margin: EdgeInsets.only(
+                                                      right: screenSize.height *
+                                                          0.01),
+                                                  child: CircleAvatar(
+                                                    radius: screenSize.height *
+                                                        0.01,
+                                                    backgroundColor: Color(
+                                                        typeColor[typeNameList
+                                                            .indexOf(value)]),
+                                                  )),
+                                              Text(value),
+                                            ],
+                                          ));
+                                    }).toList(),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -333,17 +395,22 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                         Expanded(
                           child: InkWell(
                             child: Container(
-                              height: 50,
-                              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                              height: screenSize.height * 0.06,
+                              padding: EdgeInsets.only(
+                                  top: screenSize.height * 0.015,
+                                  bottom: screenSize.height * 0.015),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).primaryColorLight,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(30.0),
+                                  bottomLeft:
+                                      Radius.circular(screenSize.height * 0.03),
                                 ),
                               ),
                               child: Text(
                                 "取消",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.035,
+                                    color: Colors.white),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -355,16 +422,21 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                         Expanded(
                           child: InkWell(
                             child: Container(
-                              height: 50,
-                              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                              height: screenSize.height * 0.06,
+                              padding: EdgeInsets.only(
+                                  top: screenSize.height * 0.015,
+                                  bottom: screenSize.height * 0.015),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(30.0)),
+                                    bottomRight: Radius.circular(
+                                        screenSize.height * 0.03)),
                               ),
                               child: Text(
                                 "確認",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.035,
+                                    color: Colors.white),
                                 textAlign: TextAlign.center,
                               ),
                             ),

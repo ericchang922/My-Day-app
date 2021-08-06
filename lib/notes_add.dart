@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'learn.dart';
-import 'main.dart';
+import 'home.dart';
 import 'notes.dart';
 
 class NotesAddPage extends StatelessWidget {

@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 
-
+import 'home.dart';
 import 'main.dart';
 import 'friends.dart';
 import 'learn.dart';

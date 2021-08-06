@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/models/best_friend_model.dart';
-import 'package:My_Day_app/models/friend_model.dart';
-import 'package:My_Day_app/models/group_member_model.dart';
+import 'package:My_Day_app/models/best_friend_list_model.dart';
+import 'package:My_Day_app/models/friend_list_model.dart';
+import 'package:My_Day_app/models/group_member_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,13 +15,14 @@ class GroupMemberPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Color(0xffF86D67),
-        title: Text('群組成員', style: TextStyle(fontSize: 22)),
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('群組成員', style: TextStyle(fontSize: screenSize.width * 0.052)),
         leading: Container(
-          margin: EdgeInsets.only(left: 5),
+          margin: EdgeInsets.only(left: screenSize.height * 0.02),
           child: GestureDetector(
             child: Icon(Icons.chevron_left),
             onTap: () {
@@ -44,7 +45,7 @@ class GroupInviteWidget extends StatefulWidget {
 }
 
 class _GroupInviteState extends State<GroupInviteWidget> {
-  GroupMemberModel _groupMemberModel = null;
+  GroupMemberListModel _groupMemberListModel = null;
   List _memberList = [];
   List _inviteMemberList = [];
 
@@ -55,35 +56,35 @@ class _GroupInviteState extends State<GroupInviteWidget> {
 
   @override
   void initState() {
-    _getGroupMemberRequest();
+    _groupMemberListRequest();
     super.initState();
   }
 
-  void _getGroupMemberRequest() async {
+  void _groupMemberListRequest() async {
     // var reponse = await rootBundle.loadString('assets/json/group_members.json');
 
     var httpClient = HttpClient();
-    var request = await httpClient.getUrl(
-        Uri.http('myday.sytes.net', '/group/member_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
+    var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
+        '/group/member_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
     var response = await request.close();
     var jsonString = await response.transform(utf8.decoder).join();
     httpClient.close();
 
     var jsonBody = json.decode(jsonString);
 
-    var groupMemberModel = GroupMemberModel.fromJson(jsonBody);
+    var groupMemberListModel = GroupMemberListModel.fromJson(jsonBody);
     setState(() {
-      _groupMemberModel = groupMemberModel;
-      for (int i = 0; i < _groupMemberModel.member.length; i++) {
-        if (_groupMemberModel.member[i].statusId == 1 ||
-            _groupMemberModel.member[i].statusId == 4) {
-          _memberList.add(_groupMemberModel.member[i]);
+      _groupMemberListModel = groupMemberListModel;
+      for (int i = 0; i < _groupMemberListModel.member.length; i++) {
+        if (_groupMemberListModel.member[i].statusId == 1 ||
+            _groupMemberListModel.member[i].statusId == 4) {
+          _memberList.add(_groupMemberListModel.member[i]);
         }
       }
 
-      for (int i = 0; i < _groupMemberModel.member.length; i++) {
-        if (_groupMemberModel.member[i].statusId == 2) {
-          _inviteMemberList.add(_groupMemberModel.member[i]);
+      for (int i = 0; i < _groupMemberListModel.member.length; i++) {
+        if (_groupMemberListModel.member[i].statusId == 2) {
+          _inviteMemberList.add(_groupMemberListModel.member[i]);
         }
       }
     });
@@ -97,19 +98,26 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildList(BuildContext context) {
-    if (_groupMemberModel != null) {
+    var screenSize = MediaQuery.of(context).size;
+    if (_groupMemberListModel != null) {
       return ListView(
         children: [
           Container(
-            margin: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+            margin: EdgeInsets.only(
+                left: screenSize.height * 0.03,
+                bottom: screenSize.height * 0.02,
+                top: screenSize.height * 0.02),
             child: Text('邀請中',
-                style: TextStyle(fontSize: 16, color: Color(0xff7AAAD8))),
+                style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
           ),
           _buildInviteMemberList(context),
           Container(
-            margin: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+            margin: EdgeInsets.only(
+                left: screenSize.height * 0.03,
+                bottom: screenSize.height * 0.02,
+                top: screenSize.height * 0.02),
             child: Text('成員',
-                style: TextStyle(fontSize: 16, color: Color(0xff7AAAD8))),
+                style: TextStyle(fontSize: screenSize.width * 0.041, color: Color(0xff7AAAD8))),
           ),
           _buildMemberList(context)
         ],
@@ -119,7 +127,33 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     }
   }
 
+  Image getImage(String imageString) {
+  var screenSize = MediaQuery.of(context).size;
+    bool isGetImage;
+    Image friendImage = Image.asset(
+      'assets/images/friend_choose.png',
+      width: screenSize.height * 0.04683,
+    );
+    const Base64Codec base64 = Base64Codec();
+    Image image = Image.memory(base64.decode(imageString),
+        width: screenSize.height * 0.04683, height: screenSize.height * 0.04683, fit: BoxFit.fill);
+    var resolve = image.image.resolve(ImageConfiguration.empty);
+    resolve.addListener(ImageStreamListener((_, __) {
+      isGetImage = true;
+    }, onError: (Object exception, StackTrace stackTrace) {
+      isGetImage = false;
+      print('error');
+    }));
+
+    if (isGetImage == true) {
+      return image;
+    } else {
+      return friendImage;
+    }
+  }
+  
   Widget _buildInviteMemberList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -128,13 +162,14 @@ class _GroupInviteState extends State<GroupInviteWidget> {
         var members = _inviteMemberList[index];
         const Base64Codec base64 = Base64Codec();
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.055, vertical: 0.0),
           leading: ClipOval(
-            child: Image.memory(base64.decode(members.memberPhoto), width: 40),
+            child: getImage(members.memberPhoto),
           ),
           title: Text(
             members.memberName,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: screenSize.width * 0.041),
           ),
           onTap: () {},
         );
@@ -146,6 +181,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
   }
 
   Widget _buildMemberList(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -154,13 +190,14 @@ class _GroupInviteState extends State<GroupInviteWidget> {
         var members = _memberList[index];
         const Base64Codec base64 = Base64Codec();
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.055, vertical: 0.0),
           leading: ClipOval(
-            child: Image.memory(base64.decode(members.memberPhoto), width: 40),
+            child: getImage(members.memberPhoto),
           ),
           title: Text(
             members.memberName,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: screenSize.width * 0.041),
           ),
           onTap: () {},
         );

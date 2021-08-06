@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final bestFriendModel = bestFriendModelFromJson(jsonString);
+//     final friendListModel = friendListModelFromJson(jsonString);
 
 import 'dart:convert';
 
-BestFriendModel bestFriendModelFromJson(String str) => BestFriendModel.fromJson(json.decode(str));
+FriendListModel friendListModelFromJson(String str) => FriendListModel.fromJson(json.decode(str));
 
-String bestFriendModelToJson(BestFriendModel data) => json.encode(data.toJson());
+String friendListModelToJson(FriendListModel data) => json.encode(data.toJson());
 
-class BestFriendModel {
-    BestFriendModel({
+class FriendListModel {
+    FriendListModel({
         this.friend,
     });
 
     List<Friend> friend;
 
-    factory BestFriendModel.fromJson(Map<String, dynamic> json) => BestFriendModel(
+    factory FriendListModel.fromJson(Map<String, dynamic> json) => FriendListModel(
         friend: List<Friend>.from(json["friend"].map((x) => Friend.fromJson(x))),
     );
 
@@ -29,21 +29,25 @@ class Friend {
         this.photo,
         this.friendId,
         this.friendName,
+        this.relationId,
     });
 
     String photo;
     String friendId;
     String friendName;
+    int relationId;
 
     factory Friend.fromJson(Map<String, dynamic> json) => Friend(
         photo: json["photo"],
         friendId: json["friendId"],
         friendName: json["friendName"],
+        relationId: json["relationId"],
     );
 
     Map<String, dynamic> toJson() => {
         "photo": photo,
         "friendId": friendId,
         "friendName": friendName,
+        "relationId": relationId,
     };
 }

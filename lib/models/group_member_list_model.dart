@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final groupMemberModel = groupMemberModelFromJson(jsonString);
+//     final groupMemberListModel = groupMemberListModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GroupMemberModel groupMemberModelFromJson(String str) => GroupMemberModel.fromJson(json.decode(str));
+GroupMemberListModel groupMemberListModelFromJson(String str) => GroupMemberListModel.fromJson(json.decode(str));
 
-String groupMemberModelToJson(GroupMemberModel data) => json.encode(data.toJson());
+String groupMemberListModelToJson(GroupMemberListModel data) => json.encode(data.toJson());
 
-class GroupMemberModel {
-    GroupMemberModel({
+class GroupMemberListModel {
+    GroupMemberListModel({
         this.founderPhoto,
         this.founderName,
         this.member,
@@ -19,7 +19,7 @@ class GroupMemberModel {
     String founderName;
     List<Member> member;
 
-    factory GroupMemberModel.fromJson(Map<String, dynamic> json) => GroupMemberModel(
+    factory GroupMemberListModel.fromJson(Map<String, dynamic> json) => GroupMemberListModel(
         founderPhoto: json["founderPhoto"],
         founderName: json["founderName"],
         member: List<Member>.from(json["member"].map((x) => Member.fromJson(x))),

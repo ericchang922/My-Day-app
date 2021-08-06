@@ -1,0 +1,23 @@
+{
+    "vote": [
+        {
+            "voteNum": 14,
+            "votersNum": 0,
+            "title": "吃甚麼",
+            "isVoteType": false
+        },
+        {
+            "voteNum": 17,
+            "votersNum": 0,
+            "title": "取哪玩",
+            "isVoteType": true
+        },
+        {
+            "voteNum": 13,
+            "votersNum": 0,
+            "title": "午餐吃甚麼",
+            "isVoteType": false
+        }
+    ],
+    "response": true
+}

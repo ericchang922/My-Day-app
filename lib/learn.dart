@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'notes.dart';
 import 'readplan.dart';
+import 'home.dart';
 const PrimaryColor = const Color(0xFFF86D67);
 
 class LearnPage extends StatelessWidget {

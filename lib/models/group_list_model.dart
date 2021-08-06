@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final groupModel = groupModelFromJson(jsonString);
+//     final groupListModel = groupListModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GroupModel groupModelFromJson(String str) => GroupModel.fromJson(json.decode(str));
+GroupListModel groupListModelFromJson(String str) => GroupListModel.fromJson(json.decode(str));
 
-String groupModelToJson(GroupModel data) => json.encode(data.toJson());
+String groupListModelToJson(GroupListModel data) => json.encode(data.toJson());
 
-class GroupModel {
-    GroupModel({
+class GroupListModel {
+    GroupListModel({
         this.groupContent,
     });
 
     List<GroupContent> groupContent;
 
-    factory GroupModel.fromJson(Map<String, dynamic> json) => GroupModel(
+    factory GroupListModel.fromJson(Map<String, dynamic> json) => GroupListModel(
         groupContent: List<GroupContent>.from(json["groupContent"].map((x) => GroupContent.fromJson(x))),
     );
 
