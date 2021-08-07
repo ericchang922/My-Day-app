@@ -1,5 +1,11 @@
+// dart
+import 'dart:convert';
+// flutter
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+// therd
+import 'package:http/http.dart' as http;
+// my day
 import 'package:My_Day_app/schedule/remind_item.dart';
 
 List<String> weekdayName = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
@@ -21,7 +27,7 @@ class CreateSchedule extends StatefulWidget {
 }
 
 class _CreateSchedule extends State<CreateSchedule> {
-  int _value;
+  int _type;
   bool _allDay = false;
   DateTime _startDateTime = DateTime.now();
   DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
@@ -37,7 +43,8 @@ class _CreateSchedule extends State<CreateSchedule> {
   @override
   void initState() {
     super.initState();
-    _remarkFocus.addListener(() => setState(()=>_remarkIsFocus = _remarkFocus.hasFocus));
+    _remarkFocus.addListener(
+        () => setState(() => _remarkIsFocus = _remarkFocus.hasFocus));
   }
 
   @override
@@ -60,8 +67,6 @@ class _CreateSchedule extends State<CreateSchedule> {
     double _pSize = _height * 0.025;
     double _pickerTextSize = _height * 0.02;
     double _timeSize = _width * 0.045;
-    final _tilteFocus = FocusNode();
-    final _locationFocus = FocusNode();
 
     String _startView = _allDay
         ? '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]}'
@@ -73,27 +78,129 @@ class _CreateSchedule extends State<CreateSchedule> {
     Widget _counterWidget = Text('');
     String _remarkLbl;
     TextStyle _remarkLblStyle;
-    String _remarkHint ='備註';
-    TextStyle _remarkHintStyle= TextStyle(fontSize: _h2Size, color: Colors.grey);
-    _counterWidget = _remarkIsFocus? null:Text('');
-    _remarkLbl = _remarkIsFocus? '備註':null;
-    _remarkLblStyle = _remarkIsFocus? TextStyle(color: _color):null;
-    _remarkHint = _remarkIsFocus? null:'備註';
-    _remarkHintStyle = _remarkIsFocus? null:TextStyle(fontSize: _h2Size, color: Colors.grey);
+    String _remarkHint = '備註';
+    TextStyle _remarkHintStyle =
+        TextStyle(fontSize: _h2Size, color: Colors.grey);
+    _counterWidget = _remarkIsFocus ? null : Text('');
+    _remarkLbl = _remarkIsFocus ? '備註' : null;
+    _remarkLblStyle = _remarkIsFocus ? TextStyle(color: _color) : null;
+    _remarkHint = _remarkIsFocus ? null : '備註';
+    _remarkHintStyle = _remarkIsFocus
+        ? null
+        : TextStyle(fontSize: _h2Size, color: Colors.grey);
 
-    // _submit -----------------------------------------------------------------------------------------
-    void _submitValue() {
-      print(_titleController.text);
-      print(_value);
-      print(_startDateTime);
-      print(_endDateTime);
-      print(_locationController.text);
-      print(_remindTimeList);
-      print(_isCountdown);
-      print(_remarkController.text);
-      Navigator.pop(context);
+    // alert --------------------------------------------------------------------------------------------
+    alert(String alertTitle, String alertTxt) async {
+      return showDialog<String>(
+        context: context,
+        builder: (_) => AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(_height * 0.03))),
+          title: Text(alertTitle),
+          content: Text(alertTxt),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('關閉', style: TextStyle(color: _color)),
+            ),
+          ],
+        ),
+      );
     }
 
+    // conection ---------------------------------------------------------------------------------------
+    _createSchedule(Map<String, dynamic> data) async {
+      var url = Uri.parse('http://myday.sytes.net/schedule/create_new/');
+      var response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: json.encode(data));
+      var responseBody=json.decode(utf8.decode(response.bodyBytes));
+      if(responseBody['response']==false){
+        await alert('錯誤', responseBody['message']);
+      }
+
+      print('statusCode: ${response.statusCode}');
+      print('body: ${utf8.decode(response.bodyBytes)}');
+    }
+
+    // _submit -----------------------------------------------------------------------------------------
+    _submit() async {
+      String _alertTitle = '新增行程失敗';
+      bool _isNotCreate = false;
+      String uid = 'amy123';
+      String title = _titleController.text;
+      String startTime;
+      String endTime;
+      String startTimeString =
+          '${_startDateTime.year.toString()}-${_startDateTime.month.toString().padLeft(2, '0')}-${_startDateTime.day.toString().padLeft(2, '0')} 00:00:00';
+      String endTimeString =
+          '${_endDateTime.year.toString()}-${_endDateTime.month.toString().padLeft(2, '0')}-${_endDateTime.day.toString().padLeft(2, '0')} 23:59:59';
+      if (_allDay) {
+        startTime = DateTime.parse(startTimeString).toString();
+        endTime = DateTime.parse(endTimeString).toString();
+      } else {
+        startTime = _startDateTime.toString();
+        endTime = _endDateTime.toString();
+      }
+      List<String> remindTime = [];
+      dynamic typeId = _type;
+      bool isCountdown = _isCountdown;
+      String place = _locationController.text;
+      String remark = _remarkController.text;
+
+      for (int i = 0; i < _remindTimeList.length; i++) {
+        remindTime.add(_startDateTime.subtract(_remindTimeList[i]).toString());
+      }
+      if (uid == null) {
+        await alert(_alertTitle, '請先登入');
+        _isNotCreate = true;
+        Navigator.pop(context);
+      }
+      if (title == null || title == '') {
+        await alert(_alertTitle, '請輸入標題');
+        _isNotCreate = true;
+      }
+      if (startTime == null || startTime == '') {
+        await alert(_alertTitle, '請選擇開始時間');
+        _isNotCreate = true;
+      }
+
+      if (endTime == null || endTime == '') {
+        await alert(_alertTitle, '請選擇結束時間');
+        _isNotCreate = true;
+      }
+      if (typeId == null || typeId <= 0 || typeId > 8) {
+        await alert(_alertTitle, '請選擇類別');
+        _isNotCreate = true;
+      }
+      if (isCountdown == null) {
+        await alert(_alertTitle, '倒數錯誤');
+        _isNotCreate = true;
+      }
+
+      bool isRemind = remindTime.length > 0 ? true : false;
+      Map remind = {'isRemind': isRemind, 'remindTime': remindTime};
+
+      Map<String, dynamic> request = {
+        'uid': uid,
+        'title': title,
+        'startTime': startTime,
+        'endTime': endTime,
+        'remind': remind,
+        'typeId': typeId,
+        'isCountdown': isCountdown,
+        'place': place,
+        'remark': remark
+      };
+      if (_isNotCreate)
+        _isNotCreate = false;
+      else
+        _createSchedule(request);
+    }
+
+    // // picker mode ----------------------------------------------------------------------------------
     CupertinoDatePickerMode _mode() {
       if (_allDay)
         return CupertinoDatePickerMode.date;
@@ -172,7 +279,12 @@ class _CreateSchedule extends State<CreateSchedule> {
                       child: CupertinoButton(
                         child: Text('確定', style: TextStyle(color: _color)),
                         onPressed: () => setState(() {
-                          _remindTimeList.add(_remindTime);
+                          if (_remindTimeList.contains(_remindTime)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('時間已經存在')));
+                          } else {
+                            _remindTimeList.add(_remindTime);
+                          }
                           Navigator.of(context).pop();
                         }),
                       ),
@@ -202,7 +314,6 @@ class _CreateSchedule extends State<CreateSchedule> {
           padding: EdgeInsets.fromLTRB(
               _paddingLR, _height * 0.03, _paddingLR, _height * 0.02),
           child: TextField(
-            focusNode: _tilteFocus,
             style: TextStyle(fontSize: _h1Size),
             decoration: InputDecoration(
                 hintText: '標題',
@@ -350,7 +461,7 @@ class _CreateSchedule extends State<CreateSchedule> {
                     iconEnabledColor: Colors.grey,
                     underline: Container(),
                     focusColor: _color,
-                    value: _value,
+                    value: _type,
                     items: [
                       DropdownMenuItem(
                           child:
@@ -382,7 +493,7 @@ class _CreateSchedule extends State<CreateSchedule> {
                           value: 8),
                     ],
                     onChanged: (int value) {
-                      setState(() => _value = value);
+                      setState(() => _type = value);
                     },
                   ),
                 ),
@@ -392,7 +503,7 @@ class _CreateSchedule extends State<CreateSchedule> {
                       height: _height * 0.025,
                       child: CircleAvatar(
                         radius: _height * 0.025,
-                        backgroundColor: Color(getTypeColor(_value)),
+                        backgroundColor: Color(getTypeColor(_type)),
                       )),
                 )
               ],
@@ -422,7 +533,6 @@ class _CreateSchedule extends State<CreateSchedule> {
                   flex: 8,
                   child: TextField(
                     controller: _locationController,
-                    focusNode: _locationFocus,
                     style: TextStyle(fontSize: _h2Size),
                     decoration: InputDecoration(
                       hintText: '地點',
@@ -440,6 +550,7 @@ class _CreateSchedule extends State<CreateSchedule> {
             ),
           ),
         ),
+        // Text ----------------------------------------------------------------------------------- remind
         Padding(
           padding: EdgeInsets.fromLTRB(_listPaddingLR, 0, _listPaddingLR, 0),
           child: Row(
@@ -453,8 +564,6 @@ class _CreateSchedule extends State<CreateSchedule> {
             ],
           ),
         ),
-
-        // Text ----------------------------------------------------------------------------------- remind
         Padding(
           padding: EdgeInsets.fromLTRB(
               _listPaddingLR, 0, _listPaddingLR, _paddingTB),
@@ -520,12 +629,12 @@ class _CreateSchedule extends State<CreateSchedule> {
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                       hintText: _remarkHint,
-                      hintStyle:_remarkHintStyle,
+                      hintStyle: _remarkHintStyle,
                       labelText: _remarkLbl,
                       labelStyle: _remarkLblStyle,
                       counter: _counterWidget,
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none),
+                      enabledBorder:
+                          OutlineInputBorder(borderSide: BorderSide.none),
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: _color)),
                     ),
@@ -583,10 +692,12 @@ class _CreateSchedule extends State<CreateSchedule> {
                       width: _bottomIconWidth,
                     ),
                     fillColor: _color,
-                    onPressed: _submitValue,
+                    onPressed: () async {
+                      _submit();
+                    },
                   ),
                 ),
-              ),
+              )
             ]),
           ),
         ),
