@@ -12,6 +12,8 @@ void main() {
   runApp(MyApp());
 }
 
+RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
@@ -33,6 +35,7 @@ class MyApp extends StatelessWidget {
         bottomAppBarColor: Color(0xffFB8B86),
       ),
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [routeObserver],
       home: Home(),
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => new LoginPage(),

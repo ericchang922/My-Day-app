@@ -24,10 +24,10 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
   @override
   void initState() {
     super.initState();
-    _groupStudyPlanListtRequest();
+    _groupStudyPlanListRequest();
   }
 
-  Future<void> _groupStudyPlanListtRequest() async {
+  Future<void> _groupStudyPlanListRequest() async {
     var jsonString =
         await rootBundle.loadString('assets/json/studyplan_list.json');
 
@@ -75,7 +75,8 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
                   icon: Icon(Icons.add))
             ],
           ),
-          body: Container(color: Colors.white, child: _buildGroupStudyPlanList(context))),
+          body: Container(
+              color: Colors.white, child: _buildGroupStudyPlanList(context))),
     );
   }
 
