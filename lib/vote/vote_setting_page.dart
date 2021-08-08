@@ -110,7 +110,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: CupertinoButton(
-                    child: Text('確定'),
+                    child: Text('確定', style: TextStyle(color: Theme.of(context).primaryColor)),
                     onPressed: () {
                       Navigator.of(context).pop();
                       setState(() {
@@ -366,31 +366,4 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
       }))
     ]);
   }
-
-  // PickerStyle customizeStyle() {
-  //   var screenSize = MediaQuery.of(context).size;
-
-  //   Widget _cancelButton = Container(
-  //       margin: EdgeInsets.only(left: screenSize.width * 0.03),
-  //       child: Text(
-  //         '取消',
-  //         style: TextStyle(
-  //           fontSize: screenSize.width * 0.041,
-  //           color: Color(0xffb4b4b4),
-  //         ),
-  //       ));
-  //   Widget _commitButton = Container(
-  //     margin: EdgeInsets.only(right: screenSize.width * 0.03),
-  //     child: Text(
-  //       '確認',
-  //       style: TextStyle(
-  //           fontSize: screenSize.width * 0.041,
-  //           color: Theme.of(context).primaryColor),
-  //     ),
-  //   );
-  //   return PickerStyle(
-  //     cancelButton: _cancelButton,
-  //     commitButton: _commitButton,
-  //   );
-  // }
 }

@@ -361,7 +361,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
               child: Align(
                 alignment: Alignment.centerRight,
                 child: CupertinoButton(
-                    child: Text('確定'),
+                    child: Text('確定', style: TextStyle(color: Theme.of(context).primaryColor)),
                     onPressed: () {
                       Navigator.of(context).pop();
                       setState(() {
