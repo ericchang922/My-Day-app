@@ -354,7 +354,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: CupertinoButton(
-                    child: Text('確定'),
+                    child: Text('確定', style: TextStyle(color: Theme.of(context).primaryColor)),
                     onPressed: () {
                       Navigator.of(context).pop();
                       setState(() {
@@ -407,7 +407,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: CupertinoButton(
-                    child: Text('確定'),
+                    child: Text('確定', style: TextStyle(color: Theme.of(context).primaryColor)),
                     onPressed: () {
                       Navigator.of(context).pop();
                       setState(() {
