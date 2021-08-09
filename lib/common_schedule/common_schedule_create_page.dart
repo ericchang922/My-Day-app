@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
 import 'package:My_Day_app/schedule/schedule_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 
 class CommonScheduleCreatePage extends StatefulWidget {
   int groupNum;

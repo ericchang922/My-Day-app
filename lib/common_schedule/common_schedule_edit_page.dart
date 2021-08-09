@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:My_Day_app/models/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
@@ -7,9 +5,6 @@ import 'package:My_Day_app/schedule/schedule_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:http/http.dart' as http;
 
 class CommonScheduleEditPage extends StatefulWidget {
   int scheduleNum;
@@ -110,7 +105,6 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
 // _submit -----------------------------------------------------------------------------------------
     _submit() async {
       String _alertTitle = '新增共同行程失敗';
-      String uid = 'lili123';
       String title = _titleController.text;
       String startTime;
       String endTime;
