@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:My_Day_app/schedule/create_schedule.dart';
+import 'package:My_Day_app/schedule/schedule_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
