@@ -67,7 +67,13 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
           "${_startDateTime.hour.toString().padLeft(2, '0')}:${_startDateTime.minute.toString().padLeft(2, '0')}";
       String _endString =
           "${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}";
-      if (_startString == "00:00" && _endString == "00:00") _allDay = true;
+
+      if (_startDateTime.day == _endDateTime.day) {
+        if (_startString == "00:00" && _endString == "00:00" ||
+            _startString == "00:00" && _endString == "23:59") {
+          _allDay = true;
+        }
+      }
     });
   }
 
