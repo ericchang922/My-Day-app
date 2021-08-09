@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
+import 'package:My_Day_app/schedule/schedule_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,30 +22,40 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
   _CommonScheduleCreateWidget(this.groupNum);
 
   int _type;
-  bool _allDay = false;
   DateTime _startDateTime = DateTime.now();
   DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
-  final _titleController = TextEditingController();
-  final _locationController = TextEditingController();
+  String _title;
+  String _location;
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
+
+  bool _allDay = false;
+  bool _isNotCreate = false;
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
+    _titleController.text = _title;
+    _locationController.text = _location;
+    // values ------------------------------------------------------------------------------------------
+    Size size = MediaQuery.of(context).size;
     double _height = size.height;
     double _width = size.width;
     double _bottomHeight = _height * 0.07;
     double _bottomIconWidth = _width * 0.05;
+
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
+
     double _paddingLR = _width * 0.06;
     double _listPaddingLR = _width * 0.1;
     double _listItemHeight = _height * 0.08;
+
     double _iconSize = _height * 0.05;
     double _h1Size = _height * 0.035;
     double _h2Size = _height * 0.03;
     double _pSize = _height * 0.025;
     double _timeSize = _width * 0.045;
+
     String _startView = _allDay
         ? '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]}'
         : '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]} ${_startDateTime.hour.toString().padLeft(2, '0')}:${_startDateTime.minute.toString().padLeft(2, '0')}';
@@ -51,73 +63,17 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
         ? '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]}'
         : '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]} ${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}';
 
-    CupertinoDatePickerMode _mode() {
-      if (_allDay)
-        return CupertinoDatePickerMode.date;
-      else
-        return CupertinoDatePickerMode.dateAndTime;
-    }
-
-    dynamic getTypeColor(value) {
-      dynamic color = value == null ? 0xffFFFFFF : typeColor[value - 1];
-      return color;
-    }
-
-    // alert --------------------------------------------------------------------------------------------
-    alert(String alertTitle, String alertTxt) async {
-      return showDialog<String>(
-        context: context,
-        builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(_height * 0.03))),
-          title: Text(alertTitle),
-          content: Text(alertTxt),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('關閉', style: TextStyle(color: _color)),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // conection ---------------------------------------------------------------------------------------
-    Future<bool> _createSchedule(Map<String, dynamic> data) async {
-      bool _isSubmit = false;
-      var url = Uri.parse('http://myday.sytes.net/schedule/create_common/');
-      var response = await http.post(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: json.encode(data));
-      var responseBody = json.decode(utf8.decode(response.bodyBytes));
-      print('statusCode: ${response.statusCode}');
-      print('body: ${utf8.decode(response.bodyBytes)}');
-      if (responseBody['response'] == false) {
-        await alert('錯誤', responseBody['message']);
-      } else if (responseBody['response'] == true) {
-        Fluttertoast.showToast(
-            msg: "新增成功",
-            toastLength: Toast.LENGTH_SHORT,
-            backgroundColor: Colors.black45,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            fontSize: size.height * 0.02);
-        _isSubmit = true;
-      }
-      return _isSubmit;
-    }
-
     // _submit -----------------------------------------------------------------------------------------
-    Future<bool> _submit() async {
-      String _alertTitle = '新增行程失敗';
-      bool _isNotCreate = false;
+    _submit() async {
+      String _alertTitle = '新增共同行程失敗';
       String uid = 'lili123';
-      bool _isSubmit = false;
       String title = _titleController.text;
       String startTime;
       String endTime;
+
+      int typeId = _type;
+      String place = _locationController.text;
+
       String startTimeString =
           '${_startDateTime.year.toString()}-${_startDateTime.month.toString().padLeft(2, '0')}-${_startDateTime.day.toString().padLeft(2, '0')} 00:00:00';
       String endTimeString =
@@ -129,55 +85,57 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
         startTime = _startDateTime.toString();
         endTime = _endDateTime.toString();
       }
-      int typeId = _type;
-      String place = _locationController.text;
 
       if (uid == null) {
-        await alert(_alertTitle, '請先登入');
+        await alert(context, _alertTitle, '請先登入');
         _isNotCreate = true;
         Navigator.pop(context);
-        return false;
       }
       if (title == null || title == '') {
-        await alert(_alertTitle, '請輸入標題');
+        await alert(context, _alertTitle, '請輸入標題');
         _isNotCreate = true;
-        return false;
       }
       if (startTime == null || startTime == '') {
-        await alert(_alertTitle, '請選擇開始時間');
+        await alert(context, _alertTitle, '請選擇開始時間');
         _isNotCreate = true;
-        return false;
       }
 
       if (endTime == null || endTime == '') {
-        await alert(_alertTitle, '請選擇結束時間');
+        await alert(context, _alertTitle, '請選擇結束時間');
         _isNotCreate = true;
-        return false;
       }
       if (typeId == null || typeId <= 0 || typeId > 8) {
-        await alert(_alertTitle, '請選擇類別');
+        await alert(context, _alertTitle, '請選擇類別');
         _isNotCreate = true;
-        return false;
       }
-
-      Map<String, dynamic> request = {
-        'uid': uid,
-        'groupNum': groupNum,
-        'title': title,
-        'startTime': startTime,
-        'endTime': endTime,
-        'typeId': typeId,
-        'place': place,
-      };
       if (_isNotCreate) {
         _isNotCreate = false;
-        return false;
+        return true;
       } else {
-        await _createSchedule(request).then((value) {
-          _isSubmit = value;
-        });
+        CreateCommon(
+          uid: uid,
+          groupNum: groupNum,
+          title: title,
+          startTime: startTime,
+          endTime: endTime,
+          typeId: typeId,
+          place: place,
+        );
+        return false;
       }
-      return _isSubmit;
+    }
+
+    dynamic getTypeColor(value) {
+      dynamic color = value == null ? 0xffFFFFFF : typeColor[value - 1];
+      return color;
+    }
+
+    // // picker mode ----------------------------------------------------------------------------------
+    CupertinoDatePickerMode _mode() {
+      if (_allDay)
+        return CupertinoDatePickerMode.date;
+      else
+        return CupertinoDatePickerMode.dateAndTime;
     }
 
     void _datePicker(contex, isStart) {
@@ -185,7 +143,7 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
       if (isStart)
         _dateTime = _startDateTime;
       else
-        _dateTime = _endDateTime;
+        _dateTime = _startDateTime.add(Duration(hours: 1));
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
@@ -208,9 +166,10 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
                   mode: _mode(),
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
-                    if (isStart)
+                    if (isStart) {
                       _startDateTime = value;
-                    else
+                      _endDateTime = value.add(Duration(hours: 1));
+                    } else
                       _endDateTime = value;
                   }),
                 ),
@@ -496,11 +455,7 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
                     ),
                     fillColor: _color,
                     onPressed: () async {
-                      _submit().then((value) {
-                        if (value == true) {
-                          Navigator.pop(context);
-                        }
-                      });
+                      if (await _submit() != true) Navigator.pop(context);
                     },
                   ),
                 ),
