@@ -30,6 +30,7 @@ dependencies:
   animations: ^2.0.1
   flutter_cupertino_date_picker: ^1.0.0
   http: ^0.13.3
+  fluttertoast: ^8.0.8
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -95,6 +96,7 @@ flutter:
     - assets/json/note_list.json
     - assets/json/studyplan_list.json
     - assets/json/common_schedule_list.json
+    - assets/json/get_common_schedule.json
     - assets/json/temporary_group_list.json
     - assets/json/temporary_group_invite_list.json
     - assets/json/get_temporary_group_invite.json

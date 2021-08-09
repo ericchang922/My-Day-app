@@ -9,11 +9,6 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_pickers/pickers.dart';
-// import 'package:flutter_pickers/style/picker_style.dart';
-// import 'package:flutter_pickers/time_picker/model/date_mode.dart';
-// import 'package:flutter_pickers/time_picker/model/pduration.dart';
-// import 'package:flutter_pickers/time_picker/model/suffix.dart';
 
 class VotePage extends StatefulWidget {
   int voteNum;
@@ -57,8 +52,6 @@ class _VoteWidget extends State<VotePage> {
   @override
   void initState() {
     super.initState();
-
-    
 
     _getGroupMemberRequest();
     _getVoteRequest();
@@ -703,7 +696,7 @@ class _VoteWidget extends State<VotePage> {
                                   print(_voteItemNameController.text);
                                 }
                               });
-                    
+
                               Navigator.of(context).pop();
                             }))
                   ],

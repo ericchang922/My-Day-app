@@ -1,9 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:My_Day_app/common_schedule/common_schedule_create_page.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_edit_page.dart';
+import 'package:My_Day_app/group/group_detail_page.dart';
+import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/common_schedule_list_model.dart';
+import 'package:animations/animations.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:http/http.dart' as http;
 
 class CommonScheduleListPage extends StatefulWidget {
   int groupNum;
@@ -14,30 +22,51 @@ class CommonScheduleListPage extends StatefulWidget {
       new _CommonScheduleListWidget(groupNum);
 }
 
-class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
+class _CommonScheduleListWidget extends State<CommonScheduleListPage> with RouteAware{
   int groupNum;
   _CommonScheduleListWidget(this.groupNum);
 
   CommonScheduleListModel _commonScheduleListModel = null;
 
+  String uid = 'lili123';
+
   @override
   void initState() {
     super.initState();
-    _groupStudyPlanListtRequest();
+    _groupScheduleListRequest();
   }
 
-  Future<void> _groupStudyPlanListtRequest() async {
-    var jsonString =
-        await rootBundle.loadString('assets/json/common_schedule_list.json');
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
 
-    // var httpClient = HttpClient();
-    // var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-    //     '/vote/get_end_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
-    // var response = await request.close();
-    // var jsonString = await response.transform(utf8.decoder).join();
-    // httpClient.close();
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
 
-    var jsonMap = json.decode(jsonString);
+  @override
+  void didPopNext() {
+    _groupScheduleListRequest();
+  }
+
+  Future<void> _groupScheduleListRequest() async {
+    // var responseBody =
+    //     await rootBundle.loadString('assets/json/common_schedule_list.json');
+
+    var url = Uri.parse("http://myday.sytes.net/schedule/common_list/?uid=" +
+        uid +
+        "&groupNum=" +
+        groupNum.toString());
+    var response = await http.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    var jsonMap = json.decode(responseBody);
 
     var commonScheduleListModel = CommonScheduleListModel.fromJson(jsonMap);
     setState(() {
@@ -48,6 +77,9 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    Color color = Theme.of(context).primaryColor;
+    double _fabDimension = 56.0;
+
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
@@ -61,7 +93,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
               child: GestureDetector(
                 child: Icon(Icons.chevron_left),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
                 },
               ),
             ),
@@ -97,10 +129,37 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
               ],
             ),
           ),
+          floatingActionButton: OpenContainer(
+            transitionType: ContainerTransitionType.fadeThrough,
+            openBuilder: (BuildContext context, VoidCallback _) {
+              return CommonScheduleCreatePage(groupNum);
+            },
+            closedElevation: 6.0,
+            closedShape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(_fabDimension / 2)),
+            ),
+            closedColor: color,
+            closedBuilder: (BuildContext context, VoidCallback openContainer) {
+              return SizedBox(
+                height: _fabDimension,
+                width: _fabDimension,
+                child: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            },
+          ),
           body: TabBarView(
             children: <Widget>[
-              Container(color: Colors.white, child: _buildFutureScheduleList(context)),
-              Container(color: Colors.white,  child: _buildPastScheduleList(context)),
+              Container(
+                  color: Colors.white,
+                  child: _buildFutureScheduleList(context)),
+              Container(
+                  color: Colors.white, child: _buildPastScheduleList(context)),
             ],
           )),
     );
@@ -111,25 +170,18 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
 
     String _futureScheduleTime(index) {
       var schedule = _commonScheduleListModel.futureSchedule[index];
-      String startTime = formatDate(
-          DateTime(
-              schedule.startTime.year,
-              schedule.startTime.month,
-              schedule.startTime.day,
-              schedule.startTime.hour,
-              schedule.startTime.minute),
-          [HH, ':', nn]);
+      String startTime =
+          "${schedule.startTime.hour.toString().padLeft(2, '0')}:${schedule.startTime.minute.toString().padLeft(2, '0')}";
+      String endTime =
+          "${schedule.endTime.hour.toString().padLeft(2, '0')}:${schedule.endTime.minute.toString().padLeft(2, '0')}";
 
-      String endTime = formatDate(
-          DateTime(
-              schedule.endTime.year,
-              schedule.endTime.month,
-              schedule.endTime.day,
-              schedule.endTime.hour,
-              schedule.endTime.minute),
-          [HH, ':', nn]);
-      if (schedule.startTime.year == schedule.endTime.year) {
-        return startTime + " - " + endTime;
+      if (schedule.startTime.day == schedule.endTime.day) {
+        if (startTime == "00:00" && endTime == "00:00" ||
+            startTime == "00:00" && endTime == "23:59") {
+          return "整天";
+        } else {
+          return startTime + " - " + endTime;
+        }
       } else {
         return startTime + " - ";
       }
@@ -153,26 +205,29 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
                   contentPadding: EdgeInsets.symmetric(
                       horizontal: screenSize.height * 0.01,
                       vertical: screenSize.height * 0.01),
-                  leading: Container(
-                      margin: EdgeInsets.only(left: screenSize.height * 0.02),
-                      child: Column(
-                        children: [
-                          Text(schedule.startTime.month.toString() + "月",
-                              style: TextStyle(
-                                  fontSize: screenSize.width * 0.035)),
-                          Text(schedule.startTime.day.toString() + "日",
-                              style: TextStyle(
-                                  fontSize: screenSize.width * 0.046)),
-                        ],
-                      )),
+                  leading: SizedBox(
+                    width: screenSize.width * 0.14,
+                    child: Container(
+                        margin: EdgeInsets.only(left: screenSize.height * 0.02),
+                        child: Column(
+                          children: [
+                            Text(schedule.startTime.month.toString() + "月",
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.035)),
+                            Text(schedule.startTime.day.toString() + "日",
+                                style: TextStyle(
+                                    fontSize: screenSize.width * 0.046)),
+                          ],
+                        )),
+                  ),
                   title: Container(
-                    margin: EdgeInsets.only(left: screenSize.height * 0.03),
+                    margin: EdgeInsets.only(left: screenSize.height * 0.02),
                     child: Text(schedule.title,
                         style: TextStyle(fontSize: screenSize.width * 0.052)),
                   ),
                   subtitle: Container(
                     margin: EdgeInsets.only(
-                        left: screenSize.height * 0.03,
+                        left: screenSize.height * 0.02,
                         top: screenSize.height * 0.007),
                     child: Text(_futureScheduleTime(index),
                         style: TextStyle(
@@ -190,7 +245,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
                           value: 1,
                           child: Container(
                               alignment: Alignment.center,
-                              child: Text("隱藏",
+                              child: Text("編輯",
                                   style: TextStyle(
                                       fontSize: screenSize.width * 0.035))),
                         ),
@@ -208,6 +263,15 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
                       ];
                     },
                     onSelected: (int value) {
+                      switch (value) {
+                        case 1:
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CommonScheduleEditPage(
+                                  schedule.scheduleNum)));
+                          break;
+                        case 2:
+                          break;
+                      }
                       print(schedule.scheduleNum);
                     },
                   ),
@@ -230,25 +294,18 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
 
     String _pastScheduleTime(index) {
       var schedule = _commonScheduleListModel.pastSchedule[index];
-      String startTime = formatDate(
-          DateTime(
-              schedule.startTime.year,
-              schedule.startTime.month,
-              schedule.startTime.day,
-              schedule.startTime.hour,
-              schedule.startTime.minute),
-          [HH, ':', nn]);
+      String startTime =
+          "${schedule.startTime.hour.toString().padLeft(2, '0')}:${schedule.startTime.minute.toString().padLeft(2, '0')}";
+      String endTime =
+          "${schedule.endTime.hour.toString().padLeft(2, '0')}:${schedule.endTime.minute.toString().padLeft(2, '0')}";
 
-      String endTime = formatDate(
-          DateTime(
-              schedule.endTime.year,
-              schedule.endTime.month,
-              schedule.endTime.day,
-              schedule.endTime.hour,
-              schedule.endTime.minute),
-          [HH, ':', nn]);
-      if (schedule.startTime.year == schedule.endTime.year) {
-        return startTime + " - " + endTime;
+      if (schedule.startTime.day == schedule.endTime.day) {
+        if (startTime == "00:00" && endTime == "00:00" ||
+            startTime == "00:00" && endTime == "23:59") {
+          return "整天";
+        } else {
+          return startTime + " - " + endTime;
+        }
       } else {
         return startTime + " - ";
       }
@@ -307,17 +364,6 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
                       return [
                         PopupMenuItem<int>(
                           value: 1,
-                          child: Container(
-                              alignment: Alignment.center,
-                              child: Text("隱藏",
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.035))),
-                        ),
-                        PopupMenuDivider(
-                          height: 1,
-                        ),
-                        PopupMenuItem<int>(
-                          value: 2,
                           child: Container(
                               alignment: Alignment.center,
                               child: Text("刪除",
