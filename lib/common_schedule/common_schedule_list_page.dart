@@ -1,17 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:My_Day_app/common_schedule/common_schedule_create_page.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_edit_page.dart';
-import 'package:My_Day_app/group/group_detail_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/common_schedule_list_model.dart';
+import 'package:My_Day_app/schedule/schedule_request.dart';
 import 'package:animations/animations.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:http/http.dart' as http;
 
 class CommonScheduleListPage extends StatefulWidget {
   int groupNum;
@@ -22,7 +16,8 @@ class CommonScheduleListPage extends StatefulWidget {
       new _CommonScheduleListWidget(groupNum);
 }
 
-class _CommonScheduleListWidget extends State<CommonScheduleListPage> with RouteAware{
+class _CommonScheduleListWidget extends State<CommonScheduleListPage>
+    with RouteAware {
   int groupNum;
   _CommonScheduleListWidget(this.groupNum);
 
@@ -54,23 +49,15 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> with Route
   }
 
   Future<void> _groupScheduleListRequest() async {
-    // var responseBody =
+    // var response =
     //     await rootBundle.loadString('assets/json/common_schedule_list.json');
+    // var responseBody = json.decode(response);
 
-    var url = Uri.parse("http://myday.sytes.net/schedule/common_list/?uid=" +
-        uid +
-        "&groupNum=" +
-        groupNum.toString());
-    var response = await http.get(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
-    var responseBody = utf8.decode(response.bodyBytes);
-
-    var jsonMap = json.decode(responseBody);
-
-    var commonScheduleListModel = CommonScheduleListModel.fromJson(jsonMap);
-    setState(() {
-      _commonScheduleListModel = commonScheduleListModel;
+    await CommonList(uid, groupNum).commonList().then((value) {
+      var commonScheduleListModel = CommonScheduleListModel.fromJson(value);
+      setState(() {
+        _commonScheduleListModel = commonScheduleListModel;
+      });
     });
   }
 
@@ -245,17 +232,6 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> with Route
                           value: 1,
                           child: Container(
                               alignment: Alignment.center,
-                              child: Text("編輯",
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.035))),
-                        ),
-                        PopupMenuDivider(
-                          height: 1,
-                        ),
-                        PopupMenuItem<int>(
-                          value: 2,
-                          child: Container(
-                              alignment: Alignment.center,
                               child: Text("刪除",
                                   style: TextStyle(
                                       fontSize: screenSize.width * 0.035))),
@@ -263,18 +239,14 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> with Route
                       ];
                     },
                     onSelected: (int value) {
-                      switch (value) {
-                        case 1:
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => CommonScheduleEditPage(
-                                  schedule.scheduleNum)));
-                          break;
-                        case 2:
-                          break;
-                      }
                       print(schedule.scheduleNum);
                     },
                   ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            CommonScheduleEditPage(schedule.scheduleNum)));
+                  },
                 );
               },
               separatorBuilder: (context, index) {
@@ -376,6 +348,11 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> with Route
                       print(schedule.scheduleNum);
                     },
                   ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            CommonScheduleEditPage(schedule.scheduleNum)));
+                  },
                 );
               },
               separatorBuilder: (context, index) {

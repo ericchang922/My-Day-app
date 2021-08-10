@@ -1,13 +1,10 @@
-import 'dart:convert';
-
 import 'package:My_Day_app/models/get_common_schedule_model.dart';
-import 'package:My_Day_app/schedule/create_schedule.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/schedule/schedule_form.dart';
+import 'package:My_Day_app/schedule/schedule_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:http/http.dart' as http;
 
 class CommonScheduleEditPage extends StatefulWidget {
   int scheduleNum;
@@ -26,18 +23,19 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
 
   int _type;
   bool _allDay = false;
+  bool _isNotCreate = false;
   String uid = 'lili123';
-  String _title = "";
-  String _place = "";
+  String _title;
+  String _location;
   DateTime _startDateTime = DateTime.now();
   DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
 
-  var _typeNameList = <String>['讀書', '工作', '會議', '休閒', '社團', '吃飯', '班級', '個人'];
+  List _typeNameList = <String>['讀書', '工作', '會議', '休閒', '社團', '吃飯', '班級', '個人'];
 
   TextEditingController get _titleController =>
       TextEditingController(text: _title);
   TextEditingController get _locationController =>
-      TextEditingController(text: _place);
+      TextEditingController(text: _location);
 
   @override
   void initState() {
@@ -45,58 +43,64 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
     _getCommonScheduleRequest();
   }
 
-  Future<void> _getCommonScheduleRequest() async {
-    // var responseBody =
+  _getCommonScheduleRequest() async {
+    // var response =
     //     await rootBundle.loadString('assets/json/get_common_schedule.json');
+    // var responseBody = json.decode(response);
 
-    var url = Uri.parse("http://myday.sytes.net/schedule/get_common/?uid=" +
-        uid +
-        "&scheduleNum=" +
-        scheduleNum.toString());
-    var response = await http.get(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
+    await GetCommon(uid, scheduleNum).getCommon().then((value) {
+      var getCommonScheduleModel = GetCommonScheduleModel.fromJson(value);
+      setState(() {
+        _getCommonScheduleModel = getCommonScheduleModel;
+      });
     });
-    var responseBody = utf8.decode(response.bodyBytes);
 
-    var jsonMap = json.decode(responseBody);
-
-    var getCommonScheduleModel = GetCommonScheduleModel.fromJson(jsonMap);
     setState(() {
-      _getCommonScheduleModel = getCommonScheduleModel;
-
       _title = _getCommonScheduleModel.title;
       _type = _typeNameList.indexOf(_getCommonScheduleModel.typeName) + 1;
       _startDateTime = _getCommonScheduleModel.startTime;
       _endDateTime = _getCommonScheduleModel.endTime;
       if (_getCommonScheduleModel.place != null)
-        _place = _getCommonScheduleModel.place;
+        _location = _getCommonScheduleModel.place;
 
       String _startString =
           "${_startDateTime.hour.toString().padLeft(2, '0')}:${_startDateTime.minute.toString().padLeft(2, '0')}";
       String _endString =
           "${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}";
-      if (_startString == "00:00" && _endString == "00:00") _allDay = true;
+
+      if (_startDateTime.day == _endDateTime.day) {
+        if (_startString == "00:00" && _endString == "00:00" ||
+            _startString == "00:00" && _endString == "23:59") {
+          _allDay = true;
+        }
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
+    _titleController.text = _title;
+    _locationController.text = _location;
+    // values ------------------------------------------------------------------------------------------
+    Size size = MediaQuery.of(context).size;
     double _height = size.height;
     double _width = size.width;
     double _bottomHeight = _height * 0.07;
     double _bottomIconWidth = _width * 0.05;
+
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
+
     double _paddingLR = _width * 0.06;
     double _listPaddingLR = _width * 0.1;
     double _listItemHeight = _height * 0.08;
+
     double _iconSize = _height * 0.05;
     double _h1Size = _height * 0.035;
     double _h2Size = _height * 0.03;
     double _pSize = _height * 0.025;
     double _timeSize = _width * 0.045;
+
     String _startView = _allDay
         ? '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]}'
         : '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]} ${_startDateTime.hour.toString().padLeft(2, '0')}:${_startDateTime.minute.toString().padLeft(2, '0')}';
@@ -104,72 +108,16 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
         ? '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]}'
         : '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]} ${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}';
 
-    CupertinoDatePickerMode _mode() {
-      if (_allDay)
-        return CupertinoDatePickerMode.date;
-      else
-        return CupertinoDatePickerMode.dateAndTime;
-    }
-
-    dynamic getTypeColor(value) {
-      dynamic color = value == null ? 0xffFFFFFF : typeColor[value - 1];
-      return color;
-    }
-
-    // alert --------------------------------------------------------------------------------------------
-    alert(String alertTitle, String alertTxt) async {
-      return showDialog<String>(
-        context: context,
-        builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(_height * 0.03))),
-          title: Text(alertTitle),
-          content: Text(alertTxt),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('關閉', style: TextStyle(color: _color)),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // conection ---------------------------------------------------------------------------------------
-    Future<bool> _editSchedule(Map<String, dynamic> data) async {
-      bool _isSubmit = false;
-      var url = Uri.parse('http://myday.sytes.net/schedule/edit/');
-      var response = await http.post(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: json.encode(data));
-      var responseBody = json.decode(utf8.decode(response.bodyBytes));
-      print('statusCode: ${response.statusCode}');
-      print('body: ${utf8.decode(response.bodyBytes)}');
-      if (responseBody['response'] == false) {
-        await alert('錯誤', responseBody['message']);
-      } else if (responseBody['response'] == true) {
-        Fluttertoast.showToast(
-            msg: "編輯成功",
-            toastLength: Toast.LENGTH_SHORT,
-            backgroundColor: Colors.black45,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            fontSize: size.height * 0.02);
-        _isSubmit = true;
-      }
-      return _isSubmit;
-    }
-
-    // _submit -----------------------------------------------------------------------------------------
-    Future<bool> _submit() async {
-      String _alertTitle = '編輯行程失敗';
-      bool _isNotCreate = false;
-      bool _isSubmit = false;
+// _submit -----------------------------------------------------------------------------------------
+    _submit() async {
+      String _alertTitle = '新增共同行程失敗';
       String title = _titleController.text;
       String startTime;
       String endTime;
+
+      int typeId = _type;
+      String place = _locationController.text;
+
       String startTimeString =
           '${_startDateTime.year.toString()}-${_startDateTime.month.toString().padLeft(2, '0')}-${_startDateTime.day.toString().padLeft(2, '0')} 00:00:00';
       String endTimeString =
@@ -181,60 +129,62 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
         startTime = _startDateTime.toString();
         endTime = _endDateTime.toString();
       }
-      dynamic typeId = _type;
-      String place = _locationController.text;
 
       if (uid == null) {
-        await alert(_alertTitle, '請先登入');
+        await alert(context, _alertTitle, '請先登入');
         _isNotCreate = true;
         Navigator.pop(context);
-        return false;
       }
       if (title == null || title == '') {
-        await alert(_alertTitle, '請輸入標題');
+        await alert(context, _alertTitle, '請輸入標題');
         _isNotCreate = true;
-        return false;
       }
       if (startTime == null || startTime == '') {
-        await alert(_alertTitle, '請選擇開始時間');
+        await alert(context, _alertTitle, '請選擇開始時間');
         _isNotCreate = true;
-        return false;
       }
 
       if (endTime == null || endTime == '') {
-        await alert(_alertTitle, '請選擇結束時間');
+        await alert(context, _alertTitle, '請選擇結束時間');
         _isNotCreate = true;
-        return false;
       }
       if (typeId == null || typeId <= 0 || typeId > 8) {
-        await alert(_alertTitle, '請選擇類別');
+        await alert(context, _alertTitle, '請選擇類別');
         _isNotCreate = true;
-        return false;
       }
 
       Map remind = {'isRemind': false, 'remindTime': []};
 
-      Map<String, dynamic> request = {
-        'uid': uid,
-        'scheduleNum': scheduleNum,
-        'title': title,
-        'startTime': startTime,
-        'endTime': endTime,
-        'remind': remind,
-        'typeId': typeId,
-        "isCountdown": false,
-        'place': place,
-        'remark': ""
-      };
       if (_isNotCreate) {
         _isNotCreate = false;
-        return false;
+        return true;
       } else {
-        await _editSchedule(request).then((value) {
-          _isSubmit = value;
-        });
+        Edit(
+            uid: uid,
+            scheduleNum: scheduleNum,
+            title: title,
+            startTime: startTime,
+            endTime: endTime,
+            remind: remind,
+            typeId: typeId,
+            isCountdown: false,
+            place: place,
+            remark: "");
+        return false;
       }
-      return _isSubmit;
+    }
+
+    dynamic getTypeColor(value) {
+      dynamic color = value == null ? 0xffFFFFFF : typeColor[value - 1];
+      return color;
+    }
+
+    // // picker mode ----------------------------------------------------------------------------------
+    CupertinoDatePickerMode _mode() {
+      if (_allDay)
+        return CupertinoDatePickerMode.date;
+      else
+        return CupertinoDatePickerMode.dateAndTime;
     }
 
     void _datePicker(contex, isStart) {
@@ -242,7 +192,7 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
       if (isStart)
         _dateTime = _startDateTime;
       else
-        _dateTime = _endDateTime;
+        _dateTime = _startDateTime.add(Duration(hours: 1));
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
@@ -265,9 +215,10 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
                   mode: _mode(),
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
-                    if (isStart)
+                    if (isStart) {
                       _startDateTime = value;
-                    else
+                      _endDateTime = value.add(Duration(hours: 1));
+                    } else
                       _endDateTime = value;
                   }),
                 ),
@@ -507,7 +458,7 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
                         FocusScope.of(context).requestFocus(FocusNode()),
                     onChanged: (text) {
                       setState(() {
-                        _place = text;
+                        _location = text;
                       });
                     },
                   ),
@@ -519,63 +470,63 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
       ],
     );
 
-    return Scaffold(
-      body: GestureDetector(
-        // 點擊空白處釋放焦點
-        behavior: HitTestBehavior.translucent,
-        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        child: Container(
-          color: Colors.white,
-          child: SafeArea(
-            bottom: false,
-            child: Center(child: createScheduleList),
+    if (_getCommonScheduleModel != null) {
+      return Scaffold(
+        body: GestureDetector(
+          // 點擊空白處釋放焦點
+          behavior: HitTestBehavior.translucent,
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          child: Container(
+            color: Colors.white,
+            child: SafeArea(
+              bottom: false,
+              child: Center(child: createScheduleList),
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: Container(
-        color: Theme.of(context).bottomAppBarColor,
-        child: SafeArea(
-          top: false,
-          child: BottomAppBar(
-            elevation: 0,
-            child: Row(children: <Widget>[
-              Expanded(
-                child: SizedBox(
-                  height: _bottomHeight,
-                  child: RawMaterialButton(
+        bottomNavigationBar: Container(
+          color: Theme.of(context).bottomAppBarColor,
+          child: SafeArea(
+            top: false,
+            child: BottomAppBar(
+              elevation: 0,
+              child: Row(children: <Widget>[
+                Expanded(
+                  child: SizedBox(
+                    height: _bottomHeight,
+                    child: RawMaterialButton(
+                        elevation: 0,
+                        child: Image.asset(
+                          'assets/images/cancel.png',
+                          width: _bottomIconWidth,
+                        ),
+                        fillColor: _light,
+                        onPressed: () => Navigator.pop(context)),
+                  ),
+                ), // 取消按鈕
+                Expanded(
+                  child: SizedBox(
+                    height: _bottomHeight,
+                    child: RawMaterialButton(
                       elevation: 0,
                       child: Image.asset(
-                        'assets/images/cancel.png',
+                        'assets/images/confirm.png',
                         width: _bottomIconWidth,
                       ),
-                      fillColor: _light,
-                      onPressed: () => Navigator.pop(context)),
-                ),
-              ), // 取消按鈕
-              Expanded(
-                child: SizedBox(
-                  height: _bottomHeight,
-                  child: RawMaterialButton(
-                    elevation: 0,
-                    child: Image.asset(
-                      'assets/images/confirm.png',
-                      width: _bottomIconWidth,
+                      fillColor: _color,
+                      onPressed: () async {
+                        if (await _submit() != true) Navigator.pop(context);
+                      },
                     ),
-                    fillColor: _color,
-                    onPressed: () async {
-                      _submit().then((value) {
-                        if (value == true) {
-                          Navigator.pop(context);
-                        }
-                      });
-                    },
                   ),
-                ),
-              )
-            ]),
+                )
+              ]),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Center(child: CircularProgressIndicator());
+    }
   }
 }
