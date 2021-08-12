@@ -1,3 +1,4 @@
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
 import 'package:My_Day_app/schedule/schedule_request.dart';
@@ -60,7 +61,7 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
         : '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]} ${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}';
 
     // _submit -----------------------------------------------------------------------------------------
-    _submit() async {
+    Future<bool> _submit() async {
       String _alertTitle = '新增共同行程失敗';
       String uid = 'lili123';
       String title = _titleController.text;
@@ -74,6 +75,9 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
           '${_startDateTime.year.toString()}-${_startDateTime.month.toString().padLeft(2, '0')}-${_startDateTime.day.toString().padLeft(2, '0')} 00:00:00';
       String endTimeString =
           '${_endDateTime.year.toString()}-${_endDateTime.month.toString().padLeft(2, '0')}-${_endDateTime.day.toString().padLeft(2, '0')} 23:59:59';
+
+      bool _request;
+
       if (_allDay) {
         startTime = DateTime.parse(startTimeString).toString();
         endTime = DateTime.parse(endTimeString).toString();
@@ -106,9 +110,9 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
       }
       if (_isNotCreate) {
         _isNotCreate = false;
-        return true;
+        _request = false;
       } else {
-        CreateCommon(
+        await CreateCommon(
           uid: uid,
           groupNum: groupNum,
           title: title,
@@ -116,9 +120,14 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
           endTime: endTime,
           typeId: typeId,
           place: place,
-        );
-        return false;
+        ).createCommon().then((value) {
+          if (value == true)
+            _request = true;
+          else
+            _request = false;
+        });
       }
+      return _request;
     }
 
     dynamic getTypeColor(value) {
@@ -451,7 +460,17 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
                     ),
                     fillColor: _color,
                     onPressed: () async {
-                      if (await _submit() != true) Navigator.pop(context);
+                      bool _isSuccess;
+                      await _submit().then((value) {
+                        if (value == true)
+                          _isSuccess = true;
+                        else
+                          _isSuccess = false;
+                      });
+                      if (_isSuccess)
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                CommonScheduleListPage(groupNum)));
                     },
                   ),
                 ),
