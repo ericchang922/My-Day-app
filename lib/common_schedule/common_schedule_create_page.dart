@@ -128,22 +128,7 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
           return true;
         else
           return false;
-        // await CreateCommon(
-        //   uid: uid,
-        //   groupNum: groupNum,
-        //   title: title,
-        //   startTime: startTime,
-        //   endTime: endTime,
-        //   typeId: typeId,
-        //   place: place,
-        // ).createCommon().then((value) {
-        //   if (value == true)
-        //     _request = true;
-        //   else
-        //     _request = false;
-        // });
       }
-      // return _request;
     }
 
     dynamic getTypeColor(value) {
