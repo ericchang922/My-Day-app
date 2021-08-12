@@ -77,56 +77,105 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
+    double _bottomHeight = _height * 0.07;
+    double _bottomIconWidth = _width * 0.05;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _light = Theme.of(context).primaryColorLight;
+    
     if (_getTemporaryGroupInviteModel != null) {
       return Scaffold(
-          appBar: AppBar(
-              backgroundColor: Theme.of(context).primaryColor,
-              leading: Container(
-                margin: EdgeInsets.only(left: screenSize.height * 0.02),
-                child: GestureDetector(
-                  child: Icon(Icons.chevron_left),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+        appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            leading: Container(
+              margin: EdgeInsets.only(left: _height * 0.02),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
               ),
-              title: Text(_getTemporaryGroupInviteModel.title,
-                  style: TextStyle(fontSize: screenSize.width * 0.052))),
-          body: Container(color: Colors.white, child: _build(context)));
+            ),
+            title: Text(_getTemporaryGroupInviteModel.title,
+                style: TextStyle(fontSize: _width * 0.052))),
+        body: Container(color: Colors.white, child: _build(context)),
+        bottomNavigationBar: Container(
+          color: Theme.of(context).bottomAppBarColor,
+          child: SafeArea(
+            top: false,
+            child: BottomAppBar(
+              elevation: 0,
+              child: Row(children: <Widget>[
+                Expanded(
+                  child: SizedBox(
+                    height: _bottomHeight,
+                    child: RawMaterialButton(
+                        elevation: 0,
+                        child: Image.asset(
+                          'assets/images/cancel.png',
+                          width: _bottomIconWidth,
+                        ),
+                        fillColor: _light,
+                        onPressed: () => Navigator.pop(context)),
+                  ),
+                ), // 取消按鈕
+                Expanded(
+                  child: SizedBox(
+                    height: _bottomHeight,
+                    child: RawMaterialButton(
+                      elevation: 0,
+                      child: Image.asset(
+                        'assets/images/confirm.png',
+                        width: _bottomIconWidth,
+                      ),
+                      fillColor: _color,
+                      onPressed: () async {
+                        
+                      },
+                    ),
+                  ),
+                )
+              ]),
+            ),
+          ),
+        ),
+      );
     } else {
       return Center(child: CircularProgressIndicator());
     }
   }
 
   Widget _build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     return ListView(
       children: [
         SizedBox(
-          height: screenSize.height * 0.02,
+          height: size.height * 0.02,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("開始", style: TextStyle(fontSize: screenSize.height * 0.025)),
+            Text("開始", style: TextStyle(fontSize: size.height * 0.025)),
             Text(_startTime,
-                style: TextStyle(fontSize: screenSize.height * 0.025)),
+                style: TextStyle(fontSize: size.height * 0.025)),
           ],
         ),
         SizedBox(
-          height: screenSize.height * 0.015,
+          height: size.height * 0.015,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("結束", style: TextStyle(fontSize: screenSize.height * 0.025)),
+            Text("結束", style: TextStyle(fontSize: size.height * 0.025)),
             Text(_endTime,
-                style: TextStyle(fontSize: screenSize.height * 0.025)),
+                style: TextStyle(fontSize: size.height * 0.025)),
           ],
         ),
         SizedBox(
-          height: screenSize.height * 0.02,
+          height: size.height * 0.02,
         ),
         Divider(),
         _buildList(context)
@@ -135,16 +184,16 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
   }
 
   Image getImage(String imageString) {
-    var screenSize = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     bool isGetImage;
     Image friendImage = Image.asset(
       'assets/images/friend_choose.png',
-      width: screenSize.height * 0.04683,
+      width: size.height * 0.04683,
     );
     const Base64Codec base64 = Base64Codec();
     Image image = Image.memory(base64.decode(imageString),
-        width: screenSize.height * 0.04683,
-        height: screenSize.height * 0.04683,
+        width: size.height * 0.04683,
+        height: size.height * 0.04683,
         fit: BoxFit.fill);
     var resolve = image.image.resolve(ImageConfiguration.empty);
     resolve.addListener(ImageStreamListener((_, __) {
@@ -173,19 +222,19 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
   }
 
   Widget _buildInviteMemberList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
         Container(
           margin: EdgeInsets.only(
-              left: screenSize.height * 0.03,
-              bottom: screenSize.height * 0.02,
-              top: screenSize.height * 0.02),
+              left: size.height * 0.03,
+              bottom: size.height * 0.02,
+              top: size.height * 0.02),
           child: Text('邀請中',
               style: TextStyle(
-                  fontSize: screenSize.width * 0.041,
+                  fontSize: size.width * 0.041,
                   color: Color(0xff7AAAD8))),
         ),
         ListView.separated(
@@ -196,13 +245,13 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
             var members = _inviteMemberList[index];
             return ListTile(
               contentPadding: EdgeInsets.symmetric(
-                  horizontal: screenSize.width * 0.055, vertical: 0.0),
+                  horizontal: size.width * 0.055, vertical: 0.0),
               leading: ClipOval(
                 child: getImage(members.memberPhoto),
               ),
               title: Text(
                 members.memberName,
-                style: TextStyle(fontSize: screenSize.width * 0.041),
+                style: TextStyle(fontSize: size.width * 0.041),
               ),
             );
           },
@@ -215,32 +264,33 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
   }
 
   Widget _buildMemberList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
         Container(
           margin: EdgeInsets.only(
-              left: screenSize.height * 0.03,
-              bottom: screenSize.height * 0.02,
-              top: screenSize.height * 0.02),
+              left: size.height * 0.03,
+              bottom: size.height * 0.02,
+              top: size.height * 0.02),
           child: Text('成員',
               style: TextStyle(
-                  fontSize: screenSize.width * 0.041,
+                  fontSize: size.width * 0.041,
                   color: Color(0xff7AAAD8))),
         ),
         ListTile(
           contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.055, vertical: 0.0),
+              horizontal: size.width * 0.055, vertical: 0.0),
           leading: ClipOval(
             child: getImage(_getTemporaryGroupInviteModel.founderPhoto),
           ),
           title: Text(
             _getTemporaryGroupInviteModel.founderName,
-            style: TextStyle(fontSize: screenSize.width * 0.041),
+            style: TextStyle(fontSize: size.width * 0.041),
           ),
-          trailing: Text("建立者", style: TextStyle(fontSize: screenSize.width * 0.041)),
+          trailing:
+              Text("建立者", style: TextStyle(fontSize: size.width * 0.041)),
         ),
         ListView.separated(
           shrinkWrap: true,
@@ -250,13 +300,13 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
             var members = _memberList[index];
             return ListTile(
               contentPadding: EdgeInsets.symmetric(
-                  horizontal: screenSize.width * 0.055, vertical: 0.0),
+                  horizontal: size.width * 0.055, vertical: 0.0),
               leading: ClipOval(
                 child: getImage(members.memberPhoto),
               ),
               title: Text(
                 members.memberName,
-                style: TextStyle(fontSize: screenSize.width * 0.041),
+                style: TextStyle(fontSize: size.width * 0.041),
               ),
             );
           },
