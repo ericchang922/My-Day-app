@@ -1,9 +1,11 @@
 // flutter
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 // my day
 import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/schedule/schedule_request.dart';
+import 'package:My_Day_app/public/schedule_request/create_new.dart';
+import 'package:My_Day_app/public/schedule_request/edit.dart';
 import 'package:My_Day_app/schedule/remind_item.dart';
 
 List<String> weekdayName = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
@@ -20,6 +22,8 @@ final List<dynamic> typeColor = [
 ];
 
 class ScheduleForm extends StatefulWidget {
+  String submitType;
+  int scheduleNum;
   String title;
   DateTime startDateTime;
   DateTime endDateTime;
@@ -30,7 +34,9 @@ class ScheduleForm extends StatefulWidget {
   String remark;
 
   ScheduleForm(
-      {String title,
+      {String submitType = 'create_new',
+      int scheduleNum,
+      String title,
       DateTime startDateTime,
       DateTime endDateTime,
       int type,
@@ -38,6 +44,8 @@ class ScheduleForm extends StatefulWidget {
       List remindTimeList,
       bool isCountdown = false,
       String remark}) {
+    this.submitType = submitType;
+    this.scheduleNum = scheduleNum;
     this.title = title;
     this.startDateTime = startDateTime;
     this.endDateTime = endDateTime;
@@ -47,13 +55,25 @@ class ScheduleForm extends StatefulWidget {
     this.isCountdown = isCountdown;
     this.remark = remark;
   }
-  
+
   @override
-  State<ScheduleForm> createState() => _ScheduleForm(title, startDateTime,
-      endDateTime, type, location, remindTimeList, isCountdown, remark);
+  State<ScheduleForm> createState() => _ScheduleForm(
+      submitType,
+      scheduleNum,
+      title,
+      startDateTime,
+      endDateTime,
+      type,
+      location,
+      remindTimeList,
+      isCountdown,
+      remark);
 }
 
 class _ScheduleForm extends State<ScheduleForm> {
+  int scheduleNum;
+  String _submitType;
+  Map _submitMap = {'create_new': 1, 'edit': 2};
   int _type;
 
   DateTime _startDateTime = DateTime.now();
@@ -80,8 +100,17 @@ class _ScheduleForm extends State<ScheduleForm> {
         () => setState(() => _remarkIsFocus = _remarkFocus.hasFocus));
   }
 
-  _ScheduleForm(this._title, this._startDateTime, this._endDateTime, this._type,
-      this._location, this._remindTimeList, this._isCountdown, this._remark);
+  _ScheduleForm(
+      this._submitType,
+      this.scheduleNum,
+      this._title,
+      this._startDateTime,
+      this._endDateTime,
+      this._type,
+      this._location,
+      this._remindTimeList,
+      this._isCountdown,
+      this._remark);
 
   @override
   Widget build(BuildContext context) {
@@ -200,17 +229,42 @@ class _ScheduleForm extends State<ScheduleForm> {
         _isNotCreate = false;
         return true;
       } else {
-        CreateNew(
-            uid: uid,
-            title: title,
-            startTime: startTime,
-            endTime: endTime,
-            remind: remind,
-            typeId: typeId,
-            isCountdown: isCountdown,
-            place: place,
-            remark: remark);
-        return false;
+        var submitWidget;
+        _submitWidgetfunc() async {
+          switch (_submitMap[_submitType]) {
+            case 1:
+              return CreateNew(
+                  context: context,
+                  uid: uid,
+                  title: title,
+                  startTime: startTime,
+                  endTime: endTime,
+                  remind: remind,
+                  typeId: typeId,
+                  isCountdown: isCountdown,
+                  place: place,
+                  remark: remark);
+            case 2:
+              return Edit(
+                  context: context,
+                  uid: uid,
+                  title: title,
+                  scheduleNum: scheduleNum,
+                  startTime: startTime,
+                  endTime: endTime,
+                  remind: remind,
+                  typeId: typeId,
+                  isCountdown: isCountdown,
+                  place: place,
+                  remark: remark);
+          }
+        }
+
+        submitWidget = await _submitWidgetfunc();
+        if (await submitWidget.getIsError())
+          return true;
+        else
+          return false;
       }
     }
 
@@ -483,6 +537,10 @@ class _ScheduleForm extends State<ScheduleForm> {
                           value: 1),
                       DropdownMenuItem(
                           child:
+                              Text('工作', style: TextStyle(fontSize: _h2Size)),
+                          value: 2),
+                      DropdownMenuItem(
+                          child:
                               Text('會議', style: TextStyle(fontSize: _h2Size)),
                           value: 3),
                       DropdownMenuItem(
@@ -710,7 +768,11 @@ class _ScheduleForm extends State<ScheduleForm> {
                     ),
                     fillColor: _color,
                     onPressed: () async {
-                      if (await _submit() != true) Navigator.pop(context);
+                      if (await _submit() != true) {
+                        Navigator.pop(context);
+                      }
+
+                      // if (await _submit() != true) Navigator.pop(context);
                     },
                   ),
                 ),

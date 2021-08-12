@@ -5,7 +5,7 @@ import 'package:My_Day_app/common_schedule/common_schedule_detail_page.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_edit_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/common_schedule_list_model.dart';
-import 'package:My_Day_app/schedule/schedule_request.dart';
+import 'package:My_Day_app/public/request.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,17 +52,22 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
   }
 
   _groupScheduleListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/common_schedule_list.json');
-    // var responseBody = json.decode(response);
-
-    await CommonList(uid, groupNum).commonList().then((responseBody) {
-      var commonScheduleListModel =
+    var response =
+        await rootBundle.loadString('assets/json/common_schedule_list.json');
+    var responseBody = json.decode(response);
+    var commonScheduleListModel =
           CommonScheduleListModel.fromJson(responseBody);
       setState(() {
         _commonScheduleListModel = commonScheduleListModel;
       });
-    });
+
+    // await CommonList(uid, groupNum).commonList().then((responseBody) {
+    //   var commonScheduleListModel =
+    //       CommonScheduleListModel.fromJson(responseBody);
+    //   setState(() {
+    //     _commonScheduleListModel = commonScheduleListModel;
+    //   });
+    // });
   }
 
   @override

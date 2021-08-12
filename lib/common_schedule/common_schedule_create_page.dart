@@ -1,7 +1,7 @@
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
-import 'package:My_Day_app/schedule/schedule_request.dart';
+import 'package:My_Day_app/public/request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -112,22 +112,22 @@ class _CommonScheduleCreateWidget extends State<CommonScheduleCreatePage> {
         _isNotCreate = false;
         _request = false;
       } else {
-        await CreateCommon(
-          uid: uid,
-          groupNum: groupNum,
-          title: title,
-          startTime: startTime,
-          endTime: endTime,
-          typeId: typeId,
-          place: place,
-        ).createCommon().then((value) {
-          if (value == true)
-            _request = true;
-          else
-            _request = false;
-        });
+        // await CreateCommon(
+        //   uid: uid,
+        //   groupNum: groupNum,
+        //   title: title,
+        //   startTime: startTime,
+        //   endTime: endTime,
+        //   typeId: typeId,
+        //   place: place,
+        // ).createCommon().then((value) {
+        //   if (value == true)
+        //     _request = true;
+        //   else
+        //     _request = false;
+        // });
       }
-      return _request;
+      // return _request;
     }
 
     dynamic getTypeColor(value) {

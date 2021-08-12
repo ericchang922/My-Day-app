@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
-import 'package:My_Day_app/schedule/schedule_request.dart';
+import 'package:My_Day_app/public/request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,17 +60,22 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
   }
 
   _getCommonScheduleRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_common_schedule.json');
-    // var responseBody = json.decode(response);
-
-    await GetCommon(uid, scheduleNum).getCommon().then((responseBody) {
-      var getCommonScheduleModel =
+    var response =
+        await rootBundle.loadString('assets/json/get_common_schedule.json');
+    var responseBody = json.decode(response);
+    var getCommonScheduleModel =
           GetCommonScheduleModel.fromJson(responseBody);
       setState(() {
         _getCommonScheduleModel = getCommonScheduleModel;
       });
-    });
+
+    // await GetCommon(uid, scheduleNum).getCommon().then((responseBody) {
+    //   var getCommonScheduleModel =
+    //       GetCommonScheduleModel.fromJson(responseBody);
+    //   setState(() {
+    //     _getCommonScheduleModel = getCommonScheduleModel;
+    //   });
+    // });
 
     setState(() {
       _title = _getCommonScheduleModel.title;
@@ -177,24 +184,24 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
         _isNotCreate = false;
         _request = false;
       } else {
-        await Edit(
-                uid: uid,
-                scheduleNum: scheduleNum,
-                title: title,
-                startTime: startTime,
-                endTime: endTime,
-                remind: remind,
-                typeId: typeId,
-                isCountdown: false,
-                place: place,
-                remark: "")
-            .edit()
-            .then((value) {
-          if (value == true)
-            _request = true;
-          else
-            _request = false;
-        });
+        // await Edit(
+        //         uid: uid,
+        //         scheduleNum: scheduleNum,
+        //         title: title,
+        //         startTime: startTime,
+        //         endTime: endTime,
+        //         remind: remind,
+        //         typeId: typeId,
+        //         isCountdown: false,
+        //         place: place,
+        //         remark: "")
+        //     .edit()
+        //     .then((value) {
+        //   if (value == true)
+        //     _request = true;
+        //   else
+        //     _request = false;
+        // });
       }
       return _request;
     }
