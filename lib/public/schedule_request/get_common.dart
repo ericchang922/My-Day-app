@@ -25,8 +25,6 @@ class GetCommon with Request {
 
     print('statusCode: ${response.statusCode}');
     print('body: ${utf8.decode(response.bodyBytes)}');
-    print(responseBody);
-    print(responseBody["response"]);
 
     if (responseBody["response"] == false) {
       await alert(context, '錯誤', responseBody['message']);

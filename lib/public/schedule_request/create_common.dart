@@ -6,11 +6,19 @@ class CreateCommon {
   String uid;
   int groupNum;
   String title;
-  String startTime = DateTime.now().toString();
-  String endTime = DateTime.now().add(Duration(hours: 1)).toString();
+  String startTime;
+  String endTime;
   int typeId;
   String place;
   Map<String, dynamic> data;
+
+  bool _isError;
+
+  _request() async {
+    Request request = Request();
+    await request.createCommon(context, data);
+    this._isError = await request.getIsError();
+  }
 
   CreateCommon({
     this.context,
@@ -31,7 +39,9 @@ class CreateCommon {
       'typeId': typeId,
       'place': place,
     };
-    Request request = Request();
-    request.createCommon(context, data);
+  }
+  getIsError() async {
+    await _request();
+    return this._isError;
   }
 }

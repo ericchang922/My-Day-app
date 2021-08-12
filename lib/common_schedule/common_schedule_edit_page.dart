@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/schedule_request/edit.dart';
+import 'package:My_Day_app/public/schedule_request/get_common.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
-import 'package:My_Day_app/public/request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,22 +61,17 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
   }
 
   _getCommonScheduleRequest() async {
-    var response =
-        await rootBundle.loadString('assets/json/get_common_schedule.json');
-    var responseBody = json.decode(response);
-    var getCommonScheduleModel =
+    // var response =
+    //     await rootBundle.loadString('assets/json/get_common_schedule.json');
+    // var responseBody = json.decode(response);
+
+    await GetCommon(uid, scheduleNum).getCommon().then((responseBody) {
+      var getCommonScheduleModel =
           GetCommonScheduleModel.fromJson(responseBody);
       setState(() {
         _getCommonScheduleModel = getCommonScheduleModel;
       });
-
-    // await GetCommon(uid, scheduleNum).getCommon().then((responseBody) {
-    //   var getCommonScheduleModel =
-    //       GetCommonScheduleModel.fromJson(responseBody);
-    //   setState(() {
-    //     _getCommonScheduleModel = getCommonScheduleModel;
-    //   });
-    // });
+    });
 
     setState(() {
       _title = _getCommonScheduleModel.title;
@@ -145,8 +141,6 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
       String endTimeString =
           '${_endDateTime.year.toString()}-${_endDateTime.month.toString().padLeft(2, '0')}-${_endDateTime.day.toString().padLeft(2, '0')} 23:59:59';
 
-      bool _request;
-
       if (_allDay) {
         startTime = DateTime.parse(startTimeString).toString();
         endTime = DateTime.parse(endTimeString).toString();
@@ -182,28 +176,29 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
 
       if (_isNotCreate) {
         _isNotCreate = false;
-        _request = false;
+        return true;
       } else {
-        // await Edit(
-        //         uid: uid,
-        //         scheduleNum: scheduleNum,
-        //         title: title,
-        //         startTime: startTime,
-        //         endTime: endTime,
-        //         remind: remind,
-        //         typeId: typeId,
-        //         isCountdown: false,
-        //         place: place,
-        //         remark: "")
-        //     .edit()
-        //     .then((value) {
-        //   if (value == true)
-        //     _request = true;
-        //   else
-        //     _request = false;
-        // });
+        var submitWidget;
+        _submitWidgetfunc() async {
+          return Edit(
+              uid: uid,
+              scheduleNum: scheduleNum,
+              title: title,
+              startTime: startTime,
+              endTime: endTime,
+              remind: remind,
+              typeId: typeId,
+              isCountdown: false,
+              place: place,
+              remark: "");
+        }
+
+        submitWidget = await _submitWidgetfunc();
+        if (await submitWidget.getIsError())
+          return true;
+        else
+          return false;
       }
-      return _request;
     }
 
     dynamic getTypeColor(value) {
@@ -547,14 +542,9 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
                       ),
                       fillColor: _color,
                       onPressed: () async {
-                        bool _isSuccess;
-                        await _submit().then((value) {
-                          if (value == true)
-                            _isSuccess = true;
-                          else
-                            _isSuccess = false;
-                        });
-                        if (_isSuccess) Navigator.pop(context);
+                        if (await _submit() != true) {
+                          Navigator.pop(context);
+                        }
                       },
                     ),
                   ),
