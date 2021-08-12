@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
+import 'package:My_Day_app/schedule/edit_schedule.dart';
 
 class HomePage extends StatefulWidget {
   @override
