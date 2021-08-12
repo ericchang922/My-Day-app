@@ -190,7 +190,7 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
               typeId: typeId,
               isCountdown: false,
               place: place,
-              remark: "");
+              remark: null);
         }
 
         submitWidget = await _submitWidgetfunc();
