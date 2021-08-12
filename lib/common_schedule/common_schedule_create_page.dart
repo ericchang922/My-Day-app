@@ -1,6 +1,6 @@
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
-import 'package:My_Day_app/schedule/schedule_request.dart';
+import 'package:My_Day_app/public/request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -2,7 +2,7 @@ import 'package:My_Day_app/common_schedule/common_schedule_create_page.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_edit_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/common_schedule_list_model.dart';
-import 'package:My_Day_app/schedule/schedule_request.dart';
+import 'package:My_Day_app/public/request.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
