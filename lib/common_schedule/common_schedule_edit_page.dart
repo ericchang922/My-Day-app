@@ -1,3 +1,4 @@
+import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
@@ -15,7 +16,8 @@ class CommonScheduleEditPage extends StatefulWidget {
       new _CommonScheduleEditWidget(scheduleNum);
 }
 
-class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
+class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
+    with RouteAware {
   int scheduleNum;
   _CommonScheduleEditWidget(this.scheduleNum);
 
@@ -43,13 +45,26 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
     _getCommonScheduleRequest();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
+
   _getCommonScheduleRequest() async {
     // var response =
     //     await rootBundle.loadString('assets/json/get_common_schedule.json');
     // var responseBody = json.decode(response);
 
-    await GetCommon(uid, scheduleNum).getCommon().then((value) {
-      var getCommonScheduleModel = GetCommonScheduleModel.fromJson(value);
+    await GetCommon(uid, scheduleNum).getCommon().then((responseBody) {
+      var getCommonScheduleModel =
+          GetCommonScheduleModel.fromJson(responseBody);
       setState(() {
         _getCommonScheduleModel = getCommonScheduleModel;
       });
@@ -109,7 +124,7 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
         : '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]} ${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}';
 
 // _submit -----------------------------------------------------------------------------------------
-    _submit() async {
+    Future<bool> _submit() async {
       String _alertTitle = '新增共同行程失敗';
       String title = _titleController.text;
       String startTime;
@@ -122,6 +137,9 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
           '${_startDateTime.year.toString()}-${_startDateTime.month.toString().padLeft(2, '0')}-${_startDateTime.day.toString().padLeft(2, '0')} 00:00:00';
       String endTimeString =
           '${_endDateTime.year.toString()}-${_endDateTime.month.toString().padLeft(2, '0')}-${_endDateTime.day.toString().padLeft(2, '0')} 23:59:59';
+
+      bool _request;
+
       if (_allDay) {
         startTime = DateTime.parse(startTimeString).toString();
         endTime = DateTime.parse(endTimeString).toString();
@@ -157,21 +175,28 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
 
       if (_isNotCreate) {
         _isNotCreate = false;
-        return true;
+        _request = false;
       } else {
-        Edit(
-            uid: uid,
-            scheduleNum: scheduleNum,
-            title: title,
-            startTime: startTime,
-            endTime: endTime,
-            remind: remind,
-            typeId: typeId,
-            isCountdown: false,
-            place: place,
-            remark: "");
-        return false;
+        await Edit(
+                uid: uid,
+                scheduleNum: scheduleNum,
+                title: title,
+                startTime: startTime,
+                endTime: endTime,
+                remind: remind,
+                typeId: typeId,
+                isCountdown: false,
+                place: place,
+                remark: "")
+            .edit()
+            .then((value) {
+          if (value == true)
+            _request = true;
+          else
+            _request = false;
+        });
       }
+      return _request;
     }
 
     dynamic getTypeColor(value) {
@@ -515,7 +540,14 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage> {
                       ),
                       fillColor: _color,
                       onPressed: () async {
-                        if (await _submit() != true) Navigator.pop(context);
+                        bool _isSuccess;
+                        await _submit().then((value) {
+                          if (value == true)
+                            _isSuccess = true;
+                          else
+                            _isSuccess = false;
+                        });
+                        if (_isSuccess) Navigator.pop(context);
                       },
                     ),
                   ),

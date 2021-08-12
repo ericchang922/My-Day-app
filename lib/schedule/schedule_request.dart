@@ -36,43 +36,6 @@ class _Request {
     print('body: ${utf8.decode(response.bodyBytes)}');
   }
 
-  edit(BuildContext context, Map<String, dynamic> data) async {
-    Uri _url = Uri.parse(url['edit']);
-    dynamic response = await http.post(_url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: json.encode(data));
-    var responseBody = json.decode(utf8.decode(response.bodyBytes));
-
-    print('statusCode: ${response.statusCode}');
-    print('body: ${utf8.decode(response.bodyBytes)}');
-
-    if (responseBody['response'] == false) {
-      await alert(context, '錯誤', responseBody['message']);
-    } else if (responseBody['response'] == true) {
-      toast(context, "編輯成功");
-    }
-  }
-
-  createCommon(BuildContext context, Map<String, dynamic> data) async {
-    Uri _url = Uri.parse(url['create_common']);
-    dynamic response = await http.post(_url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: json.encode(data));
-    var responseBody = json.decode(utf8.decode(response.bodyBytes));
-
-    print('statusCode: ${response.statusCode}');
-    print('body: ${utf8.decode(response.bodyBytes)}');
-
-    if (responseBody['response'] == false) {
-      await alert(context, '錯誤', responseBody['message']);
-    } else if (responseBody['response'] == true) {
-      toast(context, "新增成功");
-    }
-  }
 }
 
 class CreateNew {
@@ -117,7 +80,7 @@ class CreateNew {
   }
 }
 
-class Edit {
+class Edit with _Request {
   BuildContext context;
   String uid;
   int scheduleNum;
@@ -156,18 +119,35 @@ class Edit {
       'place': place,
       'remark': remark
     };
-    _Request request = _Request();
-    request.edit(context, data);
+  }
+  edit() async {
+    Uri _url = Uri.parse(_Request.url['edit']);
+    dynamic response = await http.post(_url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(data));
+    var responseBody = json.decode(utf8.decode(response.bodyBytes));
+
+    print('statusCode: ${response.statusCode}');
+    print('body: ${utf8.decode(response.bodyBytes)}');
+
+    if (responseBody['response'] == false) {
+      await alert(context, '錯誤', responseBody['message']);
+    } else if (responseBody['response'] == true) {
+      toast(context, "編輯成功");
+      return true;
+    }
   }
 }
 
-class CreateCommon {
+class CreateCommon with _Request{
   BuildContext context;
   String uid;
   int groupNum;
   String title;
-  String startTime = DateTime.now().toString();
-  String endTime = DateTime.now().add(Duration(hours: 1)).toString();
+  String startTime;
+  String endTime;
   int typeId;
   String place;
   Map<String, dynamic> data;
@@ -191,8 +171,25 @@ class CreateCommon {
       'typeId': typeId,
       'place': place,
     };
-    _Request request = _Request();
-    request.createCommon(context, data);
+  }
+  createCommon() async {
+    Uri _url = Uri.parse(_Request.url['create_common']);
+    dynamic response = await http.post(_url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(data));
+    var responseBody = json.decode(utf8.decode(response.bodyBytes));
+
+    print('statusCode: ${response.statusCode}');
+    print('body: ${utf8.decode(response.bodyBytes)}');
+
+    if (responseBody['response'] == false) {
+      await alert(context, '錯誤', responseBody['message']);
+    } else if (responseBody['response'] == true) {
+      toast(context, "新增成功");
+      return true;
+    }
   }
 }
 
@@ -215,8 +212,6 @@ class CommonList with _Request {
 
     print('statusCode: ${response.statusCode}');
     print('body: ${utf8.decode(response.bodyBytes)}');
-    print(responseBody);
-    print(responseBody["response"]);
 
     if (responseBody["response"] == false) {
       await alert(context, '錯誤', responseBody['message']);
@@ -245,8 +240,6 @@ class GetCommon with _Request {
 
     print('statusCode: ${response.statusCode}');
     print('body: ${utf8.decode(response.bodyBytes)}');
-    print(responseBody);
-    print(responseBody["response"]);
 
     if (responseBody["response"] == false) {
       await alert(context, '錯誤', responseBody['message']);
