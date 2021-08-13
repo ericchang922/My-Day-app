@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/models/get_group_model.dart';
+import 'package:My_Day_app/models/group/get_group_model.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';

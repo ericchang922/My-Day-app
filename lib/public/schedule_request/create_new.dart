@@ -18,7 +18,7 @@ class CreateNew {
 
   _request() async {
     Request request = Request();
-    await request.createNew(context, data);
+    await request.scheduleCreateNew(context, data);
     this._isError = await request.getIsError();
   }
 
