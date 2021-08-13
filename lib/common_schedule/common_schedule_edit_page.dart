@@ -256,8 +256,8 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
       );
     }
 
-    // createScheduleList ------------------------------------------------------------------------------
-    Widget createScheduleList = ListView(
+    // editScheduleList ------------------------------------------------------------------------------
+    Widget editScheduleList = ListView(
       children: [
         // text field ----------------------------------------------------------------------------- title
         Padding(
@@ -507,7 +507,7 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
             color: Colors.white,
             child: SafeArea(
               bottom: false,
-              child: Center(child: createScheduleList),
+              child: Center(child: editScheduleList),
             ),
           ),
         ),
@@ -555,7 +555,15 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
         ),
       );
     } else {
-      return Center(child: CircularProgressIndicator());
+      return Scaffold(
+        body: Container(
+          color: Colors.white,
+          child: SafeArea(
+            bottom: false,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        ),
+      );
     }
   }
 }
