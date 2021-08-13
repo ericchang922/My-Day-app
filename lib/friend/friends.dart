@@ -1,5 +1,6 @@
 // import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/setting/friends_invitation.dart';
+
+import 'package:My_Day_app/friend/friends_invitation.dart';
 import 'package:flutter/material.dart';
 import 'friends_add.dart';
 import 'bestfriend.dart';
