@@ -1,14 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/schedule_request/edit.dart';
 import 'package:My_Day_app/public/schedule_request/get_common.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CommonScheduleEditPage extends StatefulWidget {
   int scheduleNum;
@@ -24,7 +25,7 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
   int scheduleNum;
   _CommonScheduleEditWidget(this.scheduleNum);
 
-  GetCommonScheduleModel _getCommonScheduleModel = null;
+  GetCommonScheduleModel _getCommonScheduleModel;
 
   int _type;
   bool _allDay = false;
@@ -65,9 +66,11 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
     //     await rootBundle.loadString('assets/json/get_common_schedule.json');
     // var responseBody = json.decode(response);
 
-    await GetCommon(uid:uid, scheduleNum:scheduleNum).getData();
+    GetCommonScheduleModel _request =
+        await GetCommon(uid: uid, scheduleNum: scheduleNum).getData();
 
     setState(() {
+      _getCommonScheduleModel = _request;
       _title = _getCommonScheduleModel.title;
       _type = _typeNameList.indexOf(_getCommonScheduleModel.typeName) + 1;
       _startDateTime = _getCommonScheduleModel.startTime;
@@ -250,8 +253,8 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
       );
     }
 
-    // createScheduleList ------------------------------------------------------------------------------
-    Widget createScheduleList = ListView(
+    // editScheduleList ------------------------------------------------------------------------------
+    Widget editScheduleList = ListView(
       children: [
         // text field ----------------------------------------------------------------------------- title
         Padding(
@@ -501,7 +504,7 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
             color: Colors.white,
             child: SafeArea(
               bottom: false,
-              child: Center(child: createScheduleList),
+              child: Center(child: editScheduleList),
             ),
           ),
         ),
@@ -549,7 +552,15 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
         ),
       );
     } else {
-      return Center(child: CircularProgressIndicator());
+      return Scaffold(
+        body: Container(
+          color: Colors.white,
+          child: SafeArea(
+            bottom: false,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        ),
+      );
     }
   }
 }

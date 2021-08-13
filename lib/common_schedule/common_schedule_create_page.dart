@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/schedule_request/create_common.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class CommonScheduleCreatePage extends StatefulWidget {
   int groupNum;

@@ -1,13 +1,14 @@
+import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/group/group_create_page.dart';
+import 'package:My_Day_app/group/group_join_page.dart';
+import 'package:My_Day_app/public/group_request/invite_list.dart';
+import 'package:My_Day_app/public/group_request/group_list.dart';
+import 'package:My_Day_app/public/group_request/member_status.dart';
 import 'package:My_Day_app/group/group_detail_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/group_invite_list_model.dart';
-
 import 'package:My_Day_app/models/group/group_list_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'group_create_page.dart';
-import 'group_join_page.dart';
-import 'group_request.dart';
 
 selectedItem(BuildContext context, item) async {
   switch (item) {
@@ -16,7 +17,7 @@ selectedItem(BuildContext context, item) async {
           .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
       break;
     case 1:
-      bool action = await groupJoinDialog(context);
+      await groupJoinDialog(context);
       break;
   }
 }
@@ -71,10 +72,10 @@ class GroupListWidget extends StatefulWidget {
 }
 
 class _GroupListState extends State<GroupListWidget> with RouteAware {
-  String uid = 'lili123';
+  GroupListModel _groupListModel;
+  GroupInviteListModel _groupInviteListModel;
 
-  GroupListModel _groupListModel = null;
-  GroupInviteListModel _groupInviteListModel = null;
+  String uid = 'lili123';
 
   List typeColor = <int>[
     0xffF78787,
@@ -115,11 +116,10 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
     // var response = await rootBundle.loadString('assets/json/group_list.json');
     // var responseBody = json.decode(response);
 
-    await GroupList(uid).groupList().then((responseBody) {
-      var groupListModel = GroupListModel.fromJson(responseBody);
-      setState(() {
-        _groupListModel = groupListModel;
-      });
+    GroupListModel _request = await GroupList(uid: uid).getData();
+
+    setState(() {
+      _groupListModel = _request;
     });
   }
 
@@ -128,12 +128,11 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
     //     await rootBundle.loadString('assets/json/group_invite_list.json');
     // var responseBody = json.decode(response);
 
-    await InviteList(uid).inviteList().then((responseBody) {
-      var groupInviteListModel = GroupInviteListModel.fromJson(responseBody);
-      setState(() {
-        _groupInviteListModel = groupInviteListModel;
-      });
-      print('邀約群組個數：${groupInviteListModel.groupContent.length}');
+    GroupInviteListModel _request = await GroupInviteList(uid: uid).getData();
+
+    setState(() {
+      _groupInviteListModel = _request;
+      print('邀約群組個數：${_groupInviteListModel.groupContent.length}');
     });
   }
 
@@ -160,15 +159,20 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
 
     _submit(bool isJoin, int groupNum) async {
       int statusId;
+      var submitWidget;
       if (isJoin)
         statusId = 1;
       else
         statusId = 3;
-      await MemberStatus(uid: uid, groupNum: groupNum, statusId: statusId)
-          .memberStatus()
-          .then((value) {
-        return value;
-      });
+      _submitWidgetfunc() async {
+        return MemberStatus(uid: uid, groupNum: groupNum, statusId: statusId);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
     }
 
     if (_groupListModel != null && _groupInviteListModel != null) {
@@ -207,16 +211,16 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
                       // ignore: deprecated_member_use
                       Expanded(
                         child: InkWell(
+                          child: Text('加入',
+                              style:
+                                  TextStyle(fontSize: _pSize, color: _color)),
                           onTap: () async {
-                            if (await _submit(true, groupContent.groupId) ==
+                            if (await _submit(true, groupContent.groupId) !=
                                 true) {
                               _groupListRequest();
                               _groupInviteListRequest();
                             }
                           },
-                          child: Text('加入',
-                              style:
-                                  TextStyle(fontSize: _pSize, color: _color)),
                         ),
                       ),
                       SizedBox(
@@ -225,17 +229,17 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
                       // ignore: deprecated_member_use
                       Expanded(
                           child: InkWell(
+                        child: Text(
+                          '拒絕',
+                          style: TextStyle(fontSize: _pSize, color: _gray),
+                        ),
                         onTap: () async {
-                          if (await _submit(false, groupContent.groupId) ==
+                          if (await _submit(false, groupContent.groupId) !=
                               true) {
                             _groupListRequest();
                             _groupInviteListRequest();
                           }
                         },
-                        child: Text(
-                          '拒絕',
-                          style: TextStyle(fontSize: _pSize, color: _gray),
-                        ),
                       ))
                     ],
                   ),
