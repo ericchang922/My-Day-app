@@ -33,7 +33,7 @@ class _RemindItem extends State<RemindItem> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(_getTimeText(index), style: TextStyle(fontSize: _size)),
+              Text(_getTimeText(index), style: TextStyle(fontSize: _size*0.9)),
               IconButton(
                   icon:
                       Icon(Icons.remove, size: _size * 1.2, color: Colors.red),
