@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
 import 'package:My_Day_app/friend/friends_privacy_settings.dart';
 import 'package:My_Day_app/setting/open_class_schedule.dart';
 import 'package:flutter/material.dart';
