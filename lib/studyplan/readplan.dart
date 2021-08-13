@@ -1,4 +1,7 @@
+import 'package:My_Day_app/studyplan/readplan_content.dart';
 import 'package:flutter/material.dart';
+
+import 'readplan_content.dart';
 
 class ReadPlan extends StatelessWidget {
   @override
@@ -188,22 +191,32 @@ class Personal extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(right: 320, top: 10.0),
-          child: Text(
-            '個人',
-            style: TextStyle(
-                fontSize: 20,
-                color: Color(0xff7AAAD8),
-                fontWeight: FontWeight.bold),
-          ),
-        ),
+          margin: EdgeInsets.only(top:10),
+          child: FlatButton(
+            height: 30,
+            minWidth: double.infinity,
+            onPressed: () {},
+            child: Row(
+              children: <Widget>[
+                Text(
+                  '個人',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xff7AAAD8),
+                      fontWeight: FontWeight.bold),
+                ),
+              ]),
+        )),
         Container(
           margin: EdgeInsets.only(left: 20, right: 10.0, top: 10.0),
           // ignore: deprecated_member_use
           child: FlatButton(
             height: 60,
             minWidth: double.infinity,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ReadPlanContentPage()));
+            },
             child: Row(
               children: <Widget>[
                 Text(
@@ -215,7 +228,7 @@ class Personal extends StatelessWidget {
                 Spacer(),
                 Column(children: <Widget>[
                   Text(
-                    '讀書計畫',
+                    '期末考',
                     style: TextStyle(
                       fontSize: 20,
                     ),

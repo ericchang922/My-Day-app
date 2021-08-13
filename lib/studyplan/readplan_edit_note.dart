@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<bool> friendsAddDialog(BuildContext context) async {
+Future<bool> readplanAddDialog(BuildContext context) async {
   final _groupIDController = TextEditingController();
   String _inputGroupID = '';
 
@@ -32,7 +32,7 @@ Future<bool> friendsAddDialog(BuildContext context) async {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            "加好友",
+                            "編輯備註",
                             style:
                                 TextStyle(fontSize: screenSize.width * 0.041),
                             textAlign: TextAlign.center,
@@ -40,41 +40,21 @@ Future<bool> friendsAddDialog(BuildContext context) async {
                         ],
                       ),
                       Container(
-                        margin: EdgeInsets.only(
-                            left: screenSize.height * 0.02,
-                            right: screenSize.height * 0.02,
-                            bottom: screenSize.height * 0.02,
-                            top: screenSize.height * 0.015),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/search.png',
-                              width: screenSize.width * 0.05,
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: screenSize.height * 0.01),
-                              child: Text('好友ID：',
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.041)),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                          height: screenSize.height * 0.04683,
+                          height: screenSize.height * 0.1,
                           margin: EdgeInsets.only(
+                            top:screenSize.height * 0.0184,
                             left: screenSize.height * 0.02,
                             right: screenSize.height * 0.02,
                             bottom: screenSize.height * 0.0384,
                           ),
                           child: new TextField(
+                            keyboardType: TextInputType.multiline,
                             style:
                                 TextStyle(fontSize: screenSize.width * 0.041),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
-                                    horizontal: screenSize.height * 0.01,
-                                    vertical: screenSize.height * 0.01),
+                                    horizontal: screenSize.height * 0.02,
+                                    vertical: screenSize.height * 0.041),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
                                       Radius.circular(
