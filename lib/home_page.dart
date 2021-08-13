@@ -1,3 +1,4 @@
+import 'package:My_Day_app/setting/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
@@ -46,5 +47,13 @@ AppBar homePageAppBar(context) {
   return AppBar(
     title: Text('首頁'),
     backgroundColor: color,
-  );
+    actions: [
+      IconButton(
+        onPressed: () {
+          Navigator.push(context,
+          MaterialPageRoute(builder: (context) => SettingsPage()));
+        },
+        icon: Icon(Icons.settings),
+      ),
+  ]);
 }
