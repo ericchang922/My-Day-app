@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:My_Day_app/public/temporary_group_request/create_group.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
-import 'package:My_Day_app/temporary_group/temporary_request.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class TemporaryGroupCreatePage extends StatefulWidget {
   @override
@@ -641,16 +642,25 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
           friend.add({'friendId': _friend.friendId});
         }
       }
-      CreateGroup(
-              uid: uid,
-              groupName: groupName,
-              scheduleStart: scheduleStart,
-              scheduleEnd: scheduleEnd,
-              type: type,
-              place: place,
-              friend: friend)
-          .createGroup();
-      return true;
+      print(friend);
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return CreateGroup(
+            uid: uid,
+            groupName: groupName,
+            scheduleStart: scheduleStart,
+            scheduleEnd: scheduleEnd,
+            type: type,
+            place: place,
+            friend: friend);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
     }
 
     Widget search = Container(
@@ -922,7 +932,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
                         ),
                         fillColor: _color,
                         onPressed: () async {
-                          if (await _submit() == true) {
+                          if (await _submit() != true) {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           }
@@ -935,7 +945,28 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
         ),
       );
     } else {
-      return Center(child: CircularProgressIndicator());
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
+          leading: Container(
+            margin: EdgeInsets.only(left: _leadingL),
+            child: GestureDetector(
+              child: Icon(Icons.chevron_left),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+        body: Container(
+          color: Colors.white,
+          child: SafeArea(
+            bottom: false,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        ),
+      );
     }
   }
 

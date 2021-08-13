@@ -3,6 +3,12 @@ import 'dart:convert';
 // flutter
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
+import 'package:My_Day_app/models/group/get_group_model.dart';
+import 'package:My_Day_app/models/group/group_invite_list_model.dart';
+import 'package:My_Day_app/models/group/group_list_model.dart';
+import 'package:My_Day_app/models/group/group_log_model.dart';
+import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
+import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:http/http.dart' as http;
@@ -38,11 +44,41 @@ class Request {
     'common_hidden': '$host${path['schedule']}/common_hidden/',
     'countdown_list': '$host${path['schedule']}/countdown_list/',
   };
+  static Map groupUrl = {
+    'create_group': '$host${path['group']}/create_group/',
+    'edit_group': '$host${path['group']}/edit_group/',
+    'invite_friend': '$host${path['group']}/invite_friend/',
+    'setting_manager': '$host${path['group']}/setting_manager/',
+    'quit_group': '$host${path['group']}/quit_group/',
+    'member_status': '$host${path['group']}/member_status/',
+    'group_list': '${path['group']}/group_list/',
+    'get_log': '${path['group']}/get_log/',
+    'invite_list': '${path['group']}/invite_list/',
+    'member_list': '${path['group']}/member_list/',
+    'invite_friend_list': '${path['group']}/invite_friend_list/',
+    'get': '${path['group']}/get/',
+  };
+  static Map temporaryGroupUrl = {
+    'create_group': '$host${path['temporaryGroup']}/create_group/',
+    'invite_list': '${path['temporaryGroup']}/invite_list/',
+    'temporary_list': '${path['temporaryGroup']}/temporary_list/',
+    'get_invite': '${path['temporaryGroup']}/get_invite/',
+  };
 
   Map<String, dynamic> _responseBody;
   ScheduleGet _scheduleGet;
   GetCommonScheduleModel _commenSchedule;
-  CommonScheduleListModel _commonScheduldList;
+  CommonScheduleListModel _commonScheduleList;
+
+  GroupListModel _groupList;
+  GroupInviteListModel _groupInviteList;
+  GroupLogModel _groupLog;
+  GetGroupModel _group;
+
+  TemporaryGroupListModel _temporaryGroupList;
+  TemporaryGroupListModel _temporaryGroupInviteList;
+  GetTemporaryGroupInvitetModel _temporaryGroupInvite;
+
   bool _isError;
 
   Map headers = <String, String>{
@@ -50,8 +86,18 @@ class Request {
   };
 
   getScheduleGet() => _scheduleGet;
-  getCommenSchedule() => _commenSchedule;
-  commonScheduleList() => _commonScheduldList;
+  getCommenScheduleGet() => _commenSchedule;
+  commonScheduleListGet() => _commonScheduleList;
+
+  groupListGet() => _groupList;
+  groupInviteListGet() => _groupInviteList;
+  groupGetLogGet() => _groupLog;
+  getGroupGet() => _group;
+
+  temporaryGroupListGet() => _temporaryGroupList;
+  temporaryGroupInviteListGet() => _temporaryGroupInviteList;
+  temporaryGroupInviteGet() => _temporaryGroupInvite;
+
   getIsError() => _isError;
 
   httpFunction(BuildContext context, dynamic response, String toastTxt) async {
@@ -86,6 +132,14 @@ class Request {
     await httpFunction(context, response, toastTxt);
   }
 
+  httpPatch(BuildContext context, Map<String, dynamic> data, String _url,
+      String toastTxt) async {
+    Uri _uri = Uri.parse(_url);
+    dynamic response =
+        await http.patch(_uri, headers: headers, body: json.encode(data));
+    await httpFunction(context, response, toastTxt);
+  }
+
 // create_new -------------------------------------------------------------------------------------
   scheduleCreateNew(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['create_new'];
@@ -113,7 +167,7 @@ class Request {
     }
   }
 
-// get common -------------------------------------------------------------------------------------
+// get_common -------------------------------------------------------------------------------------
   scheduleGetCommon(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['get_common'];
     await httpGet(context, data, _url);
@@ -122,12 +176,96 @@ class Request {
     }
   }
 
-// get common -------------------------------------------------------------------------------------
+// common_list ------------------------------------------------------------------------------------
   scheduleCommonList(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['common_list'];
     await httpGet(context, data, _url);
     if (_responseBody != null) {
-      _commonScheduldList = CommonScheduleListModel.fromJson(_responseBody);
+      _commonScheduleList = CommonScheduleListModel.fromJson(_responseBody);
+    }
+  }
+
+// goup_list --------------------------------------------------------------------------------------
+  groupList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['group_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _groupList = GroupListModel.fromJson(_responseBody);
+    }
+  }
+
+  // goup_invite_list -----------------------------------------------------------------------------
+  inviteList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['invite_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _groupInviteList = GroupInviteListModel.fromJson(_responseBody);
+    }
+  }
+
+  // group_member_status --------------------------------------------------------------------------
+  memberStatus(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['member_status'];
+    String toastText;
+    if (data['statusId'] == 1)
+      toastText = '加入成功';
+    else if (data['statusId'] == 3) toastText = '拒絕成功';
+    await httpPatch(context, data, _url, toastText);
+  }
+
+  // group_get_log --------------------------------------------------------------------------------
+  groupGetLog(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['get_log'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _groupLog = GroupLogModel.fromJson(_responseBody);
+    }
+  }
+
+  // groupGet ----------------------------------------------------------------------------------------
+  groupGet(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['get'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _group = GetGroupModel.fromJson(_responseBody);
+    }
+  }
+
+  // temporary_create_group -----------------------------------------------------------------------
+  temporaryCreateGroup(BuildContext context, Map<String, dynamic> data) async {
+    String _url = temporaryGroupUrl['create_group'];
+    await httpPost(context, data, _url, '新增成功');
+    if (_responseBody != null) {
+      _temporaryGroupList = TemporaryGroupListModel.fromJson(_responseBody);
+    }
+  }
+
+  // temporary_list -------------------------------------------------------------------------------
+  temporaryList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = temporaryGroupUrl['temporary_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _temporaryGroupList = TemporaryGroupListModel.fromJson(_responseBody);
+    }
+  }
+
+  // temporary_invite_list ------------------------------------------------------------------------
+  temporaryInviteList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = temporaryGroupUrl['invite_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _temporaryGroupInviteList =
+          TemporaryGroupListModel.fromJson(_responseBody);
+    }
+  }
+
+  // temporary_get_invite -------------------------------------------------------------------------
+  temporaryGetInvite(BuildContext context, Map<String, dynamic> data) async {
+    String _url = temporaryGroupUrl['invite_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _temporaryGroupInvite =
+          GetTemporaryGroupInvitetModel.fromJson(_responseBody);
     }
   }
 }

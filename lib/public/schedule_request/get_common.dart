@@ -13,7 +13,7 @@ class GetCommon {
   _request() async {
     Request request = Request();
     await request.scheduleGetCommon(context, data);
-    _response = await request.getCommenSchedule();
+    _response = await request.getCommenScheduleGet();
   }
 
   GetCommon({this.uid, this.scheduleNum}) {
