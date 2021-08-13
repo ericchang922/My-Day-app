@@ -1,6 +1,7 @@
 // dart
 import 'dart:convert';
 // flutter
+import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:flutter/material.dart';
 // therd
@@ -33,7 +34,7 @@ class Request {
     'get_list': '$host${path['schedule']}/get_list/',
     'create_common': '$host${path['schedule']}/create_common/',
     'get_common': '${path['schedule']}/get_common/',
-    'common_list': '$host${path['schedule']}/common_list/',
+    'common_list': '${path['schedule']}/common_list/',
     'common_hidden': '$host${path['schedule']}/common_hidden/',
     'countdown_list': '$host${path['schedule']}/countdown_list/',
   };
@@ -41,6 +42,7 @@ class Request {
   Map<String, dynamic> _responseBody;
   ScheduleGet _scheduleGet;
   GetCommonScheduleModel _commenSchedule;
+  CommonScheduleListModel _commonScheduldList;
   bool _isError;
 
   Map headers = <String, String>{
@@ -49,6 +51,7 @@ class Request {
 
   getScheduleGet() => _scheduleGet;
   getCommenSchedule() => _commenSchedule;
+  commonScheduleList() => _commonScheduldList;
   getIsError() => _isError;
 
   httpFunction(BuildContext context, dynamic response, String toastTxt) async {
@@ -109,13 +112,22 @@ class Request {
       _scheduleGet = ScheduleGet.fromJson(_responseBody);
     }
   }
+
 // get common -------------------------------------------------------------------------------------
-  scheduleGetCommon(BuildContext context,Map<String,dynamic> data) async {
+  scheduleGetCommon(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['get_common'];
     await httpGet(context, data, _url);
-    if(_responseBody !=null){
+    if (_responseBody != null) {
       _commenSchedule = GetCommonScheduleModel.fromJson(_responseBody);
     }
+  }
 
+// get common -------------------------------------------------------------------------------------
+  scheduleCommonList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = scheduleUrl['common_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _commonScheduldList = CommonScheduleListModel.fromJson(_responseBody);
+    }
   }
 }

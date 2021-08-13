@@ -1,14 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/common_schedule/common_schedule_create_page.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_detail_page.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_edit_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/public/schedule_request/common_list.dart';
+
 import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+
 
 class CommonScheduleListPage extends StatefulWidget {
   int groupNum;
@@ -24,7 +28,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
   int groupNum;
   _CommonScheduleListWidget(this.groupNum);
 
-  CommonScheduleListModel _commonScheduleListModel = null;
+  CommonScheduleListModel _commonScheduleListModel;
 
   String uid = 'lili123';
 
@@ -56,12 +60,11 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
     //     await rootBundle.loadString('assets/json/common_schedule_list.json');
     // var responseBody = json.decode(response);
 
-    await CommonList(uid, groupNum).commonList().then((responseBody) {
-      var commonScheduleListModel =
-          CommonScheduleListModel.fromJson(responseBody);
-      setState(() {
-        _commonScheduleListModel = commonScheduleListModel;
-      });
+    CommonScheduleListModel _request =
+        await CommonList(uid: uid, groupNum: groupNum).getData();
+
+    setState(() {
+      _commonScheduleListModel = _request;
     });
   }
 

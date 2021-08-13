@@ -1,34 +1,27 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:My_Day_app/public/request.dart';
-import 'package:My_Day_app/public/alert.dart';
 
-class CommonList with Request {
+import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
+import 'package:My_Day_app/public/request.dart';
+
+class CommonList {
   BuildContext context;
   String uid;
   int groupNum;
-  CommonList(this.uid, this.groupNum);
+  Map<String, String> data;
+  CommonScheduleListModel _response;
 
-  commonList() async {
-    Uri _url = Uri.parse(Request.scheduleUrl['common_list'] +
-        "?uid=" +
-        uid +
-        "&groupNum=" +
-        groupNum.toString());
-    dynamic response = await http.get(_url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
-    var responseBody = json.decode(utf8.decode(response.bodyBytes));
+  _request() async {
+    Request request = Request();
+    await request.scheduleCommonList(context, data);
+    _response = await request.commonScheduleList();
+  }
 
-    print('statusCode: ${response.statusCode}');
-    print('body: ${utf8.decode(response.bodyBytes)}');
+  CommonList({this.uid, this.groupNum}) {
+    data = {'uid': uid, 'groupNum': groupNum.toString()};
+  }
 
-    if (responseBody["response"] == false) {
-      await alert(context, '錯誤', responseBody['message']);
-    } else if (responseBody["response"] == true) {
-      return responseBody;
-    }
+  getData() async {
+    await _request();
+    return this._response;
   }
 }
