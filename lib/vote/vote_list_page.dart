@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/models/vote_end_list_model.dart';
-import 'package:My_Day_app/models/vote_list_model.dart';
+import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
+import 'package:My_Day_app/models/vote/vote_list_model.dart';
 import 'package:My_Day_app/vote/vote_create_page.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
 import 'package:flutter/cupertino.dart';

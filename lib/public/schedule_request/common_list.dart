@@ -12,7 +12,7 @@ class CommonList with Request {
   CommonList(this.uid, this.groupNum);
 
   commonList() async {
-    Uri _url = Uri.parse(Request.url['common_list'] +
+    Uri _url = Uri.parse(Request.scheduleUrl['common_list'] +
         "?uid=" +
         uid +
         "&groupNum=" +

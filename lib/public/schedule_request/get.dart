@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/request.dart';
-import 'package:My_Day_app/public/serialize/schedule_serialize.dart';
+import 'package:My_Day_app/models/schedule/schedule_model.dart';
 
 class Get {
   BuildContext context;
@@ -11,7 +11,7 @@ class Get {
 
   _request() async {
     Request request = Request();
-    await request.get(context, data);
+    await request.scheduleGet(context, data);
     this._response = await request.getScheduleGet();
   }
 

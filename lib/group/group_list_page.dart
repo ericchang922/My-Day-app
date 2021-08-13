@@ -1,8 +1,8 @@
 import 'package:My_Day_app/group/group_detail_page.dart';
 import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/models/group_invite_list_model.dart';
+import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 
-import 'package:My_Day_app/models/group_list_model.dart';
+import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'group_create_page.dart';

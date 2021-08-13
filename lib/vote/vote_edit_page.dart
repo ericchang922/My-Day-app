@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/models/get_vote_model.dart';
+import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

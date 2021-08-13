@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/models/note_list_model.dart';
+import 'package:My_Day_app/models/note/note_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

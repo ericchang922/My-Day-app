@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:My_Day_app/models/get_temporary_group_invitet_model.dart';
+import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

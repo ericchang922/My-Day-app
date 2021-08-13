@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // my day
 import 'package:My_Day_app/public/schedule_request/get.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
-import 'package:My_Day_app/public/serialize/schedule_serialize.dart';
+import 'package:My_Day_app/models/schedule/schedule_model.dart';
 
 
 class EditSchedule extends StatefulWidget {

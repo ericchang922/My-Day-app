@@ -1,5 +1,5 @@
 import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/models/get_common_schedule_model.dart';
+import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/schedule_request/get_common.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,13 +61,7 @@ class _CommonScheduleDetailWidget extends State<CommonScheduleDetailPage>
     //     await rootBundle.loadString('assets/json/get_common_schedule.json');
     // var responseBody = json.decode(response);
 
-    await GetCommon(uid, scheduleNum).getCommon().then((responseBody) {
-      var getCommonScheduleModel =
-          GetCommonScheduleModel.fromJson(responseBody);
-      setState(() {
-        _getCommonScheduleModel = getCommonScheduleModel;
-      });
-    });
+    await GetCommon(uid:uid, scheduleNum:scheduleNum).getData();
 
     setState(() {
       _title = _getCommonScheduleModel.title;

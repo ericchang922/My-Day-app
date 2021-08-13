@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:My_Day_app/group/group_request.dart';
 import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/models/temporary_group_list_model.dart';
+import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_create_page.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_detail_page.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_invite_page.dart';

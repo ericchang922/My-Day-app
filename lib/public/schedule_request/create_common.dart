@@ -16,7 +16,7 @@ class CreateCommon {
 
   _request() async {
     Request request = Request();
-    await request.createCommon(context, data);
+    await request.scheduleCreateCommon(context, data);
     this._isError = await request.getIsError();
   }
 
