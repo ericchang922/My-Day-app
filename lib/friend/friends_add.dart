@@ -1,79 +1,164 @@
 import 'package:flutter/material.dart';
 
-
 Future<bool> friendsAddDialog(BuildContext context) async {
-  final friendsIDController = TextEditingController();
-  String inputfriendsID = '';
+  final _groupIDController = TextEditingController();
+  String _inputGroupID = '';
 
   return showDialog<bool>(
-    context: context,
-    barrierDismissible: true, //控制點擊對話框以外的區域是否隱藏對話框
-    builder: (BuildContext context) {
-      return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          title: Text(
-            '加好友',
-            textAlign: TextAlign.center,
-          ),
+      context: context,
+      builder: (BuildContext context) {
+        var screenSize = MediaQuery.of(context).size;
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(screenSize.height * 0.03))),
+          contentPadding: EdgeInsets.only(top: screenSize.height * 0.02),
           content: Container(
-            height: 95,
+            width: screenSize.width * 0.2,
+            height: screenSize.height * 0.2459,
             child: Column(
-              children: [
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            "加好友",
+                            style:
+                                TextStyle(fontSize: screenSize.width * 0.041),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: screenSize.height * 0.02,
+                            right: screenSize.height * 0.02,
+                            bottom: screenSize.height * 0.02,
+                            top: screenSize.height * 0.015),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/search.png',
+                              width: screenSize.width * 0.05,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: screenSize.height * 0.01),
+                              child: Text('好友ID：',
+                                  style: TextStyle(
+                                      fontSize: screenSize.width * 0.041)),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                          height: screenSize.height * 0.04683,
+                          margin: EdgeInsets.only(
+                            left: screenSize.height * 0.02,
+                            right: screenSize.height * 0.02,
+                            bottom: screenSize.height * 0.0384,
+                          ),
+                          child: new TextField(
+                            style:
+                                TextStyle(fontSize: screenSize.width * 0.041),
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: screenSize.height * 0.01,
+                                    vertical: screenSize.height * 0.01),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          screenSize.height * 0.01)),
+                                  borderSide: BorderSide(
+                                    color: Color(0xff070707),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          screenSize.height * 0.01)),
+                                  borderSide:
+                                      BorderSide(color: Color(0xff7AAAD8)),
+                                )),
+                            controller: _groupIDController,
+                            onChanged: (text) {
+                              _inputGroupID = _groupIDController.text;
+                            },
+                          )),
+                    ],
+                  ),
+                ),
                 Row(
                   children: [
-                    Image.asset(
-                      'assets/images/search.png',
-                      width: 20,
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                          height: screenSize.height * 0.06,
+                          padding: EdgeInsets.only(
+                              top: screenSize.height * 0.015,
+                              bottom: screenSize.height * 0.015),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColorLight,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft:
+                                  Radius.circular(screenSize.height * 0.03),
+                            ),
+                          ),
+                          child: Text(
+                            "取消",
+                            style: TextStyle(
+                                fontSize: screenSize.width * 0.035,
+                                color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      child: Text('好友ID：', style: TextStyle(fontSize: 20)),
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                          height: screenSize.height * 0.06,
+                          padding: EdgeInsets.only(
+                              top: screenSize.height * 0.015,
+                              bottom: screenSize.height * 0.015),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.only(
+                                bottomRight:
+                                    Radius.circular(screenSize.height * 0.03)),
+                          ),
+                          child: Text(
+                            "確認",
+                            style: TextStyle(
+                                fontSize: screenSize.width * 0.035,
+                                color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () {
+                          print(_inputGroupID);
+                          Navigator.of(context).pop(true);
+                        },
+                      ),
                     )
                   ],
                 ),
-                Container(
-                    height: 40.0,
-                    margin: EdgeInsets.only(top: 15),
-                    child: new TextField(
-                      decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: Color(0xff070707),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(color: Color(0xff7AAAD8)),
-                          )),
-                      controller: friendsIDController,
-                      onChanged: (text) {
-                        inputfriendsID = text;
-                      },
-                    )),
               ],
             ),
           ),
-          actions: [
-            FlatButton(
-              child: const Text('取消'),
-              textColor: Color(0xffF86D67),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: const Text('確認'),
-              textColor: Color(0xffF86D67),
-              onPressed: () {
-                print(inputfriendsID);
-                Navigator.of(context).pop(true);
-              },
-            )
-          ]);
-    },
-  );
+        );
+      });
 }
