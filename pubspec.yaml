@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -24,12 +24,13 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
-    sdk: flutter  
+    sdk: flutter
   flutter_pickers: ^1.0.0
   date_format: ^2.0.2
   animations: ^2.0.1
   flutter_cupertino_date_picker: ^1.0.0
-
+  http: ^0.13.3
+  fluttertoast: ^8.0.8
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -94,16 +95,14 @@ flutter:
     - assets/json/note_list.json
     - assets/json/studyplan_list.json
     - assets/json/common_schedule_list.json
+    - assets/json/get_common_schedule.json
     - assets/json/temporary_group_list.json
     - assets/json/temporary_group_invite_list.json
     - assets/json/get_temporary_group_invite.json
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

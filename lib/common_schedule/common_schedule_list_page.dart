@@ -1,7 +1,12 @@
 import 'dart:convert';
 
-import 'package:My_Day_app/models/common_schedule_list_model.dart';
-import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_create_page.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_detail_page.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_edit_page.dart';
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
+import 'package:My_Day_app/public/schedule_request/common_list.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,54 +19,259 @@ class CommonScheduleListPage extends StatefulWidget {
       new _CommonScheduleListWidget(groupNum);
 }
 
-class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
+class _CommonScheduleListWidget extends State<CommonScheduleListPage>
+    with RouteAware {
   int groupNum;
   _CommonScheduleListWidget(this.groupNum);
 
   CommonScheduleListModel _commonScheduleListModel = null;
 
+  String uid = 'lili123';
+
   @override
   void initState() {
     super.initState();
-    _groupStudyPlanListtRequest();
+    _groupScheduleListRequest();
   }
 
-  Future<void> _groupStudyPlanListtRequest() async {
-    var jsonString =
-        await rootBundle.loadString('assets/json/common_schedule_list.json');
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
 
-    // var httpClient = HttpClient();
-    // var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-    //     '/vote/get_end_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
-    // var response = await request.close();
-    // var jsonString = await response.transform(utf8.decoder).join();
-    // httpClient.close();
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
 
-    var jsonMap = json.decode(jsonString);
+  @override
+  void didPopNext() {
+    _groupScheduleListRequest();
+  }
 
-    var commonScheduleListModel = CommonScheduleListModel.fromJson(jsonMap);
-    setState(() {
-      _commonScheduleListModel = commonScheduleListModel;
+  _groupScheduleListRequest() async {
+    // var response =
+    //     await rootBundle.loadString('assets/json/common_schedule_list.json');
+    // var responseBody = json.decode(response);
+
+    await CommonList(uid, groupNum).commonList().then((responseBody) {
+      var commonScheduleListModel =
+          CommonScheduleListModel.fromJson(responseBody);
+      setState(() {
+        _commonScheduleListModel = commonScheduleListModel;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    double _fabDimension = 56.0;
+
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
+
+    double _heightSize = _height * 0.01;
+    double _widthSize = _width * 0.01;
+    double _leadingL = _height * 0.02;
+    double _textL = _height * 0.03;
+    double _subtitleT = _height * 0.005;
+    double _tabH = _height * 0.04683;
+
+    double _tabSize = _width * 0.041;
+    double _p2Size = _height * 0.02;
+    double _titleSize = _height * 0.025;
+    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _gray = Color(0xff959595);
+
+    Widget futureScheduleList;
+    Widget pastScheduleList;
+
+    String _scheduleTime(index, isFuture) {
+      var schedule;
+      if (isFuture)
+        schedule = _commonScheduleListModel.futureSchedule[index];
+      else
+        schedule = _commonScheduleListModel.pastSchedule[index];
+
+      String startTime =
+          "${schedule.startTime.hour.toString().padLeft(2, '0')}:${schedule.startTime.minute.toString().padLeft(2, '0')}";
+      String endTime =
+          "${schedule.endTime.hour.toString().padLeft(2, '0')}:${schedule.endTime.minute.toString().padLeft(2, '0')}";
+
+      if (schedule.startTime.day == schedule.endTime.day) {
+        if (startTime == "00:00" && endTime == "00:00" ||
+            startTime == "00:00" && endTime == "23:59") {
+          return "整天";
+        } else {
+          return startTime + " - " + endTime;
+        }
+      } else {
+        return startTime + " - ";
+      }
+    }
+
+    Widget noSchedule = Center(child: Text('目前沒有任何共同行程!'));
+    if (_commonScheduleListModel != null) {
+      if (_commonScheduleListModel.futureSchedule.length == 0) {
+        futureScheduleList = noSchedule;
+      } else {
+        futureScheduleList = ListView.separated(
+          itemCount: _commonScheduleListModel.futureSchedule.length,
+          itemBuilder: (BuildContext context, int index) {
+            var schedule = _commonScheduleListModel.futureSchedule[index];
+            return ListTile(
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: _heightSize, vertical: _heightSize),
+              leading: SizedBox(
+                width: _width * 0.14,
+                child: Container(
+                    margin: EdgeInsets.only(left: _leadingL),
+                    child: Column(
+                      children: [
+                        Text(schedule.startTime.month.toString() + "月",
+                            style: TextStyle(fontSize: _subtitleSize)),
+                        Text(schedule.startTime.day.toString() + "日",
+                            style: TextStyle(fontSize: _titleSize)),
+                      ],
+                    )),
+              ),
+              title: Container(
+                margin: EdgeInsets.only(left: _textL),
+                child: Text(schedule.title,
+                    style: TextStyle(fontSize: _titleSize)),
+              ),
+              subtitle: Container(
+                margin: EdgeInsets.only(left: _textL, top: _subtitleT),
+                child: Text(_scheduleTime(index, true),
+                    style: TextStyle(fontSize: _subtitleSize, color: _gray)),
+              ),
+              trailing: PopupMenuButton<int>(
+                offset: Offset(-40, 0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(_heightSize)),
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: Container(
+                          alignment: Alignment.center,
+                          child:
+                              Text("刪除", style: TextStyle(fontSize: _p2Size))),
+                    ),
+                  ];
+                },
+                onSelected: (int value) {
+                  print(schedule.scheduleNum);
+                },
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        CommonScheduleEditPage(schedule.scheduleNum)));
+              },
+            );
+          },
+          separatorBuilder: (context, index) {
+            return Divider(
+              height: 1,
+            );
+          },
+        );
+      }
+    } else {
+      futureScheduleList = Center(child: CircularProgressIndicator());
+    }
+
+    if (_commonScheduleListModel != null) {
+      if (_commonScheduleListModel.pastSchedule.length == 0) {
+        pastScheduleList = noSchedule;
+      } else {
+        pastScheduleList = ListView.separated(
+          itemCount: _commonScheduleListModel.pastSchedule.length,
+          itemBuilder: (BuildContext context, int index) {
+            var schedule = _commonScheduleListModel.pastSchedule[index];
+            return ListTile(
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: _heightSize, vertical: _heightSize),
+              leading: SizedBox(
+                width: _width * 0.16,
+                child: Container(
+                    margin: EdgeInsets.only(left: _leadingL),
+                    child: Column(
+                      children: [
+                        Text(schedule.startTime.month.toString() + "月",
+                            style: TextStyle(fontSize: _subtitleSize)),
+                        Text(schedule.startTime.day.toString() + "日",
+                            style: TextStyle(fontSize: _titleSize)),
+                      ],
+                    )),
+              ),
+              title: Container(
+                margin: EdgeInsets.only(left: _textL),
+                child: Text(schedule.title,
+                    style: TextStyle(fontSize: _titleSize)),
+              ),
+              subtitle: Container(
+                margin: EdgeInsets.only(left: _textL, top: _subtitleT),
+                child: Text(_scheduleTime(index, false),
+                    style: TextStyle(fontSize: _subtitleSize, color: _gray)),
+              ),
+              trailing: PopupMenuButton<int>(
+                offset: Offset(-40, 0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(_heightSize)),
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: Container(
+                          alignment: Alignment.center,
+                          child:
+                              Text("刪除", style: TextStyle(fontSize: _p2Size))),
+                    ),
+                  ];
+                },
+                onSelected: (int value) {
+                  print(schedule.scheduleNum);
+                },
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        CommonScheduleDetailPage(schedule.scheduleNum)));
+              },
+            );
+          },
+          separatorBuilder: (context, index) {
+            return Divider(
+              height: 1,
+            );
+          },
+        );
+      }
+    } else {
+      pastScheduleList = Center(child: CircularProgressIndicator());
+    }
+
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
-            title: Text('共同行程',
-                style: TextStyle(fontSize: screenSize.width * 0.052)),
+            title: Text('共同行程', style: TextStyle(fontSize: _appBarSize)),
             leading: Container(
-              margin: EdgeInsets.only(left: screenSize.height * 0.02),
+              margin: EdgeInsets.only(left: _leadingL),
               child: GestureDetector(
                 child: Icon(Icons.chevron_left),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
                 },
               ),
             ),
@@ -77,270 +287,54 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
               labelColor: Colors.white,
               unselectedLabelColor: Color(0xffe3e3e3),
               indicatorPadding: EdgeInsets.all(0.0),
-              indicatorWeight: screenSize.width * 0.01,
+              indicatorWeight: _widthSize,
               labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
               tabs: <Widget>[
                 Container(
-                  height: screenSize.height * 0.04683,
+                  height: _tabH,
                   alignment: Alignment.center,
                   color: Theme.of(context).primaryColor,
-                  child: Text("未結束",
-                      style: TextStyle(fontSize: screenSize.width * 0.041)),
+                  child: Text("未結束", style: TextStyle(fontSize: _tabSize)),
                 ),
                 Container(
-                  height: screenSize.height * 0.04683,
+                  height: _tabH,
                   alignment: Alignment.center,
                   color: Theme.of(context).primaryColor,
-                  child: Text("已結束",
-                      style: TextStyle(fontSize: screenSize.width * 0.041)),
+                  child: Text("已結束", style: TextStyle(fontSize: _tabSize)),
                 ),
               ],
             ),
           ),
+          floatingActionButton: OpenContainer(
+            transitionType: ContainerTransitionType.fadeThrough,
+            openBuilder: (BuildContext context, VoidCallback _) {
+              return CommonScheduleCreatePage(groupNum);
+            },
+            closedElevation: 6.0,
+            closedShape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(_fabDimension / 2)),
+            ),
+            closedColor: _color,
+            closedBuilder: (BuildContext context, VoidCallback openContainer) {
+              return SizedBox(
+                height: _fabDimension,
+                width: _fabDimension,
+                child: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            },
+          ),
           body: TabBarView(
             children: <Widget>[
-              Container(color: Colors.white, child: _buildFutureScheduleList(context)),
-              Container(color: Colors.white,  child: _buildPastScheduleList(context)),
+              Container(color: Colors.white, child: futureScheduleList),
+              Container(color: Colors.white, child: pastScheduleList),
             ],
           )),
     );
-  }
-
-  Widget _buildFutureScheduleList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-
-    String _futureScheduleTime(index) {
-      var schedule = _commonScheduleListModel.futureSchedule[index];
-      String startTime = formatDate(
-          DateTime(
-              schedule.startTime.year,
-              schedule.startTime.month,
-              schedule.startTime.day,
-              schedule.startTime.hour,
-              schedule.startTime.minute),
-          [HH, ':', nn]);
-
-      String endTime = formatDate(
-          DateTime(
-              schedule.endTime.year,
-              schedule.endTime.month,
-              schedule.endTime.day,
-              schedule.endTime.hour,
-              schedule.endTime.minute),
-          [HH, ':', nn]);
-      if (schedule.startTime.year == schedule.endTime.year) {
-        return startTime + " - " + endTime;
-      } else {
-        return startTime + " - ";
-      }
-    }
-
-    if (_commonScheduleListModel != null) {
-      if (_commonScheduleListModel.futureSchedule.length == 0) {
-        return Container(
-          alignment: Alignment.center,
-          child: Text('目前沒有任何共同行程!',
-              style: TextStyle(fontSize: screenSize.width * 0.03)),
-        );
-      } else {
-        return Container(
-          margin: EdgeInsets.only(top: screenSize.height * 0.01),
-          child: ListView.separated(
-              itemCount: _commonScheduleListModel.futureSchedule.length,
-              itemBuilder: (BuildContext context, int index) {
-                var schedule = _commonScheduleListModel.futureSchedule[index];
-                return ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: screenSize.height * 0.01,
-                      vertical: screenSize.height * 0.01),
-                  leading: Container(
-                      margin: EdgeInsets.only(left: screenSize.height * 0.02),
-                      child: Column(
-                        children: [
-                          Text(schedule.startTime.month.toString() + "月",
-                              style: TextStyle(
-                                  fontSize: screenSize.width * 0.035)),
-                          Text(schedule.startTime.day.toString() + "日",
-                              style: TextStyle(
-                                  fontSize: screenSize.width * 0.046)),
-                        ],
-                      )),
-                  title: Container(
-                    margin: EdgeInsets.only(left: screenSize.height * 0.03),
-                    child: Text(schedule.title,
-                        style: TextStyle(fontSize: screenSize.width * 0.052)),
-                  ),
-                  subtitle: Container(
-                    margin: EdgeInsets.only(
-                        left: screenSize.height * 0.03,
-                        top: screenSize.height * 0.007),
-                    child: Text(_futureScheduleTime(index),
-                        style: TextStyle(
-                            fontSize: screenSize.width * 0.035,
-                            color: Color(0xff959595))),
-                  ),
-                  trailing: PopupMenuButton<int>(
-                    offset: Offset(-40, 0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(screenSize.height * 0.01)),
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem<int>(
-                          value: 1,
-                          child: Container(
-                              alignment: Alignment.center,
-                              child: Text("隱藏",
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.035))),
-                        ),
-                        PopupMenuDivider(
-                          height: 1,
-                        ),
-                        PopupMenuItem<int>(
-                          value: 2,
-                          child: Container(
-                              alignment: Alignment.center,
-                              child: Text("刪除",
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.035))),
-                        ),
-                      ];
-                    },
-                    onSelected: (int value) {
-                      print(schedule.scheduleNum);
-                    },
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  height: 1,
-                );
-              }),
-        );
-      }
-    } else {
-      return Center(child: CircularProgressIndicator());
-    }
-  }
-
-  Widget _buildPastScheduleList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-
-    String _pastScheduleTime(index) {
-      var schedule = _commonScheduleListModel.pastSchedule[index];
-      String startTime = formatDate(
-          DateTime(
-              schedule.startTime.year,
-              schedule.startTime.month,
-              schedule.startTime.day,
-              schedule.startTime.hour,
-              schedule.startTime.minute),
-          [HH, ':', nn]);
-
-      String endTime = formatDate(
-          DateTime(
-              schedule.endTime.year,
-              schedule.endTime.month,
-              schedule.endTime.day,
-              schedule.endTime.hour,
-              schedule.endTime.minute),
-          [HH, ':', nn]);
-      if (schedule.startTime.year == schedule.endTime.year) {
-        return startTime + " - " + endTime;
-      } else {
-        return startTime + " - ";
-      }
-    }
-
-    if (_commonScheduleListModel != null) {
-      if (_commonScheduleListModel.pastSchedule.length == 0) {
-        return Container(
-          alignment: Alignment.center,
-          child: Text('目前沒有任何共同行程!',
-              style: TextStyle(fontSize: screenSize.width * 0.03)),
-        );
-      } else {
-        return Container(
-          margin: EdgeInsets.only(top: screenSize.height * 0.01),
-          child: ListView.separated(
-              itemCount: _commonScheduleListModel.pastSchedule.length,
-              itemBuilder: (BuildContext context, int index) {
-                var schedule = _commonScheduleListModel.pastSchedule[index];
-                return ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: screenSize.height * 0.01,
-                      vertical: screenSize.height * 0.01),
-                  leading: Container(
-                      margin: EdgeInsets.only(left: screenSize.height * 0.02),
-                      child: Column(
-                        children: [
-                          Text(schedule.startTime.month.toString() + "月",
-                              style: TextStyle(
-                                  fontSize: screenSize.width * 0.035)),
-                          Text(schedule.startTime.day.toString() + "日",
-                              style: TextStyle(
-                                  fontSize: screenSize.width * 0.046)),
-                        ],
-                      )),
-                  title: Container(
-                    margin: EdgeInsets.only(left: screenSize.height * 0.03),
-                    child: Text(schedule.title,
-                        style: TextStyle(fontSize: screenSize.width * 0.052)),
-                  ),
-                  subtitle: Container(
-                    margin: EdgeInsets.only(
-                        left: screenSize.height * 0.03,
-                        top: screenSize.height * 0.007),
-                    child: Text(_pastScheduleTime(index),
-                        style: TextStyle(
-                            fontSize: screenSize.width * 0.035,
-                            color: Color(0xff959595))),
-                  ),
-                  trailing: PopupMenuButton<int>(
-                    offset: Offset(-40, 0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(screenSize.height * 0.01)),
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem<int>(
-                          value: 1,
-                          child: Container(
-                              alignment: Alignment.center,
-                              child: Text("隱藏",
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.035))),
-                        ),
-                        PopupMenuDivider(
-                          height: 1,
-                        ),
-                        PopupMenuItem<int>(
-                          value: 2,
-                          child: Container(
-                              alignment: Alignment.center,
-                              child: Text("刪除",
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.035))),
-                        ),
-                      ];
-                    },
-                    onSelected: (int value) {
-                      print(schedule.scheduleNum);
-                    },
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  height: 1,
-                );
-              }),
-        );
-      }
-    } else {
-      return Center(child: CircularProgressIndicator());
-    }
   }
 }

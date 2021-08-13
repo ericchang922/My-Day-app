@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:My_Day_app/studyplan/learn.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
 import 'package:animations/animations.dart';

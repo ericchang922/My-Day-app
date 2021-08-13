@@ -1,11 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:My_Day_app/common_note/common_note_list_page.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/common_studyplan/common_studyplan_list_page.dart';
-import 'package:My_Day_app/models/get_group_model.dart';
-import 'package:My_Day_app/models/group_log_model.dart';
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/models/group/get_group_model.dart';
+import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,7 +28,7 @@ class GroupDetailPage extends StatefulWidget {
   _GroupDetailWidget createState() => new _GroupDetailWidget(groupNum);
 }
 
-class _GroupDetailWidget extends State<GroupDetailPage> {
+class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
   GetGroupModel _getGroupModel = null;
   GroupLogModel _groupLogModel = null;
 
@@ -37,12 +39,31 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
   int groupNum;
   String uid = 'lili123';
 
+  ScrollController _controller = ScrollController();
+
   _GroupDetailWidget(this.groupNum);
 
   @override
   void initState() {
     super.initState();
-    print(groupNum);
+    _getGroupRequest();
+    _groupLogRequest();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
+
+  @override
+  void didPopNext() {
     _getGroupRequest();
     _groupLogRequest();
   }
@@ -306,9 +327,13 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
   }
 
   Widget _buildGroupState(BuildContext context) {
+    if (_groupLogModel.groupContent.length > 0)
+      Timer(Duration(milliseconds: 500),
+          () => _controller.jumpTo(_controller.position.maxScrollExtent));
     var screenSize = MediaQuery.of(context).size;
     if (_groupLogModel.groupContent.length != 0) {
       return ListView.builder(
+        controller: _controller,
         itemCount: _groupLogModel.groupContent.length,
         itemBuilder: (content, index) {
           var groupContent = _groupLogModel.groupContent[index];

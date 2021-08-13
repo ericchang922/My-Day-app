@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/models/best_friend_list_model.dart';
-import 'package:My_Day_app/models/friend_list_model.dart';
+import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
+import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -637,13 +637,13 @@ class _GroupCreateState extends State<GroupCreateWidget> {
         print("groupName:${_groupName}");
         print("type:${_type}");
         for (int i = 0; i < _friendCheck.length; i++) {
-          if (_friendCheck[_friendListModel.friend[i].friendId] == false) {
+          if (_friendCheck[_friendListModel.friend[i].friendId] == true) {
             _inviteFriendList
                 .add({"friendId": _friendListModel.friend[i].friendId});
           }
         }
         print(_inviteFriendList);
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
       };
     }
     return Container(

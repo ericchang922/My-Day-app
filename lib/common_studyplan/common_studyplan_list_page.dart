@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:My_Day_app/common_studyplan/share_studyplan_page.dart';
-import 'package:My_Day_app/models/study_plan_list_model.dart';
+import 'package:My_Day_app/models/study_plan/study_plan_list_model.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,10 +24,10 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
   @override
   void initState() {
     super.initState();
-    _groupStudyPlanListtRequest();
+    _groupStudyPlanListRequest();
   }
 
-  Future<void> _groupStudyPlanListtRequest() async {
+  Future<void> _groupStudyPlanListRequest() async {
     var jsonString =
         await rootBundle.loadString('assets/json/studyplan_list.json');
 
@@ -75,7 +75,8 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
                   icon: Icon(Icons.add))
             ],
           ),
-          body: Container(color: Colors.white, child: _buildGroupStudyPlanList(context))),
+          body: Container(
+              color: Colors.white, child: _buildGroupStudyPlanList(context))),
     );
   }
 
