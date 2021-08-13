@@ -208,13 +208,11 @@ class _NotesAdd extends State<NotesAdd> {
                 keyboardType: TextInputType.multiline,
                 maxLines: 20,
                 minLines: 1,
-                style: TextStyle(
-                  fontSize: 150,
-                ),
+                
                 decoration: InputDecoration(
                   isCollapsed: true,
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                      EdgeInsets.symmetric(horizontal: 8, vertical: 120),
                   border: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.all(Radius.circular(10)), //设置边框四个角的弧度
