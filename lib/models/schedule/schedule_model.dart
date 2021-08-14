@@ -1,5 +1,3 @@
-import 'package:My_Day_app/schedule/schedule_form.dart';
-
 class ScheduleGet {
   final String title;
   final DateTime startTime;
