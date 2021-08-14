@@ -15,13 +15,13 @@ class CommonScheduleListModel {
         this.response,
     });
 
-    List<Schedule> pastSchedule;
-    List<Schedule> futureSchedule;
+    List<CommonScheduleList> pastSchedule;
+    List<CommonScheduleList> futureSchedule;
     bool response;
 
     factory CommonScheduleListModel.fromJson(Map<String, dynamic> json) => CommonScheduleListModel(
-        pastSchedule: List<Schedule>.from(json["pastSchedule"].map((x) => Schedule.fromJson(x))),
-        futureSchedule: List<Schedule>.from(json["futureSchedule"].map((x) => Schedule.fromJson(x))),
+        pastSchedule: List<CommonScheduleList>.from(json["pastSchedule"].map((x) => CommonScheduleList.fromJson(x))),
+        futureSchedule: List<CommonScheduleList>.from(json["futureSchedule"].map((x) => CommonScheduleList.fromJson(x))),
         response: json["response"],
     );
 
@@ -32,8 +32,8 @@ class CommonScheduleListModel {
     };
 }
 
-class Schedule {
-    Schedule({
+class CommonScheduleList {
+    CommonScheduleList({
         this.scheduleNum,
         this.title,
         this.startTime,
@@ -47,7 +47,7 @@ class Schedule {
     DateTime endTime;
     String typeName;
 
-    factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
+    factory CommonScheduleList.fromJson(Map<String, dynamic> json) => CommonScheduleList(
         scheduleNum: json["scheduleNum"],
         title: json["title"],
         startTime: DateTime.parse(json["startTime"]),
