@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/models/group/group_invite_list_model.dart';
+import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class InviteList {
+class FriendList {
   BuildContext context;
   String uid;
   Map<String, String> data;
-  GroupInviteListModel _response;
+  FriendListModel _response;
 
   _request() async {
     Request request = Request();
-    await request.groupInviteList(context, data);
-    _response = await request.groupInviteListGet();
+    await request.friendList(context, data);
+    _response = await request.friendListGet();
   }
 
-  InviteList({this.uid}) {
+  FriendList({this.uid}) {
     data = {'uid': uid};
   }
 

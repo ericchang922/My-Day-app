@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:My_Day_app/public/temporary_group_request/create_group.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
+import 'package:My_Day_app/public/friend_request/friend_list.dart';
+import 'package:My_Day_app/public/temporary_group_request/create_group.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
@@ -504,8 +505,8 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   List _filteredFriend = [];
   List _filteredBestFriend = [];
 
-  FriendListModel _friendListModel = null;
-  BestFriendListModel _bestFriendListModel = null;
+  FriendListModel _friendListModel;
+  BestFriendListModel _bestFriendListModel;
 
   @override
   void initState() {
@@ -529,48 +530,32 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     });
   }
 
-  void _bestFriendListRequest() async {
+  _bestFriendListRequest() async {
     // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
+    // var responseBody = json.decode(response);
 
-    var httpClient = HttpClient();
-    var request = await httpClient.getUrl(
-        Uri.http('myday.sytes.net', '/friend/best_list/', {'uid': uid}));
-    var response = await request.close();
-    var jsonString = await response.transform(utf8.decoder).join();
-    httpClient.close();
-
-    var jsonBody = json.decode(jsonString);
-
-    var bestFriendListModel = BestFriendListModel.fromJson(jsonBody);
+    BestFriendListModel _request = await BestFriendList(uid: uid).getData();
 
     setState(() {
-      _bestFriendListModel = bestFriendListModel;
+      _bestFriendListModel = _request;
 
-      for (int i = 0; i < bestFriendListModel.friend.length; i++) {
-        _bestFriendCheck[bestFriendListModel.friend[i].friendId] = false;
+      for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
+        _bestFriendCheck[_bestFriendListModel.friend[i].friendId] = false;
       }
     });
   }
 
-  void _friendListRequest() async {
-    // var jsonString = await rootBundle.loadString('assets/json/friend_list.json');
+  _friendListRequest() async {
+    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
+    // var responseBody = json.decode(response);
 
-    var httpClient = HttpClient();
-    var request = await httpClient.getUrl(
-        Uri.http('myday.sytes.net', '/friend/friend_list/', {'uid': uid}));
-    var response = await request.close();
-    var jsonString = await response.transform(utf8.decoder).join();
-    httpClient.close();
-
-    var jsonBody = json.decode(jsonString);
-
-    var friendListModel = FriendListModel.fromJson(jsonBody);
+    FriendListModel _request = await FriendList(uid: uid).getData();
 
     setState(() {
-      _friendListModel = friendListModel;
+      _friendListModel = _request;
 
-      for (int i = 0; i < friendListModel.friend.length; i++) {
-        _friendCheck[friendListModel.friend[i].friendId] = false;
+      for (int i = 0; i < _friendListModel.friend.length; i++) {
+        _friendCheck[_friendListModel.friend[i].friendId] = false;
       }
     });
   }
@@ -638,9 +623,14 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
       List<Map<String, dynamic>> friend = [];
       for (int i = 0; i < _friendListModel.friend.length; i++) {
         var _friend = _friendListModel.friend[i];
-        if (_friendCheck[_friend.friendId] == true) {
+        if (_friendCheck[_friend.friendId] == true)
           friend.add({'friendId': _friend.friendId});
-        }
+      }
+      for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
+        var _friend = _bestFriendListModel.friend[i];
+
+        if (_bestFriendCheck[_friend.friendId] == true)
+          friend.add({'friendId': _friend.friendId});
       }
       print(friend);
 
@@ -712,6 +702,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     Widget checkAll = Container(
       margin: EdgeInsets.only(right: _checkAllR),
       alignment: Alignment.centerRight,
+      // ignore: deprecated_member_use
       child: FlatButton(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
@@ -772,9 +763,15 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
               },
             ),
             onTap: () {
-              setState(() {
-                _bestFriendCheck[friends.friendId] = true;
-              });
+              if (_bestFriendCheck[friends.friendId] == false) {
+                setState(() {
+                  _bestFriendCheck[friends.friendId] = true;
+                });
+              } else {
+                setState(() {
+                  _bestFriendCheck[friends.friendId] = false;
+                });
+              }
             },
           );
         },
@@ -808,9 +805,15 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
               },
             ),
             onTap: () {
-              setState(() {
-                _friendCheck[friends.friendId] = true;
-              });
+              if (_friendCheck[friends.friendId] == false) {
+                setState(() {
+                  _friendCheck[friends.friendId] = true;
+                });
+              } else {
+                setState(() {
+                  _friendCheck[friends.friendId] = false;
+                });
+              }
             },
           );
         },
@@ -839,7 +842,9 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
           ],
         );
       } else {
+        // ignore: deprecated_member_use
         _filteredBestFriend = new List();
+        // ignore: deprecated_member_use
         _filteredFriend = new List();
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
@@ -857,13 +862,23 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
           }
         }
 
-        friendListWidget = ListView(
-          children: [
-            if (_filteredBestFriend.length > 0)
+        if (_filteredBestFriend.length > 0 && _filteredFriend.length > 0) {
+          friendListWidget = ListView(
+            children: [
               _buildSearchBestFriendList(context),
-            if (_filteredFriend.length > 0) _buildSearchFriendList(context)
-          ],
-        );
+              Divider(),
+              _buildSearchFriendList(context)
+            ],
+          );
+        } else {
+          friendListWidget = ListView(
+            children: [
+              if (_filteredBestFriend.length > 0)
+                _buildSearchBestFriendList(context),
+              if (_filteredFriend.length > 0) _buildSearchFriendList(context)
+            ],
+          );
+        }
       }
 
       return Scaffold(
@@ -1002,9 +1017,15 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
             },
           ),
           onTap: () {
-            setState(() {
-              _bestFriendCheck[friends.friendId] = true;
-            });
+            if (_bestFriendCheck[friends.friendId] == false) {
+              setState(() {
+                _bestFriendCheck[friends.friendId] = true;
+              });
+            } else {
+              setState(() {
+                _bestFriendCheck[friends.friendId] = false;
+              });
+            }
           },
         );
       },
@@ -1047,9 +1068,15 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
             },
           ),
           onTap: () {
-            setState(() {
-              _friendCheck[friends.friendId] = true;
-            });
+            if (_friendCheck[friends.friendId] == false) {
+              setState(() {
+                _friendCheck[friends.friendId] = true;
+              });
+            } else {
+              setState(() {
+                _friendCheck[friends.friendId] = false;
+              });
+            }
           },
         );
       },

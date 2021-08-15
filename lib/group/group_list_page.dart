@@ -128,7 +128,7 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
     //     await rootBundle.loadString('assets/json/group_invite_list.json');
     // var responseBody = json.decode(response);
 
-    GroupInviteListModel _request = await GroupInviteList(uid: uid).getData();
+    GroupInviteListModel _request = await InviteList(uid: uid).getData();
 
     setState(() {
       _groupInviteListModel = _request;

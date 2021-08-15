@@ -13,7 +13,7 @@ class MemberStatus {
 
   _request() async {
     Request request = Request();
-    await request.memberStatus(context, data);
+    await request.groupMemberStatus(context, data);
     this._isError = await request.getIsError();
   }
 

@@ -1,9 +1,12 @@
 // dart
 import 'dart:convert';
 // flutter
+import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
+import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:My_Day_app/models/group/get_group_model.dart';
+import 'package:My_Day_app/models/group/group_invite_friend_list_model.dart';
 import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
@@ -64,6 +67,17 @@ class Request {
     'temporary_list': '${path['temporaryGroup']}/temporary_list/',
     'get_invite': '${path['temporaryGroup']}/get_invite/',
   };
+  static Map friendUrl = {
+    'get': '${path['friend']}/get/',
+    'friend_list': '${path['friend']}/friend_list/',
+    'make_invite_list': '${path['friend']}/make_invite_list/',
+    'best_list': '${path['friend']}/best_list/',
+    'add_best': '$host${path['friend']}/add_best/',
+    'add': '$host${path['friend']}/add/',
+    'add_reply': '$host${path['friend']}/add_reply/',
+    'delete': '$host${path['friend']}/delete/',
+    'delete_best': '$host${path['friend']}/delete_best/',
+  };
 
   Map<String, dynamic> _responseBody;
   ScheduleGet _scheduleGet;
@@ -74,10 +88,14 @@ class Request {
   GroupInviteListModel _groupInviteList;
   GroupLogModel _groupLog;
   GetGroupModel _group;
+  GroupInviteFriendListModel _groupInviteFriendList;
 
   TemporaryGroupListModel _temporaryGroupList;
   TemporaryGroupListModel _temporaryGroupInviteList;
   GetTemporaryGroupInvitetModel _temporaryGroupInvite;
+
+  FriendListModel _friendList;
+  BestFriendListModel _bestFriendList;
 
   bool _isError;
 
@@ -93,10 +111,14 @@ class Request {
   groupInviteListGet() => _groupInviteList;
   groupGetLogGet() => _groupLog;
   getGroupGet() => _group;
+  groupInviteFriendListGet() => _groupInviteFriendList;
 
   temporaryGroupListGet() => _temporaryGroupList;
   temporaryGroupInviteListGet() => _temporaryGroupInviteList;
   temporaryGroupInviteGet() => _temporaryGroupInvite;
+
+  friendListGet() => _friendList;
+  bestFriendGet() => _bestFriendList;
 
   getIsError() => _isError;
 
@@ -195,7 +217,7 @@ class Request {
   }
 
   // goup_invite_list -----------------------------------------------------------------------------
-  inviteList(BuildContext context, Map<String, dynamic> data) async {
+  groupInviteList(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['invite_list'];
     await httpGet(context, data, _url);
     if (_responseBody != null) {
@@ -203,8 +225,14 @@ class Request {
     }
   }
 
+  // group_create ---------------------------------------------------------------------------------
+  groupCreate(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['create_group'];
+    await httpPost(context, data, _url, '新增成功');
+  }
+
   // group_member_status --------------------------------------------------------------------------
-  memberStatus(BuildContext context, Map<String, dynamic> data) async {
+  groupMemberStatus(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['member_status'];
     String toastText;
     if (data['statusId'] == 1)
@@ -219,6 +247,15 @@ class Request {
     await httpGet(context, data, _url);
     if (_responseBody != null) {
       _groupLog = GroupLogModel.fromJson(_responseBody);
+    }
+  }
+
+  // group_invite_friend_list ---------------------------------------------------------------------
+  groupInviteFriendList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['invite_friend_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _groupInviteFriendList = GroupInviteFriendListModel.fromJson(_responseBody);
     }
   }
 
@@ -266,6 +303,24 @@ class Request {
     if (_responseBody != null) {
       _temporaryGroupInvite =
           GetTemporaryGroupInvitetModel.fromJson(_responseBody);
+    }
+  }
+
+  // friend_list ----------------------------------------------------------------------------------
+  friendList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = friendUrl['friend_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _friendList = FriendListModel.fromJson(_responseBody);
+    }
+  }
+
+  // best_friend_list -----------------------------------------------------------------------------
+  bestFriendList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = friendUrl['best_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _bestFriendList = BestFriendListModel.fromJson(_responseBody);
     }
   }
 }
