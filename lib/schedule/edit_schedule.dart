@@ -35,10 +35,10 @@ class _EditSchedule extends State<EditSchedule> {
     return request.getData();
   }
 
-  _remindFormat(List remindData, endTime){
+  _remindFormat(List remindData, startTime){
     List<Duration> remindTimeList = [];
     for (String remindTime in  remindData) {
-      remindTimeList.add(endTime.difference(DateTime.parse(remindTime)));
+      remindTimeList.add(startTime.difference(DateTime.parse(remindTime)));
     }
     return remindTimeList;
   }

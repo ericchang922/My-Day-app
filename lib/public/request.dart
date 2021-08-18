@@ -13,6 +13,7 @@ import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
+import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:http/http.dart' as http;
@@ -77,10 +78,18 @@ class Request {
     'add': '$host${path['friend']}/add/',
     'add_reply': '$host${path['friend']}/add_reply/',
     'delete': '$host${path['friend']}/delete/',
-    'delete_best': '$host${path['friend']}/delete_best/',
+    'delete_best': '$host${path['friend']}/delete_best/'
+  };
+  static Map timetableUrl = {
+    'get_timetable_list': '${path['timetable']}/get_timetable_list'
+  };
+
+  Map headers = <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
   };
 
   Map<String, dynamic> _responseBody;
+
   ScheduleGet _scheduleGet;
   GetCommonScheduleModel _commenSchedule;
   CommonScheduleListModel _commonScheduleList;
@@ -99,11 +108,9 @@ class Request {
   FriendListModel _friendList;
   BestFriendListModel _bestFriendList;
 
-  bool _isError;
+  MainTimetableListGet _mainTimetableListGet;
 
-  Map headers = <String, String>{
-    'Content-Type': 'application/json; charset=UTF-8',
-  };
+  bool _isError;
 
   getScheduleGet() => _scheduleGet;
   getCommenScheduleGet() => _commenSchedule;
@@ -122,6 +129,8 @@ class Request {
 
   getFriendListGet() => _friendList;
   getBestFriendGet() => _bestFriendList;
+
+  getMainTimetableListGet() => _mainTimetableListGet;
 
   getIsError() => _isError;
 
@@ -173,6 +182,7 @@ class Request {
     await httpFunction(context, response, toastTxt);
   }
 
+// SCHEDULE ============================================================================================
 // create_new -------------------------------------------------------------------------------------
   scheduleCreateNew(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['create_new'];
@@ -218,6 +228,7 @@ class Request {
     }
   }
 
+// GROUP ===============================================================================================
 // goup_list --------------------------------------------------------------------------------------
   groupList(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['group_list'];
@@ -311,6 +322,7 @@ class Request {
     await httpDelete(context, data, _url, '已退出');
   }
 
+  // TEMPORARYGROUP ====================================================================================
   // temporary_create_group -----------------------------------------------------------------------
   temporaryCreateGroup(BuildContext context, Map<String, dynamic> data) async {
     String _url = temporaryGroupUrl['create_group'];
@@ -346,6 +358,7 @@ class Request {
     }
   }
 
+  // FRIEND ============================================================================================
   // friend_list ----------------------------------------------------------------------------------
   friendList(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['friend_list'];
@@ -361,6 +374,15 @@ class Request {
     await httpGet(context, data, _url);
     if (_responseBody != null) {
       _bestFriendList = BestFriendListModel.fromJson(_responseBody);
+    }
+  }
+
+  // TIMETABLE =========================================================================================
+  mainTimetableListGet(BuildContext context, Map<String, dynamic> data) async {
+    String _url = timetableUrl['main_timetable_lis'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _mainTimetableListGet = MainTimetableListGet.fromJson(_responseBody);
     }
   }
 }
