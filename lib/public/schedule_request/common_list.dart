@@ -13,7 +13,7 @@ class CommonList {
   _request() async {
     Request request = Request();
     await request.scheduleCommonList(context, data);
-    _response = await request.commonScheduleListGet();
+    _response = await request.getCommonScheduleListGet();
   }
 
   CommonList({this.uid, this.groupNum}) {

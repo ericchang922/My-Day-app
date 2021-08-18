@@ -1,19 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:My_Day_app/models/group/get_group_model.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'group_information_page.dart';
-import 'group_invite_page.dart';
-import 'group_manager_page.dart';
-import 'group_member_page.dart';
+import 'package:My_Day_app/group/group_information_page.dart';
+import 'package:My_Day_app/group/group_manager_page.dart';
 
 class GroupSettingPage extends StatefulWidget {
-
   int groupNum;
   GroupSettingPage(this.groupNum);
 
@@ -22,44 +13,39 @@ class GroupSettingPage extends StatefulWidget {
 }
 
 class _GroupSettingWidget extends State<GroupSettingPage> {
-  String uid = 'lili123';
-  bool _settingCheck = false;
-
   int groupNum;
   _GroupSettingWidget(this.groupNum);
 
+  String uid = 'lili123';
+
+  bool _settingCheck = false;
+
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-            leading: Container(
-              margin: EdgeInsets.only(left: screenSize.height * 0.02),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-            title: Text('設定', style: TextStyle(fontSize: screenSize.width * 0.052))),
-        body: Container(color: Colors.white, child: _buildSettingItem(context)));
-  }
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
 
-  Widget _buildSettingItem(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return Container(
-      margin: EdgeInsets.only(top: screenSize.height * 0.01),
+    double _leadingL = _height * 0.02;
+    double _listPaddingH = _width * 0.08;
+
+    double _appBarSize = _width * 0.052;
+    double _titleSize = _height * 0.025;
+
+    Color _lightGray = Color(0xffE3E3E3);
+    Color _color = Theme.of(context).primaryColor;
+
+    Widget settingItem = Container(
+      margin: EdgeInsets.only(top: _height * 0.01),
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         children: [
           ListTile(
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.04, vertical: 0.0),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _width * 0.04, vertical: 0.0),
             title: Container(
-                margin: EdgeInsets.only(left: screenSize.width * 0.015),
-                child: Text('通知', style: TextStyle(fontSize: screenSize.width * 0.052))),
+                margin: EdgeInsets.only(left: _width * 0.035),
+                child: Text('通知', style: TextStyle(fontSize: _titleSize))),
             trailing: Switch(
               value: _settingCheck,
               onChanged: (value) {
@@ -71,34 +57,49 @@ class _GroupSettingWidget extends State<GroupSettingPage> {
           ),
           Divider(),
           ListTile(
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.055, vertical: 0.0),
-            title: Text('群組資訊', style: TextStyle(fontSize: screenSize.width * 0.052)),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            title: Text('群組資訊', style: TextStyle(fontSize: _titleSize)),
             trailing: Icon(
               Icons.arrow_forward_ios,
-              color: Color(0xffE3E3E3),
+              color: _lightGray,
             ),
-            onTap: (){
-              Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GroupInformationPage(groupNum)));
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GroupInformationPage(groupNum)));
             },
           ),
           Divider(),
           ListTile(
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.055, vertical: 0.0),
-            title: Text('管理者', style: TextStyle(fontSize: screenSize.width * 0.052)),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            title: Text('管理者', style: TextStyle(fontSize: _titleSize)),
             trailing: Icon(
               Icons.arrow_forward_ios,
-              color: Color(0xffE3E3E3),
+              color: _lightGray,
             ),
-            onTap: (){
-              Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GroupManagerPage(groupNum)));
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GroupManagerPage(groupNum)));
             },
           ),
         ],
       ),
     );
+
+    return Scaffold(
+        appBar: AppBar(
+            backgroundColor: _color,
+            title: Text('設定', style: TextStyle(fontSize: _appBarSize)),
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            )),
+        body: Container(color: Colors.white, child: settingItem));
   }
 }

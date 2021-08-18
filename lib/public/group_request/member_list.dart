@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/models/group/group_log_model.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class GetLog {
+class MemberList {
   BuildContext context;
   String uid;
   int groupNum;
   Map<String, String> data;
-  GroupLogModel _response;
+  GroupMemberListModel _response;
 
   _request() async {
     Request request = Request();
-    await request.groupGetLog(context, data);
-    _response = await request.getGroupLogGet();
+    await request.groupMemberList(context, data);
+    _response = await request.getGroupMemberListGet();
   }
 
-  GetLog({this.uid, this.groupNum}) {
+  MemberList({this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

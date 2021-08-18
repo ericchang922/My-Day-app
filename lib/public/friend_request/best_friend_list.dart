@@ -12,7 +12,7 @@ class BestFriendList {
   _request() async {
     Request request = Request();
     await request.bestFriendList(context, data);
-    _response = await request.bestFriendGet();
+    _response = await request.getBestFriendGet();
   }
 
   BestFriendList({this.uid}) {

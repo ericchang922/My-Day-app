@@ -12,7 +12,7 @@ class GroupList {
   _request() async {
     Request request = Request();
     await request.groupList(context, data);
-    _response = await request.groupListGet();
+    _response = await request.getGroupListGet();
   }
 
   GroupList({this.uid}) {

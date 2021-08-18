@@ -273,7 +273,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
                 color: Color(0xffcccccc),
               ),
               value: _dropdownValue,
-              iconSize: _width * 0.05,
+              iconSize: _iconWidth,
               elevation: 16,
               underline: Container(height: 0),
               onChanged: (String newValue) {
@@ -481,24 +481,53 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
       );
 
       if (_searchText.isEmpty) {
-        friendListWidget = ListView(
-          children: [
-            Container(
-              margin:
-                  EdgeInsets.only(left: _textL, bottom: _textBT, top: _textBT),
-              child:
-                  Text('摯友', style: TextStyle(fontSize: _pSize, color: _bule)),
-            ),
-            bestFriendList,
-            Container(
-              margin:
-                  EdgeInsets.only(left: _textL, bottom: _textBT, top: _textBT),
-              child:
-                  Text('好友', style: TextStyle(fontSize: _pSize, color: _bule)),
-            ),
-            friendList
-          ],
-        );
+        if (_bestFriendListModel.friend.length != 0 &&
+            _friendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('摯友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              bestFriendList,
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('好友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              friendList
+            ],
+          );
+        } else if (_bestFriendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('摯友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              bestFriendList
+            ],
+          );
+        } else if (_friendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('好友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              friendList
+            ],
+          );
+        } else {
+          friendListWidget = Center(child: Text('目前沒有任何好友!'));
+        }
       } else {
         // ignore: deprecated_member_use
         _filteredBestFriend = new List();
@@ -621,7 +650,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     } else {
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: _color,
           title: Text('建立群組', style: TextStyle(fontSize: _appBarSize)),
           leading: Container(
             margin: EdgeInsets.only(left: _leadingL),
@@ -645,7 +674,13 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
+
+    double _listPaddingH = _width * 0.06;
+    double _pSize = _height * 0.023;
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -653,14 +688,14 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredBestFriend[index];
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: size.width * 0.055, vertical: 0.0),
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
             child: getImage(friends.photo),
           ),
           title: Text(
             friends.friendName,
-            style: TextStyle(fontSize: size.width * 0.041),
+            style: TextStyle(fontSize: _pSize),
           ),
           trailing: CustomerCheckBox(
             value: _bestFriendCheck[friends.friendId],
@@ -690,7 +725,13 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
+
+    double _listPaddingH = _width * 0.06;
+    double _pSize = _height * 0.023;
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -698,14 +739,14 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredFriend[index];
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: size.width * 0.055, vertical: 0.0),
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
             child: getImage(friends.photo),
           ),
           title: Text(
             friends.friendName,
-            style: TextStyle(fontSize: size.width * 0.041),
+            style: TextStyle(fontSize: _pSize),
           ),
           trailing: CustomerCheckBox(
             value: _friendCheck[friends.friendId],

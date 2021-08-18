@@ -15,7 +15,7 @@ class InviteFriendList {
   _request() async {
     Request request = Request();
     await request.groupInviteFriendList(context, data);
-    _response = await request.groupInviteFriendListGet();
+    _response = await request.getGroupInviteFriendListGet();
   }
 
   InviteFriendList({this.uid, this.groupNum, this.friendStatusId}) {

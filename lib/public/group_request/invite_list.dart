@@ -12,7 +12,7 @@ class InviteList {
   _request() async {
     Request request = Request();
     await request.groupInviteList(context, data);
-    _response = await request.groupInviteListGet();
+    _response = await request.getGroupInviteListGet();
   }
 
   InviteList({this.uid}) {

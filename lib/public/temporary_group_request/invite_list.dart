@@ -12,7 +12,7 @@ class InviteList {
   _request() async {
     Request request = Request();
     await request.temporaryInviteList(context, data);
-    _response = await request.temporaryGroupInviteListGet();
+    _response = await request.getTemporaryGroupInviteListGet();
   }
 
   InviteList({this.uid}) {

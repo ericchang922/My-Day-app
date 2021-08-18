@@ -313,24 +313,53 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
       );
 
       if (_searchText.isEmpty) {
-        friendListWidget = ListView(
-          children: [
-            Container(
-              margin:
-                  EdgeInsets.only(left: _textL, bottom: _textBT, top: _textBT),
-              child:
-                  Text('摯友', style: TextStyle(fontSize: _pSize, color: _bule)),
-            ),
-            bestFriendList,
-            Container(
-              margin:
-                  EdgeInsets.only(left: _textL, bottom: _textBT, top: _textBT),
-              child:
-                  Text('好友', style: TextStyle(fontSize: _pSize, color: _bule)),
-            ),
-            friendList
-          ],
-        );
+        if (_bestFriendListModel.friend.length != 0 &&
+            _friendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('摯友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              bestFriendList,
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('好友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              friendList
+            ],
+          );
+        } else if (_bestFriendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('摯友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              bestFriendList
+            ],
+          );
+        } else if (_friendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('好友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              friendList
+            ],
+          );
+        } else {
+          friendListWidget = Center(child: Text('目前沒有任何好友!'));
+        }
       } else {
         // ignore: deprecated_member_use
         _filteredBestFriend = new List();

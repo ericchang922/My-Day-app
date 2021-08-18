@@ -12,7 +12,7 @@ class FriendList {
   _request() async {
     Request request = Request();
     await request.friendList(context, data);
-    _response = await request.friendListGet();
+    _response = await request.getFriendListGet();
   }
 
   FriendList({this.uid}) {

@@ -77,6 +77,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
 
       int typeId = _type;
       String place = _locationController.text;
+      if (place == "") place = null;
 
       String startTimeString =
           '${_startDateTime.year.toString()}-${_startDateTime.month.toString().padLeft(2, '0')}-${_startDateTime.day.toString().padLeft(2, '0')} 00:00:00';
@@ -110,6 +111,11 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
       }
       if (typeId == null || typeId <= 0 || typeId > 8) {
         await alert(context, _alertTitle, '請選擇類別');
+        _isNotCreate = true;
+      }
+      if (_startDateTime.isBefore(DateTime.now()) ||
+          _endDateTime.isBefore(DateTime.now())) {
+        await alert(context, _alertTitle, '請選擇未來時間');
         _isNotCreate = true;
       }
       if (_isNotCreate) {
@@ -495,7 +501,11 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   _InviteFriendWidget(this.groupName, this.scheduleStart, this.scheduleEnd,
       this.type, this.place);
 
+  FriendListModel _friendListModel;
+  BestFriendListModel _bestFriendListModel;
+
   final _friendNameController = TextEditingController();
+
   String _searchText = "";
   String uid = 'lili123';
 
@@ -504,9 +514,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
 
   List _filteredFriend = [];
   List _filteredBestFriend = [];
-
-  FriendListModel _friendListModel;
-  BestFriendListModel _bestFriendListModel;
 
   @override
   void initState() {
@@ -597,7 +604,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     double _listTop = _height * 0.03;
     double _listLR = _height * 0.01;
     double _listPaddingH = _width * 0.06;
-
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
     double _checkAllR = _width * 0.03;
@@ -632,7 +638,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
         if (_bestFriendCheck[_friend.friendId] == true)
           friend.add({'friendId': _friend.friendId});
       }
-      print(friend);
 
       var submitWidget;
       _submitWidgetfunc() async {
@@ -823,24 +828,53 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
       );
 
       if (_searchText.isEmpty) {
-        friendListWidget = ListView(
-          children: [
-            Container(
-              margin:
-                  EdgeInsets.only(left: _textL, bottom: _textBT, top: _textBT),
-              child:
-                  Text('摯友', style: TextStyle(fontSize: _pSize, color: _bule)),
-            ),
-            bestFriendList,
-            Container(
-              margin:
-                  EdgeInsets.only(left: _textL, bottom: _textBT, top: _textBT),
-              child:
-                  Text('好友', style: TextStyle(fontSize: _pSize, color: _bule)),
-            ),
-            friendList
-          ],
-        );
+        if (_bestFriendListModel.friend.length != 0 &&
+            _friendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('摯友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              bestFriendList,
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('好友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              friendList
+            ],
+          );
+        } else if (_bestFriendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('摯友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              bestFriendList
+            ],
+          );
+        } else if (_friendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    left: _textL, bottom: _textBT, top: _textBT),
+                child: Text('好友',
+                    style: TextStyle(fontSize: _pSize, color: _bule)),
+              ),
+              friendList
+            ],
+          );
+        } else {
+          friendListWidget = Center(child: Text('目前沒有任何好友!'));
+        }
       } else {
         // ignore: deprecated_member_use
         _filteredBestFriend = new List();
@@ -883,7 +917,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
 
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: _color,
           title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
           leading: Container(
             margin: EdgeInsets.only(left: _leadingL),
@@ -990,7 +1024,10 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     double _height = size.height;
     double _width = size.width;
 
+    double _listPaddingH = _width * 0.06;
+
     double _pSize = _height * 0.023;
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -999,7 +1036,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
         var friends = _filteredBestFriend[index];
         return ListTile(
           contentPadding:
-              EdgeInsets.symmetric(horizontal: _width * 0.055, vertical: 0.0),
+              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
             child: getImage(friends.photo),
           ),
@@ -1040,6 +1077,8 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     double _height = size.height;
     double _width = size.width;
 
+    double _listPaddingH = _width * 0.06;
+
     double _pSize = _height * 0.023;
 
     return ListView.separated(
@@ -1050,7 +1089,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
         var friends = _filteredFriend[index];
         return ListTile(
           contentPadding:
-              EdgeInsets.symmetric(horizontal: _width * 0.055, vertical: 0.0),
+              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
             child: getImage(friends.photo),
           ),

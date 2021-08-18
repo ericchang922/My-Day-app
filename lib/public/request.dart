@@ -10,6 +10,7 @@ import 'package:My_Day_app/models/group/group_invite_friend_list_model.dart';
 import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:flutter/material.dart';
@@ -89,10 +90,11 @@ class Request {
   GroupLogModel _groupLog;
   GetGroupModel _group;
   GroupInviteFriendListModel _groupInviteFriendList;
+  GroupMemberListModel _groupMemberList;
 
   TemporaryGroupListModel _temporaryGroupList;
   TemporaryGroupListModel _temporaryGroupInviteList;
-  GetTemporaryGroupInvitetModel _temporaryGroupInvite;
+  GetTemporaryGroupInviteModel _temporaryGroupInvite;
 
   FriendListModel _friendList;
   BestFriendListModel _bestFriendList;
@@ -105,20 +107,21 @@ class Request {
 
   getScheduleGet() => _scheduleGet;
   getCommenScheduleGet() => _commenSchedule;
-  commonScheduleListGet() => _commonScheduleList;
+  getCommonScheduleListGet() => _commonScheduleList;
 
-  groupListGet() => _groupList;
-  groupInviteListGet() => _groupInviteList;
-  groupGetLogGet() => _groupLog;
+  getGroupListGet() => _groupList;
+  getGroupInviteListGet() => _groupInviteList;
+  getGroupLogGet() => _groupLog;
   getGroupGet() => _group;
-  groupInviteFriendListGet() => _groupInviteFriendList;
+  getGroupInviteFriendListGet() => _groupInviteFriendList;
+  getGroupMemberListGet() => _groupMemberList;
 
-  temporaryGroupListGet() => _temporaryGroupList;
-  temporaryGroupInviteListGet() => _temporaryGroupInviteList;
-  temporaryGroupInviteGet() => _temporaryGroupInvite;
+  getTemporaryGroupListGet() => _temporaryGroupList;
+  getTemporaryGroupInviteListGet() => _temporaryGroupInviteList;
+  getTemporaryGroupInviteGet() => _temporaryGroupInvite;
 
-  friendListGet() => _friendList;
-  bestFriendGet() => _bestFriendList;
+  getFriendListGet() => _friendList;
+  getBestFriendGet() => _bestFriendList;
 
   getIsError() => _isError;
 
@@ -159,6 +162,14 @@ class Request {
     Uri _uri = Uri.parse(_url);
     dynamic response =
         await http.patch(_uri, headers: headers, body: json.encode(data));
+    await httpFunction(context, response, toastTxt);
+  }
+
+  httpDelete(BuildContext context, Map<String, dynamic> data, String _url,
+      String toastTxt) async {
+    Uri _uri = Uri.parse(_url);
+    dynamic response =
+        await http.delete(_uri, headers: headers, body: json.encode(data));
     await httpFunction(context, response, toastTxt);
   }
 
@@ -255,11 +266,12 @@ class Request {
     String _url = groupUrl['invite_friend_list'];
     await httpGet(context, data, _url);
     if (_responseBody != null) {
-      _groupInviteFriendList = GroupInviteFriendListModel.fromJson(_responseBody);
+      _groupInviteFriendList =
+          GroupInviteFriendListModel.fromJson(_responseBody);
     }
   }
 
-  // groupGet ----------------------------------------------------------------------------------------
+  // group_get ----------------------------------------------------------------------------------------
   groupGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['get'];
     await httpGet(context, data, _url);
@@ -268,13 +280,41 @@ class Request {
     }
   }
 
+  // group_member_list ----------------------------------------------------------------------------
+  groupMemberList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['member_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _groupMemberList = GroupMemberListModel.fromJson(_responseBody);
+    }
+  }
+
+  // group_setting_manager ------------------------------------------------------------------------
+  groupSettingManager(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['setting_manager'];
+    String toastText;
+    if (data['statusId'] == 1)
+      toastText = '刪除成功';
+    else if (data['statusId'] == 4) toastText = '加入成功';
+    await httpPatch(context, data, _url, toastText);
+  }
+
+  // group_edit ------------------------------------------------------------------------------------
+  groupEdit(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['edit_group'];
+    await httpPatch(context, data, _url, '編輯成功');
+  }
+
+  // group_quit -----------------------------------------------------------------------------------
+  groupQuit(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['quit_group'];
+    await httpDelete(context, data, _url, '已退出');
+  }
+
   // temporary_create_group -----------------------------------------------------------------------
   temporaryCreateGroup(BuildContext context, Map<String, dynamic> data) async {
     String _url = temporaryGroupUrl['create_group'];
     await httpPost(context, data, _url, '新增成功');
-    if (_responseBody != null) {
-      _temporaryGroupList = TemporaryGroupListModel.fromJson(_responseBody);
-    }
   }
 
   // temporary_list -------------------------------------------------------------------------------
@@ -298,11 +338,11 @@ class Request {
 
   // temporary_get_invite -------------------------------------------------------------------------
   temporaryGetInvite(BuildContext context, Map<String, dynamic> data) async {
-    String _url = temporaryGroupUrl['invite_list'];
+    String _url = temporaryGroupUrl['get_invite'];
     await httpGet(context, data, _url);
     if (_responseBody != null) {
       _temporaryGroupInvite =
-          GetTemporaryGroupInvitetModel.fromJson(_responseBody);
+          GetTemporaryGroupInviteModel.fromJson(_responseBody);
     }
   }
 
