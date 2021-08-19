@@ -2,23 +2,22 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/request.dart';
 
-class MemberStatus {
+class QuitGroup {
   BuildContext context;
   String uid;
   int groupNum;
-  int statusId;
   Map<String, dynamic> data;
 
   bool _isError;
 
   _request() async {
     Request request = Request();
-    await request.groupMemberStatus(context, data);
+    await request.groupQuit(context, data);
     this._isError = await request.getIsError();
   }
 
-  MemberStatus({this.context, this.uid, this.groupNum, this.statusId}) {
-    data = {'uid': uid, 'groupNum': groupNum, 'statusId': statusId};
+  QuitGroup({this.context, this.uid, this.groupNum}) {
+    data = {'uid': uid, 'groupNum': groupNum};
   }
   getIsError() async {
     await _request();

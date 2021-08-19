@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/request.dart';
 
-class MemberStatus {
+class SettingManager {
   BuildContext context;
   String uid;
+  String friendId;
   int groupNum;
   int statusId;
   Map<String, dynamic> data;
@@ -13,12 +14,12 @@ class MemberStatus {
 
   _request() async {
     Request request = Request();
-    await request.groupMemberStatus(context, data);
+    await request.groupSettingManager(context, data);
     this._isError = await request.getIsError();
   }
 
-  MemberStatus({this.context, this.uid, this.groupNum, this.statusId}) {
-    data = {'uid': uid, 'groupNum': groupNum, 'statusId': statusId};
+  SettingManager({this.context, this.uid, this.friendId, this.groupNum, this.statusId}) {
+    data = {'uid': uid, 'friendId': friendId, 'groupNum': groupNum, 'statusId': statusId};
   }
   getIsError() async {
     await _request();

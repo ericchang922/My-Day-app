@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
+import 'package:My_Day_app/public/group_request/member_list.dart';
+import 'package:My_Day_app/public/group_request/quit_group.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
@@ -32,21 +35,26 @@ class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage>
 
   GetGroupModel _getGroupModel;
   GroupLogModel _groupLogModel;
+  GroupMemberListModel _groupMemberListModel;
 
   String uid = 'lili123';
 
   List<Widget> _votesList = [];
   List _groupLogDate = [];
   List _groupLogDateIsShow = [];
+  List _managerList = [];
+
+  bool _isManager = false;
 
   ScrollController _controller = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    print(groupNum);
     _getGroupRequest();
     _groupLogRequest();
+    _getGroupMemberRequest();
+    print(groupNum);
   }
 
   @override
@@ -65,10 +73,11 @@ class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage>
   void didPopNext() {
     _getGroupRequest();
     _groupLogRequest();
+    _getGroupMemberRequest();
   }
 
   _getGroupRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/get_group.json');
+    // var response = await rootBundle.loadString('assets/json/get_group.json');
     // var responseBody = json.decode(response);
 
     GetGroupModel _request = await Get(uid: uid, groupNum: groupNum).getData();
@@ -87,7 +96,9 @@ class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage>
 
     setState(() {
       _groupLogModel = _request;
+      // ignore: deprecated_member_use
       _groupLogDate = new List();
+      // ignore: deprecated_member_use
       _groupLogDateIsShow = new List();
 
       for (int i = 0; i < _groupLogModel.groupContent.length; i++) {
@@ -99,6 +110,29 @@ class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage>
         if (_groupLogDate.indexOf(dateString) == -1) {
           _groupLogDate.add(dateString);
           _groupLogDateIsShow[i] = true;
+        }
+      }
+    });
+  }
+
+  _getGroupMemberRequest() async {
+    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
+    // var responseBody = json.decode(response);
+
+    GroupMemberListModel _request =
+        await MemberList(uid: uid, groupNum: groupNum).getData();
+
+    setState(() {
+      _groupMemberListModel = _request;
+
+      for (int i = 0; i < _groupMemberListModel.member.length; i++) {
+        if (_groupMemberListModel.member[i].statusId == 4) {
+          _managerList.add(_groupMemberListModel.member[i].memberId);
+        }
+      }
+      for (int i = 0; i < _managerList.length; i++) {
+        if (_managerList[i] == uid) {
+          _isManager = true;
         }
       }
     });
@@ -129,6 +163,19 @@ class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage>
     Widget groupLog;
     Widget noGroupLog = Center(child: Text('目前沒有任何log喔！'));
 
+    _submit() async {
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return QuitGroup(uid: uid, groupNum: groupNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
     selectedItem(BuildContext context, item) async {
       switch (item) {
         case 0:
@@ -144,8 +191,91 @@ class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage>
               builder: (context) => GroupSettingPage(groupNum)));
           break;
         case 3:
-          Navigator.of(context).pop();
+          if (await _submit() != true) {
+            Navigator.of(context).pop();
+          }
           break;
+      }
+    }
+
+    voteAction() {
+      if (_isManager) {
+        return PopupMenuButton<int>(
+          offset: Offset(50, 50),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_height * 0.01)),
+          icon: Icon(Icons.more_vert),
+          itemBuilder: (context) => [
+            PopupMenuItem<int>(
+                value: 0,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("邀請", style: TextStyle(fontSize: _subtitleSize)))),
+            PopupMenuDivider(
+              height: 1,
+            ),
+            PopupMenuItem<int>(
+                value: 1,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("成員", style: TextStyle(fontSize: _subtitleSize)))),
+            PopupMenuDivider(
+              height: 1,
+            ),
+            PopupMenuItem<int>(
+                value: 2,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("設定", style: TextStyle(fontSize: _subtitleSize)))),
+            PopupMenuDivider(
+              height: 1,
+            ),
+            PopupMenuItem<int>(
+                value: 3,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("退出", style: TextStyle(fontSize: _subtitleSize)))),
+          ],
+          onSelected: (item) => selectedItem(context, item),
+        );
+      } else {
+        return PopupMenuButton<int>(
+          offset: Offset(50, 50),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_height * 0.01)),
+          icon: Icon(Icons.more_vert),
+          itemBuilder: (context) => [
+            PopupMenuItem<int>(
+                value: 1,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("成員", style: TextStyle(fontSize: _subtitleSize)))),
+            PopupMenuDivider(
+              height: 1,
+            ),
+            PopupMenuItem<int>(
+                value: 2,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("設定", style: TextStyle(fontSize: _subtitleSize)))),
+            PopupMenuDivider(
+              height: 1,
+            ),
+            PopupMenuItem<int>(
+                value: 3,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("退出", style: TextStyle(fontSize: _subtitleSize)))),
+          ],
+          onSelected: (item) => selectedItem(context, item),
+        );
       }
     }
 
@@ -365,50 +495,7 @@ class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage>
             backgroundColor: _color,
             title: Text(_getGroupModel.title,
                 style: TextStyle(fontSize: _appBarSize)),
-            actions: [
-              PopupMenuButton<int>(
-                offset: Offset(50, 50),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(_height * 0.01)),
-                icon: Icon(Icons.more_vert),
-                itemBuilder: (context) => [
-                  PopupMenuItem<int>(
-                      value: 0,
-                      child: Container(
-                          alignment: Alignment.center,
-                          child: Text("邀請",
-                              style: TextStyle(fontSize: _subtitleSize)))),
-                  PopupMenuDivider(
-                    height: 1,
-                  ),
-                  PopupMenuItem<int>(
-                      value: 1,
-                      child: Container(
-                          alignment: Alignment.center,
-                          child: Text("成員",
-                              style: TextStyle(fontSize: _subtitleSize)))),
-                  PopupMenuDivider(
-                    height: 1,
-                  ),
-                  PopupMenuItem<int>(
-                      value: 2,
-                      child: Container(
-                          alignment: Alignment.center,
-                          child: Text("設定",
-                              style: TextStyle(fontSize: _subtitleSize)))),
-                  PopupMenuDivider(
-                    height: 1,
-                  ),
-                  PopupMenuItem<int>(
-                      value: 3,
-                      child: Container(
-                          alignment: Alignment.center,
-                          child: Text("退出",
-                              style: TextStyle(fontSize: _subtitleSize)))),
-                ],
-                onSelected: (item) => selectedItem(context, item),
-              ),
-            ],
+            actions: [voteAction()],
             leading: Container(
               margin: EdgeInsets.only(left: _leadingL),
               child: GestureDetector(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class GroupInviteList {
+class InviteList {
   BuildContext context;
   String uid;
   Map<String, String> data;
@@ -11,11 +11,11 @@ class GroupInviteList {
 
   _request() async {
     Request request = Request();
-    await request.inviteList(context, data);
-    _response = await request.groupInviteListGet();
+    await request.groupInviteList(context, data);
+    _response = await request.getGroupInviteListGet();
   }
 
-  GroupInviteList({this.uid}) {
+  InviteList({this.uid}) {
     data = {'uid': uid};
   }
 

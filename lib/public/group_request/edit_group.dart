@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/request.dart';
 
-class MemberStatus {
+class EditGroup {
   BuildContext context;
   String uid;
   int groupNum;
-  int statusId;
+  String title;
+  int typeId;
   Map<String, dynamic> data;
 
   bool _isError;
 
   _request() async {
     Request request = Request();
-    await request.groupMemberStatus(context, data);
+    await request.groupEdit(context, data);
     this._isError = await request.getIsError();
   }
 
-  MemberStatus({this.context, this.uid, this.groupNum, this.statusId}) {
-    data = {'uid': uid, 'groupNum': groupNum, 'statusId': statusId};
+  EditGroup({this.context, this.uid, this.groupNum, this.title, this.typeId}) {
+    data = {'uid': uid, 'groupNum': groupNum, 'title': title, 'typeId': typeId};
   }
   getIsError() async {
     await _request();

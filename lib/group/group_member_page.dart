@@ -1,13 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
-import 'package:My_Day_app/models/friend/friend_list_model.dart';
-import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'customer_check_box.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
+import 'package:My_Day_app/public/group_request/member_list.dart';
 
 class GroupMemberPage extends StatelessWidget {
   int groupNum;
@@ -15,15 +11,21 @@ class GroupMemberPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
+    double _leadingL = _height * 0.02;
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title:
-            Text('群組成員', style: TextStyle(fontSize: screenSize.width * 0.052)),
+        backgroundColor: _color,
+        title: Text('群組成員', style: TextStyle(fontSize: _appBarSize)),
         leading: Container(
-          margin: EdgeInsets.only(left: screenSize.height * 0.02),
+          margin: EdgeInsets.only(left: _leadingL),
           child: GestureDetector(
             child: Icon(Icons.chevron_left),
             onTap: () {
@@ -46,36 +48,33 @@ class GroupInviteWidget extends StatefulWidget {
 }
 
 class _GroupInviteState extends State<GroupInviteWidget> {
-  GroupMemberListModel _groupMemberListModel = null;
-  List _memberList = [];
-  List _inviteMemberList = [];
-
-  String uid = 'lili123';
-
   int groupNum;
   _GroupInviteState(this.groupNum);
 
+  GroupMemberListModel _groupMemberListModel;
+
+  String uid = 'lili123';
+
+  List _memberList = [];
+  List _inviteMemberList = [];
+
+  Widget memberListWidget;
+
   @override
   void initState() {
-    _groupMemberListRequest();
     super.initState();
+    _groupMemberListRequest();
   }
 
-  void _groupMemberListRequest() async {
+  _groupMemberListRequest() async {
     // var reponse = await rootBundle.loadString('assets/json/group_members.json');
+    // var responseBody = json.decode(response);
 
-    var httpClient = HttpClient();
-    var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-        '/group/member_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
-    var response = await request.close();
-    var jsonString = await response.transform(utf8.decoder).join();
-    httpClient.close();
+    GroupMemberListModel _request =
+        await MemberList(uid: uid, groupNum: groupNum).getData();
 
-    var jsonBody = json.decode(jsonString);
-
-    var groupMemberListModel = GroupMemberListModel.fromJson(jsonBody);
     setState(() {
-      _groupMemberListModel = groupMemberListModel;
+      _groupMemberListModel = _request;
       for (int i = 0; i < _groupMemberListModel.member.length; i++) {
         if (_groupMemberListModel.member[i].statusId == 1 ||
             _groupMemberListModel.member[i].statusId == 4) {
@@ -91,75 +90,19 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: _buildList(context),
-    );
-  }
-
-  Widget _buildList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    if (_groupMemberListModel != null) {
-      if (_inviteMemberList.length == 0) {
-        return ListView(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: screenSize.height * 0.02),
-              child: _buildMemberList(context)
-            )
-          ],
-        );
-      } else {
-        return _buildMemberListWidget(context);
-      }
-    } else {
-      return Center(child: CircularProgressIndicator());
-    }
-  }
-
-  Widget _buildMemberListWidget(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return ListView(
-      children: [
-        Container(
-          margin: EdgeInsets.only(
-              left: screenSize.height * 0.03,
-              bottom: screenSize.height * 0.02,
-              top: screenSize.height * 0.02),
-          child: Text('邀請中',
-              style: TextStyle(
-                  fontSize: screenSize.width * 0.041,
-                  color: Color(0xff7AAAD8))),
-        ),
-        _buildInviteMemberList(context),
-        Container(
-          margin: EdgeInsets.only(
-              left: screenSize.height * 0.03,
-              bottom: screenSize.height * 0.02,
-              top: screenSize.height * 0.02),
-          child: Text('成員',
-              style: TextStyle(
-                  fontSize: screenSize.width * 0.041,
-                  color: Color(0xff7AAAD8))),
-        ),
-        _buildMemberList(context)
-      ],
-    );
-  }
-
   Image getImage(String imageString) {
-    var screenSize = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _imgSize = _height * 0.045;
     bool isGetImage;
+
     Image friendImage = Image.asset(
       'assets/images/friend_choose.png',
-      width: screenSize.height * 0.04683,
+      width: _imgSize,
     );
     const Base64Codec base64 = Base64Codec();
     Image image = Image.memory(base64.decode(imageString),
-        width: screenSize.height * 0.04683,
-        height: screenSize.height * 0.04683,
-        fit: BoxFit.fill);
+        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
     var resolve = image.image.resolve(ImageConfiguration.empty);
     resolve.addListener(ImageStreamListener((_, __) {
       isGetImage = true;
@@ -175,57 +118,100 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     }
   }
 
-  Widget _buildInviteMemberList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _inviteMemberList.length,
-      itemBuilder: (BuildContext context, int index) {
-        var members = _inviteMemberList[index];
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.055, vertical: 0.0),
-          leading: ClipOval(
-            child: getImage(members.memberPhoto),
-          ),
-          title: Text(
-            members.memberName,
-            style: TextStyle(fontSize: screenSize.width * 0.041),
-          ),
-          onTap: () {},
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Divider();
-      },
-    );
-  }
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
 
-  Widget _buildMemberList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _memberList.length,
-      itemBuilder: (BuildContext context, int index) {
-        var members = _memberList[index];
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.055, vertical: 0.0),
-          leading: ClipOval(
-            child: getImage(members.memberPhoto),
-          ),
-          title: Text(
-            members.memberName,
-            style: TextStyle(fontSize: screenSize.width * 0.041),
-          ),
-          onTap: () {},
+    double _textL = _height * 0.03;
+    double _textBT = _height * 0.02;
+    double _listPaddingH = _width * 0.06;
+
+    double _pSize = _height * 0.023;
+    
+    Color _bule = Color(0xff7AAAD8);
+
+    if (_groupMemberListModel != null) {
+      Widget inviteMemberList = ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _inviteMemberList.length,
+        itemBuilder: (BuildContext context, int index) {
+          var members = _inviteMemberList[index];
+          return ListTile(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(members.memberPhoto),
+            ),
+            title: Text(
+              members.memberName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            onTap: () {},
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+      );
+
+      Widget memberList = ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _memberList.length,
+        itemBuilder: (BuildContext context, int index) {
+          var members = _memberList[index];
+          return ListTile(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(members.memberPhoto),
+            ),
+            title: Text(
+              members.memberName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            onTap: () {},
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+      );
+
+      if (_inviteMemberList.length == 0) {
+        memberListWidget = ListView(
+          children: [
+            Container(
+                margin: EdgeInsets.only(top: _height * 0.02), child: memberList)
+          ],
         );
-      },
-      separatorBuilder: (context, index) {
-        return Divider();
-      },
-    );
+      } else {
+        memberListWidget = ListView(
+          children: [
+            Container(
+              margin:
+                  EdgeInsets.only(left: _textL, bottom: _textBT, top: _textBT),
+              child:
+                  Text('邀請中', style: TextStyle(fontSize: _pSize, color: _bule)),
+            ),
+            inviteMemberList,
+            Container(
+              margin:
+                  EdgeInsets.only(left: _textL, bottom: _textBT, top: _textBT),
+              child:
+                  Text('成員', style: TextStyle(fontSize: _pSize, color: _bule)),
+            ),
+            memberList
+          ],
+        );
+      }
+
+      return memberListWidget;
+    } else {
+      return Center(child: CircularProgressIndicator());
+    }
   }
 }
