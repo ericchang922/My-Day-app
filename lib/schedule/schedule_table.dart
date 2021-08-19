@@ -2,15 +2,27 @@ import 'package:flutter/material.dart';
 
 class ScheduleTable extends StatefulWidget {
   List<Map<String, String>> sectionList;
-  ScheduleTable({this.sectionList});
+  DateTime monday;
+  ScheduleTable({this.monday, this.sectionList});
   @override
-  State<ScheduleTable> createState() => _ScheduleTable(this.sectionList);
+  State<ScheduleTable> createState() =>
+      _ScheduleTable(this.monday, this.sectionList);
 }
 
 class _ScheduleTable extends State<ScheduleTable> {
   List<Map<String, String>> sectionList;
-  _ScheduleTable(this.sectionList);
+  DateTime monday;
+  _ScheduleTable(this.monday, this.sectionList);
+  List dateList = [];
 
+  void initState(){
+    super.initState();
+    for(int i = 0; i<7; i++){
+      DateTime days = monday.add(Duration(days: i));
+      dateList.add((days.day).toString());
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     List timeLineList = sectionList;
 
@@ -36,29 +48,35 @@ class _ScheduleTable extends State<ScheduleTable> {
     Duration classEnd =
         _convertToDuration(sectionList[sectionList.length - 1]['end']);
     Duration timeAddNow = Duration(hours: classEnd.inHours + 1);
+
     timeLineList.add({
       'start': _convertToShortTime(classEnd),
       'end': _convertToShortTime(timeAddNow)
     });
 
-    while (check.add(timeAddNow).isAfter(check.add(classEnd)) ||
-        check
-            .add(timeAddNow)
-            .isBefore(check.add(dayStart))) {
+    bool _checkTime() {
+      bool ok = false;
+      if (check.add(timeAddNow).isAfter(check.add(classEnd)))
+        ok = true;
+      else if (check.add(timeAddNow).isBefore(check.add(dayStart))) ok = true;
+      return ok;
+    }
 
+    while (_checkTime()) {
       if (timeAddNow.inHours + 1 > 24) {
         timeAddNow = Duration(hours: 0);
-      } 
-      if (timeAddNow.inHours==dayStart.inHours) break;
+      }
+      if (timeAddNow.inHours == dayStart.inHours) break;
 
-      Map<String,String> add = {'start': _convertToShortTime(timeAddNow)};
+      Map<String, String> add = {'start': _convertToShortTime(timeAddNow)};
 
       timeAddNow = Duration(hours: timeAddNow.inHours + 1);
       add['end'] = _convertToShortTime(timeAddNow);
+      timeLineList.add(add);
     }
-    timeLineList[timeLineList.length-1]['end']=_convertToShortTime(dayStart);
+    timeLineList[timeLineList.length - 1]['end'] =
+        _convertToShortTime(dayStart);
 
-    List dateList = ['1', '2', '3', '4', '5', '6', '7'];
     Size _size = MediaQuery.of(context).size;
     double _width = _size.width;
     double _height = _size.height;
@@ -73,6 +91,9 @@ class _ScheduleTable extends State<ScheduleTable> {
       DateTime endTime = DateTime.parse('2000-01-01 ' + end);
       double h = endTime.difference(startTime).inMinutes /
           Duration(hours: 1).inMinutes;
+      if (h < 0) h = h * -1;
+      if (h >= 24) h = 0;
+
       return h;
     }
 
