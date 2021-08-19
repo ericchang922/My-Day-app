@@ -12,7 +12,7 @@ class TemporaryList {
   _request() async {
     Request request = Request();
     await request.temporaryList(context, data);
-    _response = await request.temporaryGroupListGet();
+    _response = await request.getTemporaryGroupListGet();
   }
 
   TemporaryList({this.uid}) {

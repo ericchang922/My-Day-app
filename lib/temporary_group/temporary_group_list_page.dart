@@ -14,8 +14,10 @@ AppBar temporaryGroupListAppBar(context) {
   double _width = size.width;
   double _titleSize = _width * 0.052;
 
+  Color _color = Theme.of(context).primaryColor;
+
   return AppBar(
-    backgroundColor: Theme.of(context).primaryColor,
+    backgroundColor: _color,
     title: Text('玩聚', style: TextStyle(fontSize: _titleSize)),
     actions: [
       IconButton(
