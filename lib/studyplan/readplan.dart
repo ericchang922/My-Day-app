@@ -1,3 +1,4 @@
+import 'package:My_Day_app/studyplan/readplan_add.dart';
 import 'package:My_Day_app/studyplan/readplan_content.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,10 @@ class _ReadPlanPage extends State<ReadPlanPage> {
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => App3()));
+                },
               ),
             ],
             bottom: TabBar(
