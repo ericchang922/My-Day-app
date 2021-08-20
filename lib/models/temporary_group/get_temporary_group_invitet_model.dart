@@ -4,12 +4,12 @@
 
 import 'dart:convert';
 
-GetTemporaryGroupInvitetModel getTemporaryGroupInvitetModelFromJson(String str) => GetTemporaryGroupInvitetModel.fromJson(json.decode(str));
+GetTemporaryGroupInviteModel getTemporaryGroupInvitetModelFromJson(String str) => GetTemporaryGroupInviteModel.fromJson(json.decode(str));
 
-String getTemporaryGroupInvitetModelToJson(GetTemporaryGroupInvitetModel data) => json.encode(data.toJson());
+String getTemporaryGroupInvitetModelToJson(GetTemporaryGroupInviteModel data) => json.encode(data.toJson());
 
-class GetTemporaryGroupInvitetModel {
-    GetTemporaryGroupInvitetModel({
+class GetTemporaryGroupInviteModel {
+    GetTemporaryGroupInviteModel({
         this.title,
         this.startTime,
         this.endTime,
@@ -25,7 +25,7 @@ class GetTemporaryGroupInvitetModel {
     String founderName;
     List<Member> member;
 
-    factory GetTemporaryGroupInvitetModel.fromJson(Map<String, dynamic> json) => GetTemporaryGroupInvitetModel(
+    factory GetTemporaryGroupInviteModel.fromJson(Map<String, dynamic> json) => GetTemporaryGroupInviteModel(
         title: json["title"],
         startTime: DateTime.parse(json["startTime"]),
         endTime: DateTime.parse(json["endTime"]),

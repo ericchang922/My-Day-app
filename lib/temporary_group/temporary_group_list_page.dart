@@ -1,22 +1,23 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/group/group_request.dart';
+import 'package:My_Day_app/public/temporary_group_request/invite_list.dart';
+import 'package:My_Day_app/public/temporary_group_request/temporary_list.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
+import 'package:My_Day_app/public/group_request/member_status.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_create_page.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_detail_page.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_invite_page.dart';
-import 'package:My_Day_app/temporary_group/temporary_request.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 AppBar temporaryGroupListAppBar(context) {
   Size size = MediaQuery.of(context).size;
   double _width = size.width;
   double _titleSize = _width * 0.052;
 
+  Color _color = Theme.of(context).primaryColor;
+
   return AppBar(
-    backgroundColor: Theme.of(context).primaryColor,
+    backgroundColor: _color,
     title: Text('玩聚', style: TextStyle(fontSize: _titleSize)),
     actions: [
       IconButton(
@@ -43,10 +44,10 @@ class TemporaryGroupListWidget extends StatefulWidget {
 
 class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
     with RouteAware {
-  String uid = 'lili123';
+  TemporaryGroupListModel _temporaryGroupListModel;
+  TemporaryGroupListModel _temporaryGroupInviteListModel;
 
-  TemporaryGroupListModel _temporaryGroupListModel = null;
-  TemporaryGroupListModel _temporaryGroupInviteListModel = null;
+  String uid = 'lili123';
 
   List typeColor = <int>[
     0xffF78787,
@@ -88,12 +89,10 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
     //     await rootBundle.loadString('assets/json/temporary_group_list.json');
     // var responseBody = json.decode(response);
 
-    await TemporaryList(uid).temporaryList().then((responseBody) {
-      var temporaryGroupListModel =
-          TemporaryGroupListModel.fromJson(responseBody);
-      setState(() {
-        _temporaryGroupListModel = temporaryGroupListModel;
-      });
+    TemporaryGroupListModel _request = await TemporaryList(uid: uid).getData();
+
+    setState(() {
+      _temporaryGroupListModel = _request;
     });
   }
 
@@ -102,12 +101,10 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
     //     .loadString('assets/json/temporary_group_invite_list.json');
     // var responseBody = json.decode(response);
 
-    await TemporaryInviteList(uid).temporaryInviteList().then((responseBody) {
-      var temporaryGroupInviteListModel =
-          TemporaryGroupListModel.fromJson(responseBody);
-      setState(() {
-        _temporaryGroupInviteListModel = temporaryGroupInviteListModel;
-      });
+    TemporaryGroupListModel _request = await InviteList(uid: uid).getData();
+
+    setState(() {
+      _temporaryGroupInviteListModel = _request;
     });
   }
 
@@ -116,7 +113,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
     Size size = MediaQuery.of(context).size;
     double _height = size.height;
     double _width = size.width;
-    double _listL = _width * 0.06;
+    double _listLR = _width * 0.06;
     double _widthSize = _width * 0.01;
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
@@ -135,15 +132,20 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
 
     _submit(bool isJoin, int groupNum) async {
       int statusId;
+      var submitWidget;
       if (isJoin)
         statusId = 1;
       else
         statusId = 3;
-      await MemberStatus(uid: uid, groupNum: groupNum, statusId: statusId)
-          .memberStatus()
-          .then((value) {
-        return value;
-      });
+      _submitWidgetfunc() async {
+        return MemberStatus(uid: uid, groupNum: groupNum, statusId: statusId);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
     }
 
     String _scheduleTime(index, bool isInvite) {
@@ -182,86 +184,97 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
         itemBuilder: (BuildContext context, int index) {
           var temporaryContent =
               _temporaryGroupInviteListModel.temporaryContent[index];
-          return InkWell(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      TemporaryGroupInvitePage(temporaryContent.groupId)));
-            },
-            child: Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: _listL),
-                  child: CircleAvatar(
+          return Container(
+            margin: EdgeInsets.only(left: _listLR, right: _listLR),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        TemporaryGroupInvitePage(temporaryContent.groupId)));
+              },
+              child: Row(
+                children: [
+                  CircleAvatar(
                     radius: _typeSize,
                     backgroundColor:
                         Color(typeColor[temporaryContent.typeId - 1]),
                   ),
-                ),
-                SizedBox(
-                  width: _width * 0.16,
-                  child: Container(
-                    margin: EdgeInsets.only(left: _listL),
+                  SizedBox(
+                    width: _width * 0.16,
+                    child: Container(
+                      margin: EdgeInsets.only(left: _listLR),
+                      child: Column(
+                        children: [
+                          Text(
+                              temporaryContent.startTime.month.toString() + "月",
+                              style: TextStyle(fontSize: _subtitleSize)),
+                          Text(temporaryContent.startTime.day.toString() + "日",
+                              style: TextStyle(fontSize: _titleSize)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(temporaryContent.startTime.month.toString() + "月",
-                            style: TextStyle(fontSize: _subtitleSize)),
-                        Text(temporaryContent.startTime.day.toString() + "日",
-                            style: TextStyle(fontSize: _titleSize)),
+                        Container(
+                          margin: EdgeInsets.only(left: _textL),
+                          child: Text(
+                              '${temporaryContent.title} (${temporaryContent.peopleCount})',
+                              style: TextStyle(fontSize: _titleSize)),
+                        ),
+                        Container(
+                          margin:
+                              EdgeInsets.only(left: _textL, top: _subtitleT),
+                          child: Text(_scheduleTime(index, true),
+                              style: TextStyle(
+                                  fontSize: _subtitleSize, color: _gray)),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                Container(
-                  width: _width * 0.57,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: _textL),
-                        child: Text(
-                            '${temporaryContent.title} (${temporaryContent.peopleCount})',
-                            style: TextStyle(fontSize: _titleSize)),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: _textL, top: _subtitleT),
-                        child: Text(_scheduleTime(index, true),
-                            style: TextStyle(
-                                fontSize: _subtitleSize, color: _gray)),
-                      ),
-                    ],
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                            child: Text('加入',
+                                style:
+                                    TextStyle(fontSize: _pSize, color: _color)),
+                            onTap: () async {
+                              if (await _submit(
+                                      true, temporaryContent.groupId) !=
+                                  true) {
+                                _temporaryGroupListRequest();
+                                _temporaryGroupInviteListRequest();
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: _widthSize,
+                        ),
+                        InkWell(
+                          child: Text('拒絕',
+                              style: TextStyle(fontSize: _pSize, color: _gray)),
+                          onTap: () async {
+                            if (await _submit(
+                                    false, temporaryContent.groupId) !=
+                                true) {
+                              _temporaryGroupListRequest();
+                              _temporaryGroupInviteListRequest();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: InkWell(
-                        child: Text('加入',
-                            style: TextStyle(fontSize: _pSize, color: _color)),
-                        onTap: () async {
-                          await _submit(true, temporaryContent.groupId);
-                          _temporaryGroupListRequest();
-                          _temporaryGroupInviteListRequest();
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: _widthSize,
-                    ),
-                    InkWell(
-                      child: Text('拒絕',
-                          style: TextStyle(fontSize: _pSize, color: _gray)),
-                      onTap: () async {
-                        await _submit(false, temporaryContent.groupId);
-                        _temporaryGroupListRequest();
-                        _temporaryGroupInviteListRequest();
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -286,7 +299,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
             child: Row(
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: _listL),
+                  margin: EdgeInsets.only(left: _listLR),
                   child: CircleAvatar(
                     radius: _typeSize,
                     backgroundColor:
@@ -296,7 +309,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
                 SizedBox(
                   width: _width * 0.16,
                   child: Container(
-                    margin: EdgeInsets.only(left: _listL),
+                    margin: EdgeInsets.only(left: _listLR),
                     child: Column(
                       children: [
                         Text(temporaryContent.startTime.month.toString() + "月",

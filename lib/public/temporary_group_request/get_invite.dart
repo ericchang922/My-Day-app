@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
+import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class CommonList {
+class GetInvite {
   BuildContext context;
   String uid;
   int groupNum;
   Map<String, String> data;
-  CommonScheduleListModel _response;
+  GetTemporaryGroupInviteModel _response;
 
   _request() async {
     Request request = Request();
-    await request.scheduleCommonList(context, data);
-    _response = await request.getCommonScheduleListGet();
+    await request.temporaryGetInvite(context, data);
+    _response = await request.getTemporaryGroupInviteGet();
   }
 
-  CommonList({this.uid, this.groupNum}) {
+  GetInvite({this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

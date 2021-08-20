@@ -35,6 +35,14 @@ class _EditSchedule extends State<EditSchedule> {
     return request.getData();
   }
 
+  _remindFormat(List remindData, startTime){
+    List<Duration> remindTimeList = [];
+    for (String remindTime in  remindData) {
+      remindTimeList.add(startTime.difference(DateTime.parse(remindTime)));
+    }
+    return remindTimeList;
+  }
+
   @override
   Widget build(BuildContext context) {
     print('build');
@@ -49,7 +57,7 @@ class _EditSchedule extends State<EditSchedule> {
               data != null ? data.endTime : DateTime.now().add(Duration(hours: 1));
           int _typeId = data != null ? data.typeId : null;
           String _place = data != null ? data.place : null;
-          List _remindTimeList = data != null ? data.remind['remindTime'] : null;
+          List _remindTimeList = data != null ? _remindFormat(data.remind['remindTime'], _startTime) : null;
           bool _isCountdown = data != null ? data.isCountdown : false;
           String _remark = data != null ? data.remark : null;
           return ScheduleForm(
@@ -60,6 +68,7 @@ class _EditSchedule extends State<EditSchedule> {
             endDateTime: _endTime,
             type: _typeId,
             location: _place,
+            remindTimeList: _remindTimeList,
             isCountdown: _isCountdown,
             remark: _remark,
           );

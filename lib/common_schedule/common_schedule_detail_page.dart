@@ -1,10 +1,12 @@
+import 'package:flutter/services.dart';
+
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/schedule_request/get_common.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 
 class CommonScheduleDetailPage extends StatefulWidget {
   int scheduleNum;
@@ -20,11 +22,10 @@ class _CommonScheduleDetailWidget extends State<CommonScheduleDetailPage>
   int scheduleNum;
   _CommonScheduleDetailWidget(this.scheduleNum);
 
-  GetCommonScheduleModel _getCommonScheduleModel = null;
+  GetCommonScheduleModel _getCommonScheduleModel;
 
   int _type;
   bool _allDay = false;
-  bool _isNotCreate = false;
   String uid = 'lili123';
   String _title;
   String _location;
@@ -61,9 +62,11 @@ class _CommonScheduleDetailWidget extends State<CommonScheduleDetailPage>
     //     await rootBundle.loadString('assets/json/get_common_schedule.json');
     // var responseBody = json.decode(response);
 
-    await GetCommon(uid:uid, scheduleNum:scheduleNum).getData();
+    GetCommonScheduleModel _request =
+        await GetCommon(uid: uid, scheduleNum: scheduleNum).getData();
 
     setState(() {
+      _getCommonScheduleModel = _request;
       _title = _getCommonScheduleModel.title;
       _type = _typeNameList.indexOf(_getCommonScheduleModel.typeName) + 1;
       _startDateTime = _getCommonScheduleModel.startTime;
@@ -121,58 +124,8 @@ class _CommonScheduleDetailWidget extends State<CommonScheduleDetailPage>
       return color;
     }
 
-    // // picker mode ----------------------------------------------------------------------------------
-    CupertinoDatePickerMode _mode() {
-      if (_allDay)
-        return CupertinoDatePickerMode.date;
-      else
-        return CupertinoDatePickerMode.dateAndTime;
-    }
-
-    void _datePicker(contex, isStart) {
-      DateTime _dateTime;
-      if (isStart)
-        _dateTime = _startDateTime;
-      else
-        _dateTime = _startDateTime.add(Duration(hours: 1));
-      showCupertinoModalPopup(
-        context: context,
-        builder: (_) => Container(
-          height: _height * 0.35,
-          color: Colors.white,
-          child: Column(
-            children: [
-              Container(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: CupertinoButton(
-                    child: Text('確定', style: TextStyle(color: _color)),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
-              ),
-              Container(
-                height: _height * 0.28,
-                child: CupertinoDatePicker(
-                  mode: _mode(),
-                  initialDateTime: _dateTime,
-                  onDateTimeChanged: (value) => setState(() {
-                    if (isStart) {
-                      _startDateTime = value;
-                      _endDateTime = value.add(Duration(hours: 1));
-                    } else
-                      _endDateTime = value;
-                  }),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
     if (_getCommonScheduleModel != null) {
-      // createScheduleList ------------------------------------------------------------------------------
+      // scheduleList ------------------------------------------------------------------------------
       Widget scheduleList = ListView(
         children: [
           // text field ----------------------------------------------------------------------------- title
@@ -240,7 +193,8 @@ class _CommonScheduleDetailWidget extends State<CommonScheduleDetailPage>
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(right: _height * 0.01, top: _height * 0.01),
+                      margin: EdgeInsets.only(
+                          right: _height * 0.01, top: _height * 0.01),
                       child: Text(
                         _startView,
                         style: TextStyle(
@@ -264,7 +218,10 @@ class _CommonScheduleDetailWidget extends State<CommonScheduleDetailPage>
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(right: _height * 0.01, top: _height * 0.015, bottom: _height * 0.015),
+                      margin: EdgeInsets.only(
+                          right: _height * 0.01,
+                          top: _height * 0.015,
+                          bottom: _height * 0.015),
                       child: Text(
                         _endView,
                         style: TextStyle(
@@ -409,7 +366,15 @@ class _CommonScheduleDetailWidget extends State<CommonScheduleDetailPage>
         ),
       );
     } else {
-      return Center(child: CircularProgressIndicator());
+      return Scaffold(
+        body: Container(
+          color: Colors.white,
+          child: SafeArea(
+            bottom: false,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        ),
+      );
     }
   }
 }

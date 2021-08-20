@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class CommonList {
+class MemberList {
   BuildContext context;
   String uid;
   int groupNum;
   Map<String, String> data;
-  CommonScheduleListModel _response;
+  GroupMemberListModel _response;
 
   _request() async {
     Request request = Request();
-    await request.scheduleCommonList(context, data);
-    _response = await request.getCommonScheduleListGet();
+    await request.groupMemberList(context, data);
+    _response = await request.getGroupMemberListGet();
   }
 
-  CommonList({this.uid, this.groupNum}) {
+  MemberList({this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 
