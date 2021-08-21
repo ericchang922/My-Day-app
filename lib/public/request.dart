@@ -81,7 +81,7 @@ class Request {
     'delete_best': '$host${path['friend']}/delete_best/'
   };
   static Map timetableUrl = {
-    'get_timetable_list': '${path['timetable']}/get_timetable_list'
+    'main_timetable_list': '${path['timetable']}/main_timetable_list/'
   };
 
   Map headers = <String, String>{
@@ -379,7 +379,7 @@ class Request {
 
   // TIMETABLE =========================================================================================
   mainTimetableListGet(BuildContext context, Map<String, dynamic> data) async {
-    String _url = timetableUrl['main_timetable_lis'];
+    String _url = timetableUrl['main_timetable_list'];
     await httpGet(context, data, _url);
     if (_responseBody != null) {
       _mainTimetableListGet = MainTimetableListGet.fromJson(_responseBody);
