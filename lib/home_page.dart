@@ -1,11 +1,15 @@
-import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
-import 'package:My_Day_app/schedule/schedule_table.dart';
-import 'package:My_Day_app/setting/settings.dart';
+// flutter
+import 'package:My_Day_app/my_day_icon.dart';
+import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
-import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart';
+// therd
+import 'package:animations/animations.dart';
+// my day
+import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
+import 'package:My_Day_app/schedule/schedule_table.dart';
+import 'package:My_Day_app/schedule/create_schedule.dart';
+import 'package:My_Day_app/setting/settings.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -65,6 +69,10 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBody extends State<HomePageBody> {
+  String _uid = 'amy123';
+  Future<bool> _isOk;
+  Future<MainTimetableListGet> _futureData;
+  MainTimetableListGet _data;
   DateTime now = DateTime.now();
   int homeIndex = 4;
   PageController pageController;
@@ -79,6 +87,12 @@ class _HomePageBody extends State<HomePageBody> {
     {'start': '14:25', 'end': '15:15'},
     {'start': '15:25', 'end': '16:15'}
   ];
+  FloatingActionButton _floatingActionButton = null;
+
+  Future<MainTimetableListGet> getThisData() async {
+    MainTimetableList request = MainTimetableList(context: context, uid: _uid);
+    return request.getData();
+  }
 
   _getMon(DateTime today) {
     int daysAfter = today.weekday - 1;
@@ -97,32 +111,66 @@ class _HomePageBody extends State<HomePageBody> {
 
   _onPageChaged(int page) async {
     if (page == 0) {
-      pageController.animateToPage(2, duration: Duration(seconds: 1), curve: Curves.easeInOut);
+      homeIndex++;
       pageController.jumpToPage(2);
       DateTime mon = _getLastWeek(mondayList[0]);
       setState(() {
-        pageList.insert(1, ScheduleTable(monday: mon, sectionList: sectionList));
+        pageList.insert(1,
+            ScheduleTable(monday: mon, sectionList: sectionList, data: _data));
         mondayList.insert(0, mon);
       });
-      
+      await Future.delayed(Duration(milliseconds: 1));
+      pageController.animateToPage(1,
+          duration: Duration(milliseconds: 400), curve: Curves.easeIn);
     }
     if (page == pageList.length - 1) {
       setState(() {
         mondayList.add(_getNextWeek(mondayList[mondayList.length - 1]));
         pageList.add(ScheduleTable(
             monday: mondayList[mondayList.length - 1],
-            sectionList: sectionList));
+            sectionList: sectionList,
+            data: _data));
       });
     }
+    if (page == homeIndex) {
+      setState(() {
+        _floatingActionButton = null;
+      });
+    } else {
+      setState(() {
+        _floatingActionButton = FloatingActionButton(
+            child: Icon(MyDayIcon.home),
+            backgroundColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              pageController.animateToPage(homeIndex,
+                  duration: Duration(milliseconds: 900), curve: Curves.ease);
+            });
+      });
+    }
+  }
+
+  Future<bool> setTable() async {
+    _data = await _futureData;
+    await pageList.insert(0, Container());
+    for (int i = 0; i < mondayList.length; i++) {
+      pageList.add(ScheduleTable(
+        monday: mondayList[i],
+        sectionList: sectionList,
+        data: _data,
+      ));
+    }
+    return true;
   }
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController(initialPage: homeIndex, keepPage:false);
+    pageController = PageController(initialPage: homeIndex, keepPage: false);
     pageController.addListener(() {});
 
     setState(() {
+      _futureData = getThisData();
+
       mondayList = [
         _getLastWeek(_getLastWeek(_getLastWeek(now))),
         _getLastWeek(_getLastWeek(now)),
@@ -130,22 +178,33 @@ class _HomePageBody extends State<HomePageBody> {
         _getMon(now),
         _getNextWeek(now)
       ];
-      for (int i = 0; i < mondayList.length; i++) {
-        pageList.add(ScheduleTable(
-          monday: mondayList[i],
-          sectionList: sectionList,
-        ));
-      }
-      pageList.insert(0, Container());
+      _isOk = setTable();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      onPageChanged:_onPageChaged,
-      children: pageList,
-      controller: pageController,
-    );
+    return FutureBuilder<bool>(
+        future: _isOk,
+        builder: (BuildContext context,
+            AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            return Stack(children: [
+              PageView(
+                onPageChanged: _onPageChaged,
+                children: pageList,
+                controller: pageController,
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: 20.0, bottom: 16.0),
+                child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: _floatingActionButton),
+              )
+            ]);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

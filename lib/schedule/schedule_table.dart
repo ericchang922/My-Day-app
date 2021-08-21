@@ -1,30 +1,47 @@
+import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:flutter/material.dart';
+
+Map<String, int> weekDay = {
+  '星期一': 1,
+  '星期二': 2,
+  '星期三': 3,
+  '星期四': 4,
+  '星期五': 5,
+  '星期六': 6,
+  '星期日': 7
+};
 
 class ScheduleTable extends StatefulWidget {
   List<Map<String, String>> sectionList;
   DateTime monday;
-  ScheduleTable({this.monday, this.sectionList});
+  MainTimetableListGet data;
+  ScheduleTable({this.monday, this.sectionList, this.data});
   @override
   State<ScheduleTable> createState() =>
-      _ScheduleTable(this.monday, this.sectionList);
+      _ScheduleTable(this.monday, this.sectionList, this.data);
 }
 
 class _ScheduleTable extends State<ScheduleTable> {
   List<Map<String, String>> sectionList;
   DateTime monday;
-  _ScheduleTable(this.monday, this.sectionList);
+  MainTimetableListGet data;
+  _ScheduleTable(this.monday, this.sectionList, this.data);
   List dateList = [];
 
-  void initState(){
+  @override
+  void initState() {
     super.initState();
-    for(int i = 0; i<7; i++){
+    for (int i = 0; i < 7; i++) {
       DateTime days = monday.add(Duration(days: i));
       dateList.add((days.day).toString());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     List timeLineList = sectionList;
+    List<int> sectionNumList = [];
+    List<List<String>> sectionDataList = [];
 
     Duration _convertToDuration(String s) {
       int hour = 0;
@@ -49,11 +66,6 @@ class _ScheduleTable extends State<ScheduleTable> {
         _convertToDuration(sectionList[sectionList.length - 1]['end']);
     Duration timeAddNow = Duration(hours: classEnd.inHours + 1);
 
-    timeLineList.add({
-      'start': _convertToShortTime(classEnd),
-      'end': _convertToShortTime(timeAddNow)
-    });
-
     bool _checkTime() {
       bool ok = false;
       if (check.add(timeAddNow).isAfter(check.add(classEnd)))
@@ -61,6 +73,11 @@ class _ScheduleTable extends State<ScheduleTable> {
       else if (check.add(timeAddNow).isBefore(check.add(dayStart))) ok = true;
       return ok;
     }
+
+    timeLineList.add({
+      'start': _convertToShortTime(classEnd),
+      'end': _convertToShortTime(timeAddNow)
+    });
 
     while (_checkTime()) {
       if (timeAddNow.inHours + 1 > 24) {
@@ -132,8 +149,34 @@ class _ScheduleTable extends State<ScheduleTable> {
           )),
         );
 
-    Container _createSubject(String subjectName, double h) =>
-        _createTableRow(subjectName, _sectionColor, _height * 0.07 * h);
+    Container _createSubject(String subjectName, double h) {
+      Container created;
+      if (subjectName == null || subjectName == 'null') {
+        created = _createTableRow('', null, _height * 0.07 * h);
+      } else {
+        created =
+            _createTableRow(subjectName, _sectionColor, _height * 0.07 * h);
+      }
+      return created;
+    }
+
+    _getSection() async {
+      for (var d in data.timetable) {
+        if (monday.isAfter(d.startDate) && monday.isBefore(d.endDate)) {
+          for (var s in d.subject) {
+            if (sectionNumList.contains(s.section) != true) {
+              sectionNumList.add(s.section);
+              sectionDataList.insert(sectionNumList.indexOf(s.section),
+                  [null, null, null, null, null, null, null]);
+            }
+            sectionDataList[sectionNumList.indexOf(s.section)]
+                [weekDay[s.week] - 1] = s.subjectName;
+          }
+        }
+      }
+    }
+
+    _getSection();
 
     List<TableRow> _tableContent() {
       List<TableRow> _tableRowList = [];
@@ -150,9 +193,26 @@ class _ScheduleTable extends State<ScheduleTable> {
           _nextStart = timeLineList[i + 1]['start'];
 
         _contents = [_createTime(section['start'], section['end'])];
+        List<String> sectionSubject = [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ];
+        if (sectionDataList.length > 0) {
+          if (sectionNumList.indexOf(i + 1) < 0) {
+            sectionSubject = [null, null, null, null, null, null, null];
+          } else {
+            sectionSubject = sectionDataList[sectionNumList.indexOf(i + 1)];
+          }
+        }
 
         for (int j = 0; j < 7; j++) {
-          _contents.add(_createSubject('國文', _timeHeight(_start, _end)));
+          _contents.add(
+              _createSubject(sectionSubject[j], _timeHeight(_start, _end)));
         }
         _tableRowList.add(TableRow(children: _contents));
 
