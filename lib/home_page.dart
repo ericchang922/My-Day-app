@@ -51,24 +51,109 @@ class _HomePage extends State<HomePage> {
   }
 }
 
-AppBar homePageAppBar(context, DateTime nowMon) {
+String _convertToWeekDayName(int number) {
+  int num = number;
+  List<String> chinese = [
+    '零',
+    '一',
+    '二',
+    '三',
+    '四',
+    '五',
+    '六',
+    '七',
+    '八',
+    '九',
+    '十',
+    ''
+  ];
+  List<String> unit = ['十', '百', '千'];
+  int thousand;
+  int hundred;
+  int ten;
+  int one;
+  bool isZero = false;
+
+  String chineseNum = '';
+  if (num == null) {
+    num = 0;
+  }
+
+  if (num >= 10000) {
+    num = 0;
+    chineseNum = '過大';
+  }
+  if (num >= 1000) {
+    thousand = num ~/ 1000;
+    chineseNum += '${chinese[thousand]}${unit[2]}';
+  }
+  if (num >= 100) {
+    num = num % 1000;
+    hundred = num ~/ 100;
+    if (hundred == 0 && num % 100 != 0) {
+      chineseNum += '${chinese[hundred]}';
+    } else {
+      chineseNum += '${chinese[ten]}${unit[1]}';
+    }
+  }
+  if (num >= 10) {
+    num = num % 100;
+    ten = num ~/ 10;
+    if (ten == 1 && hundred == null && thousand == null) {
+      chineseNum += unit[0];
+    } else if (ten == 0 && isZero) {
+    } else if (ten == 0 && !isZero) {
+      chineseNum += chinese[ten];
+    } else {
+      isZero = false;
+      chineseNum += '${chinese[ten]}${unit[0]}';
+    }
+  }
+
+  one = num % 10;
+  if (one > 0) chineseNum += '${chinese[one]}';
+  if (num == 0) {
+    chineseNum = '';
+  } else {
+    chineseNum = '第$chineseNum週';
+  }
+
+  return chineseNum;
+}
+
+AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
   Color color = Theme.of(context).primaryColor;
   Size _size = MediaQuery.of(context).size;
   double _height = _size.height;
   double _width = _size.width;
-  double paddingWidth = _width*0.05;
-  double _monthSize = _height*0.023;
-  double _weekSize = _height*0.015;
+  double paddingWidth = _width * 0.05;
+  double _monthSize = _height * 0.023;
+  double _weekSize = _height * 0.015;
+
+  List<Widget> showWeek(String s) {
+    List<Widget> showWidget = [
+      Text(
+        '${nowMon.month} 月',
+        style: TextStyle(fontSize: _monthSize),
+      ),
+    ];
+    if (s == null || s == '') {
+    } else {
+      showWidget.add(Text(
+        s,
+        style: TextStyle(fontSize: _weekSize),
+      ));
+    }
+    return showWidget;
+  }
+
   return AppBar(
       title: Container(
         child: Row(children: [
           Padding(
             padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
             child: Column(
-              children: [
-                Text('${nowMon.month} 月', style: TextStyle(fontSize: _monthSize),),
-                Text('第一週', style: TextStyle(fontSize: _weekSize),),
-              ],
+              children: showWeek('${_convertToWeekDayName(weekCount)}'),
             ),
           ),
           Text('${nowMon.year} 年')
@@ -135,6 +220,7 @@ class _HomePageBody extends State<HomePageBody> {
 
   _onPageChaged(int page) async {
     HomeInherited.of(context).updateDate(pageList[page].getMonday());
+    HomeInherited.of(context).updateWeek(pageList[page].getWeekCount());
 
     if (page == 0) {
       homeIndex++;
@@ -177,7 +263,7 @@ class _HomePageBody extends State<HomePageBody> {
 
   Future<bool> setTable() async {
     _data = await _futureData;
-    await pageList.insert(0, ScheduleTable());
+    pageList.insert(0, ScheduleTable());
     for (int i = 0; i < mondayList.length; i++) {
       pageList.add(ScheduleTable(
         monday: mondayList[i],
@@ -185,6 +271,7 @@ class _HomePageBody extends State<HomePageBody> {
         data: _data,
       ));
     }
+
     return true;
   }
 
@@ -204,6 +291,7 @@ class _HomePageBody extends State<HomePageBody> {
         _getMon(now),
         _getNextWeek(now)
       ];
+
       _isOk = setTable();
     });
   }

@@ -35,8 +35,9 @@ class _Home extends State<Home> {
   @override
   Widget build(BuildContext context) {
     DateTime nowMon = HomeInherited.of(context).nowMon;
+    int weekCount = HomeInherited.of(context).weekCount;
     final _appBars = <Widget>[
-      homePageAppBar(context, nowMon),
+      homePageAppBar(context, nowMon, weekCount),
       groupListAppBar(context),
       temporaryGroupListAppBar(context),
       learnAppBar
