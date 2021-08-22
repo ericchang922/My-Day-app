@@ -1,4 +1,5 @@
 // flutter
+import 'package:My_Day_app/homeUpdate.dart';
 import 'package:My_Day_app/my_day_icon.dart';
 import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:flutter/material.dart';
@@ -50,17 +51,40 @@ class _HomePage extends State<HomePage> {
   }
 }
 
-AppBar homePageAppBar(context) {
+AppBar homePageAppBar(context, DateTime nowMon) {
   Color color = Theme.of(context).primaryColor;
-  return AppBar(title: Text('首頁'), backgroundColor: color, actions: [
-    IconButton(
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SettingsPage()));
-      },
-      icon: Icon(Icons.settings),
-    ),
-  ]);
+  Size _size = MediaQuery.of(context).size;
+  double _height = _size.height;
+  double _width = _size.width;
+  double paddingWidth = _width*0.05;
+  double _monthSize = _height*0.023;
+  double _weekSize = _height*0.015;
+  return AppBar(
+      title: Container(
+        child: Row(children: [
+          Padding(
+            padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
+            child: Column(
+              children: [
+                Text('${nowMon.month} 月', style: TextStyle(fontSize: _monthSize),),
+                Text('第一週', style: TextStyle(fontSize: _weekSize),),
+              ],
+            ),
+          ),
+          Text('${nowMon.year} 年')
+        ]),
+      ),
+      centerTitle: false,
+      backgroundColor: color,
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SettingsPage()));
+          },
+          icon: Icon(Icons.settings),
+        ),
+      ]);
 }
 
 class HomePageBody extends StatefulWidget {
@@ -77,7 +101,7 @@ class _HomePageBody extends State<HomePageBody> {
   int homeIndex = 4;
   PageController pageController;
   List<DateTime> mondayList = [];
-  List<Widget> pageList = [];
+  List<ScheduleTable> pageList = [];
   List<Map<String, String>> sectionList = [
     {'start': '08:10', 'end': '09:00'},
     {'start': '09:10', 'end': '10:00'},
@@ -110,6 +134,8 @@ class _HomePageBody extends State<HomePageBody> {
   }
 
   _onPageChaged(int page) async {
+    HomeInherited.of(context).updateDate(pageList[page].getMonday());
+
     if (page == 0) {
       homeIndex++;
       pageController.jumpToPage(2);
@@ -151,7 +177,7 @@ class _HomePageBody extends State<HomePageBody> {
 
   Future<bool> setTable() async {
     _data = await _futureData;
-    await pageList.insert(0, Container());
+    await pageList.insert(0, ScheduleTable());
     for (int i = 0; i < mondayList.length; i++) {
       pageList.add(ScheduleTable(
         monday: mondayList[i],
@@ -186,8 +212,7 @@ class _HomePageBody extends State<HomePageBody> {
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
         future: _isOk,
-        builder: (BuildContext context,
-            AsyncSnapshot<bool> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             return Stack(children: [
               PageView(

@@ -1,14 +1,15 @@
-import 'package:My_Day_app/studyplan/learn.dart';
-import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
-import 'package:animations/animations.dart';
 // flutter
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+// therd
+import 'package:animations/animations.dart';
 // my day
-
 import 'package:My_Day_app/my_day_icon.dart';
-import 'group/group_list_page.dart';
-import 'home_page.dart';
+import 'package:My_Day_app/group/group_list_page.dart';
+import 'package:My_Day_app/home_page.dart';
+import 'package:My_Day_app/homeUpdate.dart';
+import 'package:My_Day_app/studyplan/learn.dart';
+import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -18,7 +19,12 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   int _index = 0;
 
-  final _pages = <Widget>[HomePage(), GroupListPage(), TemporaryGroupListPage(), Learn()];
+  final _pages = <Widget>[
+    HomePage(),
+    GroupListPage(),
+    TemporaryGroupListPage(),
+    Learn()
+  ];
 
   void _onTapped(int index) {
     setState(() {
@@ -28,8 +34,9 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime nowMon = HomeInherited.of(context).nowMon;
     final _appBars = <Widget>[
-      homePageAppBar(context),
+      homePageAppBar(context, nowMon),
       groupListAppBar(context),
       temporaryGroupListAppBar(context),
       learnAppBar
@@ -54,11 +61,11 @@ class _Home extends State<Home> {
                   secondaryAnimation: secondaryAnimation,
                   transitionType: SharedAxisTransitionType.vertical,
                 );
-              },// 動畫 Widget function 
+              }, // 動畫 Widget function
               child: _pages[_index], // 頁面
             ),
             bottomNavigationBar: SizedBox(
-              height: height*0.09,
+              height: height * 0.09,
               child: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
                 fixedColor: Colors.white,

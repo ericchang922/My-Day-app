@@ -12,6 +12,7 @@ Map<String, int> weekDay = {
 };
 
 class ScheduleTable extends StatefulWidget {
+  getMonday() =>monday;
   List<Map<String, String>> sectionList;
   DateTime monday;
   MainTimetableListGet data;
@@ -31,14 +32,18 @@ class _ScheduleTable extends State<ScheduleTable> {
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < 7; i++) {
+    if(monday == null){
+      
+    }else{for (int i = 0; i < 7; i++) {
       DateTime days = monday.add(Duration(days: i));
       dateList.add((days.day).toString());
-    }
+    }}
+    
   }
 
   @override
   Widget build(BuildContext context) {
+    if(monday == null){return Container();}
     List timeLineList = sectionList;
     List<int> sectionNumList = [];
     List<List<String>> sectionDataList = [];
@@ -260,6 +265,8 @@ class _ScheduleTable extends State<ScheduleTable> {
       ])
     ];
     List<TableRow> _tableChildren = thead..addAll(_tableContent());
+
+
 
     return ListView(children: [
       Table(
