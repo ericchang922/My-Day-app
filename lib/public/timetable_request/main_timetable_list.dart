@@ -20,7 +20,7 @@ class MainTimetableList {
     _data = {"uid": uid};
   }
 
-  getData()async{
+  Future<MainTimetableListGet> getData()async{
     await _request();
     return this._response;
   }

@@ -30,7 +30,8 @@ class Timetable {
         semester = json['semester'],
         startDate = DateTime.parse(json['startDate']),
         endDate = DateTime.parse(json['endDate']),
-        subject = List<Subject>.from(json['subject']);
+        subject =
+            List<Subject>.from(json['subject'].map((e) => Subject.fromJson(e)));
 
   Map<String, dynamic> toJson() => {
         'schoolYear': schoolYear,
@@ -43,8 +44,8 @@ class Timetable {
 
 class Subject {
   String subjectName;
-  DateTime startTime;
-  DateTime endTime;
+  Duration startTime;
+  Duration endTime;
   String week;
   int section;
 
@@ -57,8 +58,8 @@ class Subject {
 
   Subject.fromJson(Map<String, dynamic> json)
       : subjectName = json['subjectName'],
-        startTime = json['startTime'],
-        endTime = json['endTime'],
+        startTime = Duration(hours: int.parse(json['startTime'].split(':')[0]), minutes:int.parse(json['startTime'].split(':')[1])),
+        endTime = Duration(hours: int.parse(json['endTime'].split(':')[0]), minutes:int.parse(json['endTime'].split(':')[1])),
         week = json['week'],
         section = json['section'];
   Map<String, dynamic> toJson() => {

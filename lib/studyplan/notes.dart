@@ -5,9 +5,6 @@ import 'notes_add.dart';
 import 'dart:ui';
 import 'learn.dart';
 
-void main() {
-  runApp(App());
-}
 
 class App extends StatelessWidget {
   const App({Key key}) : super(key: key);

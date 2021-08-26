@@ -1,18 +1,64 @@
+import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:flutter/material.dart';
 
+Map<String, int> weekDay = {
+  '星期一': 1,
+  '星期二': 2,
+  '星期三': 3,
+  '星期四': 4,
+  '星期五': 5,
+  '星期六': 6,
+  '星期日': 7
+};
+
 class ScheduleTable extends StatefulWidget {
+  getMonday() => monday;
+  getWeekCount() => weekCount;
   List<Map<String, String>> sectionList;
-  ScheduleTable({this.sectionList});
+  DateTime monday;
+  int weekCount;
+  MainTimetableListGet data;
+  ScheduleTable({this.monday, this.sectionList, this.data});
+
   @override
-  State<ScheduleTable> createState() => _ScheduleTable(this.sectionList);
+  State<ScheduleTable> createState() =>
+      _ScheduleTable(this.monday, this.sectionList, this.data);
 }
 
 class _ScheduleTable extends State<ScheduleTable> {
   List<Map<String, String>> sectionList;
-  _ScheduleTable(this.sectionList);
+  DateTime monday;
+  int weekCount;
+  MainTimetableListGet data;
+  _ScheduleTable(this.monday, this.sectionList, this.data);
+  List dateList = [];
 
+  _getMon(DateTime today) {
+    int daysAfter = today.weekday - 1;
+    return DateTime.utc(today.year, today.month, today.day - daysAfter);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (monday == null) {
+    } else {
+      for (int i = 0; i < 7; i++) {
+        DateTime days = monday.add(Duration(days: i));
+        dateList.add((days.day).toString());
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (monday == null) {
+      return Container();
+    }
     List timeLineList = sectionList;
+    List<int> sectionNumList = [];
+    List<List<String>> sectionDataList = [];
+    String semester;
 
     Duration _convertToDuration(String s) {
       int hour = 0;
@@ -36,29 +82,35 @@ class _ScheduleTable extends State<ScheduleTable> {
     Duration classEnd =
         _convertToDuration(sectionList[sectionList.length - 1]['end']);
     Duration timeAddNow = Duration(hours: classEnd.inHours + 1);
+
+    bool _checkTime() {
+      bool ok = false;
+      if (check.add(timeAddNow).isAfter(check.add(classEnd)))
+        ok = true;
+      else if (check.add(timeAddNow).isBefore(check.add(dayStart))) ok = true;
+      return ok;
+    }
+
     timeLineList.add({
       'start': _convertToShortTime(classEnd),
       'end': _convertToShortTime(timeAddNow)
     });
 
-    while (check.add(timeAddNow).isAfter(check.add(classEnd)) ||
-        check
-            .add(timeAddNow)
-            .isBefore(check.add(dayStart))) {
-
+    while (_checkTime()) {
       if (timeAddNow.inHours + 1 > 24) {
         timeAddNow = Duration(hours: 0);
-      } 
-      if (timeAddNow.inHours==dayStart.inHours) break;
+      }
+      if (timeAddNow.inHours == dayStart.inHours) break;
 
-      Map<String,String> add = {'start': _convertToShortTime(timeAddNow)};
+      Map<String, String> add = {'start': _convertToShortTime(timeAddNow)};
 
       timeAddNow = Duration(hours: timeAddNow.inHours + 1);
       add['end'] = _convertToShortTime(timeAddNow);
+      timeLineList.add(add);
     }
-    timeLineList[timeLineList.length-1]['end']=_convertToShortTime(dayStart);
+    timeLineList[timeLineList.length - 1]['end'] =
+        _convertToShortTime(dayStart);
 
-    List dateList = ['1', '2', '3', '4', '5', '6', '7'];
     Size _size = MediaQuery.of(context).size;
     double _width = _size.width;
     double _height = _size.height;
@@ -73,6 +125,9 @@ class _ScheduleTable extends State<ScheduleTable> {
       DateTime endTime = DateTime.parse('2000-01-01 ' + end);
       double h = endTime.difference(startTime).inMinutes /
           Duration(hours: 1).inMinutes;
+      if (h < 0) h = h * -1;
+      if (h >= 24) h = 0;
+
       return h;
     }
 
@@ -111,8 +166,93 @@ class _ScheduleTable extends State<ScheduleTable> {
           )),
         );
 
-    Container _createSubject(String subjectName, double h) =>
-        _createTableRow(subjectName, _sectionColor, _height * 0.07 * h);
+    Container _createSubject(String subjectName, double h) {
+      Container created;
+      if (subjectName == null || subjectName == 'null') {
+        created = _createTableRow('', null, _height * 0.07 * h);
+      } else {
+        created =
+            _createTableRow(subjectName, _sectionColor, _height * 0.07 * h);
+      }
+      return created;
+    }
+
+    _addSectionInList(s) {
+      if (sectionNumList.contains(s.section) != true) {
+        sectionNumList.add(s.section);
+        sectionDataList.insert(sectionNumList.indexOf(s.section),
+            [null, null, null, null, null, null, null]);
+      }
+      sectionDataList[sectionNumList.indexOf(s.section)][weekDay[s.week] - 1] =
+          s.subjectName;
+    }
+
+    _runSection(var d, int count, bool isStart) {
+      semester = '${d.schoolYear}-${d.semester}';
+
+      setState(() {
+        weekCount =
+            (_getMon(monday).difference(_getMon(d.startDate)).inDays / 7)
+                    .toInt() +
+                1;
+        widget.weekCount = weekCount;
+      });
+      if (isStart == null) {
+        for (var s in d.subject) {
+          _addSectionInList(s);
+        }
+      } else if (isStart == true) {
+        for (var s in d.subject) {
+          if (weekDay[s.week] > count) {
+            _addSectionInList(s);
+          }
+        }
+      } else if (isStart == false) {
+        for (var s in d.subject) {
+          if (weekDay[s.week] <= count + 1) {
+            _addSectionInList(s);
+          }
+        }
+      }
+    }
+
+    _getSection() async {
+      for (var d in data.timetable) {
+        // 週一在開學後，週日在結業前
+        if (!monday.isBefore(d.startDate) &&
+            !monday.add(Duration(days: 6)).isAfter(d.endDate)) {
+          _runSection(d, null, null);
+        } else if (!monday
+                .add(Duration(days: 6))
+                .isBefore(d.startDate) && // 週日在開學後，週一在結業前
+            !monday.isAfter(d.startDate)) {
+          int count;
+          countloop:
+          for (int c = 0; c < 6; c++) {
+            if (!monday.add(Duration(days: c + 1)).isBefore(d.startDate)) {
+              count = c + 1;
+              break countloop;
+            }
+          }
+          _runSection(d, count, true);
+        } else if (!monday.isBefore(d.startDate) &&
+            !monday.isAfter(d.endDate) &&
+            !monday.add(Duration(days: 6)).isBefore(d.endDate)) {
+          int count;
+          countloop:
+          for (int c = 0; c < 6; c++) {
+            if (!monday.add(Duration(days: c + 1)).isBefore(d.endDate)) {
+              count = c + 1;
+              break countloop;
+            }
+          }
+          _runSection(d, count, false);
+        }
+        break;
+      }
+    }
+
+    _getSection();
 
     List<TableRow> _tableContent() {
       List<TableRow> _tableRowList = [];
@@ -129,9 +269,26 @@ class _ScheduleTable extends State<ScheduleTable> {
           _nextStart = timeLineList[i + 1]['start'];
 
         _contents = [_createTime(section['start'], section['end'])];
+        List<String> sectionSubject = [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ];
+        if (sectionDataList.length > 0) {
+          if (sectionNumList.indexOf(i + 1) < 0) {
+            sectionSubject = [null, null, null, null, null, null, null];
+          } else {
+            sectionSubject = sectionDataList[sectionNumList.indexOf(i + 1)];
+          }
+        }
 
         for (int j = 0; j < 7; j++) {
-          _contents.add(_createSubject('國文', _timeHeight(_start, _end)));
+          _contents.add(
+              _createSubject(sectionSubject[j], _timeHeight(_start, _end)));
         }
         _tableRowList.add(TableRow(children: _contents));
 

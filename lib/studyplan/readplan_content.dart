@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:My_Day_app/studyplan/note_choose.dart';
 import 'package:My_Day_app/studyplan/readplan_add_note.dart';
 import 'package:My_Day_app/studyplan/readplan_content_delete.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,8 @@ import 'package:flutter/material.dart';
 selectedItem(BuildContext context, item) async {
   switch (item) {
     case 0:
-      // Navigator.of(context)
-      //     .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => ReadPlanChoose()));
       break;
     case 1:
       bool action = await readplanDeleteDialog(context);
@@ -132,7 +133,6 @@ class _ExamplePageState extends State<ExamplePage> {
   final items = ["國文 1~3 課", "國文 4~6 課", "國文 7~9 課", "國文 10~12 課"];
   final _items = ["國文課", "國文課", "國文課", "國文課"];
   Widget _buildItem(BuildContext context, int index) {
-    final theme = Theme.of(context);
     final title = items[index];
     final mintitle = _items[index];
     bool _checkboxSelected = true;
