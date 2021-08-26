@@ -121,11 +121,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
             contentPadding: EdgeInsets.only(top: _height * 0.02),
             content: Container(
               width: _width * 0.2,
-              height: _height * 0.25,
+              height: _height * 0.24,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Expanded(
                     child: ListView(
@@ -283,9 +280,6 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                   width: _width * 0.2,
                   height: _height * 0.2,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Expanded(
                         child: ListView(
