@@ -215,11 +215,10 @@ class _VoteWidget extends State<VotePage> with RouteAware {
     }
 
     _submitVote() async {
-      List<int> voteItemNum;
+      List<int> voteItemNum = [];
       for (int i = 0; i < _voteCheck.length; i++) {
         if (_voteCheck[i] == true) voteItemNum.add(i + 1);
       }
-      print(voteItemNum);
 
       var submitWidget;
       _submitWidgetfunc() async {
@@ -248,7 +247,7 @@ class _VoteWidget extends State<VotePage> with RouteAware {
     }
 
     _voteAction() {
-      if (_isCreate && _isManager) {
+      if (_isCreate) {
         return PopupMenuButton<int>(
           offset: Offset(50, 50),
           shape: RoundedRectangleBorder(
@@ -273,7 +272,7 @@ class _VoteWidget extends State<VotePage> with RouteAware {
           ],
           onSelected: (item) => _selectedItem(context, item),
         );
-      } else if (_isCreate) {
+      } else if (_isManager) {
         return PopupMenuButton<int>(
           offset: Offset(50, 50),
           shape: RoundedRectangleBorder(
@@ -281,11 +280,11 @@ class _VoteWidget extends State<VotePage> with RouteAware {
           icon: Icon(Icons.more_vert),
           itemBuilder: (context) => [
             PopupMenuItem<int>(
-                value: 0,
+                value: 1,
                 child: Container(
                     alignment: Alignment.center,
                     child:
-                        Text("編輯", style: TextStyle(fontSize: _subtitleSize)))),
+                        Text("刪除", style: TextStyle(fontSize: _subtitleSize)))),
           ],
           onSelected: (item) => _selectedItem(context, item),
         );
@@ -540,7 +539,7 @@ class _VoteWidget extends State<VotePage> with RouteAware {
               onTap: (value) {
                 setState(() {
                   if (value == true) {
-                    if (_voteCount() <= _getVoteModel.chooseVoteQuantity) {
+                    if (_voteCount() < _getVoteModel.chooseVoteQuantity) {
                       _voteItemCount[index]++;
                       _voteCheck[index] = value;
                     }
@@ -558,7 +557,7 @@ class _VoteWidget extends State<VotePage> with RouteAware {
             onTap: () {
               setState(() {
                 if (_voteCheck[index] == false) {
-                  if (_voteCount() <= _getVoteModel.chooseVoteQuantity) {
+                  if (_voteCount() < _getVoteModel.chooseVoteQuantity) {
                     _voteItemCount[index]++;
                     _voteCheck[index] = true;
                   }
