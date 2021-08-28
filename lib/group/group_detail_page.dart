@@ -176,7 +176,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
         return false;
     }
 
-    selectedItem(BuildContext context, item) async {
+    _selectedItem(BuildContext context, item) async {
       switch (item) {
         case 0:
           Navigator.of(context).push(MaterialPageRoute(
@@ -198,7 +198,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
       }
     }
 
-    voteAction() {
+    _voteAction() {
       if (_isManager) {
         return PopupMenuButton<int>(
           offset: Offset(50, 50),
@@ -240,7 +240,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                     child:
                         Text("退出", style: TextStyle(fontSize: _subtitleSize)))),
           ],
-          onSelected: (item) => selectedItem(context, item),
+          onSelected: (item) => _selectedItem(context, item),
         );
       } else {
         return PopupMenuButton<int>(
@@ -274,13 +274,13 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                     child:
                         Text("退出", style: TextStyle(fontSize: _subtitleSize)))),
           ],
-          onSelected: (item) => selectedItem(context, item),
+          onSelected: (item) => _selectedItem(context, item),
         );
       }
     }
 
-    voteState(bool isVoteType, int voteNum) {
-      if (isVoteType == true) {
+    _voteState(bool isVoteType, int voteNum) {
+      if (isVoteType == false) {
         return Container(
           margin: EdgeInsets.only(right: _height * 0.01),
           child: InkWell(
@@ -297,7 +297,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
       }
     }
 
-    voteWidget() {
+    _voteWidget() {
       _votesList = [];
       for (int i = 0; i < _getGroupModel.vote.length; i++) {
         var votes = _getGroupModel.vote[i];
@@ -313,7 +313,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                   width: _width * 0.06,
                 ),
               ),
-              trailing: voteState(votes.isVoteType, votes.voteNum)),
+              trailing: _voteState(votes.isVoteType, votes.voteNum)),
         );
       }
       return ListView(
@@ -519,7 +519,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                 groupList
               ],
             ),
-            voteWidget(),
+            _voteWidget(),
           ],
         );
       } else {
@@ -533,7 +533,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
             backgroundColor: _color,
             title: Text(_getGroupModel.title,
                 style: TextStyle(fontSize: _appBarSize)),
-            actions: [voteAction()],
+            actions: [_voteAction()],
             leading: Container(
               margin: EdgeInsets.only(left: _leadingL),
               child: GestureDetector(
@@ -550,7 +550,6 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
         body: Container(
           color: Colors.white,
           child: SafeArea(
-            bottom: false,
             child: Center(child: CircularProgressIndicator()),
           ),
         ),
