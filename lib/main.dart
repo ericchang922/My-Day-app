@@ -1,9 +1,9 @@
-import 'package:My_Day_app/account/login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'home.dart';
-
+import 'package:My_Day_app/account/login.dart';
+import 'package:My_Day_app/homeUpdate.dart';
+import 'package:My_Day_app/home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,11 +22,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Day',
       localizationsDelegates: [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
       ],
-      supportedLocales: [const Locale('zh','TW')],
+      supportedLocales: [const Locale('zh', 'TW')],
       theme: ThemeData(
         primaryColor: Color(0xffF86D67), //主色
         primaryColorLight: Color(0xffFFAAA6), //次色
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       navigatorObservers: [routeObserver],
-      home: Home(),
+      home: HomeUpdate(child: Home()),
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => new LoginPage(),
       },

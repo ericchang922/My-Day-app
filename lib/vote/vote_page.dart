@@ -1,14 +1,17 @@
-import 'dart:convert';
-import 'dart:io';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/vote_request/add_items.dart';
+import 'package:My_Day_app/public/vote_request/delete.dart';
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/public/vote_request/vote.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
+import 'package:My_Day_app/public/group_request/member_list.dart';
+import 'package:My_Day_app/public/vote_request/get.dart';
 import 'package:My_Day_app/vote/vote_edit_page.dart';
 import 'package:date_format/date_format.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class VotePage extends StatefulWidget {
   int voteNum;
@@ -19,17 +22,18 @@ class VotePage extends StatefulWidget {
   _VoteWidget createState() => new _VoteWidget(voteNum, groupNum);
 }
 
-class _VoteWidget extends State<VotePage> {
+class _VoteWidget extends State<VotePage> with RouteAware {
   int voteNum;
   int groupNum;
   _VoteWidget(this.voteNum, this.groupNum);
 
-  GetVoteModel _getVoteModel = null;
-  GroupMemberListModel _groupMemberListModel = null;
+  GetVoteModel _getVoteModel;
+  GroupMemberListModel _groupMemberListModel;
 
-  String _voteItemName = "";
+  String _voteItemName = '';
   String uid = 'lili123';
-  String _deadLine = "";
+  String _deadLine = '';
+  String _title = '';
 
   bool _visibleDeadLine = false;
   bool _visibleAnonymous = false;
@@ -38,8 +42,6 @@ class _VoteWidget extends State<VotePage> {
 
   List _voteItemCount = [];
   List _voteCheck = [];
-  List _voteAddItemCount = [];
-  List _voteAddItemName = [];
   List _voteAddItemCheck = [];
   List _managerList = [];
 
@@ -53,27 +55,39 @@ class _VoteWidget extends State<VotePage> {
   void initState() {
     super.initState();
 
-    _getGroupMemberRequest();
     _getVoteRequest();
+    _getGroupMemberRequest();
   }
 
-  Future<void> _getVoteRequest() async {
-    // var jsonString = await rootBundle.loadString('assets/json/get_vote.json');
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
 
-    var httpClient = HttpClient();
-    var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-        '/vote/get/', {'uid': uid, 'voteNum': voteNum.toString()}));
-    var response = await request.close();
-    var jsonString = await response.transform(utf8.decoder).join();
-    httpClient.close();
-    print(jsonString);
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
 
-    var jsonMap = json.decode(jsonString);
+  @override
+  void didPopNext() {
+    _getVoteRequest();
+    _getGroupMemberRequest();
+  }
 
-    var getVoteModel = GetVoteModel.fromJson(jsonMap);
+  _getVoteRequest() async {
+    // var response = await rootBundle.loadString('assets/json/get_vote.json');
+    // var responseBody = json.decode(response);
+
+    GetVoteModel _request = await Get(uid: uid, voteNum: voteNum).getData();
+
     setState(() {
-      _getVoteModel = getVoteModel;
+      _getVoteModel = _request;
+      // ignore: deprecated_member_use
       _voteCheck = new List();
+      // ignore: deprecated_member_use
       _voteItemCount = new List();
       if (_getVoteModel.deadline != "None") {
         DateTime dateTime = DateTime.parse(_getVoteModel.deadline);
@@ -91,37 +105,30 @@ class _VoteWidget extends State<VotePage> {
         _voteItemCount.add(_getVoteModel.voteItems[i].voteItemCount);
       }
       if (_getVoteModel.founderId == uid && _getVoteModel.voteCount == 0) {
-        setState(() {
-          _isCreate = true;
-        });
+        _isCreate = true;
       }
       for (int i = 0; i < _managerList.length; i++) {
         if (_managerList[i] == uid) {
-          setState(() {
-            _isManager = true;
-          });
+          _isManager = true;
         }
       }
-      print(_voteCheck);
+      if (_getVoteModel.optionTypeId == 1)
+        _title = '新增選項';
+      else
+        _title = '新增日期';
       _buttonIsOnpressed();
     });
   }
 
-  Future _getGroupMemberRequest() async {
+  _getGroupMemberRequest() async {
     // var reponse = await rootBundle.loadString('assets/json/group_members.json');
+    // var responseBody = json.decode(response);
 
-    var httpClient = HttpClient();
-    var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-        '/group/member_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
-    var response = await request.close();
-    var jsonString = await response.transform(utf8.decoder).join();
-    httpClient.close();
+    GroupMemberListModel _request =
+        await MemberList(uid: uid, groupNum: groupNum).getData();
 
-    var jsonBody = json.decode(jsonString);
-
-    var groupMemberListModel = GroupMemberListModel.fromJson(jsonBody);
     setState(() {
-      _groupMemberListModel = groupMemberListModel;
+      _groupMemberListModel = _request;
 
       for (int i = 0; i < _groupMemberListModel.member.length; i++) {
         if (_groupMemberListModel.member[i].statusId == 4) {
@@ -149,563 +156,528 @@ class _VoteWidget extends State<VotePage> {
     }
   }
 
-  selectedItem(BuildContext context, item) async {
-    switch (item) {
-      case 0:
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => VoteEditPage(voteNum)));
-        break;
-      case 1:
-        break;
-    }
-  }
-
-  voteAction() {
-    var screenSize = MediaQuery.of(context).size;
-    if (_isCreate && _isManager) {
-      return PopupMenuButton<int>(
-        offset: Offset(50, 50),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(screenSize.height * 0.01)),
-        icon: Icon(Icons.more_vert),
-        itemBuilder: (context) => [
-          PopupMenuItem<int>(
-              value: 0,
-              child: Container(
-                  alignment: Alignment.center,
-                  child: Text("編輯",
-                      style: TextStyle(fontSize: screenSize.width * 0.035)))),
-          PopupMenuDivider(
-            height: 1,
-          ),
-          PopupMenuItem<int>(
-              value: 1,
-              child: Container(
-                  alignment: Alignment.center,
-                  child: Text("刪除",
-                      style: TextStyle(fontSize: screenSize.width * 0.035)))),
-        ],
-        onSelected: (item) => selectedItem(context, item),
-      );
-    } else if (_isCreate) {
-      return PopupMenuButton<int>(
-        offset: Offset(50, 50),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(screenSize.height * 0.01)),
-        icon: Icon(Icons.more_vert),
-        itemBuilder: (context) => [
-          PopupMenuItem<int>(
-              value: 0,
-              child: Container(
-                  alignment: Alignment.center,
-                  child: Text("編輯",
-                      style: TextStyle(fontSize: screenSize.width * 0.035)))),
-        ],
-        onSelected: (item) => selectedItem(context, item),
-      );
-    } else {
-      return Container();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text('投票', style: TextStyle(fontSize: screenSize.width * 0.052)),
-        actions: [voteAction()],
-        leading: Container(
-          margin: EdgeInsets.only(left: screenSize.height * 0.02),
-          child: GestureDetector(
-            child: Icon(Icons.chevron_left),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-      ),
-      body: Container(color: Colors.white, child: _buildVoteWidget(context)),
-    );
-  }
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
 
-  Widget _buildVoteWidget(BuildContext context) {
-    if (_getVoteModel != null && _groupMemberListModel != null) {
-      return Column(
-        children: [
-          _buildVoteSetting(context),
-          Expanded(
-            child: ListView(
-              children: [
-                _buildVoteItem(context),
-                Divider(height: 1),
-                // _buildVoteAddItem(context),
-                // if (_voteAddItemName.length != 0) Divider(height: 1),
-                _buildAddItem(context)
-              ],
-            ),
-          ),
-          _buildCheckButtom(context)
-        ],
-      );
-    } else {
-      return Center(child: CircularProgressIndicator());
+    double _leadingL = _height * 0.02;
+    double _listPaddingH = _height * 0.04;
+    double _listPaddingV = _height * 0.02;
+    double _bottomHeight = _height * 0.07;
+    double _bottomIconWidth = _width * 0.05;
+    double _textFied = _height * 0.045;
+    double _borderRadius = _height * 0.03;
+    double _textLBR = _height * 0.02;
+    double _inkwellH = _height * 0.06;
+
+    double _appBarSize = _width * 0.052;
+    double _pSize = _height * 0.023;
+    double _titleSize = _height * 0.025;
+    double _subtitleSize = _height * 0.02;
+
+    Color _gray = Color(0xff959595);
+    Color _color = Theme.of(context).primaryColor;
+    Color _light = Theme.of(context).primaryColorLight;
+    Color _hintGray = Color(0xffCCCCCC);
+    Color _bule = Color(0xff7AAAD8);
+    Color _textFiedBorder = Color(0xff707070);
+
+    _submitDelete() async {
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return Delete(uid: uid, voteNum: voteNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
     }
-  }
 
-  Widget _buildVoteSetting(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    _submitAddItems(String itemName) async {
+      int index = _getVoteModel.voteItems.length + 1;
+      List<Map<String, dynamic>> voteItems = [];
+      voteItems.add({'voteItemNum': index, 'voteItemName': itemName});
 
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.only(top: screenSize.height * 0.04),
-          child: Text(_getVoteModel.title,
-              style: TextStyle(fontSize: screenSize.width * 0.052)),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: screenSize.height * 0.01),
-              child: Text("建立人：" + _getVoteModel.founderName,
-                  style: TextStyle(
-                      fontSize: screenSize.width * 0.035,
-                      color: Color(0xff959595))),
-            ),
-            Visibility(
-              visible: _visibleAnonymous,
-              child: Container(
-                margin: EdgeInsets.only(
-                    top: screenSize.height * 0.01,
-                    left: screenSize.height * 0.05),
-                child: Text("匿名投票",
-                    style: TextStyle(
-                        fontSize: screenSize.width * 0.035,
-                        color: Color(0xff959595))),
-              ),
-            ),
-          ],
-        ),
-        Visibility(
-          visible: _visibleDeadLine,
-          child: Container(
-            margin: EdgeInsets.only(top: screenSize.height * 0.01),
-            child: Text("截止日期：" + _deadLine,
-                style: TextStyle(
-                    fontSize: screenSize.width * 0.035,
-                    color: Color(0xff959595))),
-          ),
-        ),
-        Container(
-            margin: EdgeInsets.only(top: screenSize.height * 0.04),
-            child: Divider(
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return AddItems(uid: uid, voteNum: voteNum, voteItems: voteItems);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    _submitVote() async {
+      List<int> voteItemNum = [];
+      for (int i = 0; i < _voteCheck.length; i++) {
+        if (_voteCheck[i] == true) voteItemNum.add(i + 1);
+      }
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return Vote(uid: uid, voteNum: voteNum, voteItemNum: voteItemNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    _selectedItem(BuildContext context, item) async {
+      switch (item) {
+        case 0:
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => VoteEditPage(voteNum)));
+          break;
+        case 1:
+          if (await _submitDelete() != true) {
+            Navigator.pop(context);
+          }
+          break;
+      }
+    }
+
+    _voteAction() {
+      if (_isCreate) {
+        return PopupMenuButton<int>(
+          offset: Offset(50, 50),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_height * 0.01)),
+          icon: Icon(Icons.more_vert),
+          itemBuilder: (context) => [
+            PopupMenuItem<int>(
+                value: 0,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("編輯", style: TextStyle(fontSize: _subtitleSize)))),
+            PopupMenuDivider(
               height: 1,
-            ))
-      ],
-    );
-  }
-
-  int _voteCount() {
-    int _voteCount = 0;
-    for (int i = 0; i < _voteCheck.length; i++) {
-      if (_voteCheck[i] == true) {
-        _voteCount++;
+            ),
+            PopupMenuItem<int>(
+                value: 1,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("刪除", style: TextStyle(fontSize: _subtitleSize)))),
+          ],
+          onSelected: (item) => _selectedItem(context, item),
+        );
+      } else if (_isManager) {
+        return PopupMenuButton<int>(
+          offset: Offset(50, 50),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_height * 0.01)),
+          icon: Icon(Icons.more_vert),
+          itemBuilder: (context) => [
+            PopupMenuItem<int>(
+                value: 1,
+                child: Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text("刪除", style: TextStyle(fontSize: _subtitleSize)))),
+          ],
+          onSelected: (item) => _selectedItem(context, item),
+        );
+      } else {
+        return Container();
       }
     }
-    for (int i = 0; i < _voteAddItemCheck.length; i++) {
-      if (_voteAddItemCheck[i] == true) {
-        _voteCount++;
+
+    _voteCount() {
+      int _voteCount = 0;
+      for (int i = 0; i < _voteCheck.length; i++) {
+        if (_voteCheck[i] == true) {
+          _voteCount++;
+        }
       }
-    }
-    return _voteCount;
-  }
-
-  Widget _buildVoteItem(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _getVoteModel.voteItems.length,
-      itemBuilder: (BuildContext context, int index) {
-        var vote = _getVoteModel.voteItems[index];
-        String voteItemName;
-        if (_getVoteModel.optionTypeId == 1) {
-          voteItemName = vote.voteItemName;
-        } else {
-          DateTime voteDate = DateTime.parse(vote.voteItemName);
-          voteItemName = formatDate(
-              DateTime(voteDate.year, voteDate.month, voteDate.day,
-                  voteDate.hour, voteDate.minute),
-              [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
+      for (int i = 0; i < _voteAddItemCheck.length; i++) {
+        if (_voteAddItemCheck[i] == true) {
+          _voteCount++;
         }
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.height * 0.04,
-              vertical: screenSize.height * 0.02),
-          leading: CustomerCheckBox(
-            value: _voteCheck[index],
-            onTap: (value) {
-              setState(() {
-                if (value == true) {
-                  if (_voteCount() < _getVoteModel.chooseVoteQuantity) {
-                    _voteItemCount[index]++;
-                    _voteCheck[index] = value;
-                  }
-                } else {
-                  _voteCheck[index] = value;
-                  _voteItemCount[index]--;
-                }
-                _buttonIsOnpressed();
-              });
-            },
-          ),
-          title: Text(voteItemName,
-              style: TextStyle(fontSize: screenSize.width * 0.041)),
-          trailing: Text(_voteItemCount[index].toString(),
-              style: TextStyle(fontSize: screenSize.width * 0.041)),
-          onTap: () {
-            setState(() {
-              if (_voteCheck[index] == false) {
-                if (_voteCount() < _getVoteModel.chooseVoteQuantity) {
-                  _voteItemCount[index]++;
-                  _voteCheck[index] = true;
-                }
-              } else {
-                _voteItemCount[index]--;
-                _voteCheck[index] = false;
-              }
-              _buttonIsOnpressed();
-            });
-          },
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Divider(
-          height: 1,
-        );
-      },
-    );
-  }
-
-  Widget _buildVoteAddItem(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _voteAddItemName.length,
-      itemBuilder: (BuildContext context, int index) {
-        var voteAddItemName = _voteAddItemName[index];
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.height * 0.04,
-              vertical: screenSize.height * 0.02),
-          title: Text(voteAddItemName,
-              style: TextStyle(fontSize: screenSize.width * 0.041)),
-          leading: CustomerCheckBox(
-            value: _voteAddItemCheck[index],
-            onTap: (value) {
-              setState(() {
-                if (value == true) {
-                  if (_voteCount() < _getVoteModel.chooseVoteQuantity) {
-                    _voteAddItemCount[index]++;
-                    _voteAddItemCheck[index] = value;
-                  }
-                } else {
-                  _voteAddItemCheck[index] = value;
-                  _voteAddItemCount[index]--;
-                }
-                _buttonIsOnpressed();
-              });
-            },
-          ),
-          trailing: Text(_voteAddItemCount[index].toString(),
-              style: TextStyle(fontSize: screenSize.width * 0.041)),
-          onTap: () {
-            setState(() {
-              if (_voteAddItemCheck[index] == false) {
-                if (_voteCount() < _getVoteModel.chooseVoteQuantity) {
-                  _voteAddItemCount[index]++;
-                  _voteAddItemCheck[index] = true;
-                }
-              } else {
-                _voteAddItemCount[index]--;
-                _voteAddItemCheck[index] = false;
-              }
-              _buttonIsOnpressed();
-            });
-          },
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Divider(
-          height: 1,
-        );
-      },
-    );
-  }
-
-  Widget _buildAddItem(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    String title;
-    if (_getVoteModel.optionTypeId == 1) {
-      title = '新增選項';
-    } else {
-      title = '新增日期';
+      }
+      return _voteCount;
     }
 
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(
-          horizontal: screenSize.height * 0.04,
-          vertical: screenSize.height * 0.02),
-      leading: Icon(Icons.add, color: Color(0xffCCCCCC)),
-      title: Text(title,
-          style: TextStyle(
-              fontSize: screenSize.width * 0.041, color: Color(0xffCCCCCC))),
-      onTap: () {
-        if (_getVoteModel.optionTypeId == 2) {
-          _datePicker(context);
-        } else {
-          _voteAddItemDialog(context);
-        }
-      },
-    );
-  }
-
-  String _dateFormat(dateTime) {
-    String dateString = formatDate(
-        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
-            dateTime.minute),
-        [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
-    return dateString;
-  }
-
-  void _datePicker(contex) {
-    var screenSize = MediaQuery.of(context).size;
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => Container(
-        height: screenSize.height * 0.35,
-        color: Colors.white,
-        child: Column(
-          children: [
-            Container(
-              height: screenSize.height * 0.065,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: CupertinoButton(
-                    child: Text('確定'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
+    _datePicker(contex) {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (_) => Container(
+          height: _height * 0.35,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                height: _height * 0.065,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CupertinoButton(
+                      child: Text('確定', style: TextStyle(color: _color)),
+                      onPressed: () async {
+                        _voteItemName = _dateTime.toString();
+                        print(_voteItemName);
+                        if (await _submitAddItems(_voteItemName) != true) {
+                          _getVoteRequest();
+                          Navigator.pop(context);
+                        }
+                      }),
+                ),
+              ),
+              Container(
+                height: _height * 0.28,
+                child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    initialDateTime: DateTime.now(),
+                    onDateTimeChanged: (value) {
                       setState(() {
-                        // _voteItemName = _dateFormat(_dateTime);
-                        // _voteAddItemName.add(_voteItemName);
-                        // _voteItemName = "";
-                        // _voteAddItemCheck.add(false);
-                        // _voteAddItemCount.add(0);
-                        print(_dateTime);
-                        _getVoteRequest();
+                        _dateTime = value;
                       });
                     }),
               ),
-            ),
-            Container(
-              height: screenSize.height * 0.28,
-              child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.dateAndTime,
-                  initialDateTime: DateTime.now(),
-                  onDateTimeChanged: (value) {
-                    setState(() {
-                      _dateTime = value;
-                    });
-                  }),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildCheckButtom(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    var _onPressed;
-
-    if (_isEnabled == true) {
-      _onPressed = () {
-        // Navigator.pop(context);
-        setState(() {});
-      };
+      );
     }
 
-    return Row(children: <Widget>[
-      Expanded(
-        // ignore: deprecated_member_use
-        child: FlatButton(
-          height: screenSize.height * 0.07,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-          child: Image.asset(
-            'assets/images/cancel.png',
-            width: screenSize.width * 0.05,
-          ),
-          color: Theme.of(context).primaryColorLight,
-          textColor: Colors.white,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      Expanded(
-          // ignore: deprecated_member_use
-          child: Builder(builder: (context) {
-        return FlatButton(
-            disabledColor: Color(0xffCCCCCC),
-            height: screenSize.height * 0.07,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-            child: Image.asset(
-              'assets/images/confirm.png',
-              width: screenSize.width * 0.05,
-            ),
-            color: Theme.of(context).primaryColor,
-            textColor: Colors.white,
-            onPressed: _onPressed);
-      }))
-    ]);
-  }
-
-  Future _voteAddItemDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        var screenSize = MediaQuery.of(context).size;
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(screenSize.height * 0.03))),
-          contentPadding: EdgeInsets.only(top: screenSize.height * 0.02),
-          content: Container(
-            width: screenSize.width * 0.2,
-            height: screenSize.height * 0.2077,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      Text(
-                        "新增選項",
-                        style: TextStyle(fontSize: screenSize.width * 0.041),
-                        textAlign: TextAlign.center,
+    Future voteAddItemDialog(BuildContext context) async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
+            contentPadding: EdgeInsets.only(top: _height * 0.02),
+            content: Container(
+              width: _width * 0.2,
+              height: _height * 0.2,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        Text(
+                          "新增選項",
+                          style: TextStyle(fontSize: _pSize),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                      height: _textFied,
+                      margin: EdgeInsets.only(
+                        left: _textLBR,
+                        right: _textLBR,
+                        bottom: _height * 0.03,
                       ),
+                      child: new TextField(
+                        style: TextStyle(fontSize: _pSize),
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: _height * 0.01,
+                                vertical: _height * 0.01),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_height * 0.01)),
+                              borderSide: BorderSide(
+                                color: _textFiedBorder,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_height * 0.01)),
+                              borderSide: BorderSide(color: _bule),
+                            )),
+                        controller: _voteItemNameController
+                          ..text = _voteItemName,
+                      )),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          child: Container(
+                            height: _inkwellH,
+                            padding: EdgeInsets.only(
+                                top: _height * 0.015, bottom: _height * 0.015),
+                            decoration: BoxDecoration(
+                              color: _light,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(_borderRadius),
+                              ),
+                            ),
+                            child: Text(
+                              "取消",
+                              style: TextStyle(
+                                  fontSize: _subtitleSize, color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          child: Container(
+                            height: _inkwellH,
+                            padding: EdgeInsets.only(
+                                top: _height * 0.015, bottom: _height * 0.015),
+                            decoration: BoxDecoration(
+                              color: _color,
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(_borderRadius)),
+                            ),
+                            child: Text(
+                              "確認",
+                              style: TextStyle(
+                                  fontSize: _subtitleSize, color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          onTap: () async {
+                            if (_voteItemNameController.text.isNotEmpty) {
+                              setState(() {
+                                _voteItemName = _voteItemNameController.text;
+                              });
+                              print(_voteItemName);
+                              if (await _submitAddItems(_voteItemName) !=
+                                  true) {
+                                _getVoteRequest();
+                                Navigator.pop(context);
+                              }
+                            }
+                          },
+                        ),
+                      )
                     ],
                   ),
-                ),
-                Container(
-                    height: screenSize.height * 0.04683,
-                    margin: EdgeInsets.only(
-                      top: screenSize.height * 0.03,
-                      left: screenSize.height * 0.02,
-                      right: screenSize.height * 0.02,
-                      bottom: screenSize.height * 0.038,
-                    ),
-                    child: new TextField(
-                      style: TextStyle(fontSize: screenSize.width * 0.041),
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: screenSize.height * 0.01,
-                              vertical: screenSize.height * 0.01),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(screenSize.height * 0.01)),
-                            borderSide: BorderSide(
-                              color: Color(0xff070707),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(screenSize.height * 0.01)),
-                            borderSide: BorderSide(color: Color(0xff7AAAD8)),
-                          )),
-                      controller: _voteItemNameController..text = _voteItemName,
-                    )),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          height: screenSize.height * 0.06,
-                          padding: EdgeInsets.only(
-                              top: screenSize.height * 0.015,
-                              bottom: screenSize.height * 0.015),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColorLight,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft:
-                                  Radius.circular(screenSize.height * 0.03),
-                            ),
-                          ),
-                          child: Text(
-                            "取消",
-                            style: TextStyle(
-                                fontSize: screenSize.width * 0.035,
-                                color: Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                    Expanded(
-                        child: InkWell(
-                            child: Container(
-                              height: screenSize.height * 0.06,
-                              padding: EdgeInsets.only(
-                                  top: screenSize.height * 0.015,
-                                  bottom: screenSize.height * 0.015),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(
-                                        screenSize.height * 0.03)),
-                              ),
-                              child: Text(
-                                "確認",
-                                style: TextStyle(
-                                    fontSize: screenSize.width * 0.035,
-                                    color: Colors.white),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                if (_voteItemNameController.text.isNotEmpty) {
-                                  // _voteItemName = _voteItemNameController.text;
-                                  // _voteAddItemName.add(_voteItemName);
-                                  // _voteItemName = "";
-                                  // _voteAddItemCheck.add(false);
-                                  // _voteAddItemCount.add(0);
-                                  print(_voteItemNameController.text);
-                                }
-                              });
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
 
-                              Navigator.of(context).pop();
-                            }))
-                  ],
+    if (_getVoteModel != null && _groupMemberListModel != null) {
+      Widget voteSetting = Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: _height * 0.04),
+            child: Text(_getVoteModel.title,
+                style: TextStyle(fontSize: _appBarSize)),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: _height * 0.01),
+                child: Text("建立人：" + _getVoteModel.founderName,
+                    style: TextStyle(fontSize: _subtitleSize, color: _gray)),
+              ),
+              Visibility(
+                visible: _visibleAnonymous,
+                child: Container(
+                  margin: EdgeInsets.only(
+                      top: _height * 0.01, left: _height * 0.05),
+                  child: Text("匿名投票",
+                      style: TextStyle(fontSize: _subtitleSize, color: _gray)),
                 ),
-              ],
+              ),
+            ],
+          ),
+          Visibility(
+            visible: _visibleDeadLine,
+            child: Container(
+              margin: EdgeInsets.only(top: _height * 0.01),
+              child: Text("截止日期：" + _deadLine,
+                  style: TextStyle(fontSize: _subtitleSize, color: _gray)),
             ),
           ),
-        );
-      },
-    );
+          Container(
+              margin: EdgeInsets.only(top: _height * 0.04),
+              child: Divider(
+                height: 1,
+              ))
+        ],
+      );
+
+      Widget voteItem = ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _getVoteModel.voteItems.length,
+        itemBuilder: (BuildContext context, int index) {
+          var vote = _getVoteModel.voteItems[index];
+          String voteItemName;
+          if (_getVoteModel.optionTypeId == 1) {
+            voteItemName = vote.voteItemName;
+          } else {
+            DateTime voteDate = DateTime.parse(vote.voteItemName);
+            voteItemName = formatDate(
+                DateTime(voteDate.year, voteDate.month, voteDate.day,
+                    voteDate.hour, voteDate.minute),
+                [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
+          }
+          return ListTile(
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: _listPaddingH, vertical: _listPaddingV),
+            leading: CustomerCheckBox(
+              value: _voteCheck[index],
+              onTap: (value) {
+                setState(() {
+                  if (value == true) {
+                    if (_voteCount() < _getVoteModel.chooseVoteQuantity) {
+                      _voteItemCount[index]++;
+                      _voteCheck[index] = value;
+                    }
+                  } else {
+                    _voteCheck[index] = value;
+                    _voteItemCount[index]--;
+                  }
+                  _buttonIsOnpressed();
+                });
+              },
+            ),
+            title: Text(voteItemName, style: TextStyle(fontSize: _titleSize)),
+            trailing: Text(_voteItemCount[index].toString(),
+                style: TextStyle(fontSize: _titleSize)),
+            onTap: () {
+              setState(() {
+                if (_voteCheck[index] == false) {
+                  if (_voteCount() < _getVoteModel.chooseVoteQuantity) {
+                    _voteItemCount[index]++;
+                    _voteCheck[index] = true;
+                  }
+                } else {
+                  _voteItemCount[index]--;
+                  _voteCheck[index] = false;
+                }
+                _buttonIsOnpressed();
+              });
+            },
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Divider(
+            height: 1,
+          );
+        },
+      );
+
+      Widget addItem = ListTile(
+        contentPadding: EdgeInsets.symmetric(
+            horizontal: _listPaddingH, vertical: _listPaddingV),
+        leading: Icon(Icons.add, color: _hintGray),
+        title: Text(_title,
+            style: TextStyle(fontSize: _titleSize, color: _hintGray)),
+        onTap: () {
+          if (_getVoteModel.optionTypeId == 2) {
+            _datePicker(context);
+          } else {
+            voteAddItemDialog(context);
+          }
+        },
+      );
+
+      Widget voteWidget = Column(
+        children: [
+          voteSetting,
+          Expanded(
+            child: ListView(
+              children: [
+                voteItem,
+                Divider(height: 1),
+                if (_getVoteModel.addItemPermit == true) addItem
+              ],
+            ),
+          )
+        ],
+      );
+
+      _onPressed() {
+        var _onPressed;
+
+        if (_isEnabled == true) {
+          _onPressed = () async {
+            if (await _submitVote() != true) {
+              _getVoteRequest();
+              Navigator.pop(context);
+            }
+          };
+        }
+        return _onPressed;
+      }
+
+      return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text('投票', style: TextStyle(fontSize: _appBarSize)),
+            actions: [_voteAction()],
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ),
+          body: Container(color: Colors.white, child: voteWidget),
+          bottomNavigationBar: Row(children: <Widget>[
+            Expanded(
+              // ignore: deprecated_member_use
+              child: FlatButton(
+                height: _bottomHeight,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+                child: Image.asset(
+                  'assets/images/cancel.png',
+                  width: _bottomIconWidth,
+                ),
+                color: _light,
+                textColor: Colors.white,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Expanded(
+                // ignore: deprecated_member_use
+                child: Builder(builder: (context) {
+              // ignore: deprecated_member_use
+              return FlatButton(
+                  disabledColor: _hintGray,
+                  height: _bottomHeight,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0)),
+                  child: Image.asset(
+                    'assets/images/confirm.png',
+                    width: _bottomIconWidth,
+                  ),
+                  color: _color,
+                  textColor: Colors.white,
+                  onPressed: _onPressed());
+            }))
+          ]));
+    } else {
+      return Container(
+        color: Colors.white,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
   }
 }

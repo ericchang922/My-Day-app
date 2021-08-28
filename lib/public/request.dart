@@ -14,6 +14,9 @@ import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
+import 'package:My_Day_app/models/vote/get_vote_model.dart';
+import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
+import 'package:My_Day_app/models/vote/vote_list_model.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:http/http.dart' as http;
@@ -81,7 +84,17 @@ class Request {
     'delete_best': '$host${path['friend']}/delete_best/'
   };
   static Map timetableUrl = {
-    'get_timetable_list': '${path['timetable']}/get_timetable_list'
+    'main_timetable_list': '${path['timetable']}/main_timetable_list/'
+  };
+  static Map voteUrl = {
+    'create_new': '$host${path['vote']}/create_new/',
+    'edit': '$host${path['vote']}/edit/',
+    'delete': '$host${path['vote']}/delete/',
+    'get': '${path['vote']}/get/',
+    'get_list': '${path['vote']}/get_list/',
+    'vote': '$host${path['vote']}/vote/',
+    'add_items': '$host${path['vote']}/add_items/',
+    'get_end_list': '${path['vote']}/get_end_list/',
   };
 
   Map headers = <String, String>{
@@ -110,6 +123,10 @@ class Request {
 
   MainTimetableListGet _mainTimetableListGet;
 
+  VoteListModel _voteList;
+  VoteEndListModel _voteEndList;
+  GetVoteModel _vote;
+
   bool _isError;
 
   getScheduleGet() => _scheduleGet;
@@ -131,6 +148,10 @@ class Request {
   getBestFriendGet() => _bestFriendList;
 
   getMainTimetableListGet() => _mainTimetableListGet;
+
+  getVoteList() => _voteList;
+  getVoteEndList() => _voteEndList;
+  getVote() => _vote;
 
   getIsError() => _isError;
 
@@ -379,10 +400,68 @@ class Request {
 
   // TIMETABLE =========================================================================================
   mainTimetableListGet(BuildContext context, Map<String, dynamic> data) async {
-    String _url = timetableUrl['main_timetable_lis'];
+    String _url = timetableUrl['main_timetable_list'];
     await httpGet(context, data, _url);
     if (_responseBody != null) {
       _mainTimetableListGet = MainTimetableListGet.fromJson(_responseBody);
     }
+  }
+
+  // VOTE ==============================================================================================
+  // vote_list ------------------------------------------------------------------------------------
+  voteList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = voteUrl['get_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _voteList = VoteListModel.fromJson(_responseBody);
+    }
+  }
+
+  // vote_end_list --------------------------------------------------------------------------------
+  voteEndList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = voteUrl['get_end_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _voteEndList = VoteEndListModel.fromJson(_responseBody);
+    }
+  }
+
+  // vote_create_new ------------------------------------------------------------------------------
+  voteCreateNew(BuildContext context, Map<String, dynamic> data) async {
+    String _url = voteUrl['create_new'];
+    await httpPost(context, data, _url, '新增成功');
+  }
+
+  // vote_get -------------------------------------------------------------------------------------
+  voteGet(BuildContext context, Map<String, dynamic> data) async {
+    String _url = voteUrl['get'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _vote = GetVoteModel.fromJson(_responseBody);
+    }
+  }
+
+  // vote_add_items -------------------------------------------------------------------------------
+  voteAddItems(BuildContext context, Map<String, dynamic> data) async {
+    String _url = voteUrl['add_items'];
+    await httpPost(context, data, _url, '新增成功');
+  }
+
+  // vote -----------------------------------------------------------------------------------------
+  vote(BuildContext context, Map<String, dynamic> data) async {
+    String _url = voteUrl['vote'];
+    await httpPost(context, data, _url, '投票成功');
+  }
+
+  // vote_edit ------------------------------------------------------------------------------------
+  voteEdit(BuildContext context, Map<String, dynamic> data) async {
+    String _url = voteUrl['edit'];
+    await httpPost(context, data, _url, '編輯成功');
+  }
+
+  // vote_delete ----------------------------------------------------------------------------------
+  voteDelete(BuildContext context, Map<String, dynamic> data) async {
+    String _url = voteUrl['delete'];
+    await httpPost(context, data, _url, '刪除成功');
   }
 }

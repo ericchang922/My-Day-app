@@ -1,12 +1,11 @@
-import 'dart:convert';
-
-import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/models/vote/get_vote_model.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-// import 'package:flutter_pickers/style/picker_style.dart';
+
+import 'package:My_Day_app/public/vote_request/edit.dart';
+import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/models/vote/get_vote_model.dart';
+import 'package:My_Day_app/public/vote_request/get.dart';
+import 'package:date_format/date_format.dart';
 
 class VoteEditPage extends StatefulWidget {
   int voteNum;
@@ -20,11 +19,12 @@ class _VoteEditWidget extends State<VoteEditPage> {
   int voteNum;
   _VoteEditWidget(this.voteNum);
 
-  GetVoteModel _getVoteModel = null;
+  GetVoteModel _getVoteModel;
 
+  String uid = 'lili123';
   String _value = '';
   String _title = '';
-  String _deadLineValue = "";
+  String _deadLineValue = '';
 
   DateTime _dateTime = DateTime.now();
   DateTime _deadLine = DateTime(
@@ -32,8 +32,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
       .add(Duration(days: 3));
 
   List _voteValues = [];
-  List _voteItems = [];
-  List _voteItemsName = [];
   List _voteDate = [];
 
   TextEditingController get _voteTitleController =>
@@ -56,7 +54,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
     '9',
     '10'
   ];
-  
+
   String dropdownValue = '2';
 
   bool _visibleDeadLine = false;
@@ -69,29 +67,14 @@ class _VoteEditWidget extends State<VoteEditPage> {
     _getVoteRequest();
   }
 
-  String _dateFormat(dateTime) {
-    String dateString = formatDate(
-        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
-            dateTime.minute),
-        [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
-    return dateString;
-  }
+  _getVoteRequest() async {
+    // var response = await rootBundle.loadString('assets/json/get_vote.json');
+    // var responseBody = json.decode(response);
 
-  Future<void> _getVoteRequest() async {
-    var jsonString = await rootBundle.loadString('assets/json/get_vote.json');
+    GetVoteModel _request = await Get(uid: uid, voteNum: voteNum).getData();
 
-    // var httpClient = HttpClient();
-    // var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-    //     '/vote/get/', {'uid': uid, 'voteNum': voteNum.toString()}));
-    // var response = await request.close();
-    // var jsonString = await response.transform(utf8.decoder).join();
-    // httpClient.close();
-
-    var jsonMap = json.decode(jsonString);
-
-    var getVoteModel = GetVoteModel.fromJson(jsonMap);
     setState(() {
-      _getVoteModel = getVoteModel;
+      _getVoteModel = _request;
       for (int i = 0; i < _getVoteModel.voteItems.length; i++) {
         if (_getVoteModel.optionTypeId == 1) {
           _voteValues.add(_getVoteModel.voteItems[i].voteItemName);
@@ -112,8 +95,8 @@ class _VoteEditWidget extends State<VoteEditPage> {
       _title = _getVoteModel.title;
       if (_getVoteModel.deadline != "None") {
         _visibleDeadLine = true;
-        _deadLineValue = _dateFormat(_deadLine);
         _deadLine = DateTime.parse(_getVoteModel.deadline);
+        _deadLineValue = _dateFormat(_deadLine);
         _voteSettingCheck[1] = true;
       }
       if (_getVoteModel.addItemPermit == true) {
@@ -128,6 +111,14 @@ class _VoteEditWidget extends State<VoteEditPage> {
         dropdownValue = _getVoteModel.chooseVoteQuantity.toString();
       }
     });
+  }
+
+  String _dateFormat(dateTime) {
+    String dateString = formatDate(
+        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+            dateTime.minute),
+        [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
+    return dateString;
   }
 
   _buttonIsOnpressed() {
@@ -150,121 +141,144 @@ class _VoteEditWidget extends State<VoteEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('編輯投票',
-              style: TextStyle(fontSize: screenSize.width * 0.052)),
-          leading: Container(
-            margin: EdgeInsets.only(left: screenSize.height * 0.02),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
+
+    double _textFied = _height * 0.045;
+    double _leadingL = _height * 0.02;
+    double _bottomHeight = _height * 0.07;
+    double _bottomIconWidth = _width * 0.05;
+    double _listTilePadding = _height * 0.018;
+    double _iconWidth = _width * 0.05;
+
+    double _titleSize = _width * 0.06;
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _light = Theme.of(context).primaryColorLight;
+    Color _hintGray = Color(0xffCCCCCC);
+    Color _textFiedBorder = Color(0xff707070);
+
+    Widget voteType;
+
+    _submit() async {
+      String deadLine;
+      String title = _title;
+      List<Map<String, dynamic>> voteItems = [];
+      List<String> voteItemsName = [];
+      bool isAddItemPermit = _voteSettingCheck[2];
+      bool isAnonymous = _voteSettingCheck[3];
+      int chooseVoteQuantity;
+
+      if (_voteSettingCheck[1] == true) {
+        deadLine = _deadLine.toString();
+      } else {
+        deadLine = null;
+      }
+      if (_voteSettingCheck[4] == true) {
+        chooseVoteQuantity = int.parse(dropdownValue);
+      } else {
+        chooseVoteQuantity = 1;
+      }
+
+      if (_getVoteModel.optionTypeId == 1) {
+        for (int i = 0; i < _voteValues.length; i++) {
+          if (_voteValues[i] != "") {
+            voteItemsName.add(_voteValues[i]);
+          }
+        }
+      } else {
+        for (int i = 0; i < _voteDate.length; i++) {
+          if (_voteDate[i] != "") {
+            voteItemsName.add(_voteDate[i]);
+          }
+        }
+      }
+
+      for (int i = 0; i < voteItemsName.length; i++) {
+        voteItems.add({"voteItemNum": i + 1, "voteItemName": voteItemsName[i]});
+      }
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return Edit(
+            uid: uid,
+            voteNum: voteNum,
+            title: title,
+            voteItems: voteItems,
+            deadline: deadLine,
+            isAddItemPermit: isAddItemPermit,
+            isAnonymous: isAnonymous,
+            chooseVoteQuantity: chooseVoteQuantity);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    _deadLinePicker(contex) {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (_) => Container(
+          height: _height * 0.35,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                height: _height * 0.065,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CupertinoButton(
+                      child: Text('確定', style: TextStyle(color: _color)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          _deadLineValue = _dateFormat(_deadLine);
+                        });
+                      }),
+                ),
+              ),
+              Container(
+                height: _height * 0.28,
+                child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    initialDateTime: _deadLine,
+                    onDateTimeChanged: (value) {
+                      setState(() {
+                        _deadLine = value;
+                      });
+                    }),
+              ),
+            ],
           ),
         ),
-        body: Container(
-            color: Colors.white, child: _buildEditVoteWidget(context)),
-        bottomNavigationBar: _buildCheckButtom(context));
-  }
-
-  Widget _buildEditVoteWidget(BuildContext context) {
-    if (_getVoteModel != null) {
-      return ListView(
-          children: [_buildEditVote(context), _buildEditVoteSetting(context)]);
-    } else {
-      return Center(child: CircularProgressIndicator());
+      );
     }
-  }
 
-  Widget _buildEditVote(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return ListView(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.only(
-          top: screenSize.height * 0.03,
-          right: screenSize.height * 0.05,
-          left: screenSize.height * 0.05),
-      children: [
-        TextField(
-          controller: _voteTitleController,
-          cursorColor: Colors.black,
-          style: TextStyle(fontSize: screenSize.width * 0.06),
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.all(screenSize.width * 0.02),
-            hintText: '輸入投票問題',
-            hintStyle: TextStyle(
-                color: Color(0xffCCCCCC), fontSize: screenSize.width * 0.06),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xffCCCCCC)),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xffCCCCCC)),
-              //  when the TextFormField in focused
-            ),
-          ),
-          onChanged: (text) {
-            setState(() {
-              _title = text;
-              _buttonIsOnpressed();
-            });
-          },
-        ),
-        _buildVoteType(context)
-      ],
-    );
-  }
-
-  Widget _buildVoteType(BuildContext context) {
-    if (_getVoteModel.optionTypeId == 1) {
-      return _buildEditVoteItem(context);
-    } else {
-      return _buildEditDateVoteItem(context);
-    }
-  }
-
-  Widget _buildEditVoteItem(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return ListView.builder(
-      padding: EdgeInsets.only(bottom: screenSize.height * 0.03),
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _voteValues.length,
-      itemBuilder: (BuildContext context, int index) {
-        _value = _voteValues[index];
-        return Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                    padding: EdgeInsets.all(screenSize.height * 0.0131),
-                    margin: EdgeInsets.only(top: screenSize.height * 0.032),
-                    child: Text('${index + 1}.',
-                        style: TextStyle(fontSize: screenSize.width * 0.05))),
-                Flexible(
-                  child: Container(
-                    margin: EdgeInsets.only(top: screenSize.height * 0.028),
-                    child: TextField(
-                      controller: _voteItemController,
-                      cursorColor: Colors.black,
-                      style: TextStyle(fontSize: screenSize.width * 0.05),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(screenSize.width * 0.02),
-                        hintText: '輸入選項',
-                        hintStyle: TextStyle(
-                            color: Color(0xffCCCCCC),
-                            fontSize: screenSize.width * 0.05),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                      ),
-                      onChanged: (text) {
+    _datePicker(contex, index) {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (_) => Container(
+          height: _height * 0.35,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                height: _height * 0.065,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CupertinoButton(
+                      child: Text('確定', style: TextStyle(color: _color)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
                         setState(() {
                           int count = 0;
-                          _voteValues[index] = text;
+                          _voteValues[index] = _dateFormat(_dateTime);
+                          _voteDate[index] = _dateTime;
                           for (int i = 0; i < _voteValues.length; i++) {
                             if (_voteValues[i] == "") {
                               count++;
@@ -273,424 +287,427 @@ class _VoteEditWidget extends State<VoteEditPage> {
                           print(count);
                           if (count == 0) {
                             _voteValues.add("");
+                            _voteDate.add("");
                           }
                         });
                         _buttonIsOnpressed();
-                      },
-                    ),
-                  ),
+                      }),
                 ),
-              ],
-            ),
-            Divider(color: Color(0xffCCCCCC))
-          ],
-        );
-      },
-    );
-  }
+              ),
+              Container(
+                height: _height * 0.28,
+                child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    initialDateTime: DateTime.now(),
+                    onDateTimeChanged: (value) {
+                      setState(() {
+                        _dateTime = value;
+                      });
+                    }),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
-  Widget _buildEditDateVoteItem(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return ListView.builder(
-      padding: EdgeInsets.only(bottom: screenSize.height * 0.03),
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _voteValues.length,
-      itemBuilder: (BuildContext context, int index) {
-        _value = _voteValues[index];
-        return Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                    padding: EdgeInsets.all(screenSize.height * 0.0131),
-                    margin: EdgeInsets.only(top: screenSize.height * 0.032),
-                    child: Text('${index + 1}.',
-                        style: TextStyle(fontSize: screenSize.width * 0.05))),
-                Flexible(
-                  child: Container(
-                    margin: EdgeInsets.only(top: screenSize.height * 0.028),
-                    child: TextField(
-                      focusNode: _contentFocusNode,
-                      controller: _voteItemController,
-                      cursorColor: Colors.black,
-                      style: TextStyle(fontSize: screenSize.width * 0.05),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(screenSize.width * 0.02),
-                        hintText: '選擇日期',
-                        hintStyle: TextStyle(
-                            color: Color(0xffCCCCCC),
-                            fontSize: screenSize.width * 0.05),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
+    _onPressed() {
+      var _onPressed;
+
+      if (_isEnabled == true) {
+        _onPressed = () async {
+          if (await _submit() != true) {
+            Navigator.pop(context);
+          }
+        };
+      }
+      return _onPressed;
+    }
+
+    if (_getVoteModel != null) {
+      Widget editVoteItem = ListView.builder(
+        padding: EdgeInsets.only(bottom: _height * 0.03),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _voteValues.length,
+        itemBuilder: (BuildContext context, int index) {
+          _value = _voteValues[index];
+          return Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                      padding: EdgeInsets.all(_height * 0.01),
+                      margin: EdgeInsets.only(top: _height * 0.03),
+                      child: Text('${index + 1}.',
+                          style: TextStyle(fontSize: _appBarSize))),
+                  Flexible(
+                    child: Container(
+                      margin: EdgeInsets.only(top: _height * 0.03),
+                      child: TextField(
+                        controller: _voteItemController,
+                        cursorColor: Colors.black,
+                        style: TextStyle(fontSize: _appBarSize),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(_width * 0.02),
+                          hintText: '輸入選項',
+                          hintStyle: TextStyle(
+                              color: _hintGray, fontSize: _appBarSize),
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                        onChanged: (text) {
+                          setState(() {
+                            int count = 0;
+                            _voteValues[index] = text;
+                            for (int i = 0; i < _voteValues.length; i++) {
+                              if (_voteValues[i] == "") {
+                                count++;
+                              }
+                            }
+                            print(count);
+                            if (count == 0) {
+                              _voteValues.add("");
+                            }
+                          });
+                          _buttonIsOnpressed();
+                        },
                       ),
-                      onTap: () {
-                        _contentFocusNode.unfocus();
-                        _datePicker(context, index);
-                      },
                     ),
                   ),
-                ),
-              ],
-            ),
-            Divider(color: Color(0xffCCCCCC))
-          ],
-        );
-      },
-    );
-  }
+                ],
+              ),
+              Divider(color: _hintGray)
+            ],
+          );
+        },
+      );
 
-  void _datePicker(contex, index) {
-    var screenSize = MediaQuery.of(context).size;
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => Container(
-        height: screenSize.height * 0.35,
-        color: Colors.white,
-        child: Column(
-          children: [
-            Container(
-              height: screenSize.height * 0.065,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: CupertinoButton(
-                    child: Text('確定', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      setState(() {
-                        int count = 0;
-                        _voteValues[index] = _dateFormat(_dateTime);
-                        _voteDate[index] = _dateTime;
-                        for (int i = 0; i < _voteValues.length; i++) {
-                          if (_voteValues[i] == "") {
-                            count++;
-                          }
-                        }
-                        print(count);
-                        if (count == 0) {
-                          _voteValues.add("");
-                          _voteDate.add("");
-                        }
-                      });
-                      _buttonIsOnpressed();
-                    }),
+      Widget editDateVoteItem = ListView.builder(
+        padding: EdgeInsets.only(bottom: _height * 0.03),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _voteValues.length,
+        itemBuilder: (BuildContext context, int index) {
+          _value = _voteValues[index];
+          return Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                      padding: EdgeInsets.all(_height * 0.01),
+                      margin: EdgeInsets.only(top: _height * 0.03),
+                      child: Text('${index + 1}.',
+                          style: TextStyle(fontSize: _appBarSize))),
+                  Flexible(
+                    child: Container(
+                      margin: EdgeInsets.only(top: _height * 0.03),
+                      child: TextField(
+                        focusNode: _contentFocusNode,
+                        controller: _voteItemController,
+                        cursorColor: Colors.black,
+                        style: TextStyle(fontSize: _appBarSize),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(_width * 0.02),
+                          hintText: '選擇日期',
+                          hintStyle: TextStyle(
+                              color: _hintGray, fontSize: _appBarSize),
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                        onTap: () {
+                          _contentFocusNode.unfocus();
+                          _datePicker(context, index);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Divider(color: _hintGray)
+            ],
+          );
+        },
+      );
+
+      if (_getVoteModel.optionTypeId == 1) {
+        voteType = editVoteItem;
+      } else {
+        voteType = editDateVoteItem;
+      }
+      Widget editVote = ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.only(
+            top: _height * 0.03, right: _height * 0.05, left: _height * 0.05),
+        children: [
+          TextField(
+            controller: _voteTitleController,
+            cursorColor: Colors.black,
+            style: TextStyle(fontSize: _titleSize),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.all(_width * 0.02),
+              hintText: '輸入投票問題',
+              hintStyle: TextStyle(color: _hintGray, fontSize: _titleSize),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: _hintGray),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: _hintGray),
+                //  when the TextFormField in focused
               ),
             ),
-            Container(
-              height: screenSize.height * 0.28,
-              child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.dateAndTime,
-                  initialDateTime: DateTime.now(),
-                  onDateTimeChanged: (value) {
-                    setState(() {
-                      _dateTime = value;
-                    });
-                  }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _deadLinePicker(contex) {
-    var screenSize = MediaQuery.of(context).size;
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => Container(
-        height: screenSize.height * 0.35,
-        color: Colors.white,
-        child: Column(
-          children: [
-            Container(
-              height: screenSize.height * 0.065,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: CupertinoButton(
-                    child: Text('確定', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      setState(() {
-                        _deadLineValue = _dateFormat(_deadLine);
-                      });
-                    }),
-              ),
-            ),
-            Container(
-              height: screenSize.height * 0.28,
-              child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.dateAndTime,
-                  initialDateTime: DateTime.now(),
-                  onDateTimeChanged: (value) {
-                    setState(() {
-                      _deadLine = value;
-                    });
-                  }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEditVoteSetting(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return ListView(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.only(
-          top: screenSize.height * 0.02,
-          right: screenSize.height * 0.06,
-          left: screenSize.height * 0.04),
-      children: [
-        ListTile(
-          leading: CustomerCheckBox(
-            value: _voteSettingCheck[1],
-            onTap: (value) {
+            onChanged: (text) {
               setState(() {
-                if (value == true) {
+                _title = text;
+                _buttonIsOnpressed();
+              });
+            },
+          ),
+          voteType
+        ],
+      );
+
+      Widget editVoteSetting = ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.only(
+            top: _height * 0.02, right: _height * 0.06, left: _height * 0.06),
+        children: [
+          ListTile(
+            leading: CustomerCheckBox(
+              value: _voteSettingCheck[1],
+              onTap: (value) {
+                setState(() {
+                  if (value == true) {
+                    _visibleDeadLine = true;
+                  } else {
+                    _visibleDeadLine = false;
+                  }
+                  _voteSettingCheck[1] = value;
+                });
+              },
+            ),
+            title: Text("設定截止時間", style: TextStyle(fontSize: _appBarSize)),
+            onTap: () {
+              setState(() {
+                if (_voteSettingCheck[1] == false) {
+                  _voteSettingCheck[1] = true;
                   _visibleDeadLine = true;
                 } else {
+                  _voteSettingCheck[1] = false;
                   _visibleDeadLine = false;
                 }
-                _voteSettingCheck[1] = value;
               });
             },
           ),
-          title: Text("設定截止時間",
-              style: TextStyle(fontSize: screenSize.width * 0.05)),
-          onTap: () {
-            setState(() {
-              if (_voteSettingCheck[1] == false) {
-                _voteSettingCheck[1] = true;
-                _visibleDeadLine = true;
-              } else {
-                _voteSettingCheck[1] = false;
-                _visibleDeadLine = false;
-              }
-            });
-          },
-        ),
-        Visibility(
-          visible: _visibleDeadLine,
-          child: ListTile(
-            contentPadding: EdgeInsets.only(left: screenSize.height * 0.08),
-            title: Text(_deadLineValue,
-                style: TextStyle(fontSize: screenSize.width * 0.05)),
+          Visibility(
+            visible: _visibleDeadLine,
+            child: ListTile(
+              contentPadding: EdgeInsets.only(left: _height * 0.08),
+              title:
+                  Text(_deadLineValue, style: TextStyle(fontSize: _appBarSize)),
+              onTap: () {
+                _deadLinePicker(context);
+              },
+            ),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.all(_listTilePadding),
+            leading: CustomerCheckBox(
+              value: _voteSettingCheck[2],
+              onTap: (value) {
+                setState(() {
+                  _voteSettingCheck[2] = value;
+                });
+              },
+            ),
+            title: Text("允許新增選項", style: TextStyle(fontSize: _appBarSize)),
             onTap: () {
-              _deadLinePicker(context);
-            },
-          ),
-        ),
-        ListTile(
-          contentPadding: EdgeInsets.all(screenSize.height * 0.018),
-          leading: CustomerCheckBox(
-            value: _voteSettingCheck[2],
-            onTap: (value) {
               setState(() {
-                _voteSettingCheck[2] = value;
+                if (_voteSettingCheck[2] == false) {
+                  _voteSettingCheck[2] = true;
+                } else {
+                  _voteSettingCheck[2] = false;
+                }
               });
             },
           ),
-          title: Text("允許新增選項",
-              style: TextStyle(fontSize: screenSize.width * 0.05)),
-          onTap: () {
-            setState(() {
-              if (_voteSettingCheck[2] == false) {
-                _voteSettingCheck[2] = true;
-              } else {
-                _voteSettingCheck[2] = false;
-              }
-            });
-          },
-        ),
-        ListTile(
-          contentPadding: EdgeInsets.all(screenSize.height * 0.018),
-          leading: CustomerCheckBox(
-            value: _voteSettingCheck[3],
-            onTap: (value) {
+          ListTile(
+            contentPadding: EdgeInsets.all(_listTilePadding),
+            leading: CustomerCheckBox(
+              value: _voteSettingCheck[3],
+              onTap: (value) {
+                setState(() {
+                  _voteSettingCheck[3] = value;
+                });
+              },
+            ),
+            title: Text("匿名投票", style: TextStyle(fontSize: _appBarSize)),
+            onTap: () {
               setState(() {
-                _voteSettingCheck[3] = value;
+                if (_voteSettingCheck[3] == false) {
+                  _voteSettingCheck[3] = true;
+                } else {
+                  _voteSettingCheck[3] = false;
+                }
               });
             },
           ),
-          title:
-              Text("匿名投票", style: TextStyle(fontSize: screenSize.width * 0.05)),
-          onTap: () {
-            setState(() {
-              if (_voteSettingCheck[3] == false) {
-                _voteSettingCheck[3] = true;
-              } else {
-                _voteSettingCheck[3] = false;
-              }
-            });
-          },
-        ),
-        ListTile(
-          contentPadding: EdgeInsets.all(screenSize.height * 0.018),
-          leading: CustomerCheckBox(
-            value: _voteSettingCheck[4],
-            onTap: (value) {
+          ListTile(
+            contentPadding: EdgeInsets.all(_listTilePadding),
+            leading: CustomerCheckBox(
+              value: _voteSettingCheck[4],
+              onTap: (value) {
+                setState(() {
+                  if (value == true) {
+                    _visibleChooseVoteQuantity = true;
+                  } else {
+                    _visibleChooseVoteQuantity = false;
+                  }
+                  _voteSettingCheck[4] = value;
+                });
+              },
+            ),
+            title: Text("多票制", style: TextStyle(fontSize: _appBarSize)),
+            onTap: () {
               setState(() {
-                if (value == true) {
+                if (_voteSettingCheck[4] == false) {
+                  _voteSettingCheck[4] = true;
                   _visibleChooseVoteQuantity = true;
                 } else {
+                  _voteSettingCheck[4] = false;
                   _visibleChooseVoteQuantity = false;
                 }
-                _voteSettingCheck[4] = value;
               });
             },
           ),
-          title:
-              Text("多票制", style: TextStyle(fontSize: screenSize.width * 0.05)),
-          onTap: () {
-            setState(() {
-              if (_voteSettingCheck[4] == false) {
-                _voteSettingCheck[4] = true;
-                _visibleChooseVoteQuantity = true;
-              } else {
-                _voteSettingCheck[4] = false;
-                _visibleChooseVoteQuantity = false;
-              }
-            });
-          },
-        ),
-        Visibility(
-          visible: _visibleChooseVoteQuantity,
-          child: Container(
-            margin: EdgeInsets.only(left: screenSize.height * 0.08, bottom: screenSize.height * 0.025),
-            child: Row(
-              children: [
-                Text("一人最多",
-                    style: TextStyle(fontSize: screenSize.width * 0.05)),
-                Container(
-                  margin: EdgeInsets.only(
-                      left: screenSize.height * 0.01,
-                      right: screenSize.height * 0.01),
-                  height: screenSize.height * 0.04683,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: screenSize.height * 0.007, vertical: 0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(
-                        color: Color(0xff707070),
-                        style: BorderStyle.solid,
-                        width: screenSize.width * 0.001),
-                  ),
-                  child: DropdownButton<String>(
-                    icon: Icon(
-                      Icons.expand_more,
-                      color: Color(0xffcccccc),
+          Visibility(
+            visible: _visibleChooseVoteQuantity,
+            child: Container(
+              margin: EdgeInsets.only(
+                  left: _height * 0.08, bottom: _height * 0.025),
+              child: Row(
+                children: [
+                  Text("一人最多", style: TextStyle(fontSize: _appBarSize)),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: _height * 0.01, right: _height * 0.01),
+                    height: _textFied,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: _height * 0.007, vertical: 0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                          color: _textFiedBorder,
+                          style: BorderStyle.solid,
+                          width: _width * 0.001),
                     ),
-                    value: dropdownValue,
-                    iconSize: screenSize.width * 0.05,
-                    elevation: 16,
-                    underline: Container(height: 0),
-                    onChanged: (String newValue) {
-                      setState(() {
-                        dropdownValue = newValue;
-                      });
-                    },
-                    items: chooseVoteQuantityList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                          value: value,
-                          child: Container(
-                              margin: EdgeInsets.only(
-                                  left: screenSize.width * 0.02),
-                              child: Text(value,
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.05))));
-                    }).toList(),
+                    child: DropdownButton<String>(
+                      icon: Icon(
+                        Icons.expand_more,
+                        color: Color(0xffcccccc),
+                      ),
+                      value: dropdownValue,
+                      iconSize: _iconWidth,
+                      elevation: 16,
+                      underline: Container(height: 0),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                      },
+                      items: chooseVoteQuantityList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                            value: value,
+                            child: Container(
+                                margin: EdgeInsets.only(left: _width * 0.02),
+                                child: Text(value,
+                                    style: TextStyle(fontSize: _appBarSize))));
+                      }).toList(),
+                    ),
                   ),
+                  Text("票", style: TextStyle(fontSize: _appBarSize)),
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+
+      return Scaffold(
+          appBar: AppBar(
+            backgroundColor: _color,
+            title: Text('編輯投票', style: TextStyle(fontSize: _appBarSize)),
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ),
+          body: Container(
+              color: Colors.white,
+              child: ListView(children: [editVote, editVoteSetting])),
+          bottomNavigationBar: Row(children: <Widget>[
+            Expanded(
+              // ignore: deprecated_member_use
+              child: FlatButton(
+                height: _bottomHeight,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+                child: Image.asset(
+                  'assets/images/cancel.png',
+                  width: _bottomIconWidth,
                 ),
-                Text("票", style: TextStyle(fontSize: screenSize.width * 0.05)),
-              ],
+                color: _light,
+                textColor: Colors.white,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Expanded(
+                // ignore: deprecated_member_use
+                child: Builder(builder: (context) {
+              // ignore: deprecated_member_use
+              return FlatButton(
+                  disabledColor: _hintGray,
+                  height: _bottomHeight,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0)),
+                  child: Image.asset(
+                    'assets/images/confirm.png',
+                    width: _bottomIconWidth,
+                  ),
+                  color: _color,
+                  textColor: Colors.white,
+                  onPressed: _onPressed());
+            }))
+          ]));
+    } else {
+      return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text('編輯投票', style: TextStyle(fontSize: _appBarSize)),
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
           ),
-        )
-      ],
-    );
-  }
-
-  Widget _buildCheckButtom(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    var _onPressed;
-
-    if (_isEnabled == true) {
-      _onPressed = () {
-        Navigator.pop(context);
-        setState(() {
-          _voteItems = new List();
-          _voteItemsName = new List();
-          if (_getVoteModel.optionTypeId == 1) {
-            for (int i = 0; i < _voteValues.length; i++) {
-              if (_voteValues[i] != "") {
-                _voteItemsName.add(_voteValues[i]);
-              }
-            }
-          } else {
-            for (int i = 0; i < _voteDate.length; i++) {
-              if (_voteDate[i] != "") {
-                _voteItemsName.add(_voteDate[i]);
-              }
-            }
-
-            for (int i = 0; i < _voteItemsName.length; i++) {
-              _voteItems.add(
-                  {"voteItemNum": i + 1, "voteItemName": _voteItemsName[i]});
-            }
-            print("title：" + _voteTitleController.text);
-            print("voteItems：${_voteItems}");
-            if (_voteSettingCheck[1] == true) {
-              print("deadLine：${_deadLine}");
-            } else {
-              print("deadLine：None");
-            }
-            print("isAddItemPermit：${_voteSettingCheck[2]}");
-            print("isAnonymous：${_voteSettingCheck[3]}");
-            if (_voteSettingCheck[4] == true) {
-              print("chooseVoteQuantity：${int.parse(dropdownValue)}");
-            } else {
-              print("chooseVoteQuantity：1");
-            }
-          }
-        });
-      };
+          body: Container(
+            color: Colors.white,
+            child: Center(child: CircularProgressIndicator()),
+          ));
     }
-    return Row(children: <Widget>[
-      Expanded(
-        // ignore: deprecated_member_use
-        child: FlatButton(
-          height: screenSize.height * 0.07,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-          child: Image.asset(
-            'assets/images/cancel.png',
-            width: screenSize.width * 0.05,
-          ),
-          color: Theme.of(context).primaryColorLight,
-          textColor: Colors.white,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      Expanded(
-          // ignore: deprecated_member_use
-          child: Builder(builder: (context) {
-        return FlatButton(
-            disabledColor: Color(0xffCCCCCC),
-            height: screenSize.height * 0.07,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-            child: Image.asset(
-              'assets/images/confirm.png',
-              width: screenSize.width * 0.05,
-            ),
-            color: Theme.of(context).primaryColor,
-            textColor: Colors.white,
-            onPressed: _onPressed);
-      }))
-    ]);
   }
 }

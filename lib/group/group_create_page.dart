@@ -648,24 +648,23 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
         ),
       );
     } else {
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('建立群組', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.pop(context);
-              },
+      return SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: _color,
+            title: Text('建立群組', style: TextStyle(fontSize: _appBarSize)),
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ),
-        ),
-        body: Container(
-          color: Colors.white,
-          child: SafeArea(
-            bottom: false,
+          body: Container(
+            color: Colors.white,
             child: Center(child: CircularProgressIndicator()),
           ),
         ),
