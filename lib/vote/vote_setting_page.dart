@@ -1,29 +1,29 @@
-import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_pickers/pickers.dart';
-// import 'package:flutter_pickers/style/picker_style.dart';
-// import 'package:flutter_pickers/time_picker/model/date_mode.dart';
-// import 'package:flutter_pickers/time_picker/model/pduration.dart';
-// import 'package:flutter_pickers/time_picker/model/suffix.dart';
+
+import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/public/vote_request/create_new.dart';
+import 'package:date_format/date_format.dart';
 
 class VoteSettingPage extends StatefulWidget {
   int groupNum;
+  int optionTypeId;
   String title;
   List voteItems;
-  VoteSettingPage(this.groupNum, this.title, this.voteItems);
+  VoteSettingPage(this.groupNum, this.optionTypeId, this.title, this.voteItems);
 
   @override
   _VoteSettingWidget createState() =>
-      new _VoteSettingWidget(groupNum, title, voteItems);
+      new _VoteSettingWidget(groupNum, optionTypeId, title, voteItems);
 }
 
 class _VoteSettingWidget extends State<VoteSettingPage> {
   int groupNum;
+  int optionTypeId;
   String title;
   List voteItems;
-  _VoteSettingWidget(this.groupNum, this.title, this.voteItems);
+  _VoteSettingWidget(
+      this.groupNum, this.optionTypeId, this.title, this.voteItems);
 
   Map _voteSettingCheck = {1: false, 2: false, 3: false, 4: false};
 
@@ -67,82 +67,103 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title:
-            Text('投票設定', style: TextStyle(fontSize: screenSize.width * 0.052)),
-        leading: Container(
-          margin: EdgeInsets.only(left: 5),
-          child: GestureDetector(
-            child: Icon(Icons.chevron_left),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-      ),
-      body: Container(
-          color: Colors.white, child: _buildVoteSettingWidget(context)),
-    );
-  }
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
 
-  Widget _buildVoteSettingWidget(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(child: _buildVoteSettingItem(context)),
-        _buildCheckButtom(context)
-      ],
-    );
-  }
+    double _textFied = _height * 0.045;
+    double _borderRadius = _height * 0.01;
+    double _iconWidth = _width * 0.05;
+    double _leadingL = _height * 0.02;
+    double _bottomHeight = _height * 0.07;
+    double _listTilePadding = _height * 0.018;
 
-  void _deadLinePicker(contex) {
-    var screenSize = MediaQuery.of(context).size;
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => Container(
-        height: screenSize.height * 0.35,
-        color: Colors.white,
-        child: Column(
-          children: [
-            Container(
-              height: screenSize.height * 0.065,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: CupertinoButton(
-                    child: Text('確定', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _light = Theme.of(context).primaryColorLight;
+    Color _textFiedBorder = Color(0xff707070);
+
+    _submit() async {
+      String uid = 'lili123';
+      String deadLine;
+      bool isAddItemPermit = _voteSettingCheck[2];
+      bool isAnonymous = _voteSettingCheck[3];
+      int chooseVoteQuantity;
+
+      if (_voteSettingCheck[1] == true) {
+        deadLine = _deadLine.toString();
+      } else {
+        deadLine = null;
+      }
+      if (_voteSettingCheck[4] == true) {
+        chooseVoteQuantity = int.parse(dropdownValue);
+      } else {
+        chooseVoteQuantity = 1;
+      }
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return CreateNew(
+            uid: uid,
+            groupNum: groupNum,
+            optionTypeId: optionTypeId,
+            title: title,
+            voteItems: voteItems,
+            deadline: deadLine,
+            isAddItemPermit: isAddItemPermit,
+            isAnonymous: isAnonymous,
+            chooseVoteQuantity: chooseVoteQuantity);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    _deadLinePicker(contex) {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (_) => Container(
+          height: _height * 0.35,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                height: _height * 0.065,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CupertinoButton(
+                      child: Text('確定', style: TextStyle(color: _color)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          _deadLineValue = _dateFormat(_deadLine);
+                        });
+                      }),
+                ),
+              ),
+              Container(
+                height: _height * 0.28,
+                child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    initialDateTime: _deadLine,
+                    onDateTimeChanged: (value) {
                       setState(() {
-                        _deadLineValue = _dateFormat(_deadLine);
+                        _deadLine = value;
                       });
                     }),
               ),
-            ),
-            Container(
-              height: screenSize.height * 0.28,
-              child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.dateAndTime,
-                  initialDateTime: DateTime.now(),
-                  onDateTimeChanged: (value) {
-                    setState(() {
-                      _deadLine = value;
-                    });
-                  }),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  Widget _buildVoteSettingItem(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return ListView(
+    Widget voteSettingItem = ListView(
       padding: EdgeInsets.only(
-          top: screenSize.height * 0.06,
-          right: screenSize.height * 0.06,
-          left: screenSize.height * 0.06),
+          top: _height * 0.06, right: _height * 0.06, left: _height * 0.06),
       children: [
         ListTile(
           leading: CustomerCheckBox(
@@ -158,8 +179,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
               });
             },
           ),
-          title: Text("設定截止時間",
-              style: TextStyle(fontSize: screenSize.width * 0.05)),
+          title: Text("設定截止時間", style: TextStyle(fontSize: _appBarSize)),
           onTap: () {
             setState(() {
               if (_voteSettingCheck[1] == false) {
@@ -175,16 +195,16 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
         Visibility(
           visible: _visibleDeadLine,
           child: ListTile(
-            contentPadding: EdgeInsets.only(left: screenSize.height * 0.08),
-            title: Text(_deadLineValue,
-                style: TextStyle(fontSize: screenSize.width * 0.05)),
+            contentPadding: EdgeInsets.only(left: _height * 0.08),
+            title:
+                Text(_deadLineValue, style: TextStyle(fontSize: _appBarSize)),
             onTap: () {
               _deadLinePicker(context);
             },
           ),
         ),
         ListTile(
-          contentPadding: EdgeInsets.all(screenSize.height * 0.018),
+          contentPadding: EdgeInsets.all(_listTilePadding),
           leading: CustomerCheckBox(
             value: _voteSettingCheck[2],
             onTap: (value) {
@@ -193,8 +213,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
               });
             },
           ),
-          title: Text("允許新增選項",
-              style: TextStyle(fontSize: screenSize.width * 0.05)),
+          title: Text("允許新增選項", style: TextStyle(fontSize: _appBarSize)),
           onTap: () {
             setState(() {
               if (_voteSettingCheck[2] == false) {
@@ -206,7 +225,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
           },
         ),
         ListTile(
-          contentPadding: EdgeInsets.all(screenSize.height * 0.018),
+          contentPadding: EdgeInsets.all(_listTilePadding),
           leading: CustomerCheckBox(
             value: _voteSettingCheck[3],
             onTap: (value) {
@@ -215,8 +234,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
               });
             },
           ),
-          title:
-              Text("匿名投票", style: TextStyle(fontSize: screenSize.width * 0.05)),
+          title: Text("匿名投票", style: TextStyle(fontSize: _appBarSize)),
           onTap: () {
             setState(() {
               if (_voteSettingCheck[3] == false) {
@@ -228,7 +246,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
           },
         ),
         ListTile(
-          contentPadding: EdgeInsets.all(screenSize.height * 0.018),
+          contentPadding: EdgeInsets.all(_listTilePadding),
           leading: CustomerCheckBox(
             value: _voteSettingCheck[4],
             onTap: (value) {
@@ -242,8 +260,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
               });
             },
           ),
-          title:
-              Text("多票制", style: TextStyle(fontSize: screenSize.width * 0.05)),
+          title: Text("多票制", style: TextStyle(fontSize: _appBarSize)),
           onTap: () {
             setState(() {
               if (_voteSettingCheck[4] == false) {
@@ -259,24 +276,22 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
         Visibility(
           visible: _visibleChooseVoteQuantity,
           child: Container(
-            margin: EdgeInsets.only(left: screenSize.height * 0.08),
+            margin: EdgeInsets.only(left: _height * 0.08),
             child: Row(
               children: [
-                Text("一人最多",
-                    style: TextStyle(fontSize: screenSize.width * 0.05)),
+                Text("一人最多", style: TextStyle(fontSize: _appBarSize)),
                 Container(
                   margin: EdgeInsets.only(
-                      left: screenSize.height * 0.01,
-                      right: screenSize.height * 0.01),
-                  height: screenSize.height * 0.04683,
+                      left: _height * 0.01, right: _height * 0.01),
+                  height: _textFied,
                   padding: EdgeInsets.symmetric(
-                      horizontal: screenSize.height * 0.007, vertical: 0),
+                      horizontal: _height * 0.007, vertical: 0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(_borderRadius),
                     border: Border.all(
-                        color: Color(0xff707070),
+                        color: _textFiedBorder,
                         style: BorderStyle.solid,
-                        width: screenSize.width * 0.001),
+                        width: _width * 0.001),
                   ),
                   child: DropdownButton<String>(
                     icon: Icon(
@@ -284,7 +299,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
                       color: Color(0xffcccccc),
                     ),
                     value: dropdownValue,
-                    iconSize: screenSize.width * 0.05,
+                    iconSize: _iconWidth,
                     elevation: 16,
                     underline: Container(height: 0),
                     onChanged: (String newValue) {
@@ -297,73 +312,93 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
                       return DropdownMenuItem<String>(
                           value: value,
                           child: Container(
-                              margin: EdgeInsets.only(
-                                  left: screenSize.width * 0.02),
+                              margin: EdgeInsets.only(left: _width * 0.02),
                               child: Text(value,
-                                  style: TextStyle(
-                                      fontSize: screenSize.width * 0.05))));
+                                  style: TextStyle(fontSize: _appBarSize))));
                     }).toList(),
                   ),
                 ),
-                Text("票", style: TextStyle(fontSize: screenSize.width * 0.05)),
+                Text("票", style: TextStyle(fontSize: _appBarSize)),
               ],
             ),
           ),
         )
       ],
     );
-  }
 
-  Widget _buildCheckButtom(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return Row(children: <Widget>[
-      Expanded(
-        // ignore: deprecated_member_use
-        child: FlatButton(
-          height: screenSize.height * 0.07,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-          child: Image.asset(
-            'assets/images/cancel.png',
-            width: screenSize.width * 0.05,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: _color,
+        title: Text('投票設定', style: TextStyle(fontSize: _appBarSize)),
+        leading: Container(
+          margin: EdgeInsets.only(left: _leadingL),
+          child: GestureDetector(
+            child: Icon(Icons.chevron_left),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
           ),
-          color: Theme.of(context).primaryColorLight,
-          textColor: Colors.white,
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
       ),
-      Expanded(
-          // ignore: deprecated_member_use
-          child: Builder(builder: (context) {
-        return FlatButton(
-            disabledColor: Color(0xffCCCCCC),
-            height: screenSize.height * 0.07,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-            child: Image.asset(
-              'assets/images/confirm.png',
-              width: screenSize.width * 0.05,
-            ),
-            color: Theme.of(context).primaryColor,
-            textColor: Colors.white,
-            onPressed: () {
-              print("title：" + title);
-              print("voteItems：${voteItems}");
-              if (_voteSettingCheck[1] == true) {
-                print("deadLine：" + _deadLine.toString());
-              } else {
-                print("deadLine：null");
-              }
-              print("isAddItemPermit：${_voteSettingCheck[2]}");
-              print("isAnonymous：${_voteSettingCheck[3]}");
-              if (_voteSettingCheck[4] == true) {
-                print("chooseVoteQuantity：${int.parse(dropdownValue)}");
-              } else {
-                print("chooseVoteQuantity：1");
-              }
-            });
-      }))
-    ]);
+      body: Container(color: Colors.white, child: voteSettingItem),
+      bottomNavigationBar: Container(
+        color: Theme.of(context).bottomAppBarColor,
+        child: SafeArea(
+          top: false,
+          child: BottomAppBar(
+            elevation: 0,
+            child: Row(children: <Widget>[
+              Expanded(
+                child: SizedBox(
+                  height: _bottomHeight,
+                  child: RawMaterialButton(
+                      elevation: 0,
+                      child: Image.asset(
+                        'assets/images/cancel.png',
+                        width: _iconWidth,
+                      ),
+                      fillColor: _light,
+                      onPressed: () => Navigator.pop(context)),
+                ),
+              ), // 取消按鈕
+              Expanded(
+                child: SizedBox(
+                  height: _bottomHeight,
+                  child: RawMaterialButton(
+                      elevation: 0,
+                      child: Image.asset(
+                        'assets/images/confirm.png',
+                        width: _iconWidth,
+                      ),
+                      fillColor: _color,
+                      onPressed: () async {
+                        print("title：" + title);
+                        print(optionTypeId);
+                        print("voteItems：${voteItems}");
+                        if (_voteSettingCheck[1] == true) {
+                          print("deadLine：" + _deadLine.toString());
+                        } else {
+                          print("deadLine：null");
+                        }
+                        print("isAddItemPermit：${_voteSettingCheck[2]}");
+                        print("isAnonymous：${_voteSettingCheck[3]}");
+                        if (_voteSettingCheck[4] == true) {
+                          print(
+                              "chooseVoteQuantity：${int.parse(dropdownValue)}");
+                        } else {
+                          print("chooseVoteQuantity：1");
+                        }
+                        if (await _submit() != true) {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
+                      }),
+                ),
+              )
+            ]),
+          ),
+        ),
+      ),
+    );
   }
 }

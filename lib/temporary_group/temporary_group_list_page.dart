@@ -376,20 +376,15 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
         groupListWiget = noGroup;
 
       return Scaffold(
-          body: SafeArea(
-              child: Container(
+          body: Container(
         color: _color,
         child: Container(color: Colors.white, child: groupListWiget),
-      )));
+      ));
     } else {
-      return Scaffold(
-          body: SafeArea(
-              child: Container(
-                  color: _color,
-                  child: Container(
-                    color: Colors.white,
-                    child: Center(child: CircularProgressIndicator()),
-                  ))));
+      return Container(
+        color: Colors.white,
+        child: Center(child: CircularProgressIndicator()),
+      );
     }
   }
 }
