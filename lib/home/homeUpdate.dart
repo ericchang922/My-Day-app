@@ -10,6 +10,7 @@ class HomeUpdate extends StatefulWidget {
 class _HomeUpdate extends State<HomeUpdate> {
   DateTime nowMon = DateTime.now();
   int weekCount= 0;
+  String selectedScheduleType = 'all';
 
   void updateDate(DateTime mon) {
     setState(() => nowMon = mon);
@@ -19,11 +20,17 @@ class _HomeUpdate extends State<HomeUpdate> {
     setState(() => weekCount = week);
   }
 
+  void updateSelected(String value){
+    setState(()=>selectedScheduleType = value);
+  }
+
+
   @override
   Widget build(BuildContext context) => HomeInherited(
         child: widget.child,
         nowMon: nowMon,
         weekCount: weekCount,
+        selectedScheduleType: selectedScheduleType,
         homeUpdate: this,
       );
 }
@@ -32,6 +39,7 @@ class HomeInherited extends InheritedWidget {
   final DateTime nowMon;
   final _HomeUpdate homeUpdate;
   final int weekCount;
+  final String selectedScheduleType;
 
   HomeInherited({
     Key key,
@@ -39,6 +47,7 @@ class HomeInherited extends InheritedWidget {
     @required Widget child,
     @required this.weekCount,
     @required this.homeUpdate,
+    @required this.selectedScheduleType
   }) : super(key: key, child: child);
 
   static _HomeUpdate of(BuildContext context) =>
