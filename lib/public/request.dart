@@ -216,6 +216,12 @@ class Request {
     await httpPost(context, data, _url, '編輯成功');
   }
 
+// delete -----------------------------------------------------------------------------------------
+  scheduleDelete(BuildContext context, Map<String, dynamic> data) async {
+    String _url = scheduleUrl['delete'];
+    await httpPost(context, data, _url, '刪除成功');
+  }
+
 // create_common ----------------------------------------------------------------------------------
   scheduleCreateCommon(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['create_common'];
@@ -272,6 +278,12 @@ class Request {
   groupCreate(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['create_group'];
     await httpPost(context, data, _url, '新增成功');
+  }
+
+  // group_invite_friend --------------------------------------------------------------------------
+  groupInviteFriend(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['invite_friend'];
+    await httpPost(context, data, _url, '邀請成功');
   }
 
   // group_member_status --------------------------------------------------------------------------
