@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:My_Day_app/public/type_color.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -198,8 +199,8 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
       }
     }
 
-    dynamic getTypeColor(value) {
-      dynamic color = value == null ? 0xffFFFFFF : typeColor[value - 1];
+    Color getTypeColor(value) {
+      Color color = value == null ? Color(0xffFFFFFF) : typeColor(value);
       return color;
     }
 
@@ -439,7 +440,7 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
                       height: _height * 0.025,
                       child: CircleAvatar(
                         radius: _height * 0.025,
-                        backgroundColor: Color(getTypeColor(_type)),
+                        backgroundColor: getTypeColor(_type),
                       )),
                 )
               ],
