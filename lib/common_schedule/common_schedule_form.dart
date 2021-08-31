@@ -1,101 +1,89 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
-import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/schedule_request/edit.dart';
-import 'package:My_Day_app/public/schedule_request/get_common.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/schedule_request/create_common.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
 
-class CommonScheduleEditPage extends StatefulWidget {
+class CommonScheduleForm extends StatefulWidget {
+  int groupNum;
+  String submitType;
   int scheduleNum;
-  CommonScheduleEditPage(this.scheduleNum);
+  String title;
+  DateTime startDateTime;
+  DateTime endDateTime;
+  int type;
+  String location;
+
+  CommonScheduleForm(
+      {int groupNum,
+      String submitType = 'create_common',
+      int scheduleNum,
+      String title,
+      DateTime startDateTime,
+      DateTime endDateTime,
+      int type,
+      String location}) {
+    this.groupNum = groupNum;
+    this.submitType = submitType;
+    this.scheduleNum = scheduleNum;
+    this.title = title;
+    this.startDateTime = startDateTime;
+    this.endDateTime = endDateTime;
+    this.type = type;
+    this.location = location;
+  }
 
   @override
-  _CommonScheduleEditWidget createState() =>
-      new _CommonScheduleEditWidget(scheduleNum);
+  _CommonScheduleForm createState() => new _CommonScheduleForm(
+      groupNum,
+      submitType,
+      scheduleNum,
+      title,
+      startDateTime,
+      endDateTime,
+      type,
+      location);
 }
 
-class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
-    with RouteAware {
-  int scheduleNum;
-  _CommonScheduleEditWidget(this.scheduleNum);
-
-  GetCommonScheduleModel _getCommonScheduleModel;
-
+class _CommonScheduleForm extends State<CommonScheduleForm> {
+  int groupNum;
+  String _submitType;
+  Map _submitMap = {'create_common': 1, 'edit': 2};
   int _type;
-  bool _allDay = false;
-  bool _isNotCreate = false;
-  String uid = 'lili123';
-  String _title;
-  String _location;
+  int scheduleNum;
+
   DateTime _startDateTime = DateTime.now();
   DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
+  String _title;
+  String _location;
 
-  List _typeNameList = <String>['讀書', '工作', '會議', '休閒', '社團', '吃飯', '班級', '個人'];
+  _CommonScheduleForm(
+      this.groupNum,
+      this._submitType,
+      this.scheduleNum,
+      this._title,
+      this._startDateTime,
+      this._endDateTime,
+      this._type,
+      this._location);
 
-  TextEditingController get _titleController =>
-      TextEditingController(text: _title);
-  TextEditingController get _locationController =>
-      TextEditingController(text: _location);
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _getCommonScheduleRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  _getCommonScheduleRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_common_schedule.json');
-    // var responseBody = json.decode(response);
-
-    GetCommonScheduleModel _request =
-        await GetCommon(uid: uid, scheduleNum: scheduleNum).getData();
-
-    setState(() {
-      _getCommonScheduleModel = _request;
-      _title = _getCommonScheduleModel.title;
-      _type = _typeNameList.indexOf(_getCommonScheduleModel.typeName) + 1;
-      _startDateTime = _getCommonScheduleModel.startTime;
-      _endDateTime = _getCommonScheduleModel.endTime;
-      if (_getCommonScheduleModel.place != null)
-        _location = _getCommonScheduleModel.place;
-
-      String _startString =
-          "${_startDateTime.hour.toString().padLeft(2, '0')}:${_startDateTime.minute.toString().padLeft(2, '0')}";
-      String _endString =
-          "${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}";
-
-      if (_startDateTime.day == _endDateTime.day) {
-        if (_startString == "00:00" && _endString == "00:00" ||
-            _startString == "00:00" && _endString == "23:59") {
-          _allDay = true;
-        }
-      }
-    });
-  }
+  bool _allDay = false;
+  bool _isNotCreate = false;
 
   @override
   Widget build(BuildContext context) {
     _titleController.text = _title;
     _locationController.text = _location;
+    if (_startDateTime == null) _startDateTime = DateTime.now();
+    if (_endDateTime == null)
+      _endDateTime = DateTime.now().add(Duration(hours: 1));
+
     // values ------------------------------------------------------------------------------------------
     Size size = MediaQuery.of(context).size;
     double _height = size.height;
@@ -123,9 +111,10 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
         ? '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]}'
         : '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]} ${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}';
 
-// _submit -----------------------------------------------------------------------------------------
-    Future<bool> _submit() async {
+    // _submit -----------------------------------------------------------------------------------------
+    _submit() async {
       String _alertTitle = '新增共同行程失敗';
+      String uid = 'lili123';
       String title = _titleController.text;
       String startTime;
       String endTime;
@@ -177,17 +166,30 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
       } else {
         var submitWidget;
         _submitWidgetfunc() async {
-          return Edit(
-              uid: uid,
-              scheduleNum: scheduleNum,
-              title: title,
-              startTime: startTime,
-              endTime: endTime,
-              remind: remind,
-              typeId: typeId,
-              isCountdown: false,
-              place: place,
-              remark: null);
+          switch (_submitMap[_submitType]) {
+            case 1:
+              return CreateCommon(
+                uid: uid,
+                groupNum: groupNum,
+                title: title,
+                startTime: startTime,
+                endTime: endTime,
+                typeId: typeId,
+                place: place,
+              );
+            case 2:
+              return Edit(
+                  uid: uid,
+                  scheduleNum: scheduleNum,
+                  title: title,
+                  startTime: startTime,
+                  endTime: endTime,
+                  remind: remind,
+                  typeId: typeId,
+                  isCountdown: false,
+                  place: place,
+                  remark: null);
+          }
         }
 
         submitWidget = await _submitWidgetfunc();
@@ -253,8 +255,8 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
       );
     }
 
-    // editScheduleList ------------------------------------------------------------------------------
-    Widget editScheduleList = ListView(
+    // createScheduleList ------------------------------------------------------------------------------
+    Widget createScheduleList = ListView(
       children: [
         // text field ----------------------------------------------------------------------------- title
         Padding(
@@ -271,12 +273,8 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
                     borderSide: BorderSide(color: _color))),
             cursorColor: _color,
             controller: _titleController,
-            onSubmitted: (_) => FocusScope.of(context)
-                .requestFocus(FocusNode()), //按enter傳回空的focus
             onChanged: (text) {
-              setState(() {
-                _title = text;
-              });
+              _title = text;
             },
           ),
         ),
@@ -480,11 +478,6 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
                     cursorColor: _color,
                     onSubmitted: (_) =>
                         FocusScope.of(context).requestFocus(FocusNode()),
-                    onChanged: (text) {
-                      setState(() {
-                        _location = text;
-                      });
-                    },
                   ),
                 )
               ],
@@ -494,73 +487,69 @@ class _CommonScheduleEditWidget extends State<CommonScheduleEditPage>
       ],
     );
 
-    if (_getCommonScheduleModel != null) {
-      return Scaffold(
-        body: GestureDetector(
-          // 點擊空白處釋放焦點
-          behavior: HitTestBehavior.translucent,
-          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-          child: Container(
-            color: Colors.white,
-            child: SafeArea(
-              bottom: false,
-              child: Center(child: editScheduleList),
-            ),
-          ),
-        ),
-        bottomNavigationBar: Container(
-          color: Theme.of(context).bottomAppBarColor,
-          child: SafeArea(
-            top: false,
-            child: BottomAppBar(
-              elevation: 0,
-              child: Row(children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                        elevation: 0,
-                        child: Image.asset(
-                          'assets/images/cancel.png',
-                          width: _bottomIconWidth,
-                        ),
-                        fillColor: _light,
-                        onPressed: () => Navigator.pop(context)),
-                  ),
-                ), // 取消按鈕
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                      elevation: 0,
-                      child: Image.asset(
-                        'assets/images/confirm.png',
-                        width: _bottomIconWidth,
-                      ),
-                      fillColor: _color,
-                      onPressed: () async {
-                        if (await _submit() != true) {
-                          Navigator.pop(context);
-                        }
-                      },
-                    ),
-                  ),
-                )
-              ]),
-            ),
-          ),
-        ),
-      );
-    } else {
-      return Scaffold(
-        body: Container(
+    return Scaffold(
+      body: GestureDetector(
+        // 點擊空白處釋放焦點
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        child: Container(
           color: Colors.white,
           child: SafeArea(
             bottom: false,
-            child: Center(child: CircularProgressIndicator()),
+            child: Center(child: createScheduleList),
           ),
         ),
-      );
-    }
+      ),
+      bottomNavigationBar: Container(
+        color: Theme.of(context).bottomAppBarColor,
+        child: SafeArea(
+          top: false,
+          child: BottomAppBar(
+            elevation: 0,
+            child: Row(children: <Widget>[
+              Expanded(
+                child: SizedBox(
+                  height: _bottomHeight,
+                  child: RawMaterialButton(
+                      elevation: 0,
+                      child: Image.asset(
+                        'assets/images/cancel.png',
+                        width: _bottomIconWidth,
+                      ),
+                      fillColor: _light,
+                      onPressed: () => Navigator.pop(context)),
+                ),
+              ), // 取消按鈕
+              Expanded(
+                child: SizedBox(
+                  height: _bottomHeight,
+                  child: RawMaterialButton(
+                    elevation: 0,
+                    child: Image.asset(
+                      'assets/images/confirm.png',
+                      width: _bottomIconWidth,
+                    ),
+                    fillColor: _color,
+                    onPressed: () async {
+                      if (await _submit() != true) {
+                        switch (_submitMap[_submitType]) {
+                          case 1:
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    CommonScheduleListPage(groupNum)));
+                            break;
+                          case 2:
+                            Navigator.pop(context);
+                        }
+                      }
+                    },
+                  ),
+                ),
+              )
+            ]),
+          ),
+        ),
+      ),
+    );
   }
 }
