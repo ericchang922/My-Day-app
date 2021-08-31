@@ -7,7 +7,6 @@ Widget homePopupMenu(BuildContext context) {
   double _height = _size.height;
   double _width = _size.width;
   double _greyFontSize = _height * 0.015;
-  double _fontSize = _height * 0.017;
   double _itemsSize = _height * 0.037;
   Color _homePageGrey = Color(0xffCCCCCC);
 
