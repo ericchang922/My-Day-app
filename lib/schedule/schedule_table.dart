@@ -1,4 +1,7 @@
+import 'package:My_Day_app/home/home_schedule.dart';
+import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
+import 'package:My_Day_app/public/type_color.dart';
 import 'package:flutter/material.dart';
 
 Map<String, int> weekDay = {
@@ -18,7 +21,8 @@ class ScheduleTable extends StatefulWidget {
   DateTime monday;
   int weekCount;
   MainTimetableListGet data;
-  ScheduleTable({this.monday, this.sectionList, this.data});
+  ScheduleGetList scheduleList;
+  ScheduleTable({this.monday, this.sectionList, this.data, this.scheduleList});
 
   @override
   State<ScheduleTable> createState() =>
@@ -32,6 +36,8 @@ class _ScheduleTable extends State<ScheduleTable> {
   MainTimetableListGet data;
   _ScheduleTable(this.monday, this.sectionList, this.data);
   List dateList = [];
+  ScrollController _scrollController;
+  double _tableOffset = 0;
 
   _getMon(DateTime today) {
     int daysAfter = today.weekday - 1;
@@ -41,6 +47,12 @@ class _ScheduleTable extends State<ScheduleTable> {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {
+          _tableOffset = _scrollController.offset;
+        });
+      });
     if (monday == null) {
     } else {
       for (int i = 0; i < 7; i++) {
@@ -142,7 +154,8 @@ class _ScheduleTable extends State<ScheduleTable> {
             ),
           ),
         );
-    Container _createTop(String date) => _createTableRow(date, _topColor, null);
+    Container _createTop(String date) =>
+        _createTableRow(date, _topColor, _height * 0.02);
 
     Container _createWeekDay(String weekDayTxt) =>
         _createTableRow(weekDayTxt, _weekDayColor, _height * 0.05);
@@ -335,10 +348,11 @@ class _ScheduleTable extends State<ScheduleTable> {
         _createWeekDay('日'),
       ])
     ];
-    List<TableRow> _tableChildren = thead..addAll(_tableContent());
-
-    return ListView(children: [
-      Table(
+    List<TableRow> _tableChildren = _tableContent();
+    Container theadContainer = Container(
+      height: _height * 0.07,
+      width: _width,
+      child: Table(
           columnWidths: <int, TableColumnWidth>{
             0: _tableWidth,
             1: _tableWidth,
@@ -350,7 +364,43 @@ class _ScheduleTable extends State<ScheduleTable> {
           },
           border: TableBorder.all(
               color: _tableBorderColor, width: 1, style: BorderStyle.solid),
-          children: _tableChildren),
-    ]);
+          children: thead),
+    );
+
+    Container tbodyContainer = Container(
+      child: ListView(controller: _scrollController, children: [
+        Table(
+            columnWidths: <int, TableColumnWidth>{
+              0: _tableWidth,
+              1: _tableWidth,
+              2: _tableWidth,
+              3: _tableWidth,
+              4: _tableWidth,
+              5: _tableWidth,
+              6: _tableWidth
+            },
+            border: TableBorder.all(
+                color: _tableBorderColor, width: 1, style: BorderStyle.solid),
+            children: _tableChildren),
+      ]),
+    );
+
+    return ConstrainedBox(
+      constraints: BoxConstraints.expand(),
+      child: Column(
+        children: [
+          theadContainer,
+          Expanded(
+            child: Stack(
+              alignment: Alignment.topLeft,
+              children: [
+                tbodyContainer,
+                homeSchedule(context, top: 100-_tableOffset, left: _width/7)
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
