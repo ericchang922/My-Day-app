@@ -6,8 +6,8 @@ import 'package:animations/animations.dart';
 // my day
 import 'package:My_Day_app/my_day_icon.dart';
 import 'package:My_Day_app/group/group_list_page.dart';
-import 'package:My_Day_app/home_page.dart';
-import 'package:My_Day_app/homeUpdate.dart';
+import 'package:My_Day_app/home/home_page.dart';
+import 'package:My_Day_app/home/homeUpdate.dart';
 import 'package:My_Day_app/studyplan/learn.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
 

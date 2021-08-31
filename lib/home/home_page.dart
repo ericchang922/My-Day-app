@@ -1,5 +1,6 @@
 // flutter
-import 'package:My_Day_app/homeUpdate.dart';
+import 'package:My_Day_app/home/homeUpdate.dart';
+import 'package:My_Day_app/home/home_popup_menu.dart';
 import 'package:My_Day_app/my_day_icon.dart';
 import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'package:animations/animations.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:My_Day_app/schedule/schedule_table.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
-import 'package:My_Day_app/setting/settings.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -148,28 +148,23 @@ AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
   }
 
   return AppBar(
-      title: Container(
-        child: Row(children: [
-          Padding(
-            padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
-            child: Column(
-              children: showWeek('${_convertToWeekDayName(weekCount)}'),
-            ),
+    title: Container(
+      child: Row(children: [
+        Padding(
+          padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
+          child: Column(
+            children: showWeek('${_convertToWeekDayName(weekCount)}'),
           ),
-          Text('${nowMon.year} 年')
-        ]),
-      ),
-      centerTitle: false,
-      backgroundColor: color,
-      actions: [
-        IconButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SettingsPage()));
-          },
-          icon: Icon(Icons.settings),
         ),
-      ]);
+        Text('${nowMon.year} 年')
+      ]),
+    ),
+    centerTitle: false,
+    backgroundColor: color,
+    actions: [
+      homePopupMenu(context)
+    ],
+  );
 }
 
 class HomePageBody extends StatefulWidget {
@@ -196,7 +191,7 @@ class _HomePageBody extends State<HomePageBody> {
     {'start': '14:25', 'end': '15:15'},
     {'start': '15:25', 'end': '16:15'}
   ];
-  FloatingActionButton _floatingActionButton = null;
+  FloatingActionButton _floatingActionButton;
 
   Future<MainTimetableListGet> getThisData() async {
     MainTimetableList request = MainTimetableList(context: context, uid: _uid);

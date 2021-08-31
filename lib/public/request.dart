@@ -11,6 +11,7 @@ import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
+import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
@@ -104,6 +105,7 @@ class Request {
   Map<String, dynamic> _responseBody;
 
   ScheduleGet _scheduleGet;
+  ScheduleGetList _scheduleGetList;
   GetCommonScheduleModel _commenSchedule;
   CommonScheduleListModel _commonScheduleList;
 
@@ -130,6 +132,7 @@ class Request {
   bool _isError;
 
   getScheduleGet() => _scheduleGet;
+  getScheduleGetList() => _scheduleGetList;
   getCommenScheduleGet() => _commenSchedule;
   getCommonScheduleListGet() => _commonScheduleList;
 
@@ -234,6 +237,15 @@ class Request {
     await httpGet(context, data, _url);
     if (_responseBody != null) {
       _scheduleGet = ScheduleGet.fromJson(_responseBody);
+    }
+  }
+
+// get_list ---------------------------------------------------------------------------------------
+  scheduleGetList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = scheduleUrl['get_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _scheduleGetList = ScheduleGetList.fromJson(_responseBody);
     }
   }
 
