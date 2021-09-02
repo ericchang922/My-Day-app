@@ -75,7 +75,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
     double _widthSize = _width * 0.01;
     double _leadingL = _height * 0.02;
     double _textL = _height * 0.03;
-    double _subtitleT = _height * 0.005;
+    double _subtitleT = _height * 0.008;
     double _tabH = _height * 0.04683;
 
     double _tabSize = _width * 0.041;
@@ -86,6 +86,8 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
+    Color _lightGray = Color(0xffE3E3E3);
+    Color _yellow = Color(0xffEFB208);
 
     Widget futureScheduleList;
     Widget pastScheduleList;
@@ -279,7 +281,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
       length: 2,
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: _color,
             title: Text('共同行程', style: TextStyle(fontSize: _appBarSize)),
             leading: Container(
               margin: EdgeInsets.only(left: _leadingL),
@@ -294,13 +296,10 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
               indicator: ShapeDecoration(
                   shape: UnderlineInputBorder(
                       borderSide: BorderSide(
-                          color: Color(0xffEFB208),
-                          width: 0,
-                          style: BorderStyle.solid)),
-                  gradient: LinearGradient(
-                      colors: [Color(0xffEFB208), Color(0xffEFB208)])),
+                          color: _yellow, width: 0, style: BorderStyle.solid)),
+                  gradient: LinearGradient(colors: [_yellow, _yellow])),
               labelColor: Colors.white,
-              unselectedLabelColor: Color(0xffe3e3e3),
+              unselectedLabelColor: _lightGray,
               indicatorPadding: EdgeInsets.all(0.0),
               indicatorWeight: _widthSize,
               labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
@@ -308,13 +307,13 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                 Container(
                   height: _tabH,
                   alignment: Alignment.center,
-                  color: Theme.of(context).primaryColor,
+                  color: _color,
                   child: Text("未結束", style: TextStyle(fontSize: _tabSize)),
                 ),
                 Container(
                   height: _tabH,
                   alignment: Alignment.center,
-                  color: Theme.of(context).primaryColor,
+                  color: _color,
                   child: Text("已結束", style: TextStyle(fontSize: _tabSize)),
                 ),
               ],
