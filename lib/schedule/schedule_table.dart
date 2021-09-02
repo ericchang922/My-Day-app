@@ -1,8 +1,10 @@
+// flutter
+import 'package:flutter/material.dart';
+// my day
+import 'package:My_Day_app/home/home_page_functions.dart';
 import 'package:My_Day_app/home/home_schedule.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
-import 'package:My_Day_app/public/type_color.dart';
-import 'package:flutter/material.dart';
 
 Map<String, int> weekDay = {
   '星期一': 1,
@@ -22,39 +24,74 @@ class ScheduleTable extends StatefulWidget {
   int weekCount;
   MainTimetableListGet data;
   ScheduleGetList scheduleList;
+
   ScheduleTable({this.monday, this.sectionList, this.data, this.scheduleList});
 
   @override
-  State<ScheduleTable> createState() =>
-      _ScheduleTable(this.monday, this.sectionList, this.data);
+  State<ScheduleTable> createState() => _ScheduleTable(this.monday, this.data);
 }
 
 class _ScheduleTable extends State<ScheduleTable> {
-  List<Map<String, String>> sectionList;
   DateTime monday;
   int weekCount;
   MainTimetableListGet data;
-  _ScheduleTable(this.monday, this.sectionList, this.data);
   List dateList = [];
-  ScrollController _scrollController;
-  double _tableOffset = 0;
+  List timeLineList = [];
+  Duration dayStart;
+  Duration classEnd;
+  Duration timeAddNow;
+  DateTime check = DateTime.utc(2000, 01, 01, 00, 00);
 
-  _getMon(DateTime today) {
-    int daysAfter = today.weekday - 1;
-    return DateTime.utc(today.year, today.month, today.day - daysAfter);
+  _ScheduleTable(this.monday, this.data);
+
+  bool _checkTime() {
+    bool ok = false;
+    if (check.add(timeAddNow).isAfter(check.add(classEnd)))
+      ok = true;
+    else if (check.add(timeAddNow).isBefore(check.add(dayStart))) ok = true;
+    return ok;
   }
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController()
-      ..addListener(() {
-        setState(() {
-          _tableOffset = _scrollController.offset;
+    if (monday != null &&
+        data != null &&
+        widget.sectionList != null &&
+        widget.scheduleList != null) {
+      if (widget.sectionList[0]['start'] !=
+          widget.sectionList[widget.sectionList.length - 1]['end']) {
+        timeLineList = timeLineList..addAll(widget.sectionList);
+
+        dayStart = ConvertString.toDuration(timeLineList[0]['start']);
+        classEnd = ConvertString.toDuration(
+            timeLineList[timeLineList.length - 1]['end']);
+        timeAddNow = Duration(hours: classEnd.inHours + 1);
+        timeLineList.add({
+          'start': ConvertDuration.toShortTime(classEnd),
+          'end': ConvertDuration.toShortTime(timeAddNow)
         });
-      });
-    if (monday == null) {
-    } else {
+
+        while (_checkTime()) {
+          if (timeAddNow.inHours + 1 > 24) {
+            timeAddNow = Duration(hours: 0);
+          }
+          if (timeAddNow.inHours == dayStart.inHours) break;
+
+          Map<String, String> add = {
+            'start': ConvertDuration.toShortTime(timeAddNow)
+          };
+
+          timeAddNow = Duration(hours: timeAddNow.inHours + 1);
+          add['end'] = ConvertDuration.toShortTime(timeAddNow);
+          timeLineList.add(add);
+        }
+        timeLineList[timeLineList.length - 1]['end'] =
+            ConvertDuration.toShortTime(dayStart);
+      } else {
+        timeLineList = widget.sectionList;
+      }
+
       for (int i = 0; i < 7; i++) {
         DateTime days = monday.add(Duration(days: i));
         dateList.add((days.day).toString());
@@ -67,61 +104,10 @@ class _ScheduleTable extends State<ScheduleTable> {
     if (monday == null) {
       return Container();
     }
-    List timeLineList = sectionList;
+
     List<int> sectionNumList = [];
     List<List<String>> sectionDataList = [];
     String semester;
-
-    Duration _convertToDuration(String s) {
-      int hour = 0;
-      int minute = 0;
-      List<String> time = s.split(':');
-      if (time.length >= 2) {
-        hour = int.parse(time[0]);
-        minute = int.parse(time[1]);
-      }
-      return Duration(hours: hour, minutes: minute);
-    }
-
-    String _convertToShortTime(Duration d) {
-      List<String> time = d.toString().split(':');
-      return '${time[0].padLeft(2, '0')}:${time[1]}';
-    }
-
-    DateTime check = DateTime.utc(2000, 01, 01, 00, 00);
-
-    Duration dayStart = _convertToDuration(sectionList[0]['start']);
-    Duration classEnd =
-        _convertToDuration(sectionList[sectionList.length - 1]['end']);
-    Duration timeAddNow = Duration(hours: classEnd.inHours + 1);
-
-    bool _checkTime() {
-      bool ok = false;
-      if (check.add(timeAddNow).isAfter(check.add(classEnd)))
-        ok = true;
-      else if (check.add(timeAddNow).isBefore(check.add(dayStart))) ok = true;
-      return ok;
-    }
-
-    timeLineList.add({
-      'start': _convertToShortTime(classEnd),
-      'end': _convertToShortTime(timeAddNow)
-    });
-
-    while (_checkTime()) {
-      if (timeAddNow.inHours + 1 > 24) {
-        timeAddNow = Duration(hours: 0);
-      }
-      if (timeAddNow.inHours == dayStart.inHours) break;
-
-      Map<String, String> add = {'start': _convertToShortTime(timeAddNow)};
-
-      timeAddNow = Duration(hours: timeAddNow.inHours + 1);
-      add['end'] = _convertToShortTime(timeAddNow);
-      timeLineList.add(add);
-    }
-    timeLineList[timeLineList.length - 1]['end'] =
-        _convertToShortTime(dayStart);
 
     Size _size = MediaQuery.of(context).size;
     double _width = _size.width;
@@ -140,7 +126,7 @@ class _ScheduleTable extends State<ScheduleTable> {
       if (h < 0) h = h * -1;
       if (h >= 24) h = 0;
 
-      return h;
+      return h * _height * 0.07;
     }
 
     Container _createTableRow(String txt, Color bkcolor, double height) =>
@@ -162,7 +148,7 @@ class _ScheduleTable extends State<ScheduleTable> {
 
     Container _createTime(String start, String end) => Container(
           color: _weekDayColor,
-          height: _height * 0.07 * _timeHeight(start, end),
+          height: _timeHeight(start, end),
           child: Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -182,10 +168,9 @@ class _ScheduleTable extends State<ScheduleTable> {
     Container _createSubject(String subjectName, double h) {
       Container created;
       if (subjectName == null || subjectName == 'null') {
-        created = _createTableRow('', null, _height * 0.07 * h);
+        created = _createTableRow('', null, h);
       } else {
-        created =
-            _createTableRow(subjectName, _sectionColor, _height * 0.07 * h);
+        created = _createTableRow(subjectName, _sectionColor, h);
       }
       return created;
     }
@@ -204,10 +189,9 @@ class _ScheduleTable extends State<ScheduleTable> {
       semester = '${d.schoolYear}-${d.semester}';
 
       setState(() {
-        weekCount =
-            (_getMon(monday).difference(_getMon(d.startDate)).inDays / 7)
-                    .toInt() +
-                1;
+        weekCount = (getMon(monday).difference(getMon(d.startDate)).inDays / 7)
+                .toInt() +
+            1;
         widget.weekCount = weekCount;
       });
       if (isStart == null) {
@@ -309,15 +293,15 @@ class _ScheduleTable extends State<ScheduleTable> {
           double space = _timeHeight(_end, _nextStart);
           // 取得此行程和下一個行程之間的間隔（以小時計算）
 
-          if (space >= 1) {
+          if (space >= _height * 0.07) {
             _contents = [];
             // 大於一小時則會在中間加入空格
             _contents.add(Container(
               color: _weekDayColor,
-              height: _height * 0.07 * space,
+              height: space,
             ));
             for (int j = 0; j < 7; j++) {
-              _contents.add(Container(height: _height * 0.05 * space));
+              _contents.add(Container(height: space));
             }
             _tableRowList.add(TableRow(children: _contents));
           }
@@ -348,7 +332,7 @@ class _ScheduleTable extends State<ScheduleTable> {
         _createWeekDay('日'),
       ])
     ];
-    List<TableRow> _tableChildren = _tableContent();
+
     Container theadContainer = Container(
       height: _height * 0.07,
       width: _width,
@@ -367,22 +351,195 @@ class _ScheduleTable extends State<ScheduleTable> {
           children: thead),
     );
 
+    List<Widget> tbodyList = [
+      Table(
+          columnWidths: <int, TableColumnWidth>{
+            0: _tableWidth,
+            1: _tableWidth,
+            2: _tableWidth,
+            3: _tableWidth,
+            4: _tableWidth,
+            5: _tableWidth,
+            6: _tableWidth
+          },
+          border: TableBorder.all(
+              color: _tableBorderColor, width: 1, style: BorderStyle.solid),
+          children: _tableContent()),
+    ];
+
+    List<int> insertList = [];
+
+    for (int i = 0; i < timeLineList.length - 1; i++) {
+      DateTime thisEnd =
+          check.add(ConvertString.toDuration(timeLineList[i]['end']));
+      DateTime nextStart =
+          check.add(ConvertString.toDuration(timeLineList[i + 1]['start']));
+      if (nextStart.difference(thisEnd).inMinutes /
+              Duration(hours: 1).inMinutes >=
+          1) {
+        insertList.add(i);
+      }
+    }
+
+    for (int i = 0; i < insertList.length; i++) {
+      int index = insertList[i];
+      timeLineList.insert(index + 1 + i, {'start': '', 'end': ''});
+    }
+
+    addScheduleBtn() {
+      DateTime sunday = monday.add(Duration(days: 6));
+      Duration dayStartTime =
+          ConvertString.toDuration(timeLineList[0]['start']);
+      double scheduleHeight;
+      double startTop;
+      double startLeft;
+      List<Widget> scheduleBtnList = [];
+
+      List<List> weekCount = [];
+      for (int i = 0; i < timeLineList.length; i++) {
+        List<int> aWeekCount = [];
+        for (int j = 0; j < 7; j++) {
+          aWeekCount.add(0);
+        }
+        weekCount.add(aWeekCount);
+      }
+
+      for (var s in widget.scheduleList.schedule) {
+        bool isThisWeek = false;
+        bool notStart = true;
+        DateTime start = s.startTime;
+        DateTime end = s.endTime;
+        DateTime weekStart = DateTime.utc(monday.year, monday.month, monday.day)
+            .add(dayStartTime);
+        DateTime weekEnd = sunday.add(Duration(days: 1)).add(dayStartTime);
+
+        if ((!start.isBefore(weekStart) && !start.isAfter(weekEnd)) ||
+            (!end.isAfter(weekEnd) && !end.isBefore(weekStart))) {
+          isThisWeek = true;
+          //行程在這週
+          for (int i = 0; i < 7; i++) {
+            scheduleHeight = 0;
+            startTop = 0;
+            startLeft = _width / 8;
+            DateTime today = monday.add(Duration(days: i));
+            DateTime todayStart = today.add(dayStartTime);
+            DateTime todayEnd = today.add(Duration(days: 1)).add(dayStartTime);
+            int max = 0;
+
+            if (!end.isBefore(todayStart) && start.isBefore(todayEnd)) {
+              // 行程在今天
+              startLeft = (_width / 8) * (i + 1);
+              // 要顯示在今天的行程有：
+              // 1. 今天開始今天結束 2. 前幾天開始今天結束 3. 前幾天開始後幾天結束 4. 今天開始後幾天結束
+              // 條件為： 今天開始之後結束、今天結束之前開始
+              max = 0;
+
+              for (int j = 0; j < timeLineList.length; j++) {
+                // 從timeLineList裡面的時間開始一格一格比條件如下：
+                // 如果行程開始時間在這一格裡面就用開始時間作為開始
+                // 如果結束時間在這格裡面就以結束時間作為結束
+                // 將長度加到變數中計算按鈕長度
+                Duration thisStart;
+                Duration thisEnd;
+                if (timeLineList[j]['start'] == '') {
+                  if (j < timeLineList.length - 1 && j != 0) {
+                    thisStart =
+                        ConvertString.toDuration(timeLineList[j - 1]['end']);
+                    thisEnd =
+                        ConvertString.toDuration(timeLineList[j + 1]['start']);
+                  }
+                } else {
+                  thisStart =
+                      ConvertString.toDuration(timeLineList[j]['start']);
+                  thisEnd = ConvertString.toDuration(timeLineList[j]['end']);
+                }
+
+                DateTime thisStartDateTime = today.add(thisStart);
+                DateTime thisEndDateTime = today.add(thisEnd);
+
+                if (thisStartDateTime.isBefore(todayStart))
+                  thisStartDateTime = thisStartDateTime.add(Duration(days: 1));
+                if (!thisEndDateTime.isAfter(todayStart))
+                  thisEndDateTime = thisEndDateTime.add(Duration(days: 1));
+
+                Duration heightStart;
+                Duration heightEnd;
+
+                // 行程在這格開始的位置
+                if (!start.isBefore(thisStartDateTime) &&
+                    !start.isAfter(thisEndDateTime)) {
+                  // 如果開始時間在這格開始之後 而且 在這格結束之前 => 表示是在這格開始的
+
+                  notStart = false;
+                  heightStart = timeOfDateTime(start);
+                  weekCount[j][i]++;
+                  startTop += _timeHeight(
+                      ConvertDuration.toShortTime(thisStart),
+                      ConvertDuration.toShortTime(heightStart));
+                } else if (!start.isAfter(thisStartDateTime) &&
+                    !end.isBefore(thisStartDateTime)) {
+                  // 開始時間是在這格開始之前 而且 結束時間是在這格開始之後 => 會經過這格 有可能結束在這格或是之後
+
+                  notStart = false;
+                  heightStart = thisStart;
+                  weekCount[j][i]++;
+                }
+
+                if (!end.isBefore(thisStartDateTime) &&
+                    !end.isAfter(thisEndDateTime)) {
+                  // 如果結束時間在這格開始之後 而且 在這格結束之前 => 表示是在這格結束的
+
+                  heightEnd = timeOfDateTime(end);
+                } else if (!end.isBefore(thisEndDateTime) &&
+                    !start.isAfter(thisEndDateTime)) {
+                  // 結束時間是在這格結束之後 而且 開始時間是在這格結束之前 => 會經過這格 有可能在這格開始或是之前
+
+                  heightEnd = thisEnd;
+                }
+
+                if (notStart) {
+                  startTop += _timeHeight(
+                      ConvertDuration.toShortTime(thisStart),
+                      ConvertDuration.toShortTime(thisEnd));
+                }
+
+                if (heightStart != null && heightEnd != null) {
+                  scheduleHeight += _timeHeight(
+                      ConvertDuration.toShortTime(heightStart),
+                      ConvertDuration.toShortTime(heightEnd));
+                }
+                if (weekCount[j][i] > max) {
+                  max = weekCount[j][i];
+                }
+              }
+            }
+            if (max <= 4) {
+              if (isThisWeek) {
+                startLeft += (max - 1) * _width * 0.03;
+
+                scheduleBtnList.add(homeSchedule(
+                  context,
+                  top: startTop,
+                  left: startLeft,
+                  height: scheduleHeight,
+                  scheduleNum: s.scheduleNum,
+                  typeId: s.typeId,
+                  count: max,
+                ));
+              }
+            }
+          }
+        }
+      }
+
+      return scheduleBtnList;
+    }
+
+    List<Widget> tbody = tbodyList..addAll(addScheduleBtn());
+
     Container tbodyContainer = Container(
-      child: ListView(controller: _scrollController, children: [
-        Table(
-            columnWidths: <int, TableColumnWidth>{
-              0: _tableWidth,
-              1: _tableWidth,
-              2: _tableWidth,
-              3: _tableWidth,
-              4: _tableWidth,
-              5: _tableWidth,
-              6: _tableWidth
-            },
-            border: TableBorder.all(
-                color: _tableBorderColor, width: 1, style: BorderStyle.solid),
-            children: _tableChildren),
-      ]),
+      child: ListView(
+          children: [Stack(alignment: Alignment.topLeft, children: tbody)]),
     );
 
     return ConstrainedBox(
@@ -391,13 +548,7 @@ class _ScheduleTable extends State<ScheduleTable> {
         children: [
           theadContainer,
           Expanded(
-            child: Stack(
-              alignment: Alignment.topLeft,
-              children: [
-                tbodyContainer,
-                homeSchedule(context, top: 100-_tableOffset, left: _width/7)
-              ],
-            ),
+            child: tbodyContainer,
           ),
         ],
       ),

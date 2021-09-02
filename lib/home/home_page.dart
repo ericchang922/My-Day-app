@@ -1,16 +1,18 @@
 // flutter
-import 'package:My_Day_app/home/homeUpdate.dart';
-import 'package:My_Day_app/home/home_popup_menu.dart';
-import 'package:My_Day_app/my_day_icon.dart';
-import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
-import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
+import 'package:My_Day_app/my_day_icon.dart';
+import 'package:My_Day_app/public/schedule_request/get_list.dart';
+import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:My_Day_app/schedule/schedule_table.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
+import 'package:My_Day_app/home/homeUpdate.dart';
+import 'package:My_Day_app/home/home_popup_menu.dart';
+import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
+import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -161,9 +163,7 @@ AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
     ),
     centerTitle: false,
     backgroundColor: color,
-    actions: [
-      homePopupMenu(context)
-    ],
+    actions: [homePopupMenu(context)],
   );
 }
 
@@ -176,7 +176,9 @@ class _HomePageBody extends State<HomePageBody> {
   String _uid = 'amy123';
   Future<bool> _isOk;
   Future<MainTimetableListGet> _futureData;
+  Future<ScheduleGetList> _futureScheduleList;
   MainTimetableListGet _data;
+  ScheduleGetList _scheduleList;
   DateTime now = DateTime.now();
   int homeIndex = 4;
   PageController pageController;
@@ -195,6 +197,11 @@ class _HomePageBody extends State<HomePageBody> {
 
   Future<MainTimetableListGet> getThisData() async {
     MainTimetableList request = MainTimetableList(context: context, uid: _uid);
+    return request.getData();
+  }
+
+  Future<ScheduleGetList> getScheduleList() async {
+    GetList request = GetList(context: context, uid: _uid);
     return request.getData();
   }
 
@@ -222,8 +229,14 @@ class _HomePageBody extends State<HomePageBody> {
       pageController.jumpToPage(2);
       DateTime mon = _getLastWeek(mondayList[0]);
       setState(() {
-        pageList.insert(1,
-            ScheduleTable(monday: mon, sectionList: sectionList, data: _data));
+        pageList.insert(
+            1,
+            ScheduleTable(
+              monday: mon,
+              sectionList: sectionList,
+              data: _data,
+              scheduleList: _scheduleList,
+            ));
         mondayList.insert(0, mon);
       });
       await Future.delayed(Duration(milliseconds: 1));
@@ -234,9 +247,11 @@ class _HomePageBody extends State<HomePageBody> {
       setState(() {
         mondayList.add(_getNextWeek(mondayList[mondayList.length - 1]));
         pageList.add(ScheduleTable(
-            monday: mondayList[mondayList.length - 1],
-            sectionList: sectionList,
-            data: _data));
+          monday: mondayList[mondayList.length - 1],
+          sectionList: sectionList,
+          data: _data,
+          scheduleList: _scheduleList,
+        ));
       });
     }
     if (page == homeIndex) {
@@ -257,13 +272,16 @@ class _HomePageBody extends State<HomePageBody> {
   }
 
   Future<bool> setTable() async {
+    _scheduleList = await _futureScheduleList;
     _data = await _futureData;
+
     pageList.insert(0, ScheduleTable());
     for (int i = 0; i < mondayList.length; i++) {
       pageList.add(ScheduleTable(
         monday: mondayList[i],
         sectionList: sectionList,
         data: _data,
+        scheduleList: _scheduleList,
       ));
     }
 
@@ -277,6 +295,7 @@ class _HomePageBody extends State<HomePageBody> {
     pageController.addListener(() {});
 
     setState(() {
+      _futureScheduleList = getScheduleList();
       _futureData = getThisData();
 
       mondayList = [
