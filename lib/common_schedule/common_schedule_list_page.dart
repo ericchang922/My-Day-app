@@ -1,18 +1,13 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/common_schedule/common_schedule_create_page.dart';
-import 'package:My_Day_app/common_schedule/common_schedule_detail_page.dart';
-import 'package:My_Day_app/common_schedule/common_schedule_edit_page.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
+import 'package:My_Day_app/common_schedule/edit_common_schedule.dart';
+import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/public/schedule_request/common_list.dart';
 
 import 'package:animations/animations.dart';
-
-
 
 class CommonScheduleListPage extends StatefulWidget {
   int groupNum;
@@ -95,6 +90,19 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
     Widget futureScheduleList;
     Widget pastScheduleList;
 
+    _submitDelete(int scheduleNum) async {
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return Delete(uid: uid, scheduleNum: scheduleNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
     String _scheduleTime(index, isFuture) {
       var schedule;
       if (isFuture)
@@ -169,14 +177,16 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                     ),
                   ];
                 },
-                onSelected: (int value) {
-                  print(schedule.scheduleNum);
+                onSelected: (int value) async {
+                  if (await _submitDelete(schedule.scheduleNum) != true) {
+                    _groupScheduleListRequest();
+                  }
                 },
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
-                        CommonScheduleEditPage(schedule.scheduleNum)));
+                        EditCommonSchedule(scheduleNum: schedule.scheduleNum)));
               },
             );
           },
@@ -240,14 +250,16 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                     ),
                   ];
                 },
-                onSelected: (int value) {
-                  print(schedule.scheduleNum);
+                onSelected: (int value) async {
+                  if (await _submitDelete(schedule.scheduleNum) != true) {
+                    _groupScheduleListRequest();
+                  }
                 },
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
-                        CommonScheduleDetailPage(schedule.scheduleNum)));
+                        EditCommonSchedule(scheduleNum: schedule.scheduleNum)));
               },
             );
           },
@@ -311,7 +323,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
           floatingActionButton: OpenContainer(
             transitionType: ContainerTransitionType.fadeThrough,
             openBuilder: (BuildContext context, VoidCallback _) {
-              return CommonScheduleCreatePage(groupNum);
+              return CommonScheduleForm(groupNum: groupNum);
             },
             closedElevation: 6.0,
             closedShape: RoundedRectangleBorder(

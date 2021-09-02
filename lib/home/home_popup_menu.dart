@@ -25,7 +25,19 @@ Widget homePopupMenu(BuildContext context) {
       padding: EdgeInsets.all(_width * 0.005),
       icon: Icon(Icons.more_vert),
       onSelected: (value) {
-        HomeInherited.of(context).updateSelected(value);
+        switch (value) {
+          case 'manage':
+            null;
+            break;
+          case 'share':
+            null;
+            break;
+          case 'accept':
+            null;
+            break;
+          default:
+            HomeInherited.of(context).updateSelected(value);
+        }
       },
       itemBuilder: (context) => [
             PopupMenuItem(
@@ -77,7 +89,8 @@ Widget homePopupMenu(BuildContext context) {
               height: _itemsSize,
             ),
             PopupMenuItem(
-              child: Text('個人', style: TextStyle(color: _itemsColor('personal'))),
+              child:
+                  Text('個人', style: TextStyle(color: _itemsColor('personal'))),
               value: 'personal',
               height: _itemsSize,
             ),
@@ -111,17 +124,17 @@ Widget homePopupMenu(BuildContext context) {
             PopupMenuItem(
               child: Text('管理課表'),
               height: _itemsSize,
-              onTap: null,
+              value: 'manage',
             ),
             PopupMenuItem(
               child: Text('分享課表'),
               height: _itemsSize,
-              onTap: null,
+              value: 'share',
             ),
             PopupMenuItem(
               child: Text('接收課表'),
               height: _itemsSize,
-              onTap: null,
+              value: 'accept',
             ),
           ]);
 }
