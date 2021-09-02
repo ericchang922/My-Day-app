@@ -1,6 +1,13 @@
 // dart
 import 'dart:convert';
 // flutter
+import 'package:flutter/material.dart';
+// therd
+import 'package:http/http.dart' as http;
+// my day
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/toast.dart';
+import 'package:My_Day_app/models/schedule/schedule_model.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
@@ -18,13 +25,6 @@ import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
 import 'package:My_Day_app/models/vote/vote_list_model.dart';
-import 'package:flutter/material.dart';
-// therd
-import 'package:http/http.dart' as http;
-// my day
-import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/public/toast.dart';
-import 'package:My_Day_app/models/schedule/schedule_model.dart';
 
 class Request {
   static const host = 'http://myday.sytes.net';
@@ -46,7 +46,7 @@ class Request {
     'edit': '$host${path['schedule']}/edit/',
     'delete': '$host${path['schedule']}/delete/',
     'get': '${path['schedule']}/get/',
-    'get_list': '$host${path['schedule']}/get_list/',
+    'get_list': '${path['schedule']}/get_list/',
     'create_common': '$host${path['schedule']}/create_common/',
     'get_common': '${path['schedule']}/get_common/',
     'common_list': '${path['schedule']}/common_list/',

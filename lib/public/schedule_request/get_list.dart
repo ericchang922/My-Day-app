@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class GetList {
   BuildContext context;
   String uid;
-  Map<String, dynamic> _data;
+  Map<String, String> _data;
   ScheduleGetList _response;
 
   _request() async {
@@ -14,7 +14,7 @@ class GetList {
     this._response = await request.getScheduleGetList();
   }
 
-  GetList({this.uid}) {
+  GetList({this.context, this.uid}) {
     _data = {'uid': uid};
   }
 
