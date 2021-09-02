@@ -4,8 +4,8 @@ class ScheduleGetList {
   ScheduleGetList(this.schedule);
 
   ScheduleGetList.fromJson(Map<String, dynamic> json)
-      : schedule =
-            List<_Schedule>.from(json['schedule'].map((e) => e.fromJson));
+      : schedule = List<_Schedule>.from(
+            json['schedule'].map((e) => _Schedule.fromJson(e)));
 
   Map<String, dynamic> toJson() =>
       {'schedule': List<_Schedule>.from(schedule.map((e) => e.toString()))};
@@ -24,8 +24,8 @@ class _Schedule {
   _Schedule.fromJson(Map<String, dynamic> json)
       : scheduleNum = json['scheduleNum'],
         title = json['title'],
-        startTime = DateTime.parse(json['startTime']),
-        endTime = DateTime.parse(json['endTime']),
+        startTime = DateTime.parse('${json['startTime']}z'),
+        endTime = DateTime.parse('${json['endTime']}z'),
         typeId = json['typeId'];
 
   Map<String, dynamic> toJson() => {

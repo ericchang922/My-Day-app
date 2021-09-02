@@ -1,10 +1,11 @@
-import 'dart:convert';
-
-import 'package:My_Day_app/common_studyplan/share_studyplan_page.dart';
-import 'package:My_Day_app/models/study_plan/study_plan_list_model.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
+import 'package:My_Day_app/public/studyplan_request/one_group_list.dart';
+import 'package:My_Day_app/common_studyplan/share_studyplan_page.dart';
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/models/study_plan/share_studyplan_list_model.dart';
+import 'package:date_format/date_format.dart';
 
 class CommonStudyPlanListPage extends StatefulWidget {
   int groupNum;
@@ -15,76 +16,93 @@ class CommonStudyPlanListPage extends StatefulWidget {
       new _CommonStudyPlanListWidget(groupNum);
 }
 
-class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
+class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
+    with RouteAware {
   int groupNum;
   _CommonStudyPlanListWidget(this.groupNum);
 
-  StudyPlanListModel _groupStudyPlanListModel = null;
+  ShareStudyplanListModel _groupStudyplanListModel;
+
+  String uid = 'lili123';
 
   @override
   void initState() {
     super.initState();
-    _groupStudyPlanListRequest();
+    _groupStudyplanListRequest();
   }
 
-  Future<void> _groupStudyPlanListRequest() async {
-    var jsonString =
-        await rootBundle.loadString('assets/json/studyplan_list.json');
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
 
-    // var httpClient = HttpClient();
-    // var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-    //     '/vote/get_end_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
-    // var response = await request.close();
-    // var jsonString = await response.transform(utf8.decoder).join();
-    // httpClient.close();
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
 
-    var jsonMap = json.decode(jsonString);
+  @override
+  void didPopNext() {
+    _groupStudyplanListRequest();
+  }
 
-    var groupStudyPlanListModel = StudyPlanListModel.fromJson(jsonMap);
+  _groupStudyplanListRequest() async {
+    // var response =
+    //     await rootBundle.loadString('assets/json/share_studyplan_list.json');
+    // var responseBody = json.decode(response);
+    // var _request = ShareStudyplanListModel.fromJson(responseBody);
+
+    ShareStudyplanListModel _request =
+        await OneGroupList(uid: uid, groupNum: groupNum).getData();
+
     setState(() {
-      _groupStudyPlanListModel = groupStudyPlanListModel;
+      _groupStudyplanListModel = _request;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text('共同讀書計畫',
-                style: TextStyle(fontSize: screenSize.width * 0.052)),
-            leading: Container(
-              margin: EdgeInsets.only(left: screenSize.height * 0.02),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ShareStudyPlanPage(groupNum)));
-                  },
-                  icon: Icon(Icons.add))
-            ],
-          ),
-          body: Container(
-              color: Colors.white, child: _buildGroupStudyPlanList(context))),
-    );
-  }
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
 
-  Widget _buildGroupStudyPlanList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    double _heightSize = _height * 0.01;
+    double _widthSize = _width * 0.01;
+    double _leadingL = _height * 0.02;
+    double _textL = _height * 0.03;
+    double _subtitleT = _height * 0.008;
+    double _tabH = _height * 0.04683;
+
+    double _tabSize = _width * 0.041;
+    double _p2Size = _height * 0.02;
+    double _titleSize = _height * 0.025;
+    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _gray = Color(0xff959595);
+
+    Widget noStudyplan = Center(child: Text('目前沒有任何共同讀書計畫!'));
+    Widget groupStudyPlanList;
+
+    _submitCancel(int studyplanNum) async {
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return CancelSharing(
+            uid: uid, studyplanNum: studyplanNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
 
     String _studyPlanTime(index) {
-      var studyplan = _groupStudyPlanListModel.studyplan[index];
+      var studyplan = _groupStudyplanListModel.studyplan[index];
 
       String startTime = formatDate(
           DateTime(
@@ -107,69 +125,68 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
       return startTime + " - " + endTime;
     }
 
-    if (_groupStudyPlanListModel != null) {
-      if (_groupStudyPlanListModel.studyplan.length == 0) {
-        return Container(
-          alignment: Alignment.center,
-          child: Text('目前沒有任何共同讀書計畫!',
-              style: TextStyle(fontSize: screenSize.width * 0.03)),
+    _popupMenu(String id, int studyplanNum) {
+      if (id == uid) {
+        return PopupMenuButton(
+          offset: Offset(-40, 0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_height * 0.01)),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: 1,
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Text("取消分享",
+                        style: TextStyle(fontSize: _subtitleSize))),
+              ),
+            ];
+          },
+          onSelected: (int value) async {
+            if (await _submitCancel(studyplanNum) != true) {
+              _groupStudyplanListRequest();
+            }
+          },
         );
+      }
+    }
+
+    if (_groupStudyplanListModel != null) {
+      if (_groupStudyplanListModel.studyplan.length == 0) {
+        groupStudyPlanList = noStudyplan;
       } else {
-        return ListView.separated(
-            itemCount: _groupStudyPlanListModel.studyplan.length,
+        groupStudyPlanList = ListView.separated(
+            itemCount: _groupStudyplanListModel.studyplan.length,
             itemBuilder: (BuildContext context, int index) {
-              var studyplan = _groupStudyPlanListModel.studyplan[index];
+              var studyplan = _groupStudyplanListModel.studyplan[index];
               return ListTile(
                 contentPadding: EdgeInsets.symmetric(
-                    horizontal: screenSize.height * 0.01,
-                    vertical: screenSize.height * 0.01),
-                leading: Container(
-                    margin: EdgeInsets.only(left: screenSize.height * 0.02),
-                    child: Column(
-                      children: [
-                        Text(studyplan.date.month.toString() + "月",
-                            style:
-                                TextStyle(fontSize: screenSize.width * 0.035)),
-                        Text(studyplan.date.day.toString() + "日",
-                            style:
-                                TextStyle(fontSize: screenSize.width * 0.046)),
-                      ],
-                    )),
+                    horizontal: _heightSize, vertical: _heightSize),
+                leading: SizedBox(
+                  width: _width * 0.16,
+                  child: Container(
+                      margin: EdgeInsets.only(left: _leadingL),
+                      child: Column(
+                        children: [
+                          Text(studyplan.date.month.toString() + "月",
+                              style: TextStyle(fontSize: _subtitleSize)),
+                          Text(studyplan.date.day.toString() + "日",
+                              style: TextStyle(fontSize: _titleSize)),
+                        ],
+                      )),
+                ),
                 title: Container(
-                  margin: EdgeInsets.only(left: screenSize.height * 0.03),
+                  margin: EdgeInsets.only(left: _textL),
                   child: Text(studyplan.title,
-                      style: TextStyle(fontSize: screenSize.width * 0.052)),
+                      style: TextStyle(fontSize: _titleSize)),
                 ),
                 subtitle: Container(
-                  margin: EdgeInsets.only(
-                      left: screenSize.height * 0.03,
-                      top: screenSize.height * 0.007),
+                  margin: EdgeInsets.only(left: _textL, top: _subtitleT),
                   child: Text(_studyPlanTime(index),
-                      style: TextStyle(
-                          fontSize: screenSize.width * 0.035,
-                          color: Color(0xff959595))),
+                      style: TextStyle(fontSize: _subtitleSize, color: _gray)),
                 ),
-                trailing: PopupMenuButton(
-                  offset: Offset(-40, 0),
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(screenSize.height * 0.01)),
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        value: 1,
-                        child: Container(
-                            alignment: Alignment.center,
-                            child: Text("取消分享",
-                                style: TextStyle(
-                                    fontSize: screenSize.width * 0.035))),
-                      ),
-                    ];
-                  },
-                  onSelected: (int value) {
-                    print(studyplan.studyplanNum);
-                  },
-                ),
+                trailing:
+                    _popupMenu(studyplan.creatorId, studyplan.studyplanNum),
               );
             },
             separatorBuilder: (context, index) {
@@ -179,7 +196,33 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
             });
       }
     } else {
-      return Center(child: CircularProgressIndicator());
+      groupStudyPlanList = Container(
+          color: Colors.white,
+          child: Center(child: CircularProgressIndicator()));
     }
+
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: _color,
+          title: Text('共同讀書計畫', style: TextStyle(fontSize: _appBarSize)),
+          leading: Container(
+            margin: EdgeInsets.only(left: _leadingL),
+            child: GestureDetector(
+              child: Icon(Icons.chevron_left),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ShareStudyPlanPage(groupNum)));
+                },
+                icon: Icon(Icons.add))
+          ],
+        ),
+        body: Container(color: Colors.white, child: groupStudyPlanList));
   }
 }

@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final groupNoteListModel = groupNoteListModelFromJson(jsonString);
+//     final shareNoteListModel = shareNoteListModelFromJson(jsonString);
 
 import 'dart:convert';
 
-NoteListModel groupNoteListModelFromJson(String str) => NoteListModel.fromJson(json.decode(str));
+ShareNoteListModel shareNoteListModelFromJson(String str) => ShareNoteListModel.fromJson(json.decode(str));
 
-String groupNoteListModelToJson(NoteListModel data) => json.encode(data.toJson());
+String shareNoteListModelToJson(ShareNoteListModel data) => json.encode(data.toJson());
 
-class NoteListModel {
-    NoteListModel({
+class ShareNoteListModel {
+    ShareNoteListModel({
         this.note,
         this.response,
     });
@@ -17,7 +17,7 @@ class NoteListModel {
     List<Note> note;
     bool response;
 
-    factory NoteListModel.fromJson(Map<String, dynamic> json) => NoteListModel(
+    factory ShareNoteListModel.fromJson(Map<String, dynamic> json) => ShareNoteListModel(
         note: List<Note>.from(json["note"].map((x) => Note.fromJson(x))),
         response: json["response"],
     );
@@ -33,21 +33,25 @@ class Note {
         this.noteNum,
         this.typeName,
         this.title,
+        this.createId,
     });
 
     int noteNum;
     String typeName;
     String title;
+    String createId;
 
     factory Note.fromJson(Map<String, dynamic> json) => Note(
         noteNum: json["noteNum"],
         typeName: json["typeName"],
         title: json["title"],
+        createId: json["createId"],
     );
 
     Map<String, dynamic> toJson() => {
         "noteNum": noteNum,
         "typeName": typeName,
         "title": title,
+        "createId": createId,
     };
 }
