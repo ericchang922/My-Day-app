@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/group_request/invite_friend.dart';
 import 'package:My_Day_app/models/group/group_invite_friend_list_model.dart';
 import 'package:My_Day_app/public/group_request/invite_friend_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
@@ -143,6 +144,32 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
     Color _textFiedBorder = Color(0xff707070);
 
     Widget friendListWidget;
+
+    _submit() async {
+      List<Map<String, dynamic>> friend = [];
+      for (int i = 0; i < _friendListModel.friend.length; i++) {
+        var _friend = _friendListModel.friend[i];
+        if (_friendCheck[_friend.friendId] == true)
+          friend.add({'friendId': _friend.friendId});
+      }
+      for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
+        var _friend = _bestFriendListModel.friend[i];
+
+        if (_bestFriendCheck[_friend.friendId] == true)
+          friend.add({'friendId': _friend.friendId});
+      }
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return InviteFriend(uid: uid, groupNum: groupNum, friend: friend);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
 
     Widget search = Container(
       margin: EdgeInsets.only(right: _listLR, left: _height * 0.01),
@@ -463,9 +490,9 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
                         ),
                         fillColor: _color,
                         onPressed: () async {
-                          // if (await _submit() != true) {
-                          //   Navigator.pop(context);
-                          // }
+                          if (await _submit() != true) {
+                            Navigator.pop(context);
+                          }
                         }),
                   ),
                 )

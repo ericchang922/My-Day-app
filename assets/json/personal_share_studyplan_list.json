@@ -1,0 +1,12 @@
+{
+    "studyplan": [
+        {
+            "studyplanNum": 2,
+            "title": "平時小考複習",
+            "date": "2021-05-05",
+            "startTime": "2021-05-05T17:00:00",
+            "endTime": "2021-05-06T05:00:00"
+        }
+    ],
+    "response": true
+}
