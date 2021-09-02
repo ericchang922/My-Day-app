@@ -1,9 +1,11 @@
-import 'dart:convert';
-
-import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/models/note/note_list_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:My_Day_app/public/note_request/share.dart';
+import 'package:My_Day_app/models/note/share_note_list_model.dart';
+import 'package:My_Day_app/public/note_request/get_group_list.dart';
+import 'package:My_Day_app/public/note_request/get_list.dart';
+import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/models/note/note_list.dart';
 
 class ShareNotePage extends StatefulWidget {
   int groupNum;
@@ -17,7 +19,11 @@ class _ShareNoteWidget extends State<ShareNotePage> {
   int groupNum;
   _ShareNoteWidget(this.groupNum);
 
-  NoteListModel _shareNoteModel = null;
+  List _noteListModel = [];
+  ShareNoteListModel _shareNoteList;
+
+  String uid = 'lili123';
+  int noteNum;
 
   List _noteCheck = [];
 
@@ -26,7 +32,7 @@ class _ShareNoteWidget extends State<ShareNotePage> {
   @override
   void initState() {
     super.initState();
-    _shareNoteRequest();
+    _noteListRequest();
     _buttonIsOnpressed();
   }
 
@@ -48,22 +54,31 @@ class _ShareNoteWidget extends State<ShareNotePage> {
     }
   }
 
-  Future<void> _shareNoteRequest() async {
-    var jsonString = await rootBundle.loadString('assets/json/note_list.json');
+  _noteListRequest() async {
+    // var response =
+    //     await rootBundle.loadString('assets/json/share_note_list.json');
+    // var responseBody = json.decode(response);
+    // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
 
-    // var httpClient = HttpClient();
-    // var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-    //     '/vote/get_end_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
-    // var response = await request.close();
-    // var jsonString = await response.transform(utf8.decoder).join();
-    // httpClient.close();
+    ShareNoteListModel _shareNoteListRequest =
+        await GetGroupList(uid: uid, groupNum: groupNum).getData();
 
-    var jsonMap = json.decode(jsonString);
+    NoteListModel _noteList = await GetList(uid: uid).getData();
 
-    var shareStudyPlanModel = NoteListModel.fromJson(jsonMap);
     setState(() {
-      _shareNoteModel = shareStudyPlanModel;
-      for (int i = 0; i < _shareNoteModel.note.length; i++) {
+      _shareNoteList = _shareNoteListRequest;
+      for (int i = 0; i < _noteList.note.length; i++) {
+        int count = 0;
+        var note = _noteList.note[i];
+        for (int j = 0; j < _shareNoteList.note.length; j++) {
+          var groupNote = _shareNoteList.note[j];
+          if (note.noteNum == groupNote.noteNum) count++;
+        }
+        if (count == 0) {
+          _noteListModel.add(note);
+        }
+      }
+      for (int i = 0; i < _noteListModel.length; i++) {
         _noteCheck.add(false);
       }
     });
@@ -71,87 +86,86 @@ class _ShareNoteWidget extends State<ShareNotePage> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return DefaultTabController(
-        initialIndex: 0,
-        length: 2,
-        child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).primaryColor,
-              title: Text('選擇筆記',
-                  style: TextStyle(fontSize: screenSize.width * 0.052)),
-              leading: Container(
-                margin: EdgeInsets.only(left: screenSize.height * 0.02),
-                child: GestureDetector(
-                  child: Icon(Icons.chevron_left),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ),
-            body: Container(color: Colors.white, child: _buildShareNoteListWidget(context))));
-  }
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
 
-  int _noteCount() {
-    int _noteCount = 0;
-    for (int i = 0; i < _noteCheck.length; i++) {
-      if (_noteCheck[i] == true) {
-        _noteCount++;
+    double _leadingL = _height * 0.02;
+    double _bottomHeight = _height * 0.07;
+    double _bottomIconWidth = _width * 0.05;
+
+    double _titleSize = _height * 0.025;
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _light = Theme.of(context).primaryColorLight;
+    Color _hintGray = Color(0xffCCCCCC);
+
+    Widget noNote = Center(child: Text('目前沒有任何筆記!'));
+    Widget noteList;
+
+    _submitShare(int noteNum) async {
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return Share(uid: uid, noteNum: noteNum, groupNum: groupNum);
       }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
     }
-    return _noteCount;
-  }
 
-  Widget _buildShareNoteListWidget(BuildContext context){
-    return Column(
-      children: [
-        Expanded(child: _buildShareNoteList(context)),
-        _buildCheckButtom(context)
-      ],
-    );
-  }
+    int _noteCount() {
+      int _noteCount = 0;
+      for (int i = 0; i < _noteCheck.length; i++) {
+        if (_noteCheck[i] == true) {
+          _noteCount++;
+        }
+      }
+      return _noteCount;
+    }
 
-  Widget _buildShareNoteList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    if (_shareNoteModel != null) {
-      if (_shareNoteModel.note.length == 0) {
-        return Container(
-          alignment: Alignment.center,
-          child: Text('目前沒有任何共同筆記!',
-              style: TextStyle(fontSize: screenSize.width * 0.03)),
-        );
+    if (_noteListModel != null && _shareNoteList != null) {
+      if (_noteListModel.length == 0) {
+        noteList = noNote;
       } else {
-        return ListView.separated(
-            itemCount: _shareNoteModel.note.length,
+        noteList = ListView.separated(
+            itemCount: _noteListModel.length,
             itemBuilder: (BuildContext context, int index) {
-              var note = _shareNoteModel.note[index];
+              var note = _noteListModel[index];
               return ListTile(
                 contentPadding: EdgeInsets.symmetric(
-                    horizontal: screenSize.height * 0.03,
-                    vertical: screenSize.height * 0.008),
+                    horizontal: _height * 0.03, vertical: _height * 0.008),
                 title: Container(
-                  margin: EdgeInsets.only(left: screenSize.height * 0.01),
-                  child: Text(note.title,
-                      style: TextStyle(fontSize: screenSize.width * 0.052)),
+                  margin: EdgeInsets.only(left: _height * 0.01),
+                  child:
+                      Text(note.title, style: TextStyle(fontSize: _titleSize)),
                 ),
                 trailing: CustomerCheckBox(
                   value: _noteCheck[index],
                   onTap: (value) {
-                    if (value == true) {
-                      if (_noteCount() == 0) {
+                    setState(() {
+                      if (value == true) {
+                        if (_noteCount() < 1) {
+                          _noteCheck[index] = value;
+                          noteNum = note.noteNum;
+                        }
+                      } else {
                         _noteCheck[index] = value;
                       }
-                    } else {
-                      _noteCheck[index] = value;
-                    }
+                    });
                     _buttonIsOnpressed();
                   },
                 ),
                 onTap: () {
                   setState(() {
                     if (_noteCheck[index] == false) {
-                      _noteCheck[index] = true;
+                      if (_noteCount() < 1) {
+                        _noteCheck[index] = true;
+                        noteNum = note.noteNum;
+                      }
                     } else {
                       _noteCheck[index] = false;
                     }
@@ -167,52 +181,74 @@ class _ShareNoteWidget extends State<ShareNotePage> {
             });
       }
     } else {
-      return Center(child: CircularProgressIndicator());
+      noteList = Container(
+          color: Colors.white,
+          child: Center(child: CircularProgressIndicator()));
     }
-  }
 
-  Widget _buildCheckButtom(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    var _onPressed;
-    if (_isEnabled == true) {
-      _onPressed = () {
-        int index = _noteCheck.indexOf(true);
-        print(_shareNoteModel.note[index].noteNum);
-      };
-    }
-    return Row(children: <Widget>[
-      Expanded(
-        // ignore: deprecated_member_use
-        child: FlatButton(
-          height: screenSize.height * 0.07,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-          child: Image.asset(
-            'assets/images/cancel.png',
-            width: screenSize.width * 0.05,
-          ),
-          color: Theme.of(context).primaryColorLight,
-          textColor: Colors.white,
-          onPressed: () {
+    _onPressed() {
+      var _onPressed;
+
+      if (_isEnabled == true) {
+        _onPressed = () async {
+          if (await _submitShare(noteNum) != true) {
             Navigator.pop(context);
-          },
-        ),
-      ),
-      Expanded(
-          // ignore: deprecated_member_use
-          child: Builder(builder: (context) {
-        return FlatButton(
-            disabledColor: Color(0xffCCCCCC),
-            height: screenSize.height * 0.07,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-            child: Image.asset(
-              'assets/images/confirm.png',
-              width: screenSize.width * 0.05,
+          }
+        };
+      }
+      return _onPressed;
+    }
+
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('選擇筆記', style: TextStyle(fontSize: _appBarSize)),
+          leading: Container(
+            margin: EdgeInsets.only(left: _leadingL),
+            child: GestureDetector(
+              child: Icon(Icons.chevron_left),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
             ),
-            color: Theme.of(context).primaryColor,
-            textColor: Colors.white,
-            onPressed: _onPressed);
-      }))
-    ]);
+          ),
+        ),
+        body: Container(color: Colors.white, child: noteList),
+        bottomNavigationBar: Row(children: <Widget>[
+          Expanded(
+            // ignore: deprecated_member_use
+            child: FlatButton(
+              height: _bottomHeight,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+              child: Image.asset(
+                'assets/images/cancel.png',
+                width: _bottomIconWidth,
+              ),
+              color: _light,
+              textColor: Colors.white,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Expanded(
+              // ignore: deprecated_member_use
+              child: Builder(builder: (context) {
+            // ignore: deprecated_member_use
+            return FlatButton(
+                disabledColor: _hintGray,
+                height: _bottomHeight,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+                child: Image.asset(
+                  'assets/images/confirm.png',
+                  width: _bottomIconWidth,
+                ),
+                color: _color,
+                textColor: Colors.white,
+                onPressed: _onPressed());
+          }))
+        ]));
   }
 }
