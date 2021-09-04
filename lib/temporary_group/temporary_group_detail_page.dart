@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/group_request/quit_group.dart';
-import 'package:flutter/material.dart';
-
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/group/group_invite_page.dart';
 import 'package:My_Day_app/group/group_member_page.dart';
@@ -490,29 +490,36 @@ class _TemporaryGroupDetailWidget extends State<TemporaryGroupDetailPage>
         );
       }
 
-      return Scaffold(
-          appBar: AppBar(
-            backgroundColor: _color,
-            title: Text(_getGroupModel.title,
-                style: TextStyle(fontSize: _appBarSize)),
-            actions: [_voteAction()],
-            leading: Container(
-              margin: EdgeInsets.only(left: _leadingL),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: _color,
+                title: Text(_getGroupModel.title,
+                    style: TextStyle(fontSize: _appBarSize)),
+                actions: [_voteAction()],
+                leading: Container(
+                  margin: EdgeInsets.only(left: _leadingL),
+                  child: GestureDetector(
+                    child: Icon(Icons.chevron_left),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-          body: Container(color: Colors.white, child: _groupWidget));
+              body: Container(
+                  color: Colors.white,
+                  child: SafeArea(top: false, child: _groupWidget))),
+        ),
+      );
     } else {
       return Scaffold(
         body: Container(
           color: Colors.white,
           child: SafeArea(
-            bottom: false,
             child: Center(child: CircularProgressIndicator()),
           ),
         ),

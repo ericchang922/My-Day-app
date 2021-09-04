@@ -82,7 +82,7 @@ class _EditCommonSchedule extends State<EditCommonSchedule> with RouteAware {
     } else {
       return Container(
           color: Colors.white,
-          child: Center(child: CircularProgressIndicator()));
+          child: SafeArea(child: Center(child: CircularProgressIndicator())));
     }
   }
 }

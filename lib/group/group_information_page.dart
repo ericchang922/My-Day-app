@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/group_request/get.dart';
 import 'package:My_Day_app/public/group_request/edit_group.dart';
 import 'package:My_Day_app/models/group/get_group_model.dart';
@@ -35,15 +36,6 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
     '吃飯',
     '班級'
   ];
-  List typeColor = <int>[
-    0xffF78787,
-    0xffFFD51B,
-    0xffFFA800,
-    0xffB6EB3A,
-    0xff53DAF0,
-    0xff4968BA,
-    0xffCE85E4
-  ];
 
   TextEditingController get _groupNameController =>
       TextEditingController(text: _groupName);
@@ -64,7 +56,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
       _getGroupModel = _request;
       _groupName = _getGroupModel.title;
       _groupType = _getGroupModel.typeId;
-      _groupTypeName = typeNameList[_groupType];
+      _groupTypeName = typeNameList[_groupType - 1];
     });
   }
 
@@ -92,6 +84,11 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
     Color _textFiedBorder = Color(0xff707070);
+
+    Color getTypeColor(value) {
+      Color color = value == null ? Color(0xffFFFFFF) : typeColor(value);
+      return color;
+    }
 
     _submit() async {
       String title = _groupName;
@@ -122,130 +119,140 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
             content: Container(
               width: _width * 0.2,
               height: _height * 0.24,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              "更改群組名稱",
-                              style: TextStyle(fontSize: _pSize),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                              left: _textLBR,
-                              right: _textLBR,
-                              bottom: _textLBR,
-                              top: _height * 0.015),
-                          child:
-                              Text('群組名稱：', style: TextStyle(fontSize: _pSize)),
-                        ),
-                        Container(
-                            height: _textFied,
+              child: GestureDetector(
+                // 點擊空白處釋放焦點
+                behavior: HitTestBehavior.translucent,
+                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                "更改群組名稱",
+                                style: TextStyle(fontSize: _pSize),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                          Container(
                             margin: EdgeInsets.only(
-                              left: _textLBR,
-                              right: _textLBR,
-                            ),
-                            child: new TextField(
-                              style: TextStyle(fontSize: _pSize),
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: _height * 0.01,
-                                      vertical: _height * 0.01),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(_height * 0.01)),
-                                    borderSide: BorderSide(
-                                      color: _textFiedBorder,
+                                left: _textLBR,
+                                right: _textLBR,
+                                bottom: _textLBR,
+                                top: _height * 0.015),
+                            child: Text('群組名稱：',
+                                style: TextStyle(fontSize: _pSize)),
+                          ),
+                          Container(
+                              height: _textFied,
+                              margin: EdgeInsets.only(
+                                left: _textLBR,
+                                right: _textLBR,
+                              ),
+                              child: new TextField(
+                                style: TextStyle(fontSize: _pSize),
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: _height * 0.01,
+                                        vertical: _height * 0.01),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(_height * 0.01)),
+                                      borderSide: BorderSide(
+                                        color: _textFiedBorder,
+                                      ),
                                     ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(_height * 0.01)),
-                                    borderSide: BorderSide(color: _bule),
-                                  )),
-                              controller: _groupNameController,
-                              onChanged: (text) {
-                                setState(() {
-                                  _groupName = text;
-                                });
-                              },
-                            )),
-                      ],
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(_height * 0.01)),
+                                      borderSide: BorderSide(color: _bule),
+                                    )),
+                                controller: _groupNameController,
+                                onChanged: (text) {
+                                  setState(() {
+                                    _groupName = text;
+                                  });
+                                },
+                              )),
+                        ],
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          child: Container(
-                            height: _inkwellH,
-                            padding: EdgeInsets.only(
-                                top: _height * 0.015, bottom: _height * 0.015),
-                            decoration: BoxDecoration(
-                              color: _light,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(_borderRadius),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              height: _inkwellH,
+                              padding: EdgeInsets.only(
+                                  top: _height * 0.015,
+                                  bottom: _height * 0.015),
+                              decoration: BoxDecoration(
+                                color: _light,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(_borderRadius),
+                                ),
+                              ),
+                              child: Text(
+                                "取消",
+                                style: TextStyle(
+                                    fontSize: _subtitleSize,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                            child: Text(
-                              "取消",
-                              style: TextStyle(
-                                  fontSize: _subtitleSize, color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
                           ),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
                         ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          child: Container(
-                            height: _inkwellH,
-                            padding: EdgeInsets.only(
-                                top: _height * 0.015, bottom: _height * 0.015),
-                            decoration: BoxDecoration(
-                              color: _color,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(_borderRadius)),
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              height: _inkwellH,
+                              padding: EdgeInsets.only(
+                                  top: _height * 0.015,
+                                  bottom: _height * 0.015),
+                              decoration: BoxDecoration(
+                                color: _color,
+                                borderRadius: BorderRadius.only(
+                                    bottomRight:
+                                        Radius.circular(_borderRadius)),
+                              ),
+                              child: Text(
+                                "確認",
+                                style: TextStyle(
+                                    fontSize: _subtitleSize,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                            child: Text(
-                              "確認",
-                              style: TextStyle(
-                                  fontSize: _subtitleSize, color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          onTap: () async {
-                            if (_groupNameController.text.isEmpty) {
-                              setState(() {
-                                _groupName = _groupName;
-                              });
-                            } else {
-                              setState(() {
-                                _groupName = _groupNameController.text;
-                              });
-                              if (await _submit() != true) {
-                                Navigator.of(context).pop();
+                            onTap: () async {
+                              if (_groupNameController.text.isEmpty) {
+                                setState(() {
+                                  _groupName = _groupName;
+                                });
+                              } else {
+                                setState(() {
+                                  _groupName = _groupNameController.text;
+                                });
+                                if (await _submit() != true) {
+                                  Navigator.of(context).pop();
+                                }
                               }
-                            }
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -254,7 +261,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
     }
 
     Future groupUpdateTypeDialog(BuildContext context) {
-      String dropdownValue = typeNameList[_groupType];
+      String dropdownValue = typeNameList[_groupType - 1];
       int _choseType;
       String _choseTypeName = '';
 
@@ -346,9 +353,12 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                                         right: _height * 0.01),
                                                     child: CircleAvatar(
                                                       radius: _height * 0.01,
-                                                      backgroundColor: Color(
-                                                          typeColor[typeNameList
-                                                              .indexOf(value)]),
+                                                      backgroundColor:
+                                                          getTypeColor(
+                                                              typeNameList
+                                                                      .indexOf(
+                                                                          value) +
+                                                                  1),
                                                     )),
                                                 Text(value),
                                               ],
@@ -479,41 +489,54 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
           ],
         ),
       );
-      return Scaffold(
-          appBar: AppBar(
-            backgroundColor: _color,
-            title: Text('群組資訊', style: TextStyle(fontSize: _appBarSize)),
-            leading: Container(
-              margin: EdgeInsets.only(left: _leadingL),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: _color,
+                title: Text('群組資訊', style: TextStyle(fontSize: _appBarSize)),
+                leading: Container(
+                  margin: EdgeInsets.only(left: _leadingL),
+                  child: GestureDetector(
+                    child: Icon(Icons.chevron_left),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ),
+              body: Container(
+                  color: Colors.white,
+                  child: SafeArea(top: false, child: informationItem))),
+        ),
+      );
+    } else {
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('群組資訊', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
               ),
             ),
-          ),
-          body: Container(color: Colors.white, child: informationItem));
-    } else {
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('群組資訊', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
+            body: Container(
+              color: Colors.white,
+              child: SafeArea(
+                  top: false,
+                  child: Center(child: CircularProgressIndicator())),
             ),
-          ),
-        ),
-        body: Container(
-          color: Colors.white,
-          child: SafeArea(
-            bottom: false,
-            child: Center(child: CircularProgressIndicator()),
           ),
         ),
       );

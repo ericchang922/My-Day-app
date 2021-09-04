@@ -20,22 +20,29 @@ class GroupManagerPage extends StatelessWidget {
 
     Color _color = Theme.of(context).primaryColor;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: _color,
-        title: Text('管理者', style: TextStyle(fontSize: _appBarSize)),
-        leading: Container(
-          margin: EdgeInsets.only(left: _leadingL),
-          child: GestureDetector(
-            child: Icon(Icons.chevron_left),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
+    return Container(
+      color: _color,
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: _color,
+            title: Text('管理者', style: TextStyle(fontSize: _appBarSize)),
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
           ),
+          body: Container(
+              color: Colors.white,
+              child: SafeArea(top: false, child: GroupManagerWidget(groupNum))),
         ),
       ),
-      body: Container(color: Colors.white, child: GroupManagerWidget(groupNum)),
     );
   }
 }

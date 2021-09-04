@@ -90,8 +90,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
     _submitCancel(int studyplanNum) async {
       var submitWidget;
       _submitWidgetfunc() async {
-        return CancelSharing(
-            uid: uid, studyplanNum: studyplanNum);
+        return CancelSharing(uid: uid, studyplanNum: studyplanNum);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -201,28 +200,36 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
           child: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('共同讀書計畫', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
+    return Container(
+      color: _color,
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('共同讀書計畫', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ShareStudyPlanPage(groupNum)));
+                    },
+                    icon: Icon(Icons.add))
+              ],
             ),
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ShareStudyPlanPage(groupNum)));
-                },
-                icon: Icon(Icons.add))
-          ],
-        ),
-        body: Container(color: Colors.white, child: groupStudyPlanList));
+            body: Container(
+                color: Colors.white,
+                child: SafeArea(top: false, child: groupStudyPlanList))),
+      ),
+    );
   }
 }
