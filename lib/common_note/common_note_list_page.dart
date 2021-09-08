@@ -145,28 +145,36 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
           child: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('共同筆記', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
+    return Container(
+      color: _color,
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('共同筆記', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ShareNotePage(groupNum)));
+                    },
+                    icon: Icon(Icons.add))
+              ],
             ),
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ShareNotePage(groupNum)));
-                },
-                icon: Icon(Icons.add))
-          ],
-        ),
-        body: Container(color: Colors.white, child: groupNoteList));
+            body: Container(
+                color: Colors.white,
+                child: SafeArea(top: false, child: groupNoteList))),
+      ),
+    );
   }
 }

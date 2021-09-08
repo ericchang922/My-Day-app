@@ -208,7 +208,6 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // ignore: deprecated_member_use
                       Expanded(
                         child: InkWell(
                           child: Text('加入',
@@ -226,7 +225,6 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
                       SizedBox(
                         height: _widthSize,
                       ),
-                      // ignore: deprecated_member_use
                       Expanded(
                           child: InkWell(
                         child: Text(
@@ -261,11 +259,14 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          GroupDetailPage(groupContent.groupId)));
+              Navigator.of(context).push(MaterialPageRoute(
+                  settings: RouteSettings(name: '/group_detail'),
+                  builder: (context) => GroupDetailPage(
+                        arguments: {
+                          'groupNum': groupContent.groupId,
+                          'isNotTemporary': true
+                        },
+                      )));
             },
             title: Text(
               '${groupContent.title} (${groupContent.peopleCount})',

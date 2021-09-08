@@ -26,7 +26,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
   String _title = '';
   String _deadLineValue = '';
 
-  DateTime _dateTime = DateTime.now();
   DateTime _deadLine = DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day, 8, 0)
       .add(Duration(days: 3));
@@ -224,12 +223,11 @@ class _VoteEditWidget extends State<VoteEditPage> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.35,
+          height: _height * 0.4,
           color: Colors.white,
           child: Column(
             children: [
               Container(
-                height: _height * 0.065,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
@@ -260,15 +258,19 @@ class _VoteEditWidget extends State<VoteEditPage> {
     }
 
     _datePicker(contex, index) {
+      DateTime _dateTime;
+      if (_voteDate[index] == "")
+        _dateTime = DateTime.now();
+      else
+        _dateTime = DateTime.parse(_voteDate[index]);
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.35,
+          height: _height * 0.4,
           color: Colors.white,
           child: Column(
             children: [
               Container(
-                height: _height * 0.065,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
@@ -298,7 +300,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                 height: _height * 0.28,
                 child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.dateAndTime,
-                    initialDateTime: DateTime.now(),
+                    initialDateTime: _dateTime,
                     onDateTimeChanged: (value) {
                       setState(() {
                         _dateTime = value;
@@ -377,7 +379,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                   ),
                 ],
               ),
-              Divider(color: _hintGray)
+              Divider(color: _hintGray, height: 1)
             ],
           );
         },
@@ -424,7 +426,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                   ),
                 ],
               ),
-              Divider(color: _hintGray)
+              Divider(color: _hintGray, height: 1)
             ],
           );
         },

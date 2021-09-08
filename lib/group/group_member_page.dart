@@ -19,22 +19,28 @@ class GroupMemberPage extends StatelessWidget {
 
     Color _color = Theme.of(context).primaryColor;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: _color,
-        title: Text('群組成員', style: TextStyle(fontSize: _appBarSize)),
-        leading: Container(
-          margin: EdgeInsets.only(left: _leadingL),
-          child: GestureDetector(
-            child: Icon(Icons.chevron_left),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
+    return Container(
+      color: _color,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: _color,
+            title: Text('群組成員', style: TextStyle(fontSize: _appBarSize)),
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
           ),
+          body: Container(
+              color: Colors.white,
+              child: SafeArea(top: false, child: GroupInviteWidget(groupNum))),
         ),
       ),
-      body: Container(color: Colors.white, child: GroupInviteWidget(groupNum)),
     );
   }
 }
@@ -129,7 +135,7 @@ class _GroupInviteState extends State<GroupInviteWidget> {
     double _listPaddingH = _width * 0.06;
 
     double _pSize = _height * 0.023;
-    
+
     Color _bule = Color(0xff7AAAD8);
 
     if (_groupMemberListModel != null) {

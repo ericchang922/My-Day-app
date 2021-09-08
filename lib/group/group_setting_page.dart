@@ -87,19 +87,27 @@ class _GroupSettingWidget extends State<GroupSettingPage> {
       ),
     );
 
-    return Scaffold(
-        appBar: AppBar(
-            backgroundColor: _color,
-            title: Text('設定', style: TextStyle(fontSize: _appBarSize)),
-            leading: Container(
-              margin: EdgeInsets.only(left: _leadingL),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            )),
-        body: Container(color: Colors.white, child: settingItem));
+    return Container(
+      color: _color,
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+            appBar: AppBar(
+                backgroundColor: _color,
+                title: Text('設定', style: TextStyle(fontSize: _appBarSize)),
+                leading: Container(
+                  margin: EdgeInsets.only(left: _leadingL),
+                  child: GestureDetector(
+                    child: Icon(Icons.chevron_left),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                )),
+            body: Container(
+                color: Colors.white,
+                child: SafeArea(top: false, child: settingItem))),
+      ),
+    );
   }
 }

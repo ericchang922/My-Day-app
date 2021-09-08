@@ -215,17 +215,11 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
     );
 
     Widget checkAll = Container(
-      margin: EdgeInsets.only(right: _width * 0.03),
+      margin: EdgeInsets.only(right: _width * 0.05),
       alignment: Alignment.centerRight,
-      // ignore: deprecated_member_use
-      child: FlatButton(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        padding: EdgeInsets.zero,
-        height: 6,
-        minWidth: 5,
+      child: InkWell(
         child: Text('全選', style: TextStyle(fontSize: _subtitleSize)),
-        onPressed: () {
+        onTap: () {
           setState(() {
             if (_friendNameController.text.isEmpty) {
               for (int i = 0; i < _friendListModel.friend.length; i++) {
@@ -427,100 +421,110 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
         }
       }
 
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ),
-        body: GestureDetector(
-          // 點擊空白處釋放焦點
-          behavior: HitTestBehavior.translucent,
-          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-          child: Container(
-              color: Colors.white,
-              child: Container(
-                margin: EdgeInsets.only(top: _height * 0.02),
-                child: Column(
-                  children: [
-                    search,
-                    checkAll,
-                    Expanded(child: friendListWidget),
-                  ],
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-              )),
-        ),
-        bottomNavigationBar: Container(
-          color: Theme.of(context).bottomAppBarColor,
-          child: SafeArea(
-            top: false,
-            child: BottomAppBar(
-              elevation: 0,
-              child: Row(children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                        elevation: 0,
-                        child: Image.asset(
-                          'assets/images/cancel.png',
-                          width: _iconWidth,
-                        ),
-                        fillColor: _light,
-                        onPressed: () => Navigator.pop(context)),
-                  ),
-                ), // 取消按鈕
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                        elevation: 0,
-                        child: Image.asset(
-                          'assets/images/confirm.png',
-                          width: _iconWidth,
-                        ),
-                        fillColor: _color,
-                        onPressed: () async {
-                          if (await _submit() != true) {
-                            Navigator.pop(context);
-                          }
-                        }),
-                  ),
-                )
-              ]),
+              ),
+            ),
+            body: GestureDetector(
+              // 點擊空白處釋放焦點
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              child: Container(
+                  color: Colors.white,
+                  child: Container(
+                    margin: EdgeInsets.only(top: _height * 0.02),
+                    child: Column(
+                      children: [
+                        search,
+                        checkAll,
+                        Expanded(child: friendListWidget),
+                      ],
+                    ),
+                  )),
+            ),
+            bottomNavigationBar: Container(
+              color: Theme.of(context).bottomAppBarColor,
+              child: SafeArea(
+                top: false,
+                child: BottomAppBar(
+                  elevation: 0,
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/cancel.png',
+                              width: _iconWidth,
+                            ),
+                            fillColor: _light,
+                            onPressed: () => Navigator.pop(context)),
+                      ),
+                    ), // 取消按鈕
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/confirm.png',
+                              width: _iconWidth,
+                            ),
+                            fillColor: _color,
+                            onPressed: () async {
+                              if (await _submit() != true) {
+                                Navigator.pop(context);
+                              }
+                            }),
+                      ),
+                    )
+                  ]),
+                ),
+              ),
             ),
           ),
         ),
       );
     } else {
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.pop(context);
-              },
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-        body: Container(
-          color: Colors.white,
-          child: SafeArea(
-            bottom: false,
-            child: Center(child: CircularProgressIndicator()),
+            body: Container(
+              color: Colors.white,
+              child: SafeArea(
+                  top: false,
+                  child: Center(child: CircularProgressIndicator())),
+            ),
           ),
         ),
       );

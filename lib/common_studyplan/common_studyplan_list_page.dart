@@ -1,10 +1,11 @@
+import 'package:My_Day_app/common_studyplan/studyplan_detail_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
 import 'package:My_Day_app/public/studyplan_request/one_group_list.dart';
 import 'package:My_Day_app/common_studyplan/share_studyplan_page.dart';
 import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/models/study_plan/share_studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/share_studyplan_list_model.dart';
 import 'package:date_format/date_format.dart';
 
 class CommonStudyPlanListPage extends StatefulWidget {
@@ -90,8 +91,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
     _submitCancel(int studyplanNum) async {
       var submitWidget;
       _submitWidgetfunc() async {
-        return CancelSharing(
-            uid: uid, studyplanNum: studyplanNum);
+        return CancelSharing(uid: uid, studyplanNum: studyplanNum);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -187,6 +187,11 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
                 ),
                 trailing:
                     _popupMenu(studyplan.creatorId, studyplan.studyplanNum),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          StudyplanDetailPage(studyplan.studyplanNum)));
+                },
               );
             },
             separatorBuilder: (context, index) {
@@ -201,28 +206,36 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
           child: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('共同讀書計畫', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
+    return Container(
+      color: _color,
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('共同讀書計畫', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ShareStudyPlanPage(groupNum)));
+                    },
+                    icon: Icon(Icons.add))
+              ],
             ),
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ShareStudyPlanPage(groupNum)));
-                },
-                icon: Icon(Icons.add))
-          ],
-        ),
-        body: Container(color: Colors.white, child: groupStudyPlanList));
+            body: Container(
+                color: Colors.white,
+                child: SafeArea(top: false, child: groupStudyPlanList))),
+      ),
+    );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:My_Day_app/models/study_plan/personal_share_studyplan.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan.dart';
 import 'package:My_Day_app/public/request.dart';
 import 'package:flutter/material.dart';
 

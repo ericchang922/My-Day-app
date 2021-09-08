@@ -1,7 +1,7 @@
-import 'package:My_Day_app/public/type_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/schedule_request/edit.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/public/alert.dart';
@@ -223,7 +223,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.35,
+          height: _height * 0.4,
           color: Colors.white,
           child: Column(
             children: [
