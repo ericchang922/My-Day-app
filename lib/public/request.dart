@@ -1,6 +1,7 @@
 // dart
 import 'dart:convert';
 // flutter
+import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:http/http.dart' as http;
@@ -19,14 +20,14 @@ import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
-import 'package:My_Day_app/models/study_plan/share_studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/share_studyplan_list_model.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
 import 'package:My_Day_app/models/vote/vote_list_model.dart';
-import 'package:My_Day_app/models/study_plan/personal_share_studyplan.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/models/note/note_list.dart';
 import 'package:flutter/material.dart';
@@ -162,6 +163,7 @@ class Request {
   VoteEndListModel _voteEndList;
   GetVoteModel _vote;
 
+  StudyplanModel _studyplan;
   ShareStudyplanListModel _shareStudyplanList;
   PersonalShareStudyplanListModel _personalShareStudyplanList;
 
@@ -195,6 +197,7 @@ class Request {
   getVoteEndList() => _voteEndList;
   getVote() => _vote;
 
+  getStudyplan() => _studyplan;
   getShareStudyplanList() => _shareStudyplanList;
   getPersonalShareStudyplanList() => _personalShareStudyplanList;
 
@@ -535,6 +538,15 @@ class Request {
   }
 
   // STUDYPLAN ====================================================================================
+  // get ------------------------------------------------------------------------------------------
+  studyplanGet(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['get'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _studyplan = StudyplanModel.fromJson(_responseBody);
+    }
+  }
+
   // one_group_list -------------------------------------------------------------------------------
   studyplanOneGroupList(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['one_group_list'];
@@ -544,7 +556,7 @@ class Request {
     }
   }
 
-  // personal_share_list -------------------------------------------------------------------------------
+  // personal_share_list --------------------------------------------------------------------------
   studyplanPersonalShareList(
       BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['personal_share_list'];
@@ -555,7 +567,7 @@ class Request {
     }
   }
 
-  // sharing -------------------------------------------------------------------------------
+  // sharing --------------------------------------------------------------------------------------
   studyplanSharing(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['sharing'];
     await httpPatch(context, data, _url, '分享成功');

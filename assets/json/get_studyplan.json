@@ -1,0 +1,76 @@
+{
+    "creatorId": "lili123",
+    "creator": "lili",
+    "isAuthority": true,
+    "title": "複習英文文法",
+    "date": "2021-07-06",
+    "startTime": "2021-07-06T09:00:00",
+    "endTime": "2023-07-06T21:00:00",
+    "subject": [
+        {
+            "subjectName": "文法CH3",
+            "subjectStart": "2021-07-06T09:00:00",
+            "subjectEnd": "2021-07-06T10:00:00",
+            "remark": "要再看一次",
+            "noteNum": 2,
+            "rest": false
+        },
+        {
+            "subjectName": "休息時間",
+            "subjectStart": "2021-07-06T10:00:00",
+            "subjectEnd": "2021-07-06T10:30:00",
+            "remark": null,
+            "noteNum": null,
+            "rest": true
+        },
+        {
+            "subjectName": "文法CH4",
+            "subjectStart": "2021-07-06T10:30:00",
+            "subjectEnd": "2021-07-06T11:30:00",
+            "remark": null,
+            "noteNum": 4,
+            "rest": false
+        },
+        {
+            "subjectName": "吃飯時間",
+            "subjectStart": "2021-07-06T11:30:00",
+            "subjectEnd": "2021-07-06T13:00:00",
+            "remark": null,
+            "noteNum": null,
+            "rest": true
+        },
+        {
+            "subjectName": "文法CH5",
+            "subjectStart": "2021-07-06T13:00:00",
+            "subjectEnd": "2021-07-06T15:00:00",
+            "remark": null,
+            "noteNum": 2,
+            "rest": false
+        },
+        {
+            "subjectName": "文法CH6",
+            "subjectStart": "2021-07-06T15:00:00",
+            "subjectEnd": "2021-07-06T17:30:00",
+            "remark": null,
+            "noteNum": null,
+            "rest": false
+        },
+        {
+            "subjectName": "吃飯時間",
+            "subjectStart": "2021-07-06T17:30:00",
+            "subjectEnd": "2021-07-06T19:00:00",
+            "remark": null,
+            "noteNum": null,
+            "rest": true
+        },
+        {
+            "subjectName": "文法CH6",
+            "subjectStart": "2021-07-06T19:00:00",
+            "subjectEnd": "2021-07-06T21:00:00",
+            "remark": null,
+            "noteNum": null,
+            "rest": false
+        }
+    ],
+    "response": true
+}
