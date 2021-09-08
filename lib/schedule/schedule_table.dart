@@ -1,4 +1,7 @@
 // flutter
+import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/schedule/schedule_dialog.dart';
+import 'package:My_Day_app/schedule/schedule_table_function.dart';
 import 'package:flutter/material.dart';
 // my day
 import 'package:My_Day_app/home/home_page_functions.dart';
@@ -35,7 +38,8 @@ class _ScheduleTable extends State<ScheduleTable> {
   DateTime monday;
   int weekCount;
   MainTimetableListGet data;
-  List dateList = [];
+  List dayList = [];
+  List<DateTime> dateList = [];
   List timeLineList = [];
   Duration dayStart;
   Duration classEnd;
@@ -94,7 +98,8 @@ class _ScheduleTable extends State<ScheduleTable> {
 
       for (int i = 0; i < 7; i++) {
         DateTime days = monday.add(Duration(days: i));
-        dateList.add((days.day).toString());
+        dateList.add(days);
+        dayList.add((days.day).toString());
       }
     }
   }
@@ -112,68 +117,13 @@ class _ScheduleTable extends State<ScheduleTable> {
     Size _size = MediaQuery.of(context).size;
     double _width = _size.width;
     double _height = _size.height;
+    double _tableContentHeight = 0;
+
+    Create _create = Create(context: context, height: _height, width: _width);
+
     FixedColumnWidth _tableWidth = FixedColumnWidth(_width / 8);
-    Color _topColor = Color(0xffF6E0A4);
     Color _tableBorderColor = Color(0xffE3E3E3);
     Color _weekDayColor = Color(0xffF6F6F6);
-    Color _sectionColor = Color(0xffFFFAF0);
-
-    double _timeHeight(String start, String end) {
-      DateTime startTime = DateTime.parse('2000-01-01 ' + start);
-      DateTime endTime = DateTime.parse('2000-01-01 ' + end);
-      double h = endTime.difference(startTime).inMinutes /
-          Duration(hours: 1).inMinutes;
-      if (h < 0) h = h * -1;
-      if (h >= 24) h = 0;
-
-      return h * _height * 0.07;
-    }
-
-    Container _createTableRow(String txt, Color bkcolor, double height) =>
-        Container(
-          color: bkcolor,
-          height: height,
-          child: Center(
-            child: Text(
-              txt,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
-    Container _createTop(String date) =>
-        _createTableRow(date, _topColor, _height * 0.02);
-
-    Container _createWeekDay(String weekDayTxt) =>
-        _createTableRow(weekDayTxt, _weekDayColor, _height * 0.05);
-
-    Container _createTime(String start, String end) => Container(
-          color: _weekDayColor,
-          height: _timeHeight(start, end),
-          child: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                start.toString(),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                end.toString(),
-                textAlign: TextAlign.center,
-              )
-            ],
-          )),
-        );
-
-    Container _createSubject(String subjectName, double h) {
-      Container created;
-      if (subjectName == null || subjectName == 'null') {
-        created = _createTableRow('', null, h);
-      } else {
-        created = _createTableRow(subjectName, _sectionColor, h);
-      }
-      return created;
-    }
 
     _addSectionInList(s) {
       if (sectionNumList.contains(s.section) != true) {
@@ -261,11 +211,13 @@ class _ScheduleTable extends State<ScheduleTable> {
         String _start = section['start'];
         String _end = section['end'];
         String _nextStart;
+        double _timeHeight = timeHeight(_start, _end, _height);
 
         if (i + 1 < timeLineList.length)
           _nextStart = timeLineList[i + 1]['start'];
 
-        _contents = [_createTime(section['start'], section['end'])];
+        _contents = [_create.time(section['start'], section['end'])];
+        _tableContentHeight += _timeHeight;
         List<String> sectionSubject = [
           null,
           null,
@@ -275,6 +227,7 @@ class _ScheduleTable extends State<ScheduleTable> {
           null,
           null
         ];
+
         if (sectionDataList.length > 0) {
           if (sectionNumList.indexOf(i + 1) < 0) {
             sectionSubject = [null, null, null, null, null, null, null];
@@ -284,13 +237,12 @@ class _ScheduleTable extends State<ScheduleTable> {
         }
 
         for (int j = 0; j < 7; j++) {
-          _contents.add(
-              _createSubject(sectionSubject[j], _timeHeight(_start, _end)));
+          _contents.add(_create.subject(sectionSubject[j], _timeHeight));
         }
         _tableRowList.add(TableRow(children: _contents));
 
         if (_nextStart != null) {
-          double space = _timeHeight(_end, _nextStart);
+          double space = timeHeight(_end, _nextStart, _height);
           // 取得此行程和下一個行程之間的間隔（以小時計算）
 
           if (space >= _height * 0.07) {
@@ -300,6 +252,7 @@ class _ScheduleTable extends State<ScheduleTable> {
               color: _weekDayColor,
               height: space,
             ));
+            _tableContentHeight += space;
             for (int j = 0; j < 7; j++) {
               _contents.add(Container(height: space));
             }
@@ -312,24 +265,24 @@ class _ScheduleTable extends State<ScheduleTable> {
 
     List<TableRow> thead = [
       TableRow(children: [
-        _createTop(''),
-        _createTop(dateList[0]),
-        _createTop(dateList[1]),
-        _createTop(dateList[2]),
-        _createTop(dateList[3]),
-        _createTop(dateList[4]),
-        _createTop(dateList[5]),
-        _createTop(dateList[6])
+        _create.top(''),
+        _create.top(dayList[0]),
+        _create.top(dayList[1]),
+        _create.top(dayList[2]),
+        _create.top(dayList[3]),
+        _create.top(dayList[4]),
+        _create.top(dayList[5]),
+        _create.top(dayList[6])
       ]),
       TableRow(children: [
-        _createWeekDay(''),
-        _createWeekDay('一'),
-        _createWeekDay('二'),
-        _createWeekDay('三'),
-        _createWeekDay('四'),
-        _createWeekDay('五'),
-        _createWeekDay('六'),
-        _createWeekDay('日'),
+        _create.weekDay(''),
+        _create.weekDay('一'),
+        _create.weekDay('二'),
+        _create.weekDay('三'),
+        _create.weekDay('四'),
+        _create.weekDay('五'),
+        _create.weekDay('六'),
+        _create.weekDay('日'),
       ])
     ];
 
@@ -365,6 +318,10 @@ class _ScheduleTable extends State<ScheduleTable> {
           border: TableBorder.all(
               color: _tableBorderColor, width: 1, style: BorderStyle.solid),
           children: _tableContent()),
+      Positioned(
+          left: _width / 8,
+          child:
+              Row(children: _create.dateBtn(dateList, _tableContentHeight, widget.scheduleList)))
     ];
 
     List<int> insertList = [];
@@ -473,9 +430,8 @@ class _ScheduleTable extends State<ScheduleTable> {
                   notStart = false;
                   heightStart = timeOfDateTime(start);
                   weekCount[j][i]++;
-                  startTop += _timeHeight(
-                      ConvertDuration.toShortTime(thisStart),
-                      ConvertDuration.toShortTime(heightStart));
+                  startTop += timeHeight(ConvertDuration.toShortTime(thisStart),
+                      ConvertDuration.toShortTime(heightStart), _height);
                 } else if (!start.isAfter(thisStartDateTime) &&
                     !end.isBefore(thisStartDateTime)) {
                   // 開始時間是在這格開始之前 而且 結束時間是在這格開始之後 => 會經過這格 有可能結束在這格或是之後
@@ -498,15 +454,15 @@ class _ScheduleTable extends State<ScheduleTable> {
                 }
 
                 if (notStart) {
-                  startTop += _timeHeight(
-                      ConvertDuration.toShortTime(thisStart),
-                      ConvertDuration.toShortTime(thisEnd));
+                  startTop += timeHeight(ConvertDuration.toShortTime(thisStart),
+                      ConvertDuration.toShortTime(thisEnd), _height);
                 }
 
                 if (heightStart != null && heightEnd != null) {
-                  scheduleHeight += _timeHeight(
+                  scheduleHeight += timeHeight(
                       ConvertDuration.toShortTime(heightStart),
-                      ConvertDuration.toShortTime(heightEnd));
+                      ConvertDuration.toShortTime(heightEnd),
+                      _height);
                 }
                 if (weekCount[j][i] > max) {
                   max = weekCount[j][i];
