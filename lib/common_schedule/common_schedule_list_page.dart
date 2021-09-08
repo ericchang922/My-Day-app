@@ -292,7 +292,8 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                   child: GestureDetector(
                     child: Icon(Icons.chevron_left),
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('/group_detail'));
                     },
                   ),
                 ),

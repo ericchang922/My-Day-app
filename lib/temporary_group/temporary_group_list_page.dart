@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/group/group_detail_page.dart';
 import 'package:My_Day_app/public/temporary_group_request/invite_list.dart';
 import 'package:My_Day_app/public/temporary_group_request/temporary_list.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_status.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_create_page.dart';
-import 'package:My_Day_app/temporary_group/temporary_group_detail_page.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_invite_page.dart';
 
 AppBar temporaryGroupListAppBar(context) {
@@ -293,8 +293,13 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
           return InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      TemporaryGroupDetailPage(temporaryContent.groupId)));
+                  settings: RouteSettings(name: '/group_detail'),
+                  builder: (context) => GroupDetailPage(
+                        arguments: {
+                          'groupNum': temporaryContent.groupId,
+                          'isNotTemporary': false
+                        },
+                      )));
             },
             child: Row(
               children: [
