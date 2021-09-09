@@ -1,3 +1,4 @@
+import 'package:My_Day_app/timetable/timetable_edit_popup.dart';
 import 'package:flutter/material.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
@@ -18,14 +19,9 @@ class TimetableEdit extends State {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
-        title: Text('編輯課表', style: TextStyle(fontSize: 20)),
-        leading: IconButton(
-          icon: Icon(Icons.chevron_left),
-          onPressed: () {
-            Navigator.of(context).pop();
-          }
-        )
-      )
+        title: Text('110年　第一學期', style: TextStyle(fontSize: 20)),
+        actions: [editPopMenu(context)],
+      ),
     );
   }
 }
