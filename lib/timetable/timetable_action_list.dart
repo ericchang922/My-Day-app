@@ -1,4 +1,4 @@
-import 'package:My_Day_app/timetable/timetable_edit.dart';
+import 'package:My_Day_app/timetable/timetable_edit_form.dart';
 import 'package:My_Day_app/timetable/timetable_form.dart';
 import 'package:flutter/material.dart';
 
@@ -71,7 +71,7 @@ class TimetableActionList extends State {
               minWidth: double.infinity,
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TimetableEditPage()));
+                    MaterialPageRoute(builder: (context) => TimetableEditFormPage()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
