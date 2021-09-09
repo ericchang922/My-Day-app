@@ -10,53 +10,8 @@ import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 
-selectedItem(BuildContext context, item) async {
-  switch (item) {
-    case 0:
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
-      break;
-    case 1:
-      await groupJoinDialog(context);
-      break;
-  }
-}
-
 AppBar groupListAppBar(context) {
-  Size size = MediaQuery.of(context).size;
-  double _width = size.width;
-  double _height = size.height;
-  double _appBarSize = _width * 0.052;
-  double _p2Size = _height * 0.02;
-
-  return AppBar(
-    backgroundColor: Theme.of(context).primaryColor,
-    title: Text('群組', style: TextStyle(fontSize: _appBarSize)),
-    actions: [
-      PopupMenuButton<int>(
-        offset: Offset(50, 50),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(_height * 0.01)),
-        icon: Icon(Icons.add),
-        itemBuilder: (context) => [
-          PopupMenuItem<int>(
-              value: 0,
-              child: Container(
-                  alignment: Alignment.center,
-                  child: Text("建立群組", style: TextStyle(fontSize: _p2Size)))),
-          PopupMenuDivider(
-            height: 1,
-          ),
-          PopupMenuItem<int>(
-              value: 1,
-              child: Container(
-                  alignment: Alignment.center,
-                  child: Text("加入群組", style: TextStyle(fontSize: _p2Size)))),
-        ],
-        onSelected: (item) => selectedItem(context, item),
-      ),
-    ],
-  );
+  return null;
 }
 
 class GroupListPage extends StatelessWidget {
@@ -146,6 +101,8 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
     double _textBT = _height * 0.02;
     double _subtitleT = _height * 0.005;
 
+    double _appBarSize = _width * 0.052;
+    double _p2Size = _height * 0.02;
     double _pSize = _height * 0.023;
     double _titleSize = _height * 0.025;
     double _subtitleSize = _height * 0.02;
@@ -156,6 +113,18 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
     Color _color = Theme.of(context).primaryColor;
 
     Widget groupListWiget;
+
+    selectedItem(BuildContext context, item) async {
+      switch (item) {
+        case 0:
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
+          break;
+        case 1:
+          await groupJoinDialog(context).then((value) => _groupListRequest());
+          break;
+      }
+    }
 
     _submit(bool isJoin, int groupNum) async {
       int statusId;
@@ -315,6 +284,36 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
         groupListWiget = noGroup;
 
       return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('群組', style: TextStyle(fontSize: _appBarSize)),
+          actions: [
+            PopupMenuButton<int>(
+              offset: Offset(50, 50),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(_height * 0.01)),
+              icon: Icon(Icons.add),
+              itemBuilder: (context) => [
+                PopupMenuItem<int>(
+                    value: 0,
+                    child: Container(
+                        alignment: Alignment.center,
+                        child:
+                            Text("建立群組", style: TextStyle(fontSize: _p2Size)))),
+                PopupMenuDivider(
+                  height: 1,
+                ),
+                PopupMenuItem<int>(
+                    value: 1,
+                    child: Container(
+                        alignment: Alignment.center,
+                        child:
+                            Text("加入群組", style: TextStyle(fontSize: _p2Size)))),
+              ],
+              onSelected: (item) => selectedItem(context, item),
+            ),
+          ],
+        ),
         body: Container(color: Colors.white, child: groupListWiget),
       );
     } else {
