@@ -163,7 +163,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
                 contentPadding: EdgeInsets.symmetric(
                     horizontal: _heightSize, vertical: _heightSize),
                 leading: SizedBox(
-                  width: _width * 0.16,
+                  width: _width * 0.17,
                   child: Container(
                       margin: EdgeInsets.only(left: _leadingL),
                       child: Column(

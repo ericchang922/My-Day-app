@@ -115,7 +115,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
     double _width = size.width;
     double _listLR = _width * 0.06;
     double _widthSize = _width * 0.01;
-    double _textL = _height * 0.03;
+    double _textL = _height * 0.02;
     double _textBT = _height * 0.02;
     double _subtitleT = _height * 0.005;
 
@@ -200,7 +200,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
                         Color(typeColor[temporaryContent.typeId - 1]),
                   ),
                   SizedBox(
-                    width: _width * 0.16,
+                    width: _width * 0.17,
                     child: Container(
                       margin: EdgeInsets.only(left: _listLR),
                       child: Column(
@@ -312,7 +312,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
                   ),
                 ),
                 SizedBox(
-                  width: _width * 0.16,
+                  width: _width * 0.17,
                   child: Container(
                     margin: EdgeInsets.only(left: _listLR),
                     child: Column(
