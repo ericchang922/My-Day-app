@@ -22,6 +22,7 @@ class GroupMemberPage extends StatelessWidget {
     return Container(
       color: _color,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: _color,
@@ -38,24 +39,24 @@ class GroupMemberPage extends StatelessWidget {
           ),
           body: Container(
               color: Colors.white,
-              child: SafeArea(top: false, child: GroupInviteWidget(groupNum))),
+              child: SafeArea(top: false, child: GroupMemberWidget(groupNum))),
         ),
       ),
     );
   }
 }
 
-class GroupInviteWidget extends StatefulWidget {
+class GroupMemberWidget extends StatefulWidget {
   int groupNum;
-  GroupInviteWidget(this.groupNum);
+  GroupMemberWidget(this.groupNum);
 
   @override
-  State<GroupInviteWidget> createState() => new _GroupInviteState(groupNum);
+  State<GroupMemberWidget> createState() => new _GroupMemberWidget(groupNum);
 }
 
-class _GroupInviteState extends State<GroupInviteWidget> {
+class _GroupMemberWidget extends State<GroupMemberWidget> {
   int groupNum;
-  _GroupInviteState(this.groupNum);
+  _GroupMemberWidget(this.groupNum);
 
   GroupMemberListModel _groupMemberListModel;
 

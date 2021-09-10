@@ -77,7 +77,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
     double _heightSize = _height * 0.01;
     double _widthSize = _width * 0.01;
     double _leadingL = _height * 0.02;
-    double _textL = _height * 0.03;
+    double _textL = _height * 0.02;
     double _subtitleT = _height * 0.008;
     double _bottomHeight = _height * 0.07;
     double _bottomIconWidth = _width * 0.05;
@@ -89,7 +89,6 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
     Color _gray = Color(0xff959595);
-    Color _hintGray = Color(0xffCCCCCC);
 
     Widget noStudyplan = Center(child: Text('目前沒有任何讀書計畫!'));
     Widget studyPlanList;
@@ -154,7 +153,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                 contentPadding: EdgeInsets.symmetric(
                     horizontal: _heightSize, vertical: _heightSize),
                 leading: SizedBox(
-                  width: _width * 0.16,
+                  width: _width * 0.17,
                   child: Container(
                       margin: EdgeInsets.only(left: _leadingL),
                       child: Column(

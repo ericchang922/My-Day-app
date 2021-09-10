@@ -74,7 +74,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
     double _heightSize = _height * 0.01;
     double _widthSize = _width * 0.01;
     double _leadingL = _height * 0.02;
-    double _textL = _height * 0.03;
+    double _textL = _height * 0.02;
     double _subtitleT = _height * 0.008;
     double _tabH = _height * 0.04683;
 
@@ -142,7 +142,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
               contentPadding: EdgeInsets.symmetric(
                   horizontal: _heightSize, vertical: _heightSize),
               leading: SizedBox(
-                width: _width * 0.14,
+                width: _width * 0.17,
                 child: Container(
                     margin: EdgeInsets.only(left: _leadingL),
                     child: Column(
@@ -215,7 +215,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
               contentPadding: EdgeInsets.symmetric(
                   horizontal: _heightSize, vertical: _heightSize),
               leading: SizedBox(
-                width: _width * 0.16,
+                width: _width * 0.17,
                 child: Container(
                     margin: EdgeInsets.only(left: _leadingL),
                     child: Column(
