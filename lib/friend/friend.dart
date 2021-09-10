@@ -13,17 +13,18 @@ import 'package:My_Day_app/public/group_request/create_group.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
-class FriendInvitationPage extends StatefulWidget {
+class friendPage extends StatefulWidget {
   @override
-  _FriendInvitationWidget createState() => new _FriendInvitationWidget();
+  _friendWidget createState() => new _friendWidget();
 }
 
-class _FriendInvitationWidget extends State<FriendInvitationPage> {
+class _friendWidget extends State<friendPage> {
   FriendListModel _friendListModel;
   BestFriendListModel _bestFriendListModel;
 
   final _friendNameController = TextEditingController();
 
+  
   String _searchText = "";
   String _dropdownValue = '讀書';
   String uid = 'lili123';
@@ -35,7 +36,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
   List _filteredBestFriend = [];
 
   bool _isNotCreate = false;
-  bool viewVisible = true;
+
   @override
   void initState() {
     super.initState();
@@ -56,12 +57,6 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
           _searchText = _friendNameController.text;
         });
       }
-    });
-  }
-
-  void hideWidget() {
-    setState(() {
-      viewVisible = false;
     });
   }
 
@@ -129,24 +124,28 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     double _width = size.width;
     double _height = size.height;
 
+    
     double _listPaddingH = _width * 0.06;
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
     double _leadingL = _height * 0.02;
+    
 
     double _pSize = _height * 0.023;
-
+   
     double _appBarSize = _width * 0.052;
 
     Color _color = Theme.of(context).primaryColor;
-
+  
     Color _bule = Color(0xff7AAAD8);
+   
 
     Widget friendListWidget;
 
     _submit() async {
       String _alertTitle = '新增群組失敗';
-
+     
+      
       List<Map<String, dynamic>> friend = [];
       for (int i = 0; i < _friendListModel.friend.length; i++) {
         var _friend = _friendListModel.friend[i];
@@ -165,14 +164,15 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         _isNotCreate = true;
         Navigator.pop(context);
       }
-
+      
       if (_isNotCreate) {
         _isNotCreate = false;
         return true;
       } else {
         var submitWidget;
         _submitWidgetfunc() async {
-          return CreateGroup(uid: uid, friend: friend);
+          return CreateGroup(
+              uid: uid, friend: friend);
         }
 
         submitWidget = await _submitWidgetfunc();
@@ -191,34 +191,17 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         itemBuilder: (BuildContext context, int index) {
           var friends = _bestFriendListModel.friend[index];
           return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: _listPaddingH, vertical: 0.0),
-                leading: ClipOval(
-                  child: getImage(friends.photo),
-                ),
-                title: Text(
-                  friends.friendName,
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                trailing:  
-                Row(children: [
-                  FlatButton(
-                    child: Text(
-                      '刪除',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffCCCCCC),
-                    onPressed: hideWidget,
-                  ),
-                  FlatButton(
-                    child: Text(
-                      '確認',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: hideWidget,
-                  ),
-                ]));
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(friends.photo),
+            ),
+            title: Text(
+              friends.friendName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            
+          );
         },
         separatorBuilder: (context, index) {
           return Divider();
@@ -232,34 +215,17 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         itemBuilder: (BuildContext context, int index) {
           var friends = _friendListModel.friend[index];
           return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: _listPaddingH, vertical: 0.0),
-                leading: ClipOval(
-                  child: getImage(friends.photo),
-                ),
-                title: Text(
-                  friends.friendName,
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                trailing:  
-                Row(children: [
-                  FlatButton(
-                    child: Text(
-                      '刪除',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffCCCCCC),
-                    onPressed: hideWidget,
-                  ),
-                  FlatButton(
-                    child: Text(
-                      '確認',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: hideWidget,
-                  ),
-                ]));
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(friends.photo),
+            ),
+            title: Text(
+              friends.friendName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            
+          );
         },
         separatorBuilder: (context, index) {
           return Divider();
@@ -277,9 +243,9 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
               //   child: Text('摯友',
               //       style: TextStyle(fontSize: _pSize, color: _bule)),
               // ),
-              bestFriendList,
-
-              // friendList
+              // bestFriendList,
+             
+              friendList
             ],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
@@ -291,13 +257,14 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
               //   child: Text('摯友',
               //       style: TextStyle(fontSize: _pSize, color: _bule)),
               // ),
-              bestFriendList
+              // bestFriendList
             ],
           );
         } else if (_friendListModel.friend.length != 0) {
           friendListWidget = ListView(
             children: [
-              // friendList
+              
+              friendList
             ],
           );
         } else {
@@ -346,58 +313,62 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
       return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Color(0xffF86D67),
-          title: Text('摯友', style: TextStyle(fontSize: 20)),
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left),
-            onPressed: () {
-              Navigator.of(context).pop();
+        backgroundColor: Color(0xffF86D67),
+        title:Text('好友',style: TextStyle(fontSize: 20)),
+        leading:IconButton(
+          icon: Icon(Icons.chevron_left),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ), 
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () async {
+             bool action = await friendsAddDialog(context);
             },
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () async {
-                bool action = await friendsAddDialog(context);
-              },
-            ),
-          ],
-        ),
+        ],
+      ),
         body: GestureDetector(
-            child: Container(
-          margin: EdgeInsets.only(top: _height * 0.02),
-          child: Column(
-            children: [
-              SizedBox(height: _height * 0.01),
-              Expanded(child: friendListWidget),
-            ],
-          ),
-        )),
+              child: Container(
+                margin: EdgeInsets.only(top: _height * 0.02),
+                child: Column(
+                  children: [
+                    FriendsPageWidget(),
+                    SizedBox(height: _height * 0.01),
+                    Expanded(child: friendListWidget),
+                  ],
+                ),
+              )),
+   
+      
       );
     } else {
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xffF86D67),
-          title: Text('摯友', style: TextStyle(fontSize: 20)),
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left),
-            onPressed: () {
-              Navigator.of(context).pop();
+        backgroundColor: Color(0xffF86D67),
+        title:Text('好友',style: TextStyle(fontSize: 20)),
+        leading:IconButton(
+          icon: Icon(Icons.chevron_left),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ), 
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () async {
+             bool action = await friendsAddDialog(context);
             },
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () async {
-                bool action = await friendsAddDialog(context);
-              },
-            ),
-          ],
-        ),
+        ],
+      ),
         body: SafeArea(
-          bottom: false,
-          child: Center(child: CircularProgressIndicator()),
-        ),
+            bottom: false,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        
       );
     }
   }
@@ -417,34 +388,17 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredBestFriend[index];
         return ListTile(
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: _listPaddingH, vertical: 0.0),
-              leading: ClipOval(
-                child: getImage(friends.photo),
-              ),
-              title: Text(
-                friends.friendName,
-                style: TextStyle(fontSize: _pSize),
-              ),
-              trailing: 
-              Row(children: [
-                  FlatButton(
-                    child: Text(
-                      '刪除',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffCCCCCC),
-                    onPressed: hideWidget,
-                  ),
-                  FlatButton(
-                    child: Text(
-                      '確認',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: hideWidget,
-                  ),
-              ]));
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+          leading: ClipOval(
+            child: getImage(friends.photo),
+          ),
+          title: Text(
+            friends.friendName,
+            style: TextStyle(fontSize: _pSize),
+          ),
+          
+        );
       },
       separatorBuilder: (context, index) {
         return Divider();
@@ -467,38 +421,95 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredFriend[index];
         return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: _listPaddingH, vertical: 0.0),
-                leading: ClipOval(
-                  child: getImage(friends.photo),
-                ),
-                title: Text(
-                  friends.friendName,
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                trailing: 
-                Row(children: [
-                  FlatButton(
-                    child: Text(
-                      '刪除',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffCCCCCC),
-                    onPressed: hideWidget,
-                  ),
-                  FlatButton(
-                    child: Text(
-                      '確認',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: hideWidget,
-                  ),
-                ]));
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+          leading: ClipOval(
+            child: getImage(friends.photo),
+          ),
+          title: Text(
+            friends.friendName,
+            style: TextStyle(fontSize: _pSize),
+          ),
+          
+        );
       },
       separatorBuilder: (context, index) {
         return Divider();
       },
     );
+  }
+}
+class FriendsPageWidget extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+
+        Container(
+          margin: EdgeInsets.only(top: 4.0),
+        // ignore: deprecated_member_use
+        child: FlatButton(
+          height: 60,
+          minWidth: double.infinity,
+          onPressed: (){
+            Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BestfriendPage()));
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                '摯友',
+                style: TextStyle(fontSize: 20,
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: Color(0xffE3E3E3),
+              )
+            ],
+          ),
+        ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 4.0),
+          color: Color(0xffE3E3E3),
+          constraints: BoxConstraints.expand(height: 1.0),
+        ),
+        Container(
+            margin: EdgeInsets.only(top: 4.0),
+          // ignore: deprecated_member_use
+          child: FlatButton(
+            height: 60,
+            minWidth: double.infinity,
+            onPressed: (){
+              Navigator.push(context,
+              MaterialPageRoute(builder: (context) =>FriendInvitationPage()));
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  '交友邀請',
+                  style: TextStyle(fontSize: 20,
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: Color(0xffE3E3E3),
+                )
+              ],
+            ),
+          ),
+        ),
+         Container(
+            margin: EdgeInsets.only(top: 4.0),
+            color: Color(0xffE3E3E3),
+            constraints: BoxConstraints.expand(height: 1.0),
+          ),
+          
+        ]));
   }
 }

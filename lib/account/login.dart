@@ -1,4 +1,7 @@
+import 'package:My_Day_app/account/login_fail.dart';
+import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/home.dart';
+import 'package:My_Day_app/main.dart';
 import 'package:flutter/material.dart';
 import 'register.dart';
 import 'forget_password.dart';
@@ -76,6 +79,17 @@ class Login extends StatelessWidget {
   get child => null;
   get btnCenterClickEvent => null;
   get appBar => null;
+  String uid = 'lili123';
+  String pw = '123';
+  String _alertTitle = '登入失敗';
+  String _alertTxt = '請確認帳號和密碼是否正確';
+  
+  
+ 
+  final TextEditingController myuid = new TextEditingController();
+  final TextEditingController mypw = new TextEditingController();
+
+  BuildContext get context => null;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -93,6 +107,7 @@ class Login extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.fromLTRB(52, 0, 52, 0),
                   child: TextField(
+                    controller: myuid,
                     obscureText: false,
                     decoration: InputDecoration(
                       filled: true,
@@ -120,6 +135,7 @@ class Login extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.fromLTRB(52, 0, 52, 0),
                   child: TextField(
+                    controller: mypw,
                     obscureText: true,
                     decoration: InputDecoration(
                       fillColor: Color(0xfff3f3f4),
@@ -142,19 +158,29 @@ class Login extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.fromLTRB(55, 25, 55, 0),
                   child: FlatButton(
-                    height: 40,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                      '登入',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    color: Color(0xffF86D67),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/home');
-                    },
-                  ),
+                      height: 40,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Text(
+                        '登入',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      color: Color(0xffF86D67),
+                      textColor: Colors.white,
+                      onPressed: () async {
+                        if (uid == myuid.text && pw == mypw.text) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyApp(),
+                              ));
+                        } else {
+                          // print("帳號或密碼錯誤");
+                          // loginfail(context, _alertTitle, '請確認帳號和密碼是否正確');
+                          bool action = await loginfailDialog(context,_alertTitle,_alertTxt);
+                         
+                        }
+                      }),
                 ),
               ],
             )));
