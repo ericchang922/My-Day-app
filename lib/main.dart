@@ -2,7 +2,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:My_Day_app/account/login.dart';
-import 'package:My_Day_app/homeUpdate.dart';
+import 'package:My_Day_app/home/homeUpdate.dart';
 import 'package:My_Day_app/home.dart';
 
 void main() {
@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xffF86D67), //主色
         primaryColorLight: Color(0xffFFAAA6), //次色
-        primaryColorDark: Color(0xffFFF5F5), //淡色
-        accentColor: Color(0xffF86D67),
+        primaryColorDark: Color(0xffFFF5F5), //超淡色
+        accentColor: Color(0xffFFB5B5), //淡色
         bottomAppBarColor: Color(0xffFB8B86),
       ),
       debugShowCheckedModeBanner: false,

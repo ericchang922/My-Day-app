@@ -84,21 +84,32 @@ flutter:
 
     - assets/json/friend_list.json
     - assets/json/best_friend_list.json
+
     - assets/json/group_list.json
     - assets/json/group_log.json
     - assets/json/group_invite_list.json
     - assets/json/group_member_list.json
     - assets/json/get_group.json
+
     - assets/json/get_vote.json
     - assets/json/vote_list.json
     - assets/json/vote_end_list.json
+
+    - assets/json/share_note_list.json
     - assets/json/note_list.json
-    - assets/json/studyplan_list.json
+
+    - assets/json/share_studyplan_list.json
+    - assets/json/personal_share_studyplan_list.json
+
     - assets/json/common_schedule_list.json
     - assets/json/get_common_schedule.json
+
     - assets/json/temporary_group_list.json
     - assets/json/temporary_group_invite_list.json
     - assets/json/get_temporary_group_invite.json
+
+    - assets/json/get_studyplan.json
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

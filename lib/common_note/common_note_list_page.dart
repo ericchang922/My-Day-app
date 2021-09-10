@@ -1,9 +1,10 @@
-import 'dart:convert';
-
-import 'package:My_Day_app/common_note/share_note_page.dart';
-import 'package:My_Day_app/models/note/note_list_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:My_Day_app/public/note_request/cancel_share.dart';
+import 'package:My_Day_app/common_note/share_note_page.dart';
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/models/note/share_note_list_model.dart';
+import 'package:My_Day_app/public/note_request/get_group_list.dart';
 
 class CommonNoteListPage extends StatefulWidget {
   int groupNum;
@@ -13,116 +14,124 @@ class CommonNoteListPage extends StatefulWidget {
   _CommonNoteListWidget createState() => new _CommonNoteListWidget(groupNum);
 }
 
-class _CommonNoteListWidget extends State<CommonNoteListPage> {
+class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
   int groupNum;
   _CommonNoteListWidget(this.groupNum);
 
-  NoteListModel _groupNoteListModel = null;
+  ShareNoteListModel _shareNoteListModel;
+
+  String uid = 'lili123';
 
   @override
   void initState() {
     super.initState();
-    _groupNoteListtRequest();
+    _groupNoteListRequest();
   }
 
-  Future<void> _groupNoteListtRequest() async {
-    var jsonString =
-        await rootBundle.loadString('assets/json/note_list.json');
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
 
-    // var httpClient = HttpClient();
-    // var request = await httpClient.getUrl(Uri.http('myday.sytes.net',
-    //     '/vote/get_end_list/', {'uid': uid, 'groupNum': groupNum.toString()}));
-    // var response = await request.close();
-    // var jsonString = await response.transform(utf8.decoder).join();
-    // httpClient.close();
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
 
-    var jsonMap = json.decode(jsonString);
+  @override
+  void didPopNext() {
+    _groupNoteListRequest();
+  }
 
-    var groupNoteListModel = NoteListModel.fromJson(jsonMap);
+  _groupNoteListRequest() async {
+    // var response =
+    //     await rootBundle.loadString('assets/json/share_note_list.json');
+    // var responseBody = json.decode(response);
+    // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
+
+    ShareNoteListModel _request =
+        await GetGroupList(uid: uid, groupNum: groupNum).getData();
+
     setState(() {
-      _groupNoteListModel = groupNoteListModel;
+      _shareNoteListModel = _request;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text('共同筆記',
-                style: TextStyle(fontSize: screenSize.width * 0.052)),
-            leading: Container(
-              margin: EdgeInsets.only(left: screenSize.height * 0.02),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            ShareNotePage(groupNum)));
-                  },
-                  icon: Icon(Icons.add))
-            ],
-          ),
-          body: Container(color: Colors.white, child: _buildGroupNoteList(context))),
-    );
-  }
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
 
-  Widget _buildGroupNoteList(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    if (_groupNoteListModel != null) {
-      if (_groupNoteListModel.note.length == 0) {
-        return Container(
-          alignment: Alignment.center,
-          child: Text('目前沒有任何共同筆記!',
-              style: TextStyle(fontSize: screenSize.width * 0.03)),
+    double _leadingL = _height * 0.02;
+
+    double _titleSize = _height * 0.025;
+    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+
+    Widget noNote = Center(child: Text('目前沒有任何共同筆記!'));
+    Widget groupNoteList;
+
+    _submitCancel(int noteNum) async {
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return CancelShare(uid: uid, noteNum: noteNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    _popupMenu(String id, int noteNum) {
+      if (id == uid) {
+        return PopupMenuButton(
+          offset: Offset(-40, 0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_height * 0.01)),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: 1,
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Text("取消分享",
+                        style: TextStyle(fontSize: _subtitleSize))),
+              ),
+            ];
+          },
+          onSelected: (int value) async {
+            if (await _submitCancel(noteNum) != true) {
+              _groupNoteListRequest();
+            }
+          },
         );
+      }
+    }
+
+    if (_shareNoteListModel != null) {
+      if (_shareNoteListModel.note.length == 0) {
+        groupNoteList = noNote;
       } else {
-        return ListView.separated(
-            itemCount: _groupNoteListModel.note.length,
+        groupNoteList = ListView.separated(
+            itemCount: _shareNoteListModel.note.length,
             itemBuilder: (BuildContext context, int index) {
-              var note = _groupNoteListModel.note[index];
+              var note = _shareNoteListModel.note[index];
               return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: screenSize.height * 0.01,
-                    vertical: screenSize.height * 0.008),
-                title: Container(
-                  margin: EdgeInsets.only(left: screenSize.height * 0.03),
-                  child: Text(note.title,
-                      style: TextStyle(fontSize: screenSize.width * 0.052)),
-                ),
-                trailing: PopupMenuButton(
-                  offset: Offset(-40, 0),
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(screenSize.height * 0.01)),
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        value: 1,
-                        child: Container(
-                            alignment: Alignment.center,
-                            child: Text("取消分享",
-                                style: TextStyle(
-                                    fontSize: screenSize.width * 0.035))),
-                      ),
-                    ];
-                  },
-                  onSelected: (int value) {
-                    print(note.noteNum);
-                  },
-                ),
-              );
+                  contentPadding: EdgeInsets.symmetric(
+                      horizontal: _height * 0.01, vertical: _height * 0.008),
+                  title: Container(
+                    margin: EdgeInsets.only(left: _height * 0.03),
+                    child: Text(note.title,
+                        style: TextStyle(fontSize: _titleSize)),
+                  ),
+                  trailing: _popupMenu(note.createId, note.noteNum));
             },
             separatorBuilder: (context, index) {
               return Divider(
@@ -131,7 +140,41 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> {
             });
       }
     } else {
-      return Center(child: CircularProgressIndicator());
+      groupNoteList = Container(
+          color: Colors.white,
+          child: Center(child: CircularProgressIndicator()));
     }
+
+    return Container(
+      color: _color,
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('共同筆記', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ShareNotePage(groupNum)));
+                    },
+                    icon: Icon(Icons.add))
+              ],
+            ),
+            body: Container(
+                color: Colors.white,
+                child: SafeArea(top: false, child: groupNoteList))),
+      ),
+    );
   }
 }

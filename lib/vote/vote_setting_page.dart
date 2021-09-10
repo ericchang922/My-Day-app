@@ -126,12 +126,11 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.35,
+          height: _height * 0.4,
           color: Colors.white,
           child: Column(
             children: [
               Container(
-                height: _height * 0.065,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(

@@ -253,59 +253,65 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
         ],
       );
 
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text(_getTemporaryGroupInviteModel.title,
-              style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text(_getTemporaryGroupInviteModel.title,
+                  style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-        body: Container(color: Colors.white, child: groupInviteWidget),
-        bottomNavigationBar: Container(
-          color: Theme.of(context).bottomAppBarColor,
-          child: SafeArea(
-            top: false,
-            child: BottomAppBar(
-              elevation: 0,
-              child: Row(children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                        elevation: 0,
-                        child: Image.asset(
-                          'assets/images/cancel.png',
-                          width: _bottomIconWidth,
-                        ),
-                        fillColor: _light,
-                        onPressed: () => Navigator.pop(context)),
-                  ),
-                ), // 取消按鈕
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                      elevation: 0,
-                      child: Image.asset(
-                        'assets/images/confirm.png',
-                        width: _bottomIconWidth,
+            body: Container(color: Colors.white, child: groupInviteWidget),
+            bottomNavigationBar: Container(
+              color: Theme.of(context).bottomAppBarColor,
+              child: SafeArea(
+                top: false,
+                child: BottomAppBar(
+                  elevation: 0,
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/cancel.png',
+                              width: _bottomIconWidth,
+                            ),
+                            fillColor: _light,
+                            onPressed: () => Navigator.pop(context)),
                       ),
-                      fillColor: _color,
-                      onPressed: () async {
-                        if (await _submit() != true) Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                )
-              ]),
+                    ), // 取消按鈕
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                          elevation: 0,
+                          child: Image.asset(
+                            'assets/images/confirm.png',
+                            width: _bottomIconWidth,
+                          ),
+                          fillColor: _color,
+                          onPressed: () async {
+                            if (await _submit() != true) Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    )
+                  ]),
+                ),
+              ),
             ),
           ),
         ),
@@ -315,7 +321,6 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
         body: Container(
           color: Colors.white,
           child: SafeArea(
-            bottom: false,
             child: Center(child: CircularProgressIndicator()),
           ),
         ),

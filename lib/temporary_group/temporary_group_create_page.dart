@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/public/temporary_group_request/create_group.dart';
@@ -62,8 +63,8 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
         ? '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]}'
         : '${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_endDateTime.weekday - 1]} ${_endDateTime.hour.toString().padLeft(2, '0')}:${_endDateTime.minute.toString().padLeft(2, '0')}';
 
-    dynamic getTypeColor(value) {
-      dynamic color = value == null ? 0xffFFFFFF : typeColor[value - 1];
+    Color getTypeColor(value) {
+      Color color = value == null ? Color(0xffFFFFFF) : typeColor(value);
       return color;
     }
 
@@ -144,7 +145,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.35,
+          height: _height * 0.4,
           color: Colors.white,
           child: Column(
             children: [
@@ -358,7 +359,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
                       height: _height * 0.025,
                       child: CircleAvatar(
                         radius: _height * 0.025,
-                        backgroundColor: Color(getTypeColor(_type)),
+                        backgroundColor: getTypeColor(_type),
                       )),
                 )
               ],
@@ -705,17 +706,11 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     );
 
     Widget checkAll = Container(
-      margin: EdgeInsets.only(right: _checkAllR),
+      margin: EdgeInsets.only(right: _width * 0.05),
       alignment: Alignment.centerRight,
-      // ignore: deprecated_member_use
-      child: FlatButton(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        padding: EdgeInsets.zero,
-        height: 6,
-        minWidth: 5,
+      child: InkWell(
         child: Text('全選', style: TextStyle(fontSize: _subtitleSize)),
-        onPressed: () {
+        onTap: () {
           setState(() {
             if (_friendNameController.text.isEmpty) {
               for (int i = 0; i < _friendListModel.friend.length; i++) {
@@ -915,104 +910,113 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
         }
       }
 
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.pop(context);
-              },
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-        body: GestureDetector(
-          // 點擊空白處釋放焦點
-          behavior: HitTestBehavior.translucent,
-          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-          child: Container(
-            color: Colors.white,
-            child: SafeArea(
-              bottom: false,
+            body: GestureDetector(
+              // 點擊空白處釋放焦點
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
               child: Container(
-                margin: EdgeInsets.only(top: _listTop),
-                child: Column(
-                  children: [
-                    search,
-                    checkAll,
-                    Expanded(child: friendListWidget),
-                  ],
+                color: Colors.white,
+                child: Container(
+                  margin: EdgeInsets.only(top: _listTop),
+                  child: Column(
+                    children: [
+                      search,
+                      checkAll,
+                      Expanded(child: friendListWidget),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            bottomNavigationBar: Container(
+              color: Theme.of(context).bottomAppBarColor,
+              child: SafeArea(
+                top: false,
+                child: BottomAppBar(
+                  elevation: 0,
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/cancel.png',
+                              width: _iconWidth,
+                            ),
+                            fillColor: _light,
+                            onPressed: () => Navigator.pop(context)),
+                      ),
+                    ), // 取消按鈕
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/confirm.png',
+                              width: _iconWidth,
+                            ),
+                            fillColor: _color,
+                            onPressed: () async {
+                              if (await _submit() != true) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            }),
+                      ),
+                    )
+                  ]),
                 ),
               ),
             ),
           ),
         ),
-        bottomNavigationBar: Container(
-          color: Theme.of(context).bottomAppBarColor,
-          child: SafeArea(
-            top: false,
-            child: BottomAppBar(
-              elevation: 0,
-              child: Row(children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                        elevation: 0,
-                        child: Image.asset(
-                          'assets/images/cancel.png',
-                          width: _iconWidth,
-                        ),
-                        fillColor: _light,
-                        onPressed: () => Navigator.pop(context)),
-                  ),
-                ), // 取消按鈕
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                        elevation: 0,
-                        child: Image.asset(
-                          'assets/images/confirm.png',
-                          width: _iconWidth,
-                        ),
-                        fillColor: _color,
-                        onPressed: () async {
-                          if (await _submit() != true) {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          }
-                        }),
-                  ),
-                )
-              ]),
-            ),
-          ),
-        ),
       );
     } else {
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.pop(context);
-              },
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).primaryColor,
+              title: Text('邀請好友', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-        body: Container(
-          color: Colors.white,
-          child: SafeArea(
-            bottom: false,
-            child: Center(child: CircularProgressIndicator()),
+            body: Container(
+              color: Colors.white,
+              child: SafeArea(
+                top: false,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ),
           ),
         ),
       );

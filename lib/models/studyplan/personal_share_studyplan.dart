@@ -1,26 +1,30 @@
 // To parse this JSON data, do
 //
-//     final groupStudyPlanListModel = groupStudyPlanListModelFromJson(jsonString);
+//     final personalShareStudyplanListModel = personalShareStudyplanListModelFromJson(jsonString);
 
 import 'dart:convert';
 
-StudyPlanListModel groupStudyPlanListModelFromJson(String str) => StudyPlanListModel.fromJson(json.decode(str));
+PersonalShareStudyplanListModel personalShareStudyplanListModelFromJson(String str) => PersonalShareStudyplanListModel.fromJson(json.decode(str));
 
-String groupStudyPlanListModelToJson(StudyPlanListModel data) => json.encode(data.toJson());
+String personalShareStudyplanListModelToJson(PersonalShareStudyplanListModel data) => json.encode(data.toJson());
 
-class StudyPlanListModel {
-    StudyPlanListModel({
+class PersonalShareStudyplanListModel {
+    PersonalShareStudyplanListModel({
         this.studyplan,
+        this.response,
     });
 
     List<Studyplan> studyplan;
+    bool response;
 
-    factory StudyPlanListModel.fromJson(Map<String, dynamic> json) => StudyPlanListModel(
+    factory PersonalShareStudyplanListModel.fromJson(Map<String, dynamic> json) => PersonalShareStudyplanListModel(
         studyplan: List<Studyplan>.from(json["studyplan"].map((x) => Studyplan.fromJson(x))),
+        response: json["response"],
     );
 
     Map<String, dynamic> toJson() => {
         "studyplan": List<dynamic>.from(studyplan.map((x) => x.toJson())),
+        "response": response,
     };
 }
 

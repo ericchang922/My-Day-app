@@ -51,134 +51,139 @@ Future<bool> groupJoinDialog(BuildContext context) async {
           content: Container(
             width: _width * 0.2,
             height: _height * 0.25,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            "加入群組",
-                            style: TextStyle(fontSize: _pSize),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: _textLBR,
-                            right: _textLBR,
-                            bottom: _textLBR,
-                            top: _height * 0.015),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/search.png',
-                              width: _iconWidth,
+            child: GestureDetector(
+              // 點擊空白處釋放焦點
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              "加入群組",
+                              style: TextStyle(fontSize: _pSize),
+                              textAlign: TextAlign.center,
                             ),
-                            Container(
-                              margin: EdgeInsets.only(left: _height * 0.01),
-                              child: Text('群組ID：',
-                                  style: TextStyle(fontSize: _pSize)),
-                            )
                           ],
                         ),
-                      ),
-                      Container(
-                          height: _textFied,
+                        Container(
                           margin: EdgeInsets.only(
-                            left: _textLBR,
-                            right: _textLBR,
-                            bottom: _height * 0.015,
+                              left: _textLBR,
+                              right: _textLBR,
+                              bottom: _textLBR,
+                              top: _height * 0.015),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/search.png',
+                                width: _iconWidth,
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(left: _height * 0.01),
+                                child: Text('群組ID：',
+                                    style: TextStyle(fontSize: _pSize)),
+                              )
+                            ],
                           ),
-                          child: new TextField(
-                            style: TextStyle(fontSize: _pSize),
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: _height * 0.01,
-                                    vertical: _height * 0.01),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(_height * 0.01)),
-                                  borderSide: BorderSide(
-                                    color: _textFiedBorder,
+                        ),
+                        Container(
+                            height: _textFied,
+                            margin: EdgeInsets.only(
+                              left: _textLBR,
+                              right: _textLBR,
+                              bottom: _height * 0.015,
+                            ),
+                            child: new TextField(
+                              style: TextStyle(fontSize: _pSize),
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: _height * 0.01,
+                                      vertical: _height * 0.01),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(_height * 0.01)),
+                                    borderSide: BorderSide(
+                                      color: _textFiedBorder,
+                                    ),
                                   ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(_height * 0.01)),
-                                  borderSide: BorderSide(color: _bule),
-                                )),
-                            controller: _groupIDController,
-                            onChanged: (text) {
-                              _groupNum = _groupIDController.text;
-                            },
-                          )),
-                    ],
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(_height * 0.01)),
+                                    borderSide: BorderSide(color: _bule),
+                                  )),
+                              controller: _groupIDController,
+                              onChanged: (text) {
+                                _groupNum = _groupIDController.text;
+                              },
+                            )),
+                      ],
+                    ),
                   ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          height: _inkwellH,
-                          padding: EdgeInsets.only(
-                              top: _height * 0.015, bottom: _height * 0.015),
-                          decoration: BoxDecoration(
-                            color: _light,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(_borderRadius),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          child: Container(
+                            height: _inkwellH,
+                            padding: EdgeInsets.only(
+                                top: _height * 0.015, bottom: _height * 0.015),
+                            decoration: BoxDecoration(
+                              color: _light,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(_borderRadius),
+                              ),
+                            ),
+                            child: Text(
+                              "取消",
+                              style: TextStyle(
+                                  fontSize: _subtitleSize, color: Colors.white),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          child: Text(
-                            "取消",
-                            style: TextStyle(
-                                fontSize: _subtitleSize, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          height: _inkwellH,
-                          padding: EdgeInsets.only(
-                              top: _height * 0.015, bottom: _height * 0.015),
-                          decoration: BoxDecoration(
-                            color: _color,
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(_borderRadius)),
-                          ),
-                          child: Text(
-                            "確認",
-                            style: TextStyle(
-                                fontSize: _subtitleSize, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        onTap: () async {
-                          if (await _submit() != true) {
+                          onTap: () {
                             Navigator.of(context).pop();
-                          }
-                        },
+                          },
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              ],
+                      Expanded(
+                        child: InkWell(
+                          child: Container(
+                            height: _inkwellH,
+                            padding: EdgeInsets.only(
+                                top: _height * 0.015, bottom: _height * 0.015),
+                            decoration: BoxDecoration(
+                              color: _color,
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(_borderRadius)),
+                            ),
+                            child: Text(
+                              "確認",
+                              style: TextStyle(
+                                  fontSize: _subtitleSize, color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          onTap: () async {
+                            if (await _submit() != true) {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

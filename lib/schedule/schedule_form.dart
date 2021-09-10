@@ -1,5 +1,6 @@
 // flutter
 
+import 'package:My_Day_app/public/type_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 // my day
@@ -9,17 +10,6 @@ import 'package:My_Day_app/public/schedule_request/edit.dart';
 import 'package:My_Day_app/schedule/remind_item.dart';
 
 List<String> weekdayName = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
-
-final List<dynamic> typeColor = [
-  0xffF78787,
-  0xffFFD51B,
-  0xffFFA800,
-  0xffB6EB3A,
-  0xff53DAF0,
-  0xff4968BA,
-  0xffCE85E4,
-  0xff8E7A42
-];
 
 class ScheduleForm extends StatefulWidget {
   String submitType;
@@ -268,8 +258,8 @@ class _ScheduleForm extends State<ScheduleForm> {
       }
     }
 
-    dynamic getTypeColor(value) {
-      dynamic color = value == null ? 0xffFFFFFF : typeColor[value - 1];
+    Color getTypeColor(value) {
+      Color color = value == null ? Color(0xffFFFFFF) : typeColor(value);
       return color;
     }
 
@@ -575,7 +565,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                       height: _height * 0.025,
                       child: CircleAvatar(
                         radius: _height * 0.025,
-                        backgroundColor: Color(getTypeColor(_type)),
+                        backgroundColor: getTypeColor(_type),
                       )),
                 )
               ],

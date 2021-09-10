@@ -1,18 +1,13 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/common_schedule/common_schedule_create_page.dart';
-import 'package:My_Day_app/common_schedule/common_schedule_detail_page.dart';
-import 'package:My_Day_app/common_schedule/common_schedule_edit_page.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
+import 'package:My_Day_app/common_schedule/edit_common_schedule.dart';
+import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/public/schedule_request/common_list.dart';
 
 import 'package:animations/animations.dart';
-
-
 
 class CommonScheduleListPage extends StatefulWidget {
   int groupNum;
@@ -80,7 +75,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
     double _widthSize = _width * 0.01;
     double _leadingL = _height * 0.02;
     double _textL = _height * 0.03;
-    double _subtitleT = _height * 0.005;
+    double _subtitleT = _height * 0.008;
     double _tabH = _height * 0.04683;
 
     double _tabSize = _width * 0.041;
@@ -91,9 +86,24 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
+    Color _lightGray = Color(0xffE3E3E3);
+    Color _yellow = Color(0xffEFB208);
 
     Widget futureScheduleList;
     Widget pastScheduleList;
+
+    _submitDelete(int scheduleNum) async {
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return Delete(uid: uid, scheduleNum: scheduleNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
 
     String _scheduleTime(index, isFuture) {
       var schedule;
@@ -169,14 +179,16 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                     ),
                   ];
                 },
-                onSelected: (int value) {
-                  print(schedule.scheduleNum);
+                onSelected: (int value) async {
+                  if (await _submitDelete(schedule.scheduleNum) != true) {
+                    _groupScheduleListRequest();
+                  }
                 },
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
-                        CommonScheduleEditPage(schedule.scheduleNum)));
+                        EditCommonSchedule(scheduleNum: schedule.scheduleNum)));
               },
             );
           },
@@ -240,14 +252,16 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                     ),
                   ];
                 },
-                onSelected: (int value) {
-                  print(schedule.scheduleNum);
+                onSelected: (int value) async {
+                  if (await _submitDelete(schedule.scheduleNum) != true) {
+                    _groupScheduleListRequest();
+                  }
                 },
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
-                        CommonScheduleDetailPage(schedule.scheduleNum)));
+                        EditCommonSchedule(scheduleNum: schedule.scheduleNum)));
               },
             );
           },
@@ -265,79 +279,90 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text('共同行程', style: TextStyle(fontSize: _appBarSize)),
-            leading: Container(
-              margin: EdgeInsets.only(left: _leadingL),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            bottom: TabBar(
-              indicator: ShapeDecoration(
-                  shape: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Color(0xffEFB208),
-                          width: 0,
-                          style: BorderStyle.solid)),
-                  gradient: LinearGradient(
-                      colors: [Color(0xffEFB208), Color(0xffEFB208)])),
-              labelColor: Colors.white,
-              unselectedLabelColor: Color(0xffe3e3e3),
-              indicatorPadding: EdgeInsets.all(0.0),
-              indicatorWeight: _widthSize,
-              labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-              tabs: <Widget>[
-                Container(
-                  height: _tabH,
-                  alignment: Alignment.center,
-                  color: Theme.of(context).primaryColor,
-                  child: Text("未結束", style: TextStyle(fontSize: _tabSize)),
-                ),
-                Container(
-                  height: _tabH,
-                  alignment: Alignment.center,
-                  color: Theme.of(context).primaryColor,
-                  child: Text("已結束", style: TextStyle(fontSize: _tabSize)),
-                ),
-              ],
-            ),
-          ),
-          floatingActionButton: OpenContainer(
-            transitionType: ContainerTransitionType.fadeThrough,
-            openBuilder: (BuildContext context, VoidCallback _) {
-              return CommonScheduleCreatePage(groupNum);
-            },
-            closedElevation: 6.0,
-            closedShape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(_fabDimension / 2)),
-            ),
-            closedColor: _color,
-            closedBuilder: (BuildContext context, VoidCallback openContainer) {
-              return SizedBox(
-                height: _fabDimension,
-                width: _fabDimension,
-                child: Center(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
+      child: Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: _color,
+                title: Text('共同行程', style: TextStyle(fontSize: _appBarSize)),
+                leading: Container(
+                  margin: EdgeInsets.only(left: _leadingL),
+                  child: GestureDetector(
+                    child: Icon(Icons.chevron_left),
+                    onTap: () {
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('/group_detail'));
+                    },
                   ),
                 ),
-              );
-            },
-          ),
-          body: TabBarView(
-            children: <Widget>[
-              Container(color: Colors.white, child: futureScheduleList),
-              Container(color: Colors.white, child: pastScheduleList),
-            ],
-          )),
+                bottom: TabBar(
+                  indicator: ShapeDecoration(
+                      shape: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: _yellow,
+                              width: 0,
+                              style: BorderStyle.solid)),
+                      gradient: LinearGradient(colors: [_yellow, _yellow])),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: _lightGray,
+                  indicatorPadding: EdgeInsets.all(0.0),
+                  indicatorWeight: _widthSize,
+                  labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+                  tabs: <Widget>[
+                    Container(
+                      height: _tabH,
+                      alignment: Alignment.center,
+                      color: _color,
+                      child: Text("未結束", style: TextStyle(fontSize: _tabSize)),
+                    ),
+                    Container(
+                      height: _tabH,
+                      alignment: Alignment.center,
+                      color: _color,
+                      child: Text("已結束", style: TextStyle(fontSize: _tabSize)),
+                    ),
+                  ],
+                ),
+              ),
+              floatingActionButton: OpenContainer(
+                transitionType: ContainerTransitionType.fadeThrough,
+                openBuilder: (BuildContext context, VoidCallback _) {
+                  return CommonScheduleForm(groupNum: groupNum);
+                },
+                closedElevation: 6.0,
+                closedShape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(_fabDimension / 2)),
+                ),
+                closedColor: _color,
+                closedBuilder:
+                    (BuildContext context, VoidCallback openContainer) {
+                  return SizedBox(
+                    height: _fabDimension,
+                    width: _fabDimension,
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              body: TabBarView(
+                children: <Widget>[
+                  Container(
+                      color: Colors.white,
+                      child: SafeArea(top: false, child: futureScheduleList)),
+                  Container(
+                      color: Colors.white,
+                      child: SafeArea(top: false, child: pastScheduleList)),
+                ],
+              )),
+        ),
+      ),
     );
   }
 }

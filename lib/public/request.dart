@@ -1,6 +1,14 @@
 // dart
 import 'dart:convert';
 // flutter
+import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
+import 'package:flutter/material.dart';
+// therd
+import 'package:http/http.dart' as http;
+// my day
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/toast.dart';
+import 'package:My_Day_app/models/schedule/schedule_model.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
@@ -11,12 +19,17 @@ import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
+import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
+import 'package:My_Day_app/models/studyplan/share_studyplan_list_model.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
 import 'package:My_Day_app/models/vote/vote_list_model.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan.dart';
+import 'package:My_Day_app/models/note/share_note_list_model.dart';
+import 'package:My_Day_app/models/note/note_list.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:http/http.dart' as http;
@@ -45,7 +58,7 @@ class Request {
     'edit': '$host${path['schedule']}/edit/',
     'delete': '$host${path['schedule']}/delete/',
     'get': '${path['schedule']}/get/',
-    'get_list': '$host${path['schedule']}/get_list/',
+    'get_list': '${path['schedule']}/get_list/',
     'create_common': '$host${path['schedule']}/create_common/',
     'get_common': '${path['schedule']}/get_common/',
     'common_list': '${path['schedule']}/common_list/',
@@ -96,6 +109,28 @@ class Request {
     'add_items': '$host${path['vote']}/add_items/',
     'get_end_list': '${path['vote']}/get_end_list/',
   };
+  static Map studyplanUrl = {
+    'create_studyplan': '$host${path['studyplan']}/create_studyplan/',
+    'edit_studyplan': '$host${path['studyplan']}/edit_studyplan/',
+    'sharing': '$host${path['studyplan']}/sharing/',
+    'delete': '$host${path['studyplan']}/delete/',
+    'cancel_sharing': '$host${path['studyplan']}/cancel_sharing/',
+    'get': '${path['studyplan']}/get/',
+    'personal_list': '${path['studyplan']}/personal_list/',
+    'personal_share_list': '${path['studyplan']}/personal_share_list/',
+    'group_list': '${path['studyplan']}/group_list/',
+    'one_group_list': '${path['studyplan']}/one_group_list/',
+  };
+  static Map noteUrl = {
+    'create_new': '$host${path['note']}/create_new/',
+    'edit': '$host${path['note']}/edit/',
+    'delete': '$host${path['note']}/delete/',
+    'get': '${path['note']}/get/',
+    'get_list': '${path['note']}/get_list/',
+    'get_group_list': '${path['note']}/get_group_list/',
+    'share': '$host${path['note']}/share/',
+    'cancel_share': '$host${path['note']}/cancel_share/',
+  };
 
   Map headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
@@ -104,6 +139,7 @@ class Request {
   Map<String, dynamic> _responseBody;
 
   ScheduleGet _scheduleGet;
+  ScheduleGetList _scheduleGetList;
   GetCommonScheduleModel _commenSchedule;
   CommonScheduleListModel _commonScheduleList;
 
@@ -127,9 +163,17 @@ class Request {
   VoteEndListModel _voteEndList;
   GetVoteModel _vote;
 
+  StudyplanModel _studyplan;
+  ShareStudyplanListModel _shareStudyplanList;
+  PersonalShareStudyplanListModel _personalShareStudyplanList;
+
+  ShareNoteListModel _shareNoteList;
+  NoteListModel _noteList;
+
   bool _isError;
 
   getScheduleGet() => _scheduleGet;
+  getScheduleGetList() => _scheduleGetList;
   getCommenScheduleGet() => _commenSchedule;
   getCommonScheduleListGet() => _commonScheduleList;
 
@@ -152,6 +196,13 @@ class Request {
   getVoteList() => _voteList;
   getVoteEndList() => _voteEndList;
   getVote() => _vote;
+
+  getStudyplan() => _studyplan;
+  getShareStudyplanList() => _shareStudyplanList;
+  getPersonalShareStudyplanList() => _personalShareStudyplanList;
+
+  getShareNoteList() => _shareNoteList;
+  getNoteList() => _noteList;
 
   getIsError() => _isError;
 
@@ -216,6 +267,12 @@ class Request {
     await httpPost(context, data, _url, '編輯成功');
   }
 
+// delete -----------------------------------------------------------------------------------------
+  scheduleDelete(BuildContext context, Map<String, dynamic> data) async {
+    String _url = scheduleUrl['delete'];
+    await httpPost(context, data, _url, '刪除成功');
+  }
+
 // create_common ----------------------------------------------------------------------------------
   scheduleCreateCommon(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['create_common'];
@@ -228,6 +285,15 @@ class Request {
     await httpGet(context, data, _url);
     if (_responseBody != null) {
       _scheduleGet = ScheduleGet.fromJson(_responseBody);
+    }
+  }
+
+// get_list ---------------------------------------------------------------------------------------
+  scheduleGetList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = scheduleUrl['get_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _scheduleGetList = ScheduleGetList.fromJson(_responseBody);
     }
   }
 
@@ -272,6 +338,12 @@ class Request {
   groupCreate(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['create_group'];
     await httpPost(context, data, _url, '新增成功');
+  }
+
+  // group_invite_friend --------------------------------------------------------------------------
+  groupInviteFriend(BuildContext context, Map<String, dynamic> data) async {
+    String _url = groupUrl['invite_friend'];
+    await httpPost(context, data, _url, '邀請成功');
   }
 
   // group_member_status --------------------------------------------------------------------------
@@ -463,5 +535,79 @@ class Request {
   voteDelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['delete'];
     await httpPost(context, data, _url, '刪除成功');
+  }
+
+  // STUDYPLAN ====================================================================================
+  // get ------------------------------------------------------------------------------------------
+  studyplanGet(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['get'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _studyplan = StudyplanModel.fromJson(_responseBody);
+    }
+  }
+
+  // one_group_list -------------------------------------------------------------------------------
+  studyplanOneGroupList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['one_group_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _shareStudyplanList = ShareStudyplanListModel.fromJson(_responseBody);
+    }
+  }
+
+  // personal_share_list --------------------------------------------------------------------------
+  studyplanPersonalShareList(
+      BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['personal_share_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _personalShareStudyplanList =
+          PersonalShareStudyplanListModel.fromJson(_responseBody);
+    }
+  }
+
+  // sharing --------------------------------------------------------------------------------------
+  studyplanSharing(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['sharing'];
+    await httpPatch(context, data, _url, '分享成功');
+  }
+
+  // cancel_sharing -------------------------------------------------------------------------------
+  studyplanCancelSharing(
+      BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['cancel_sharing'];
+    await httpPatch(context, data, _url, '已取消');
+  }
+
+  // NOTE ==============================================================================================
+  // get_group_list -------------------------------------------------------------------------------
+  noteGetGroupList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['get_group_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _shareNoteList = ShareNoteListModel.fromJson(_responseBody);
+    }
+  }
+
+  // get_list -------------------------------------------------------------------------------------
+  noteGetList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['get_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _noteList = NoteListModel.fromJson(_responseBody);
+    }
+  }
+
+  // share ----------------------------------------------------------------------------------------
+  noteShare(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['share'];
+    await httpPost(context, data, _url, '分享成功');
+  }
+
+  // cancel_share ---------------------------------------------------------------------------------
+  noteCancelShare(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['cancel_share'];
+    await httpPost(context, data, _url, '已取消');
   }
 }

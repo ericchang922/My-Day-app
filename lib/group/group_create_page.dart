@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
@@ -27,16 +28,6 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     '社團',
     '吃飯',
     '班級'
-  ];
-
-  List typeColor = <int>[
-    0xffF78787,
-    0xffFFD51B,
-    0xffFFA800,
-    0xffB6EB3A,
-    0xff53DAF0,
-    0xff4968BA,
-    0xffCE85E4
   ];
 
   final _groupNameController = TextEditingController();
@@ -163,6 +154,11 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
 
     Widget friendListWidget;
 
+    Color getTypeColor(value) {
+      Color color = value == null ? Color(0xffFFFFFF) : typeColor(value);
+      return color;
+    }
+
     _submit() async {
       String _alertTitle = '新增群組失敗';
       String groupName = _groupName;
@@ -287,12 +283,12 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
                     child: Row(
                       children: [
                         Container(
-                            margin: EdgeInsets.only(right: _height * 0.01),
-                            child: CircleAvatar(
+                          margin: EdgeInsets.only(right: _height * 0.01),
+                          child: CircleAvatar(
                               radius: _borderRadius,
-                              backgroundColor:
-                                  Color(typeColor[typeNameList.indexOf(value)]),
-                            )),
+                              backgroundColor: getTypeColor(
+                                  typeNameList.indexOf(value) + 1)),
+                        ),
                         Text(value, style: TextStyle(fontSize: _pSize)),
                       ],
                     ));
@@ -358,17 +354,11 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     );
 
     Widget checkAll = Container(
-      margin: EdgeInsets.only(right: _width * 0.03),
+      margin: EdgeInsets.only(right: _width * 0.05),
       alignment: Alignment.centerRight,
-      // ignore: deprecated_member_use
-      child: FlatButton(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        padding: EdgeInsets.zero,
-        height: 6,
-        minWidth: 5,
+      child: InkWell(
         child: Text('全選', style: TextStyle(fontSize: _subtitleSize)),
-        onPressed: () {
+        onTap: () {
           setState(() {
             if (_friendNameController.text.isEmpty) {
               for (int i = 0; i < _friendListModel.friend.length; i++) {
@@ -568,104 +558,115 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
         }
       }
 
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('建立群組', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ),
-        body: GestureDetector(
-          // 點擊空白處釋放焦點
-          behavior: HitTestBehavior.translucent,
-          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-          child: Container(
-              color: Colors.white,
-              child: Container(
-                margin: EdgeInsets.only(top: _height * 0.02),
-                child: Column(
-                  children: [
-                    groupName,
-                    groupType,
-                    SizedBox(height: _height * 0.01),
-                    Divider(),
-                    SizedBox(height: _height * 0.01),
-                    search,
-                    checkAll,
-                    Expanded(child: friendListWidget),
-                  ],
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('建立群組', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-              )),
-        ),
-        bottomNavigationBar: Container(
-          color: Theme.of(context).bottomAppBarColor,
-          child: SafeArea(
-            top: false,
-            child: BottomAppBar(
-              elevation: 0,
-              child: Row(children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                        elevation: 0,
-                        child: Image.asset(
-                          'assets/images/cancel.png',
-                          width: _iconWidth,
-                        ),
-                        fillColor: _light,
-                        onPressed: () => Navigator.pop(context)),
-                  ),
-                ), // 取消按鈕
-                Expanded(
-                  child: SizedBox(
-                    height: _bottomHeight,
-                    child: RawMaterialButton(
-                        elevation: 0,
-                        child: Image.asset(
-                          'assets/images/confirm.png',
-                          width: _iconWidth,
-                        ),
-                        fillColor: _color,
-                        onPressed: () async {
-                          if (await _submit() != true) {
-                            Navigator.pop(context);
-                          }
-                        }),
-                  ),
-                )
-              ]),
+              ),
+            ),
+            body: GestureDetector(
+              // 點擊空白處釋放焦點
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              child: Container(
+                  color: Colors.white,
+                  child: Container(
+                    margin: EdgeInsets.only(top: _height * 0.02),
+                    child: Column(
+                      children: [
+                        groupName,
+                        groupType,
+                        SizedBox(height: _height * 0.01),
+                        Divider(),
+                        SizedBox(height: _height * 0.01),
+                        search,
+                        checkAll,
+                        Expanded(child: friendListWidget),
+                      ],
+                    ),
+                  )),
+            ),
+            bottomNavigationBar: Container(
+              color: Theme.of(context).bottomAppBarColor,
+              child: SafeArea(
+                top: false,
+                child: BottomAppBar(
+                  elevation: 0,
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/cancel.png',
+                              width: _iconWidth,
+                            ),
+                            fillColor: _light,
+                            onPressed: () => Navigator.pop(context)),
+                      ),
+                    ), // 取消按鈕
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/confirm.png',
+                              width: _iconWidth,
+                            ),
+                            fillColor: _color,
+                            onPressed: () async {
+                              if (await _submit() != true) {
+                                Navigator.pop(context);
+                              }
+                            }),
+                      ),
+                    )
+                  ]),
+                ),
+              ),
             ),
           ),
         ),
       );
     } else {
-      return SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: _color,
-            title: Text('建立群組', style: TextStyle(fontSize: _appBarSize)),
-            leading: Container(
-              margin: EdgeInsets.only(left: _leadingL),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.pop(context);
-                },
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('建立群組', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
             ),
-          ),
-          body: Container(
-            color: Colors.white,
-            child: Center(child: CircularProgressIndicator()),
+            body: Container(
+              color: Colors.white,
+              child: Center(
+                  child:
+                      SafeArea(top: false, child: CircularProgressIndicator())),
+            ),
           ),
         ),
       );

@@ -147,12 +147,11 @@ class _VoteCreateWidget extends State<VoteCreatePage>
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.35,
+          height: _height * 0.4,
           color: Colors.white,
           child: Column(
             children: [
               Container(
-                height: _height * 0.065,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
@@ -209,7 +208,15 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                   child: Container(
                     margin: EdgeInsets.only(top: _height * 0.03),
                     child: TextField(
-                      controller: _voteItemController,
+                      controller:  TextEditingController.fromValue(
+                          TextEditingValue(
+                              text: _voteItemController.text,
+                              // 保持光標在最後
+                              selection: TextSelection.fromPosition(
+                                  TextPosition(
+                                      affinity: TextAffinity.downstream,
+                                      offset:
+                                          _voteItemController.text.length)))),
                       cursorColor: Colors.black,
                       style: TextStyle(fontSize: _appBarSize),
                       decoration: InputDecoration(
@@ -233,7 +240,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                 ),
               ],
             ),
-            Divider(color: _hintGray)
+            Divider(color: _hintGray, height: 1)
           ],
         );
       },
@@ -256,7 +263,6 @@ class _VoteCreateWidget extends State<VoteCreatePage>
             ),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: _hintGray),
-              //  when the TextFormField in focused
             ),
           ),
           onChanged: (text) {
@@ -308,7 +314,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                 ),
               ],
             ),
-            Divider(color: _hintGray)
+            Divider(color: _hintGray, height: 1)
           ],
         );
       },
@@ -331,7 +337,6 @@ class _VoteCreateWidget extends State<VoteCreatePage>
             ),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: _hintGray),
-              //  when the TextFormField in focused
             ),
           ),
           onChanged: (text) {

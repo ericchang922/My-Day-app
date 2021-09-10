@@ -13,8 +13,8 @@ class ScheduleGet {
 
   ScheduleGet.fromJson(Map<String, dynamic> json)
       : title = json['title'],
-        startTime = DateTime.parse(json['startTime']),
-        endTime = DateTime.parse(json['endTime']),
+        startTime = DateTime.parse('${json['startTime']}z'),
+        endTime = DateTime.parse('${json['endTime']}z'),
         remind = json['remind'],
         typeId = json['typeId'],
         isCountdown = json['isCountdown'],

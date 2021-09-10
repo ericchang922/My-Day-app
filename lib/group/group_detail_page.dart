@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:My_Day_app/public/group_request/quit_group.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/common_note/common_note_list_page.dart';
-import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/common_studyplan/common_studyplan_list_page.dart';
 import 'package:My_Day_app/group/group_invite_page.dart';
 import 'package:My_Day_app/group/group_member_page.dart';
@@ -22,16 +21,17 @@ import 'package:My_Day_app/vote/vote_page.dart';
 import 'package:date_format/date_format.dart';
 
 class GroupDetailPage extends StatefulWidget {
-  int groupNum;
-  GroupDetailPage(this.groupNum);
+  var arguments;
+  GroupDetailPage({Key key, this.arguments}) : super(key: key);
 
   @override
-  _GroupDetailWidget createState() => new _GroupDetailWidget(groupNum);
+  _GroupDetailWidget createState() =>
+      new _GroupDetailWidget(arguments: this.arguments);
 }
 
 class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
-  int groupNum;
-  _GroupDetailWidget(this.groupNum);
+  Map arguments;
+  _GroupDetailWidget({this.arguments});
 
   GetGroupModel _getGroupModel;
   GroupLogModel _groupLogModel;
@@ -54,7 +54,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     _getGroupRequest();
     _groupLogRequest();
     _getGroupMemberRequest();
-    print(groupNum);
+    print(arguments['groupNum']);
   }
 
   @override
@@ -80,7 +80,8 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     // var response = await rootBundle.loadString('assets/json/get_group.json');
     // var responseBody = json.decode(response);
 
-    GetGroupModel _request = await Get(uid: uid, groupNum: groupNum).getData();
+    GetGroupModel _request =
+        await Get(uid: uid, groupNum: arguments['groupNum']).getData();
 
     setState(() {
       _getGroupModel = _request;
@@ -92,7 +93,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     // var responseBody = json.decode(response);
 
     GroupLogModel _request =
-        await GetLog(uid: uid, groupNum: groupNum).getData();
+        await GetLog(uid: uid, groupNum: arguments['groupNum']).getData();
 
     setState(() {
       _groupLogModel = _request;
@@ -120,7 +121,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     // var responseBody = json.decode(response);
 
     GroupMemberListModel _request =
-        await MemberList(uid: uid, groupNum: groupNum).getData();
+        await MemberList(uid: uid, groupNum: arguments['groupNum']).getData();
 
     setState(() {
       _groupMemberListModel = _request;
@@ -162,6 +163,9 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     Widget groupWidget;
     Widget groupLog;
     Widget noGroupLog = Center(child: Text('目前沒有任何log喔！'));
+
+    int groupNum = arguments['groupNum'];
+    bool _isNotTemporary = arguments['isNotTemporary'];
 
     _submit() async {
       var submitWidget;
@@ -293,7 +297,13 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
           ),
         );
       } else {
-        return Text('已投票', style: TextStyle(fontSize: _pSize, color: _gray));
+        return InkWell(
+          child: Text('已投票', style: TextStyle(fontSize: _pSize, color: _gray)),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => VotePage(voteNum, groupNum)));
+          },
+        );
       }
     }
 
@@ -467,41 +477,47 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                     builder: (context) => CommonScheduleListPage(groupNum)));
               },
             ),
-            Divider(height: 1),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: _listPaddingH, vertical: size.height * 0.01),
-              title: Text('共同讀書計畫', style: TextStyle(fontSize: _appBarSize)),
-              leading: Image.asset(
-                'assets/images/share_studyplan.png',
-                width: _iconSize,
+            Visibility(visible: _isNotTemporary, child: Divider(height: 1)),
+            Visibility(
+              visible: _isNotTemporary,
+              child: ListTile(
+                contentPadding: EdgeInsets.symmetric(
+                    horizontal: _listPaddingH, vertical: size.height * 0.01),
+                title: Text('共同讀書計畫', style: TextStyle(fontSize: _appBarSize)),
+                leading: Image.asset(
+                  'assets/images/share_studyplan.png',
+                  width: _iconSize,
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: _lightGray,
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CommonStudyPlanListPage(groupNum)));
+                },
               ),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                color: _lightGray,
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CommonStudyPlanListPage(groupNum)));
-              },
             ),
-            Divider(height: 1),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: _listPaddingH, vertical: _height * 0.01),
-              leading: Image.asset(
-                'assets/images/note.png',
-                width: _iconSize,
+            Visibility(visible: _isNotTemporary, child: Divider(height: 1)),
+            Visibility(
+              visible: _isNotTemporary,
+              child: ListTile(
+                contentPadding: EdgeInsets.symmetric(
+                    horizontal: _listPaddingH, vertical: _height * 0.01),
+                leading: Image.asset(
+                  'assets/images/note.png',
+                  width: _iconSize,
+                ),
+                title: Text('共同筆記', style: TextStyle(fontSize: _appBarSize)),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: _lightGray,
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CommonNoteListPage(groupNum)));
+                },
               ),
-              title: Text('共同筆記', style: TextStyle(fontSize: _appBarSize)),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                color: _lightGray,
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CommonNoteListPage(groupNum)));
-              },
             ),
           ],
         ),
@@ -528,23 +544,31 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
         );
       }
 
-      return Scaffold(
-          appBar: AppBar(
-            backgroundColor: _color,
-            title: Text(_getGroupModel.title,
-                style: TextStyle(fontSize: _appBarSize)),
-            actions: [_voteAction()],
-            leading: Container(
-              margin: EdgeInsets.only(left: _leadingL),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: _color,
+                title: Text(_getGroupModel.title,
+                    style: TextStyle(fontSize: _appBarSize)),
+                actions: [_voteAction()],
+                leading: Container(
+                  margin: EdgeInsets.only(left: _leadingL),
+                  child: GestureDetector(
+                    child: Icon(Icons.chevron_left),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-          body: Container(color: Colors.white, child: groupWidget));
+              body: Container(
+                  color: Colors.white,
+                  child: SafeArea(top: false, child: groupWidget))),
+        ),
+      );
     } else {
       return Scaffold(
         body: Container(
