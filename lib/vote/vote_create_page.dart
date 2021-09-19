@@ -208,7 +208,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                   child: Container(
                     margin: EdgeInsets.only(top: _height * 0.03),
                     child: TextField(
-                      controller:  TextEditingController.fromValue(
+                      controller: TextEditingController.fromValue(
                           TextEditingValue(
                               text: _voteItemController.text,
                               // 保持光標在最後
@@ -388,89 +388,103 @@ class _VoteCreateWidget extends State<VoteCreatePage>
       return _onPressed;
     }
 
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: _color,
-          title: Text('建立投票', style: TextStyle(fontSize: _appBarSize)),
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-          bottom: TabBar(
-            controller: _tabController,
-            indicator: ShapeDecoration(
-                shape: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: _yellow, width: 0, style: BorderStyle.solid)),
-                gradient: LinearGradient(colors: [_yellow, _yellow])),
-            labelColor: Colors.white,
-            unselectedLabelColor: _hintGray,
-            indicatorPadding: EdgeInsets.all(0.0),
-            indicatorWeight: _width * 0.01,
-            labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-            tabs: <Widget>[
-              Container(
-                height: _textFied,
-                alignment: Alignment.center,
-                color: _color,
-                child: Text("選項", style: TextStyle(fontSize: _pSize)),
-              ),
-              Container(
-                height: _textFied,
-                alignment: Alignment.center,
-                color: _color,
-                child: Text("日期", style: TextStyle(fontSize: _pSize)),
-              ),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            Container(color: Colors.white, child: createVote),
-            Container(color: Colors.white, child: createDateVote)
-          ],
-        ),
-        bottomNavigationBar: Row(children: <Widget>[
-          Expanded(
-            // ignore: deprecated_member_use
-            child: FlatButton(
-              height: _bottomHeight,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Image.asset(
-                'assets/images/cancel.png',
-                width: _bottomIconWidth,
-              ),
-              color: _light,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          Expanded(
-              // ignore: deprecated_member_use
-              child: Builder(builder: (context) {
-            // ignore: deprecated_member_use
-            return FlatButton(
-                disabledColor: _hintGray,
-                height: _bottomHeight,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0)),
-                child: Image.asset(
-                  'assets/images/confirm.png',
-                  width: _bottomIconWidth,
+    return Container(
+      color: _color,
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: _color,
+              title: Text('建立投票', style: TextStyle(fontSize: _appBarSize)),
+              leading: Container(
+                margin: EdgeInsets.only(left: _leadingL),
+                child: GestureDetector(
+                  child: Icon(Icons.chevron_left),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-                color: _color,
-                textColor: Colors.white,
-                onPressed: _onPressed());
-          }))
-        ]));
+              ),
+              bottom: TabBar(
+                controller: _tabController,
+                indicator: ShapeDecoration(
+                    shape: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: _yellow,
+                            width: 0,
+                            style: BorderStyle.solid)),
+                    gradient: LinearGradient(colors: [_yellow, _yellow])),
+                labelColor: Colors.white,
+                unselectedLabelColor: _hintGray,
+                indicatorPadding: EdgeInsets.all(0.0),
+                indicatorWeight: _width * 0.01,
+                labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+                tabs: <Widget>[
+                  Container(
+                    height: _textFied,
+                    alignment: Alignment.center,
+                    color: _color,
+                    child: Text("選項", style: TextStyle(fontSize: _pSize)),
+                  ),
+                  Container(
+                    height: _textFied,
+                    alignment: Alignment.center,
+                    color: _color,
+                    child: Text("日期", style: TextStyle(fontSize: _pSize)),
+                  ),
+                ],
+              ),
+            ),
+            body: GestureDetector(
+              // 點擊空白處釋放焦點
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  Container(color: Colors.white, child: createVote),
+                  Container(color: Colors.white, child: createDateVote)
+                ],
+              ),
+            ),
+            bottomNavigationBar: Container(
+              color: Theme.of(context).bottomAppBarColor,
+              child: SafeArea(
+                top: false,
+                child: BottomAppBar(
+                  elevation: 0,
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: SizedBox(
+                        height: _bottomHeight,
+                        child: RawMaterialButton(
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/cancel.png',
+                              width: _bottomIconWidth,
+                            ),
+                            fillColor: _light,
+                            onPressed: () => Navigator.pop(context)),
+                      ),
+                    ), // 取消按鈕
+                    Expanded(
+                        child: SizedBox(
+                      height: _bottomHeight,
+                      child: RawMaterialButton(
+                        elevation: 0,
+                        child: Image.asset(
+                          'assets/images/confirm.png',
+                          width: _bottomIconWidth,
+                        ),
+                        fillColor: _color,
+                        onPressed: _onPressed(),
+                      ),
+                    )),
+                  ]),
+                ),
+              ),
+            )),
+      ),
+    );
   }
 }

@@ -638,59 +638,71 @@ class _VoteEditWidget extends State<VoteEditPage> {
         ],
       );
 
-      return Scaffold(
-          appBar: AppBar(
-            backgroundColor: _color,
-            title: Text('編輯投票', style: TextStyle(fontSize: _appBarSize)),
-            leading: Container(
-              margin: EdgeInsets.only(left: _leadingL),
-              child: GestureDetector(
-                child: Icon(Icons.chevron_left),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          ),
-          body: Container(
-              color: Colors.white,
-              child: ListView(children: [editVote, editVoteSetting])),
-          bottomNavigationBar: Row(children: <Widget>[
-            Expanded(
-              // ignore: deprecated_member_use
-              child: FlatButton(
-                height: _bottomHeight,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0)),
-                child: Image.asset(
-                  'assets/images/cancel.png',
-                  width: _bottomIconWidth,
-                ),
-                color: _light,
-                textColor: Colors.white,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            Expanded(
-                // ignore: deprecated_member_use
-                child: Builder(builder: (context) {
-              // ignore: deprecated_member_use
-              return FlatButton(
-                  disabledColor: _hintGray,
-                  height: _bottomHeight,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0)),
-                  child: Image.asset(
-                    'assets/images/confirm.png',
-                    width: _bottomIconWidth,
+      return Container(
+        color: _color,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: _color,
+                title: Text('編輯投票', style: TextStyle(fontSize: _appBarSize)),
+                leading: Container(
+                  margin: EdgeInsets.only(left: _leadingL),
+                  child: GestureDetector(
+                    child: Icon(Icons.chevron_left),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  color: _color,
-                  textColor: Colors.white,
-                  onPressed: _onPressed());
-            }))
-          ]));
+                ),
+              ),
+              body: GestureDetector(
+                // 點擊空白處釋放焦點
+                behavior: HitTestBehavior.translucent,
+                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                child: Container(
+                    color: Colors.white,
+                    child: ListView(children: [editVote, editVoteSetting])),
+              ),
+              bottomNavigationBar: Container(
+                color: Theme.of(context).bottomAppBarColor,
+                child: SafeArea(
+                  top: false,
+                  child: BottomAppBar(
+                    elevation: 0,
+                    child: Row(children: <Widget>[
+                      Expanded(
+                        child: SizedBox(
+                          height: _bottomHeight,
+                          child: RawMaterialButton(
+                              elevation: 0,
+                              child: Image.asset(
+                                'assets/images/cancel.png',
+                                width: _iconWidth,
+                              ),
+                              fillColor: _light,
+                              onPressed: () => Navigator.pop(context)),
+                        ),
+                      ), // 取消按鈕
+                      Expanded(
+                        child: SizedBox(
+                          height: _bottomHeight,
+                          child: RawMaterialButton(
+                              elevation: 0,
+                              child: Image.asset(
+                                'assets/images/confirm.png',
+                                width: _iconWidth,
+                              ),
+                              fillColor: _color,
+                              onPressed: _onPressed()),
+                        ),
+                      )
+                    ]),
+                  ),
+                ),
+              )),
+        ),
+      );
     } else {
       return Scaffold(
           appBar: AppBar(

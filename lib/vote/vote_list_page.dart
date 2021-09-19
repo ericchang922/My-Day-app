@@ -211,6 +211,7 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
     return Container(
       color: _color,
       child: SafeArea(
+        bottom: false,
         child: DefaultTabController(
           initialIndex: 0,
           length: 2,
@@ -266,8 +267,12 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
             ),
             body: TabBarView(
               children: <Widget>[
-                Container(color: Colors.white, child: voteList),
-                Container(color: Colors.white, child: voteEndList),
+                Container(
+                    color: Colors.white,
+                    child: SafeArea(top: false, child: voteList)),
+                Container(
+                    color: Colors.white,
+                    child: SafeArea(top: false, child: voteEndList)),
               ],
             ),
           ),

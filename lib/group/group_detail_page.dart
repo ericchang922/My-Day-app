@@ -147,6 +147,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
 
     double _leadingL = _height * 0.02;
     double _listPaddingH = _width * 0.08;
+    double _itemsSize = _height * 0.045;
 
     double _appBarSize = _width * 0.052;
     double _pSize = _height * 0.023;
@@ -212,6 +213,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
           itemBuilder: (context) => [
             PopupMenuItem<int>(
                 value: 0,
+                height: _itemsSize,
                 child: Container(
                     alignment: Alignment.center,
                     child:
@@ -221,6 +223,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
             ),
             PopupMenuItem<int>(
                 value: 1,
+                height: _itemsSize,
                 child: Container(
                     alignment: Alignment.center,
                     child:
@@ -230,6 +233,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
             ),
             PopupMenuItem<int>(
                 value: 2,
+                height: _itemsSize,
                 child: Container(
                     alignment: Alignment.center,
                     child:
@@ -239,6 +243,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
             ),
             PopupMenuItem<int>(
                 value: 3,
+                height: _itemsSize,
                 child: Container(
                     alignment: Alignment.center,
                     child:
@@ -255,6 +260,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
           itemBuilder: (context) => [
             PopupMenuItem<int>(
                 value: 1,
+                height: _itemsSize,
                 child: Container(
                     alignment: Alignment.center,
                     child:
@@ -264,6 +270,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
             ),
             PopupMenuItem<int>(
                 value: 2,
+                height: _itemsSize,
                 child: Container(
                     alignment: Alignment.center,
                     child:
@@ -272,7 +279,8 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
               height: 1,
             ),
             PopupMenuItem<int>(
-                value: 3,
+                value: 5,
+                height: _itemsSize,
                 child: Container(
                     alignment: Alignment.center,
                     child:

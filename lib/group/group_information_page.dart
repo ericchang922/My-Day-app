@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/group_request/edit_group.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/group_request/get.dart';
-import 'package:My_Day_app/public/group_request/edit_group.dart';
 import 'package:My_Day_app/models/group/get_group_model.dart';
 
 class GroupInformationPage extends StatefulWidget {
@@ -92,7 +92,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
 
     _submit() async {
       String title = _groupName;
-      int typeId = _groupType + 1;
+      int typeId = _groupType;
 
       var submitWidget;
       _submitWidgetfunc() async {
@@ -243,6 +243,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                   _groupName = _groupNameController.text;
                                 });
                                 if (await _submit() != true) {
+                                  _getGroupRequest();
                                   Navigator.of(context).pop();
                                 }
                               }
@@ -261,17 +262,6 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
     }
 
     Future groupUpdateTypeDialog(BuildContext context) {
-      String dropdownValue = typeNameList[_groupType - 1];
-      int _choseType;
-      String _choseTypeName = '';
-
-      typeState() {
-        setState(() {
-          _groupType = _choseType;
-          _groupTypeName = _choseTypeName;
-        });
-      }
-
       return showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -312,7 +302,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                   top: _height * 0.03),
                               child: Row(
                                 children: [
-                                  Text('群組ID：',
+                                  Text('類別：',
                                       style: TextStyle(fontSize: _pSize)),
                                   Container(
                                     height: _textFied,
@@ -332,13 +322,16 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                         Icons.expand_more,
                                         color: Color(0xffcccccc),
                                       ),
-                                      value: dropdownValue,
+                                      value: _groupTypeName,
                                       iconSize: _iconWidth,
                                       elevation: 16,
                                       underline: Container(height: 0),
                                       onChanged: (String newValue) {
                                         setState(() {
-                                          dropdownValue = newValue;
+                                          _groupTypeName = newValue;
+                                          _groupType = typeNameList
+                                                  .indexOf(_groupTypeName) +
+                                              1;
                                         });
                                       },
                                       items: typeNameList
@@ -422,13 +415,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                 ),
                               ),
                               onTap: () async {
-                                setState(() {
-                                  _choseType =
-                                      typeNameList.indexOf(dropdownValue);
-                                  _choseTypeName = typeNameList[_choseType];
-                                });
-                                typeState();
                                 if (await _submit() != true) {
+                                  _getGroupRequest();
                                   Navigator.of(context).pop();
                                 }
                               },
@@ -471,8 +459,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                 child: Text(_groupTypeName,
                     style: TextStyle(fontSize: _subtitleSize)),
               ),
-              onTap: () {
-                groupUpdateTypeDialog(context);
+              onTap: () async {
+                await groupUpdateTypeDialog(context);
               },
             ),
             Divider(),

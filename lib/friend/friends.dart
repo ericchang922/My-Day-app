@@ -50,7 +50,7 @@ class FriendsPageWidget extends StatelessWidget {
               minWidth: double.infinity,
               onPressed: (){
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => BestFriendPage()));
+                MaterialPageRoute(builder: (context) => BestfriendPage()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
