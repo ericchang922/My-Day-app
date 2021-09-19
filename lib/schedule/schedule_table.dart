@@ -1,6 +1,6 @@
 // flutter
 import 'package:My_Day_app/public/convert.dart';
-import 'package:My_Day_app/schedule/schedule_dialog.dart';
+import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/schedule/schedule_table_function.dart';
 import 'package:flutter/material.dart';
 // my day
@@ -117,6 +117,7 @@ class _ScheduleTable extends State<ScheduleTable> {
     Size _size = MediaQuery.of(context).size;
     double _width = _size.width;
     double _height = _size.height;
+    double _allDayRowHeight = _height * 0.03;
     double _tableContentHeight = 0;
 
     Create _create = Create(context: context, height: _height, width: _width);
@@ -263,6 +264,51 @@ class _ScheduleTable extends State<ScheduleTable> {
       return _tableRowList;
     }
 
+    _allDaySchedule() {
+      List<Widget> _allDayChildren = [];
+      Duration _dayStartTime =
+          ConvertString.toDuration(timeLineList[0]['start']);
+
+      _allDayChildren.add(Container(
+        color: _weekDayColor,
+        height: _height * 0.03,
+        alignment: Alignment.center,
+        child: Text('整日'),
+      ));
+      for (DateTime d in dateList) {
+        DateTime _todayStart = d.add(_dayStartTime);
+        DateTime _todayEnd = _todayStart.add(Duration(days: 1));
+        List<Widget> columnChildren = [];
+
+        for (var s in widget.scheduleList.schedule) {
+          DateTime _start = s.startTime;
+          DateTime _end = s.endTime;
+
+          if ((!_start.isAfter(_todayStart) && !_end.isBefore(_todayEnd)) ||
+              (_start == d &&
+                  !_end.isBefore(d.add(Duration(hours: 23, minutes: 59))))) {
+            columnChildren.add(Container(
+              height: _height * 0.01,
+              child: TextButton(
+                  child: Container(),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          typeColor(s.typeId)))),
+            ));
+          }
+        }
+        _allDayChildren.add(Container(
+          height: _allDayRowHeight,
+          width: _width / 8,
+          child: ListView(
+            children: columnChildren,
+          ),
+        ));
+      }
+
+      return TableRow(children: _allDayChildren);
+    }
+
     List<TableRow> thead = [
       TableRow(children: [
         _create.top(''),
@@ -283,11 +329,12 @@ class _ScheduleTable extends State<ScheduleTable> {
         _create.weekDay('五'),
         _create.weekDay('六'),
         _create.weekDay('日'),
-      ])
+      ]),
+      _allDaySchedule()
     ];
 
     Container theadContainer = Container(
-      height: _height * 0.07,
+      height: _height * 0.07 + _allDayRowHeight,
       width: _width,
       child: Table(
           columnWidths: <int, TableColumnWidth>{
@@ -320,8 +367,9 @@ class _ScheduleTable extends State<ScheduleTable> {
           children: _tableContent()),
       Positioned(
           left: _width / 8,
-          child:
-              Row(children: _create.dateBtn(dateList, _tableContentHeight, widget.scheduleList)))
+          child: Row(
+              children: _create.dateBtn(
+                  dateList, _tableContentHeight, widget.scheduleList)))
     ];
 
     List<int> insertList = [];
@@ -343,155 +391,170 @@ class _ScheduleTable extends State<ScheduleTable> {
       timeLineList.insert(index + 1 + i, {'start': '', 'end': ''});
     }
 
-    addScheduleBtn() {
-      DateTime sunday = monday.add(Duration(days: 6));
-      Duration dayStartTime =
+    _addScheduleBtn() {
+      DateTime _sunday = monday.add(Duration(days: 6));
+      Duration _dayStartTime =
           ConvertString.toDuration(timeLineList[0]['start']);
-      double scheduleHeight;
-      double startTop;
-      double startLeft;
-      List<Widget> scheduleBtnList = [];
+      double _scheduleHeight;
+      double _startTop;
+      double _startLeft;
+      List<Widget> _scheduleBtnList = [];
 
-      List<List> weekCount = [];
+      List<List> _weekCount = [];
       for (int i = 0; i < timeLineList.length; i++) {
         List<int> aWeekCount = [];
         for (int j = 0; j < 7; j++) {
           aWeekCount.add(0);
         }
-        weekCount.add(aWeekCount);
+        _weekCount.add(aWeekCount);
       }
 
       for (var s in widget.scheduleList.schedule) {
-        bool isThisWeek = false;
-        bool notStart = true;
-        DateTime start = s.startTime;
-        DateTime end = s.endTime;
-        DateTime weekStart = DateTime.utc(monday.year, monday.month, monday.day)
-            .add(dayStartTime);
-        DateTime weekEnd = sunday.add(Duration(days: 1)).add(dayStartTime);
+        bool _isThisWeek = false;
+        bool _notStart = true;
+        DateTime _start = s.startTime;
+        DateTime _end = s.endTime;
+        DateTime _weekStart =
+            DateTime.utc(monday.year, monday.month, monday.day)
+                .add(_dayStartTime);
+        DateTime _weekEnd = _sunday.add(Duration(days: 1)).add(_dayStartTime);
 
-        if ((!start.isBefore(weekStart) && !start.isAfter(weekEnd)) ||
-            (!end.isAfter(weekEnd) && !end.isBefore(weekStart))) {
-          isThisWeek = true;
+        if ((!_start.isBefore(_weekStart) && !_start.isAfter(_weekEnd)) ||
+            (!_end.isAfter(_weekEnd) && !_end.isBefore(_weekStart))) {
+          _isThisWeek = true;
           //行程在這週
           for (int i = 0; i < 7; i++) {
-            scheduleHeight = 0;
-            startTop = 0;
-            startLeft = _width / 8;
-            DateTime today = monday.add(Duration(days: i));
-            DateTime todayStart = today.add(dayStartTime);
-            DateTime todayEnd = today.add(Duration(days: 1)).add(dayStartTime);
-            int max = 0;
+            _scheduleHeight = 0;
+            _startTop = 0;
+            _startLeft = _width / 8;
+            DateTime _today = monday.add(Duration(days: i));
+            DateTime _todayStart = _today.add(_dayStartTime);
+            DateTime _todayEnd =
+                _today.add(Duration(days: 1)).add(_dayStartTime);
+            int _max = 0;
+            bool _isAllDay = false;
 
-            if (!end.isBefore(todayStart) && start.isBefore(todayEnd)) {
-              // 行程在今天
-              startLeft = (_width / 8) * (i + 1);
-              // 要顯示在今天的行程有：
-              // 1. 今天開始今天結束 2. 前幾天開始今天結束 3. 前幾天開始後幾天結束 4. 今天開始後幾天結束
-              // 條件為： 今天開始之後結束、今天結束之前開始
-              max = 0;
+            if ((!_start.isAfter(_todayStart) && !_end.isBefore(_todayEnd)) ||
+                (_start == _today &&
+                    !_end.isBefore(
+                        _today.add(Duration(hours: 23, minutes: 59))))) {
+              _isAllDay = true;
+            } else {
+              if (!_end.isBefore(_todayStart) && _start.isBefore(_todayEnd)) {
+                // 行程在今天
+                _startLeft = (_width / 8) * (i + 1);
+                // 要顯示在今天的行程有：
+                // 1. 今天開始今天結束 2. 前幾天開始今天結束 3. 前幾天開始後幾天結束 4. 今天開始後幾天結束
+                // 條件為： 今天開始之後結束、今天結束之前開始
+                _max = 0;
 
-              for (int j = 0; j < timeLineList.length; j++) {
-                // 從timeLineList裡面的時間開始一格一格比條件如下：
-                // 如果行程開始時間在這一格裡面就用開始時間作為開始
-                // 如果結束時間在這格裡面就以結束時間作為結束
-                // 將長度加到變數中計算按鈕長度
-                Duration thisStart;
-                Duration thisEnd;
-                if (timeLineList[j]['start'] == '') {
-                  if (j < timeLineList.length - 1 && j != 0) {
-                    thisStart =
-                        ConvertString.toDuration(timeLineList[j - 1]['end']);
-                    thisEnd =
-                        ConvertString.toDuration(timeLineList[j + 1]['start']);
+                for (int j = 0; j < timeLineList.length; j++) {
+                  // 從timeLineList裡面的時間開始一格一格比條件如下：
+                  // 如果行程開始時間在這一格裡面就用開始時間作為開始
+                  // 如果結束時間在這格裡面就以結束時間作為結束
+                  // 將長度加到變數中計算按鈕長度
+                  Duration _thisStart;
+                  Duration _thisEnd;
+                  if (timeLineList[j]['start'] == '') {
+                    if (j < timeLineList.length - 1 && j != 0) {
+                      _thisStart =
+                          ConvertString.toDuration(timeLineList[j - 1]['end']);
+                      _thisEnd = ConvertString.toDuration(
+                          timeLineList[j + 1]['start']);
+                    }
+                  } else {
+                    _thisStart =
+                        ConvertString.toDuration(timeLineList[j]['start']);
+                    _thisEnd = ConvertString.toDuration(timeLineList[j]['end']);
                   }
-                } else {
-                  thisStart =
-                      ConvertString.toDuration(timeLineList[j]['start']);
-                  thisEnd = ConvertString.toDuration(timeLineList[j]['end']);
-                }
 
-                DateTime thisStartDateTime = today.add(thisStart);
-                DateTime thisEndDateTime = today.add(thisEnd);
+                  DateTime _thisStartDateTime = _today.add(_thisStart);
+                  DateTime _thisEndDateTime = _today.add(_thisEnd);
 
-                if (thisStartDateTime.isBefore(todayStart))
-                  thisStartDateTime = thisStartDateTime.add(Duration(days: 1));
-                if (!thisEndDateTime.isAfter(todayStart))
-                  thisEndDateTime = thisEndDateTime.add(Duration(days: 1));
+                  if (_thisStartDateTime.isBefore(_todayStart))
+                    _thisStartDateTime =
+                        _thisStartDateTime.add(Duration(days: 1));
+                  if (!_thisEndDateTime.isAfter(_todayStart))
+                    _thisEndDateTime = _thisEndDateTime.add(Duration(days: 1));
 
-                Duration heightStart;
-                Duration heightEnd;
+                  Duration _heightStart;
+                  Duration _heightEnd;
 
-                // 行程在這格開始的位置
-                if (!start.isBefore(thisStartDateTime) &&
-                    !start.isAfter(thisEndDateTime)) {
-                  // 如果開始時間在這格開始之後 而且 在這格結束之前 => 表示是在這格開始的
+                  // 行程在這格開始的位置
+                  if (!_start.isBefore(_thisStartDateTime) &&
+                      !_start.isAfter(_thisEndDateTime)) {
+                    // 如果開始時間在這格開始之後 而且 在這格結束之前 => 表示是在這格開始的
 
-                  notStart = false;
-                  heightStart = timeOfDateTime(start);
-                  weekCount[j][i]++;
-                  startTop += timeHeight(ConvertDuration.toShortTime(thisStart),
-                      ConvertDuration.toShortTime(heightStart), _height);
-                } else if (!start.isAfter(thisStartDateTime) &&
-                    !end.isBefore(thisStartDateTime)) {
-                  // 開始時間是在這格開始之前 而且 結束時間是在這格開始之後 => 會經過這格 有可能結束在這格或是之後
+                    _notStart = false;
+                    _heightStart = timeOfDateTime(_start);
+                    _weekCount[j][i]++;
+                    _startTop += timeHeight(
+                        ConvertDuration.toShortTime(_thisStart),
+                        ConvertDuration.toShortTime(_heightStart),
+                        _height);
+                  } else if (!_start.isAfter(_thisStartDateTime) &&
+                      !_end.isBefore(_thisStartDateTime)) {
+                    // 開始時間是在這格開始之前 而且 結束時間是在這格開始之後 => 會經過這格 有可能結束在這格或是之後
 
-                  notStart = false;
-                  heightStart = thisStart;
-                  weekCount[j][i]++;
-                }
+                    _notStart = false;
+                    _heightStart = _thisStart;
+                    _weekCount[j][i]++;
+                  }
 
-                if (!end.isBefore(thisStartDateTime) &&
-                    !end.isAfter(thisEndDateTime)) {
-                  // 如果結束時間在這格開始之後 而且 在這格結束之前 => 表示是在這格結束的
+                  if (!_end.isBefore(_thisStartDateTime) &&
+                      !_end.isAfter(_thisEndDateTime)) {
+                    // 如果結束時間在這格開始之後 而且 在這格結束之前 => 表示是在這格結束的
 
-                  heightEnd = timeOfDateTime(end);
-                } else if (!end.isBefore(thisEndDateTime) &&
-                    !start.isAfter(thisEndDateTime)) {
-                  // 結束時間是在這格結束之後 而且 開始時間是在這格結束之前 => 會經過這格 有可能在這格開始或是之前
+                    _heightEnd = timeOfDateTime(_end);
+                  } else if (!_end.isBefore(_thisEndDateTime) &&
+                      !_start.isAfter(_thisEndDateTime)) {
+                    // 結束時間是在這格結束之後 而且 開始時間是在這格結束之前 => 會經過這格 有可能在這格開始或是之前
 
-                  heightEnd = thisEnd;
-                }
+                    _heightEnd = _thisEnd;
+                  }
 
-                if (notStart) {
-                  startTop += timeHeight(ConvertDuration.toShortTime(thisStart),
-                      ConvertDuration.toShortTime(thisEnd), _height);
-                }
+                  if (_notStart) {
+                    _startTop += timeHeight(
+                        ConvertDuration.toShortTime(_thisStart),
+                        ConvertDuration.toShortTime(_thisEnd),
+                        _height);
+                  }
 
-                if (heightStart != null && heightEnd != null) {
-                  scheduleHeight += timeHeight(
-                      ConvertDuration.toShortTime(heightStart),
-                      ConvertDuration.toShortTime(heightEnd),
-                      _height);
-                }
-                if (weekCount[j][i] > max) {
-                  max = weekCount[j][i];
+                  if (_heightStart != null && _heightEnd != null) {
+                    _scheduleHeight += timeHeight(
+                        ConvertDuration.toShortTime(_heightStart),
+                        ConvertDuration.toShortTime(_heightEnd),
+                        _height);
+                  }
+                  if (_weekCount[j][i] > _max) {
+                    _max = _weekCount[j][i];
+                  }
                 }
               }
-            }
-            if (max <= 4) {
-              if (isThisWeek) {
-                startLeft += (max - 1) * _width * 0.03;
+              if (_max <= 4) {
+                if (_isThisWeek) {
+                  _startLeft += (_max - 1) * _width * 0.03;
 
-                scheduleBtnList.add(homeSchedule(
-                  context,
-                  top: startTop,
-                  left: startLeft,
-                  height: scheduleHeight,
-                  scheduleNum: s.scheduleNum,
-                  typeId: s.typeId,
-                  count: max,
-                ));
+                  _scheduleBtnList.add(homeSchedule(
+                    context,
+                    top: _startTop,
+                    left: _startLeft,
+                    height: _scheduleHeight,
+                    scheduleNum: s.scheduleNum,
+                    typeId: s.typeId,
+                    count: _max,
+                  ));
+                }
               }
             }
           }
         }
       }
 
-      return scheduleBtnList;
+      return _scheduleBtnList;
     }
 
-    List<Widget> tbody = tbodyList..addAll(addScheduleBtn());
+    List<Widget> tbody = tbodyList..addAll(_addScheduleBtn());
 
     Container tbodyContainer = Container(
       child: ListView(
