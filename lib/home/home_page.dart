@@ -11,7 +11,7 @@ import 'package:My_Day_app/public/schedule_request/get_list.dart';
 import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:My_Day_app/schedule/schedule_table.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
-import 'package:My_Day_app/home/homeUpdate.dart';
+import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/home/home_popup_menu.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
@@ -194,7 +194,7 @@ class _HomePageBody extends State<HomePageBody> {
     } else {
       setState(() {
         _floatingActionButton = FloatingActionButton(
-            child: Icon(MyDayIcon.home),
+            child: Icon(MyDayIcon.home, color: Colors.white,),
             backgroundColor: Theme.of(context).primaryColor,
             onPressed: () {
               pageController.animateToPage(homeIndex,
