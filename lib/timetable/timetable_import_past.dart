@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
-class TimetableReceivePage extends StatefulWidget {
+class TimetableImprotPastPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return TimetableReceive();
-  }
+  TimetableImportPast createState() => new TimetableImportPast();
 }
 
-class TimetableReceive extends State {
+class TimetableImportPast extends State<TimetableImprotPastPage> {
   get child => null;
   get left => null;
 
@@ -18,7 +16,7 @@ class TimetableReceive extends State {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
-        title: Text('接收課表', style: TextStyle(fontSize: 20)),
+        title: Text('110年　第一學期', style: TextStyle(fontSize: 20)),
       ),
     );
   }
