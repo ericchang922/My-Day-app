@@ -12,17 +12,8 @@ Future<bool> loginfailDialog(BuildContext context,String alertTitle, String aler
             borderRadius: BorderRadius.all(Radius.circular(_height * 0.03))),
           title: Text(alertTitle),
           content: Text(alertTxt),
-                actions: <Widget>[                     
-                InkWell(
-                  child: Text("關閉",
-                    style: TextStyle(color: _color),
-                  ),               
-                onTap: () {
-                  Navigator.push(context,
-                    MaterialPageRoute( builder: (context) => LoginPage()));
-                },
-              ),
-              ],
+                
+              
             ),
       );
   }

@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 class NotesAddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       
         body: NotesAddPageWidget(),
       
-    );
+    ));
   }
 }
 
@@ -19,7 +20,11 @@ enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 class NotesAddPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+  Size size = MediaQuery.of(context).size;
+  double _width = size.width;
+  double _iconWidth = _width * 0.05;
+    return SafeArea(
+        child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
           title: Text('新增筆記', style: TextStyle(fontSize: 20)),
@@ -35,39 +40,47 @@ class NotesAddPageWidget extends StatelessWidget {
             child: Row(children: <Widget>[
           Expanded(
             // ignore: deprecated_member_use
-            child: FlatButton(
+             child: SizedBox(
               height: 50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Text(
-                '取消',
-                style: TextStyle(fontSize: 18),
-              ),
-              color: Color(0xffFFAAA6),
-              textColor: Colors.white,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                  backgroundColor:Color(0xffFFAAA6)
+                  ),
+             
+              child: Image.asset(
+                    'assets/images/cancel.png',
+                    width: _iconWidth,
+                  ),
+              
               onPressed: () {
                 Navigator.pop(context);
               },
-            ),
+             )),
           ),
           Expanded(
             // ignore: deprecated_member_use
-            child: FlatButton(
+             child: SizedBox(
               height: 50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Text(
-                '確認',
-                style: TextStyle(fontSize: 18),
-              ),
-              color: Color(0xffF86D67),
-              textColor: Colors.white,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                  backgroundColor: Color(0xffF86D67)
+                  ),
+              
+              child: Image.asset(
+                    'assets/images/confirm.png',
+                    width: _iconWidth,
+                  ),
+             
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
           ),
-        ])));
+    )]))));
   }
 }
 
@@ -89,7 +102,8 @@ class _NotesAdd extends State<NotesAdd> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
+      home: SafeArea(
+        child: Scaffold(
         body: ListView(
           children: <Widget>[
             Container(
@@ -154,7 +168,7 @@ class _NotesAdd extends State<NotesAdd> {
                   constraints: BoxConstraints.expand(height: 1.0),
                 )),
             Padding(
-              padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+              padding: EdgeInsets.fromLTRB(30, 0, 20, 0),
               // ignore: deprecated_member_use
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,7 +179,10 @@ class _NotesAdd extends State<NotesAdd> {
                       fontSize: 20,
                     ),
                   ),
-                  FlatButton(
+                  TextButton(
+                    style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
                       child: Text(
                         '瀏覽',
                         style: TextStyle(fontSize: 18),
@@ -228,6 +245,6 @@ class _NotesAdd extends State<NotesAdd> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

@@ -15,7 +15,11 @@ class ForgetpwPage extends StatelessWidget {
 class ForgetpwWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+  Size size = MediaQuery.of(context).size;
+  double _width = size.width;
+  double _iconWidth = _width * 0.05;
+    return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           title:
               Text('忘記密碼', style: TextStyle(color: Colors.white, fontSize: 22)),
@@ -26,41 +30,48 @@ class ForgetpwWidget extends StatelessWidget {
             child: Row(children: <Widget>[
           Expanded(
             // ignore: deprecated_member_use
-            child: FlatButton(
-              height: 50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Text(
-                '取消',
-                style: TextStyle(fontSize: 18),
-              ),
-              color: Color(0xffFFAAA6),
-              textColor: Colors.white,
+            child: SizedBox(
+                height: 50,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                    backgroundColor: Color(0xffFFAAA6)
+                    ),
+              
+              child: Image.asset(
+                    'assets/images/cancel.png',
+                    width: _iconWidth,
+                  ),
+              
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
+                Navigator.pop(context);
               },
-            ),
+            )),
           ),
           Expanded(
             // ignore: deprecated_member_use
-            child: FlatButton(
-              height: 50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Text(
-                '確認',
-                style: TextStyle(fontSize: 18),
-              ),
-              color: Color(0xffF86D67),
-              textColor: Colors.white,
+            child: SizedBox(
+                height: 50,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                    backgroundColor: Color(0xffF86D67)
+                    ),
+              
+              child: Image.asset(
+                    'assets/images/confirm.png',
+                    width: _iconWidth,
+                  ),
+             
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ChangepwPage()));
               },
-            ),
+            )),
           ),
-        ])));
+        ]))));
   }
 }
 
@@ -75,7 +86,8 @@ class Forgetpw extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
+        home: SafeArea(
+          child: Scaffold(
             resizeToAvoidBottomInset: false,
             body: ListView(
               children: <Widget>[
@@ -108,17 +120,21 @@ class Forgetpw extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(155, 0, 45, 0),
-                  child: FlatButton(
-                    height: 30,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0)),
+                  child: SizedBox(
+                    height: 40,
+                    child: TextButton(
+                    style: TextButton.styleFrom(
+                        primary: Color(0xffF86D67),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                        
+                        ),
+                    
                     child: Text(
                       '發送驗證碼',
                       style: TextStyle(fontSize: 15),
                     ),
-                    textColor: Color(0xffF86D67),
                     onPressed: () {},
-                  ),
+                  )),
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(35, 0, 35, 0),
@@ -149,6 +165,6 @@ class Forgetpw extends StatelessWidget {
                   ),
                 ),
               ],
-            )));
+    ))));
   }
 }

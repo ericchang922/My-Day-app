@@ -15,7 +15,11 @@ class ChangepwPage extends StatelessWidget {
 class ChangepwWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+  Size size = MediaQuery.of(context).size;
+  double _width = size.width;
+  double _iconWidth = _width * 0.05;
+    return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           title:
               Text('更改密碼', style: TextStyle(color: Colors.white, fontSize: 22)),
@@ -26,41 +30,49 @@ class ChangepwWidget extends StatelessWidget {
             child: Row(children: <Widget>[
           Expanded(
             // ignore: deprecated_member_use
-            child: FlatButton(
-              height: 50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Text(
-                '取消',
-                style: TextStyle(fontSize: 18),
-              ),
-              color: Color(0xffFFAAA6),
-              textColor: Colors.white,
+            child: SizedBox(
+                height: 50,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                    backgroundColor: Color(0xffFFAAA6)
+                    ),
+              
+              child: Image.asset(
+                    'assets/images/cancel.png',
+                    width: _iconWidth,
+                  ),
+            
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ForgetpwPage()));
               },
-            ),
+            )),
           ),
           Expanded(
             // ignore: deprecated_member_use
-            child: FlatButton(
-              height: 50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              child: Text(
-                '確認',
-                style: TextStyle(fontSize: 18),
-              ),
-              color: Color(0xffF86D67),
-              textColor: Colors.white,
+            child: SizedBox(
+                height: 50,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                    backgroundColor: Color(0xffF86D67)
+                    ),
+              
+              child: Image.asset(
+                    'assets/images/confirm.png',
+                    width: _iconWidth,
+                  ),
+              
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => LoginPage()));
               },
             ),
-          ),
-        ])));
+          )),
+        ]))));
   }
 }
 
@@ -75,7 +87,8 @@ class Changepw extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
+        home: SafeArea(
+          child: Scaffold(
             resizeToAvoidBottomInset: false,
             body: ListView(
               children: <Widget>[
@@ -135,6 +148,6 @@ class Changepw extends StatelessWidget {
                   ),
                 ),
               ],
-            )));
+            ))));
   }
 }

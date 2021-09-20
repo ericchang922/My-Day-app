@@ -1,5 +1,7 @@
 import 'package:My_Day_app/account/login.dart';
 import 'package:My_Day_app/friend/friends.dart';
+
+
 import 'package:flutter/material.dart';
 import 'personal_information.dart';
 
@@ -27,7 +29,8 @@ class Settings extends State {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       
       appBar: AppBar( 
         backgroundColor: Color(0xffF86D67),
@@ -41,12 +44,16 @@ class Settings extends State {
       ),
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+         Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
               },
               child: Row(
@@ -67,7 +74,7 @@ class Settings extends State {
                 ),
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -76,12 +83,16 @@ class Settings extends State {
                   color: Color(0xffE3E3E3),
                   constraints: BoxConstraints.expand(height: 1.0),
                 )),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+         Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => PersonalInformationPage()));
@@ -100,7 +111,7 @@ class Settings extends State {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -110,15 +121,19 @@ class Settings extends State {
               constraints: BoxConstraints.expand(height: 1.0),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => FriendsPage()));
+                MaterialPageRoute(builder: (context) => FriendPage()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,7 +149,7 @@ class Settings extends State {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -143,12 +158,16 @@ class Settings extends State {
                   color: Color(0xffE3E3E3),
                   constraints: BoxConstraints.expand(height: 1.0),
                 )),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => NoticePage()));
@@ -167,7 +186,7 @@ class Settings extends State {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -177,12 +196,16 @@ class Settings extends State {
               constraints: BoxConstraints.expand(height: 1.0),
             ),
           ),
-              Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ThemePage()));
@@ -201,7 +224,7 @@ class Settings extends State {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -210,12 +233,16 @@ class Settings extends State {
                   color: Color(0xffE3E3E3),
                   constraints: BoxConstraints.expand(height: 1.0),
                 )),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 
               },
@@ -233,7 +260,7 @@ class Settings extends State {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -243,12 +270,16 @@ class Settings extends State {
               constraints: BoxConstraints.expand(height: 1.0),
             ),
           ),
-              Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => PrivacyPage()));
@@ -267,7 +298,7 @@ class Settings extends State {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -276,12 +307,16 @@ class Settings extends State {
                   color: Color(0xffE3E3E3),
                   constraints: BoxConstraints.expand(height: 1.0),
                 )),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => LoginPage()));
@@ -296,7 +331,7 @@ class Settings extends State {
                   ),
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -308,7 +343,7 @@ class Settings extends State {
           ),
         ],
       ),
-    );
+    ));
   }
 
   void _changed(isCheck) {

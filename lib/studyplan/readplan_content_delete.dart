@@ -29,7 +29,7 @@ Future<bool> readplanDeleteDialog(BuildContext context) async {
                           Text(
                             "是否刪除此讀書計畫",
                             style:
-                                TextStyle(fontSize: screenSize.width * 0.07),
+                                TextStyle(fontSize: screenSize.width * 0.06),
                             textAlign: TextAlign.center,
                           ),
                         ],

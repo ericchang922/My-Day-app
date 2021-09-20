@@ -5,6 +5,7 @@
 import 'package:My_Day_app/studyplan/note_choose.dart';
 import 'package:My_Day_app/studyplan/readplan_add_note.dart';
 import 'package:My_Day_app/studyplan/readplan_content_delete.dart';
+import 'package:My_Day_app/studyplan/readplan_edit.dart';
 import 'package:flutter/material.dart';
 
 
@@ -12,7 +13,7 @@ selectedItem(BuildContext context, item) async {
   switch (item) {
     case 0:
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => ReadPlanChoose()));
+          .push(MaterialPageRoute(builder: (context) => ReadPlanEdit()));
       break;
     case 1:
       bool action = await readplanDeleteDialog(context);
@@ -30,7 +31,8 @@ class ReadPlanContentPage extends StatelessWidget {
           platform: TargetPlatform.iOS,
         ),
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
+        home: SafeArea(
+        child: Scaffold(
           appBar: AppBar(
             backgroundColor: Color(0xffF86D67),
             title: Text('期末考 2020/11/28', style: TextStyle(fontSize: 20)),
@@ -80,7 +82,7 @@ class ReadPlanContentPage extends StatelessWidget {
               ExamplePage(),
             ]),
           ),
-        ));
+        )));
   }
 }
 
@@ -96,11 +98,15 @@ class ReadPlanContent extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(right: 10, left: 10, top: 10),
           // ignore: deprecated_member_use
-          child: FlatButton(
-            color: Color(0xffFFB5B5),
-            height: 40,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: SizedBox(
+              height: 40,
+              
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                  shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  backgroundColor: Color(0xffFFB5B5)
+                ),
             onPressed: () {
               return null;
             },
@@ -118,7 +124,7 @@ class ReadPlanContent extends StatelessWidget {
             ),
           ),
         ),
-      ],
+        )],
     );
   }
 }
@@ -141,9 +147,13 @@ class _ExamplePageState extends State<ExamplePage> {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 10, left: 20, top: 10),
-            child: FlatButton(
-              height: 60,
-              minWidth: double.infinity,
+            child: SizedBox(
+              height: 67,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: () async {
                 bool action = await readplanAddDialog(context);
               },
@@ -184,7 +194,7 @@ class _ExamplePageState extends State<ExamplePage> {
                   ),
                 ],
               ),
-            ),
+            )),
           ),
           Container(
             margin: EdgeInsets.only(top: 4.0),

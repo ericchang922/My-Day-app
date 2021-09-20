@@ -133,13 +133,13 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
     double _leadingL = _height * 0.02;
-
+    double _widthSize = _width * 0.01;
     double _pSize = _height * 0.023;
 
     double _appBarSize = _width * 0.052;
 
     Color _color = Theme.of(context).primaryColor;
-
+    Color _gray = Color(0xff959595);
     Color _bule = Color(0xff7AAAD8);
 
     Widget friendListWidget;
@@ -191,34 +191,41 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         itemBuilder: (BuildContext context, int index) {
           var friends = _bestFriendListModel.friend[index];
           return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: _listPaddingH, vertical: 0.0),
-                leading: ClipOval(
-                  child: getImage(friends.photo),
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: _listPaddingH, vertical: 0.0),
+              leading: ClipOval(
+                child: getImage(friends.photo),
+              ),
+              title: Text(
+                friends.friendName,
+                style: TextStyle(fontSize: _pSize),
+              ),
+              trailing: Column(children: [
+                Expanded(
+                    child: InkWell(
+                  child: Text(
+                    '確認',
+                    style: TextStyle(fontSize: _pSize, color: _color),
+                  ),
+                  onTap: () async {
+                    hideWidget();
+                  },
+                )),
+                SizedBox(
+                  height: _widthSize,
                 ),
-                title: Text(
-                  friends.friendName,
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                trailing:  
-                Row(children: [
-                  FlatButton(
+                Expanded(
+                  child: InkWell(
                     child: Text(
                       '刪除',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: _pSize, color: _gray),
                     ),
-                    textColor: Color(0xffCCCCCC),
-                    onPressed: hideWidget,
+                    onTap: () async {
+                    hideWidget();
+                  },
                   ),
-                  FlatButton(
-                    child: Text(
-                      '確認',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: hideWidget,
-                  ),
-                ]));
+                )
+              ]));
         },
         separatorBuilder: (context, index) {
           return Divider();
@@ -232,34 +239,41 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         itemBuilder: (BuildContext context, int index) {
           var friends = _friendListModel.friend[index];
           return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: _listPaddingH, vertical: 0.0),
-                leading: ClipOval(
-                  child: getImage(friends.photo),
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: _listPaddingH, vertical: 0.0),
+              leading: ClipOval(
+                child: getImage(friends.photo),
+              ),
+              title: Text(
+                friends.friendName,
+                style: TextStyle(fontSize: _pSize),
+              ),
+              trailing: Column(children: [
+                Expanded(
+                    child: InkWell(
+                  child: Text(
+                    '確認',
+                    style: TextStyle(fontSize: _pSize, color: _color),
+                  ),
+                  onTap: () async {
+                    hideWidget();
+                  },
+                )),
+                SizedBox(
+                  height: _widthSize,
                 ),
-                title: Text(
-                  friends.friendName,
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                trailing:  
-                Row(children: [
-                  FlatButton(
+                Expanded(
+                  child: InkWell(
                     child: Text(
                       '刪除',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: _pSize, color: _gray),
                     ),
-                    textColor: Color(0xffCCCCCC),
-                    onPressed: hideWidget,
+                    onTap: () async {
+                    hideWidget();
+                  },
                   ),
-                  FlatButton(
-                    child: Text(
-                      '確認',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: hideWidget,
-                  ),
-                ]));
+                )
+              ]));
         },
         separatorBuilder: (context, index) {
           return Divider();
@@ -343,11 +357,12 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         }
       }
 
-      return Scaffold(
+      return SafeArea(
+      child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
-          title: Text('摯友', style: TextStyle(fontSize: 20)),
+          title: Text('交友邀請', style: TextStyle(fontSize: 20)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
@@ -373,12 +388,13 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
             ],
           ),
         )),
-      );
+      ));
     } else {
-      return Scaffold(
+      return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
-          title: Text('摯友', style: TextStyle(fontSize: 20)),
+          title: Text('交友邀請', style: TextStyle(fontSize: 20)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
@@ -398,7 +414,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      );
+      ));
     }
   }
 
@@ -409,7 +425,10 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
 
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
-
+    double _widthSize = _width * 0.01;
+    
+    Color _color = Theme.of(context).primaryColor;
+    Color _gray = Color(0xff959595);
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -417,34 +436,41 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredBestFriend[index];
         return ListTile(
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: _listPaddingH, vertical: 0.0),
-              leading: ClipOval(
-                child: getImage(friends.photo),
-              ),
-              title: Text(
-                friends.friendName,
-                style: TextStyle(fontSize: _pSize),
-              ),
-              trailing: 
-              Row(children: [
-                  FlatButton(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(friends.photo),
+            ),
+            title: Text(
+              friends.friendName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            trailing: Column(children: [
+                Expanded(
+                    child: InkWell(
+                  child: Text(
+                    '確認',
+                    style: TextStyle(fontSize: _pSize, color: _color),
+                  ),
+                  onTap: () async {
+                    hideWidget();
+                  },
+                )),
+                SizedBox(
+                  height: _widthSize,
+                ),
+                Expanded(
+                  child: InkWell(
                     child: Text(
                       '刪除',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: _pSize, color: _gray),
                     ),
-                    textColor: Color(0xffCCCCCC),
-                    onPressed: hideWidget,
+                    onTap: () async {
+                    hideWidget();
+                  },
                   ),
-                  FlatButton(
-                    child: Text(
-                      '確認',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: hideWidget,
-                  ),
-              ]));
+                )
+            ]));
       },
       separatorBuilder: (context, index) {
         return Divider();
@@ -456,9 +482,15 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     Size size = MediaQuery.of(context).size;
     double _height = size.height;
     double _width = size.width;
-
-    double _listPaddingH = _width * 0.06;
+    double _widthSize = _width * 0.01;
     double _pSize = _height * 0.023;
+
+    
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _gray = Color(0xff959595);
+    double _listPaddingH = _width * 0.06;
+    
 
     return ListView.separated(
       shrinkWrap: true,
@@ -467,34 +499,41 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredFriend[index];
         return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: _listPaddingH, vertical: 0.0),
-                leading: ClipOval(
-                  child: getImage(friends.photo),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(friends.photo),
+            ),
+            title: Text(
+              friends.friendName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            trailing: Column(children: [
+                Expanded(
+                    child: InkWell(
+                  child: Text(
+                    '確認',
+                    style: TextStyle(fontSize: _pSize, color: _color),
+                  ),
+                  onTap: () async {
+                    hideWidget();
+                  },
+                )),
+                SizedBox(
+                  height: _widthSize,
                 ),
-                title: Text(
-                  friends.friendName,
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                trailing: 
-                Row(children: [
-                  FlatButton(
+                Expanded(
+                  child: InkWell(
                     child: Text(
                       '刪除',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: _pSize, color: _gray),
                     ),
-                    textColor: Color(0xffCCCCCC),
-                    onPressed: hideWidget,
+                    onTap: () async {
+                    hideWidget();
+                  },
                   ),
-                  FlatButton(
-                    child: Text(
-                      '確認',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    textColor: Color(0xffF86D67),
-                    onPressed: hideWidget,
-                  ),
-                ]));
+                )
+            ]));
       },
       separatorBuilder: (context, index) {
         return Divider();
