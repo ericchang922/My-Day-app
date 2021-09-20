@@ -29,7 +29,8 @@ class FriendsPrivacySettings extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
           title: Text('好友隱私設定', style: TextStyle(fontSize: 20)),
@@ -68,7 +69,7 @@ class FriendsPrivacySettings extends State {
                         child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('玩具邀請',
+                          Text('玩聚邀請',
                             style: TextStyle(fontSize: 20,
                             // alignment: Alignment.center,
                                 ),
@@ -140,7 +141,7 @@ class FriendsPrivacySettings extends State {
                         child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('玩具邀請',
+                          Text('玩聚邀請',
                             style: TextStyle(fontSize: 20,
                             // alignment: Alignment.center,
                                 ),
@@ -187,7 +188,8 @@ class FriendsPrivacySettings extends State {
           ),
         ],
       ),
-    );
+    
+    ));
   }
 
   void _changed(isCheck) {

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:My_Day_app/friend/bestfriend.dart';
+
 import 'package:My_Day_app/friend/friends_add.dart';
-import 'package:My_Day_app/friend/friends_invitation.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
@@ -206,12 +206,15 @@ class _BestfriendWidget extends State<BestfriendPage> {
               friends.friendName,
               style: TextStyle(fontSize: _pSize),
             ),
-            trailing: FlatButton(
+            trailing: TextButton(
+              style: TextButton.styleFrom(
+                primary: Color(0xffF86D67)
+              ),
               child: Text(
                 '移除',
                 style: TextStyle(fontSize: 18),
               ),
-              textColor: Color(0xffF86D67),
+             
               onPressed: hideWidget,
             ),
           ));
@@ -243,12 +246,15 @@ class _BestfriendWidget extends State<BestfriendPage> {
               friends.friendName,
               style: TextStyle(fontSize: _pSize),
             ),
-            trailing: FlatButton(
+            trailing: TextButton(
+              style: TextButton.styleFrom(
+                primary: Color(0xffF86D67)
+              ),
               child: Text(
                 '移除',
                 style: TextStyle(fontSize: 18),
               ),
-              textColor: Color(0xffF86D67),
+              
               onPressed: hideWidget,
             ),
           ));
@@ -335,7 +341,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
         }
       }
 
-      return Scaffold(
+      return SafeArea(
+      child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
@@ -365,9 +372,10 @@ class _BestfriendWidget extends State<BestfriendPage> {
             ],
           ),
         )),
-      );
+      ));
     } else {
-      return Scaffold(
+      return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
           title: Text('摯友', style: TextStyle(fontSize: 20)),
@@ -390,7 +398,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      );
+      ));
     }
   }
 
@@ -424,12 +432,15 @@ class _BestfriendWidget extends State<BestfriendPage> {
             friends.friendName,
             style: TextStyle(fontSize: _pSize),
           ),
-          trailing: FlatButton(
+          trailing: TextButton(
+            style: TextButton.styleFrom(
+                primary: Color(0xffF86D67)
+              ),
             child: Text(
               '移除',
               style: TextStyle(fontSize: 18),
             ),
-            textColor: Color(0xffF86D67),
+           
             onPressed: hideWidget,
           ),
         ));
@@ -470,12 +481,15 @@ class _BestfriendWidget extends State<BestfriendPage> {
             friends.friendName,
             style: TextStyle(fontSize: _pSize),
           ),
-          trailing: FlatButton(
+          trailing: TextButton(
+            style: TextButton.styleFrom(
+                primary: Color(0xffF86D67)
+              ),
             child: Text(
               '移除',
               style: TextStyle(fontSize: 18),
             ),
-            textColor: Color(0xffF86D67),
+            
             onPressed: hideWidget,
           ),
         ));

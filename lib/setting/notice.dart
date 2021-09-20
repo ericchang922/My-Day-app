@@ -24,7 +24,8 @@ class Notice extends State {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
       appBar: AppBar( 
         backgroundColor: Color(0xffF86D67),
         title:Text('通知',style: TextStyle(fontSize: 20)),
@@ -40,30 +41,34 @@ class Notice extends State {
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
-              onPressed: (){
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    '行程',
-                    style: TextStyle(fontSize: 20,
-                    ),
-                  ),
-                  Switch(
-                  value: _isCheckstroke,
-                  onChanged: _changedstroke,
-                  activeColor: Colors.white,
-                  activeTrackColor: Color(0xffF86D67),
-                  // inactiveThumbColor: Color(0xffF86D67),
-                  // inactiveTrackColor: Color(0xffF86D67),
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
                 ),
-                ],
-              ),
-            ),
+                onPressed: (){
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '行程',
+                      style: TextStyle(fontSize: 20,
+                      ),
+                    ),
+                    Switch(
+                    value: _isCheckstroke,
+                    onChanged: _changedstroke,
+                    activeColor: Colors.white,
+                    activeTrackColor: Color(0xffF86D67),
+                    // inactiveThumbColor: Color(0xffF86D67),
+                    // inactiveTrackColor: Color(0xffF86D67),
+                  ),
+                  ],
+                ),
+              )),
           ),
           Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -75,30 +80,34 @@ class Notice extends State {
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
-              onPressed: (){
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    '倒數',
-                    style: TextStyle(fontSize: 20,
-                    ),
-                  ),
-                  Switch(
-                  value: _isCheckreciprocal,
-                  onChanged: _changedreciprocal,
-                  activeColor: Colors.white,
-                  activeTrackColor: Color(0xffF86D67),
-                  // inactiveThumbColor: Color(0xffF86D67),
-                  // inactiveTrackColor: Color(0xffF86D67),
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
                 ),
-                ],
-              ),
-            ),
+                onPressed: (){
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '倒數',
+                      style: TextStyle(fontSize: 20,
+                      ),
+                    ),
+                    Switch(
+                    value: _isCheckreciprocal,
+                    onChanged: _changedreciprocal,
+                    activeColor: Colors.white,
+                    activeTrackColor: Color(0xffF86D67),
+                    // inactiveThumbColor: Color(0xffF86D67),
+                    // inactiveTrackColor: Color(0xffF86D67),
+                  ),
+                  ],
+                ),
+              )),
           ),
           Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -110,56 +119,64 @@ class Notice extends State {
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
-              onPressed: (){
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    '群組',
-                    style: TextStyle(fontSize: 20,
-                    ),
-                  ),
-                  Switch(
-                  value: _isCheckgroup,
-                  onChanged: _changedgroup,
-                  activeColor: Colors.white,
-                  activeTrackColor: Color(0xffF86D67),
-                  // inactiveThumbColor: Color(0xffF86D67),
-                  // inactiveTrackColor: Color(0xffF86D67),
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
                 ),
-                ],
-              ),
-            ),
+                onPressed: (){
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '群組',
+                      style: TextStyle(fontSize: 20,
+                      ),
+                    ),
+                    Switch(
+                    value: _isCheckgroup,
+                    onChanged: _changedgroup,
+                    activeColor: Colors.white,
+                    activeTrackColor: Color(0xffF86D67),
+                    // inactiveThumbColor: Color(0xffF86D67),
+                    // inactiveTrackColor: Color(0xffF86D67),
+                  ),
+                  ],
+                ),
+              )),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
-              onPressed: (){
-                Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PlayTogetherInvitePage()));
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    '玩聚邀請',
-                    style: TextStyle(fontSize: 20,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
+                onPressed: (){
+                  Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PlayTogetherInvitePage()));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '玩聚邀請',
+                      style: TextStyle(fontSize: 20,
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.chevron_right,
-                    color: Color(0xffE3E3E3),
-                  )
-                ],
-              ),
-            ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: Color(0xffE3E3E3),
+                    )
+                  ],
+                ),
+              )),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -172,7 +189,7 @@ class Notice extends State {
             
         ],
       ),
-    );
+    ));
   }
 
   void _changedstroke(isCheck) {

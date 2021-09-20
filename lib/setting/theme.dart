@@ -14,10 +14,11 @@ class ThemePage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
         body: SwitchDemo(),
     
-    );
+    ));
   }
 }
 
@@ -33,7 +34,8 @@ class Theme extends State {
  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBar(
           backgroundColor: _hasBeenPressed?Color(0xff29527A):Color(0xffF86D67),
           title: Text('主題', style: TextStyle(fontSize: 20)),
@@ -46,12 +48,12 @@ class Theme extends State {
       body: ListView(
         children: <Widget>[
           Container(
-              margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+              margin: EdgeInsets.only(left: 10.0, right: 20, top: 10.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     // ignore: deprecated_member_use
-                    FlatButton.icon(
+                    TextButton.icon(
                       icon: Icon(Icons.circle_sharp,
                           color: Color(0xffF86D67), size: 40),
                       label: Text(
@@ -60,22 +62,22 @@ class Theme extends State {
                       ),
                     ),
                     // ignore: deprecated_member_use
-                    FlatButton(
-                        height: 20,
-                        minWidth: 10,
-                        color:
-                            _hasBeenPressed ? Colors.white : Color(0xffF86D67),
-                        shape: _hasBeenPressed
-                            ? CircleBorder(
-                                side: BorderSide(color: Colors.black),
-                              )
-                            : CircleBorder(),
+                    SizedBox(
+                      height: 40,
+                      width: 20,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor:
+                              _hasBeenPressed ? Colors.white : Color(0xffF86D67),
+                          shape: _hasBeenPressed? CircleBorder(side: BorderSide(color: Colors.black),)
+                              : CircleBorder(),
+                        ),
                         onPressed: () {
                           setState(() {
                             _hasBeenPressed = !_hasBeenPressed;
                           });
                         }),
-                  ])),
+          )])),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Container(
@@ -85,12 +87,12 @@ class Theme extends State {
             ),
           ),
           Container(
-              margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+              margin: EdgeInsets.only(left: 10.0, right: 20, top: 10.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     // ignore: deprecated_member_use
-                    FlatButton.icon(
+                    TextButton.icon(
                       icon: Icon(Icons.circle_sharp,
                           color: Color(0xff29527A), size: 40),
                       label: Text(
@@ -99,22 +101,25 @@ class Theme extends State {
                       ),
                     ),
                     // ignore: deprecated_member_use
-                    FlatButton(
-                        height: 20,
-                        minWidth: 10,
-                        color:
+                   SizedBox(
+                      height: 40,
+                      width: 20,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                        backgroundColor:
                             _hasBeenPressed ? Color(0xffF86D67) : Colors.white,
                         shape: _hasBeenPressed
                             ? CircleBorder()
                             : CircleBorder(
                                 side: BorderSide(color: Colors.black),
                               ),
+                          ),
                         onPressed: () {
                           setState(() {
                             _hasBeenPressed = !_hasBeenPressed;
                           });
                         }),
-                  ])),
+                  )])),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Container(
@@ -125,6 +130,6 @@ class Theme extends State {
           ),
         ],
       ),
-    );
+    ));
   }
 }

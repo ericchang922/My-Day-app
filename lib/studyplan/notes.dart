@@ -45,7 +45,8 @@ class Notes extends State<App2> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
+        home: SafeArea(
+        child: Scaffold(
             appBar: AppBar(
               backgroundColor: Color(0xffF86D67),
               title: Text('筆記', style: TextStyle(fontSize: 20)),
@@ -72,7 +73,7 @@ class Notes extends State<App2> with SingleTickerProviderStateMixin {
                 Home(),
                 ExamplePage(),
               ]),
-            )));
+            ))));
   }
 }
 
@@ -136,9 +137,13 @@ class _HomeState extends State<Home> {
                 },
                 body: Container(
                   margin: EdgeInsets.only(top: 10, left: 20, right: 15),
-                  child: FlatButton(
-                    height: 40,
-                    minWidth: double.infinity,
+                  child: SizedBox(
+                  height: 40,
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                ),
                     onPressed: () {},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -156,7 +161,7 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                ),
+                )),
                 isExpanded: expandStateList[index].isOpen);
           }).toList(),
         ),
@@ -178,7 +183,7 @@ class ExamplePage extends StatefulWidget {
 }
 
 class _ExamplePageState extends State<ExamplePage> {
-  final _items = ["國文 1~3 課", "國文 4~6 課", "國文 7~9 課", "國文 10~12 課"];
+  final _items = ["國文 1~3 課", "國文 4~6 課", "國文 7~9 課", "國文 10~12 課",];
   Widget _buildItem(BuildContext context, int index) {
     final theme = Theme.of(context);
     final name = _items[index];
@@ -193,10 +198,14 @@ class _ExamplePageState extends State<ExamplePage> {
           child: DragTarget<int>(
             builder: (context, candidate, rejects) {
               return Container(
-                margin: EdgeInsets.only(right: 10, left: 20, top: 10),
-                child: FlatButton(
+                margin: EdgeInsets.only(right: 15, left: 20, top: 10),
+                child: SizedBox(
                   height: 40,
-                  minWidth: double.infinity,
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                  ),
                   onPressed: () {},
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -214,7 +223,7 @@ class _ExamplePageState extends State<ExamplePage> {
                     ],
                   ),
                 ),
-              );
+              ));
             },
             onLeave: (data) {
               // 當 拖動源 離開當前 拖動目標時 回調

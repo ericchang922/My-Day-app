@@ -19,7 +19,8 @@ class LoginPage extends StatelessWidget {
 class LoginWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           title:
               Text('登入', style: TextStyle(color: Colors.white, fontSize: 22)),
@@ -32,43 +33,40 @@ class LoginWidget extends StatelessWidget {
             // ignore: deprecated_member_use
             child: Padding(
               padding: EdgeInsets.fromLTRB(10, 0, 0, 150),
-              child: FlatButton(
+              child: SizedBox(
                 height: 60,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0)),
-                child: Text(
-                  '忘記密碼',
-                  style: TextStyle(fontSize: 15),
-                ),
-                textColor: Color(0xffF86D67),
+                child: TextButton(
+                child: Text('忘記密碼',style: TextStyle(fontSize: 15)),
+                style: TextButton.styleFrom(primary: Color(0xffF86D67),shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),),
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => ForgetpwPage()));
                 },
-              ),
+              )),
             ),
           ),
           Expanded(
             // ignore: deprecated_member_use
             child: Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 10, 150),
-              child: FlatButton(
+              child: SizedBox(
                 height: 60,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0)),
-                child: Text(
-                  '我要註冊',
-                  style: TextStyle(fontSize: 15),
-                ),
-                textColor: Color(0xffF86D67),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()));
-                },
-              ),
+                child: TextButton(
+                  style: TextButton.styleFrom(primary: Color(0xffF86D67),shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),),
+                  child: Text(
+                    '我要註冊',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => RegisterPage()));
+                  },
+                )),
             ),
           ),
-        ])));
+        ]))));
   }
 }
 
@@ -94,7 +92,8 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
+        home: SafeArea(
+          child: Scaffold(
             resizeToAvoidBottomInset: false,
             body: ListView(
               children: <Widget>[
@@ -157,16 +156,21 @@ class Login extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(55, 25, 55, 0),
-                  child: FlatButton(
-                      height: 40,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
+                  child: SizedBox(
+                    height: 40,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        backgroundColor: Color(0xffF86D67)
+                        ),
+                      
                       child: Text(
                         '登入',
                         style: TextStyle(fontSize: 20),
                       ),
-                      color: Color(0xffF86D67),
-                      textColor: Colors.white,
+                      
+              
                       onPressed: () async {
                         if (uid == myuid.text && pw == mypw.text) {
                           Navigator.push(
@@ -180,9 +184,9 @@ class Login extends StatelessWidget {
                           bool action = await loginfailDialog(context,_alertTitle,_alertTxt);
                          
                         }
-                      }),
+                      })),
                 ),
               ],
-            )));
+            ))));
   }
 }

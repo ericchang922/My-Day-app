@@ -46,7 +46,8 @@ class ReadPlanAdd extends State<_ReadPlanAdd>
     double _iconWidth = _width * 0.05;
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
+        home: SafeArea(
+        child: Scaffold(
             appBar: AppBar(
               backgroundColor: Color(0xffF86D67),
               title: Text('新增讀書計畫', style: TextStyle(fontSize: 20)),
@@ -68,39 +69,47 @@ class ReadPlanAdd extends State<_ReadPlanAdd>
                 child: Row(children: <Widget>[
               Expanded(
                 // ignore: deprecated_member_use
-                child: FlatButton(
-                  height: 50,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0)),
+                child: SizedBox(
+                    height: 50,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                        backgroundColor: Color(0xffFFAAA6)
+                        ),
+                  
                   child: Image.asset(
                     'assets/images/cancel.png',
                     width: _iconWidth,
                   ),
-                  color: Color(0xffFFAAA6),
-                  textColor: Colors.white,
+                  
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                ),
+                )),
               ),
               Expanded(
                 // ignore: deprecated_member_use
-                child: FlatButton(
-                  height: 50,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0)),
+                child: SizedBox(
+                    height: 50,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                        backgroundColor: Color(0xffF86D67)
+                        ),
+                  
                   child: Image.asset(
                     'assets/images/confirm.png',
                     width: _iconWidth,
                   ),
-                  color: Color(0xffF86D67),
-                  textColor: Colors.white,
+                  
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
               ),
-            ]))));
+    )])))));
   }
 }
 
@@ -227,18 +236,22 @@ class _ReadPlanAddTitle extends State<ReadPlanAddTitle> {
             )),
           ])),
       Container(
-          margin: EdgeInsets.only(left: 30, right: 150, bottom: 15),
+          margin: EdgeInsets.only(left: 30, right: 120, bottom: 15),
           child: Row(
             children: [
               Container(
                 child: Text('日期: ', style: TextStyle(fontSize: 20)),
               ),
               //可以通过在外面包裹一层InkWell来让某组件可以响应用户事件
-              FlatButton(
+              SizedBox(
                 height: 40,
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Color(0xff707070)),
-                    borderRadius: BorderRadius.circular(10)),
+                width: 125,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(side: BorderSide(color: Color(0xff707070)),
+                      borderRadius: BorderRadius.circular(10)),
+                  ),
+                
                 child: InkWell(
                   onTap: () {
                     //调起日期选择器
@@ -253,7 +266,7 @@ class _ReadPlanAddTitle extends State<ReadPlanAddTitle> {
                   ),
                 ),
               )
-            ],
+              )],
           )),
       Container(
         margin: EdgeInsets.only(left: 30, bottom: 15, right: 70),
@@ -261,12 +274,14 @@ class _ReadPlanAddTitle extends State<ReadPlanAddTitle> {
           children: [
             Text('時間: ', style: TextStyle(fontSize: 20)),
             Flexible(
-                child: FlatButton(
-                    height: 40,
-                    minWidth: 20,
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Color(0xff707070)),
-                        borderRadius: BorderRadius.circular(10)),
+              child: SizedBox(
+                height: 40,
+                width: 80,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(side: BorderSide(color: Color(0xff707070)),
+                      borderRadius: BorderRadius.circular(10)),
+                    ),
                     child: InkWell(
                       onTap: () {
                         //调起时间选择器
@@ -278,15 +293,20 @@ class _ReadPlanAddTitle extends State<ReadPlanAddTitle> {
                           Text("${this._Time.format(context)}"),
                         ],
                       ),
-                    ))),
+            )))),
             Text(' - ', style: TextStyle(fontSize: 20)),
             Flexible(
-                child: FlatButton(
+                child: SizedBox(
                     height: 40,
-                    minWidth: 20,
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Color(0xff707070)),
-                        borderRadius: BorderRadius.circular(10)),
+                    width: 80,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        
+                        shape: RoundedRectangleBorder(side: BorderSide(color: Color(0xff707070)),
+                          borderRadius: BorderRadius.circular(10)),
+                        
+                        ),
+                    
                     child: InkWell(
                       onTap: () {
                         //调起时间选择器
@@ -299,7 +319,7 @@ class _ReadPlanAddTitle extends State<ReadPlanAddTitle> {
                         ],
                       ),
                     )))
-          ],
+            )],
         ),
       ),
       Container(
@@ -422,20 +442,24 @@ class _ReadPlanAddList extends State<ReadPlanAddList> {
                       ],
                     ),
                   )),
-                  FlatButton.icon(
-                    icon: Icon(Icons.add, color: Color(0xffF86D67)),
+                  SizedBox(
                     height: 40,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    label: Text(
-                      '備註',
-                      style: TextStyle(fontSize: 18),
+                    child:TextButton.icon(
+                      icon: Icon(Icons.add, color: Color(0xffF86D67)),
+                      style: TextButton.styleFrom(
+                        primary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      ),
+                      label: Text(
+                        '備註',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      onPressed: () async {
+                        bool action = await readplanAddDialog(context);
+                      },
                     ),
-                    onPressed: () async {
-                      bool action = await readplanAddDialog(context);
-                    },
-                  ),
-                ])),
+        )])),
         Container(
           margin: EdgeInsets.only(top: 4.0),
           color: Color(0xffE3E3E3),
@@ -495,8 +519,11 @@ class _ReadPlanAddListAdd extends State<ReadPlanAddListAdd> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(top: 4.0, right: 235),
-          child: FlatButton.icon(
+          margin: EdgeInsets.only(top: 4.0, right: 230),
+          child: TextButton.icon(
+            style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
             label: Text('新增欄位', style: TextStyle(fontSize: 18)),
             onPressed: () {
               setState(() {

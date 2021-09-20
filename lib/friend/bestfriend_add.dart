@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 class BestFriendAddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         body: BestFriendAddPageWidget(),
      
-    );
+    ));
   }
 }
 
@@ -16,7 +17,8 @@ enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 class BestFriendAddPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
         title:Text('新增摯友',style: TextStyle(fontSize: 20)),
@@ -29,7 +31,7 @@ class BestFriendAddPageWidget extends StatelessWidget {
         
       ), 
       body: ExamplePage(),
-    );
+    ));
   }
 }
 class ExamplePage extends StatefulWidget {
@@ -76,20 +78,24 @@ class _ExamplePageState extends State<ExamplePage> {
                       TextSpan(text:_items[index], style: TextStyle(fontSize: 20)),
                     ],
                   )),
-                  FlatButton(
+                  SizedBox(
                     height: 40,
-                    minWidth: 15,
-                    shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                      '新增',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    color: Color(0xffF86D67),
-                    textColor: Colors.white,
-                    onPressed: hideWidget,
-                  )
-                ],
+                    width: 15,
+                    child:TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        backgroundColor: Color(0xffF86D67)
+                        ),
+                      
+                      child: Text(
+                        '新增',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      
+                      onPressed: hideWidget,
+                    )
+                )],
               ),
             ),
             Container(
