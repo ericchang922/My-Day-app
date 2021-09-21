@@ -1,4 +1,5 @@
 import 'package:My_Day_app/timetable/timetable_choose_past.dart';
+import 'package:My_Day_app/timetable/timetable_information.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,8 @@ Widget editPopMenu(BuildContext context) {
                 MaterialPageRoute(builder: (context) => TimetableChoosePastPage()));
             break;
           case 'information':
-            null;
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => TimetableInformationPage()));
             break;
           case 'delete':
             null;

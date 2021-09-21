@@ -5,12 +5,10 @@ const PrimaryColor = const Color(0xFFF86D67);
 
 class TimetableEditPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return TimetableEdit();
-  }
+  TimetableEdit createState() => new TimetableEdit();
 }
 
-class TimetableEdit extends State {
+class TimetableEdit extends State<TimetableEditPage> {
   get child => null;
   get left => null;
 

@@ -6,21 +6,43 @@ const PrimaryColor = const Color(0xFFF86D67);
 
 class TimetableActionListPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return TimetableActionList();
-  }
+  TimetableActionList createState() => new TimetableActionList();
 }
 
-class TimetableActionList extends State {
+class TimetableActionList extends State<TimetableActionListPage> {
   get child => null;
   get left => null;
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
+
+    double _listLR = _height * 0.02;
+    double _textFied = _height * 0.045;
+    double _borderRadius = _height * 0.01;
+    double _iconWidth = _width * 0.05;
+    double _listPaddingH = _width * 0.06;
+    double _textL = _height * 0.03;
+    double _textBT = _height * 0.02;
+    double _leadingL = _height * 0.02;
+    double _bottomHeight = _height * 0.07;
+
+    double _titleSize = _height * 0.025;
+    double _pSize = _height * 0.023;
+    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _light = Theme.of(context).primaryColorLight;
+    Color _bule = Color(0xff7AAAD8);
+    Color _textFiedBorder = Color(0xff707070);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xffF86D67),
-        title: Text('課表', style: TextStyle(fontSize: 20)),
+        backgroundColor: _color,
+        title: Text('課表', style: TextStyle(fontSize: _appBarSize)),
         leading: IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
@@ -37,15 +59,18 @@ class TimetableActionList extends State {
               height: 60,
               minWidth: double.infinity,
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TimetableFormPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TimetableFormPage()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     '新增課表',
-                    style: TextStyle(fontSize: 20,
+                    style: TextStyle(
+                      fontSize: _appBarSize,
                     ),
                   ),
                   Icon(
@@ -70,15 +95,18 @@ class TimetableActionList extends State {
               height: 60,
               minWidth: double.infinity,
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TimetableEditFormPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TimetableEditFormPage()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     '編輯課表',
-                    style: TextStyle(fontSize: 20,
+                    style: TextStyle(
+                      fontSize: _appBarSize,
                     ),
                   ),
                   Icon(

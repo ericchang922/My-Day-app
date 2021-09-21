@@ -1,18 +1,14 @@
-import 'package:My_Day_app/timetable/timetable_action_list.dart';
-import 'package:My_Day_app/timetable/timetable_create_cancel.dart';
-import 'package:My_Day_app/timetable/timetable_create_popup_menu.dart';
+import 'package:My_Day_app/timetable/timetable_receive.dart';
 import 'package:flutter/material.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
-class TimetableCreatePage extends StatefulWidget {
+class TimetableReceivePreviewPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return TimetableCreate();
-  }
+  TimetableReceivePreview createState() => new TimetableReceivePreview();
 }
 
-class TimetableCreate extends State {
+class TimetableReceivePreview extends State<TimetableReceivePreviewPage> {
   get child => null;
   get left => null;
 
@@ -22,7 +18,6 @@ class TimetableCreate extends State {
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
         title: Text('110年　第一學期', style: TextStyle(fontSize: 20)),
-        actions: [createPopMenu(context)],
       ),
       body: ListView(
         children: [
@@ -55,7 +50,12 @@ class TimetableCreate extends State {
                       width: MediaQuery.of(context).size.width * 0.05,
                     ),
                     fillColor: Theme.of(context).primaryColorLight,
-                    onPressed: () async => await timetableCreateCancel(context)
+                     onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TimetableReceivePage()));
+                      }
                   ),
                 ),
               ), // 取消按鈕
@@ -70,8 +70,10 @@ class TimetableCreate extends State {
                       ),
                       fillColor: Theme.of(context).primaryColor,
                       onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TimetableReceivePage()));
                       }),
                 ),
               )
