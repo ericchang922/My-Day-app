@@ -1,8 +1,3 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-import 'package:My_Day_app/studyplan/note_choose.dart';
 import 'package:My_Day_app/studyplan/readplan_add_note.dart';
 import 'package:My_Day_app/studyplan/readplan_content_delete.dart';
 import 'package:My_Day_app/studyplan/readplan_edit.dart';
@@ -20,9 +15,7 @@ selectedItem(BuildContext context, item) async {
       break;
   }
 }
-
 class ReadPlanContentPage extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -73,29 +66,57 @@ class ReadPlanContentPage extends StatelessWidget {
             ],
             
             ),
-         
-          body: SingleChildScrollView(
-            child: Column(children: [
-              ReadPlanContent(),
-              ExamplePage(),
-              Personal(),
-              ExamplePage(),
-            ]),
-          ),
-        )));
+        body: CheckboxWidget(),
+              ),
+          )
+    );
   }
 }
 
-class ReadPlanContent extends StatelessWidget {
-  get child => null;
-  get left => null;
+class CheckboxWidget extends StatefulWidget {
+  @override
+  CheckboxWidgetState createState() => new CheckboxWidgetState();
+}
+
+class CheckboxWidgetState extends State {
+
+  Map<String, bool> numbers = {
+    "國文 1~3 課" : false,
+    "國文 4~6 課" : false,
+    "國文 7~9 課" : false,
+    "國文 10~12 課" : false,
+    
+    "國文課" : false,
+    "數學 4~6 課" : false,
+    "英文 7~9 課" : false,
+    "英文 10~12 課" : false,
+  };
+ 
+  var holder_1 = [];
+
+  getItems(){
+
+    numbers.forEach((key, value) {
+      if(value == true)
+      {
+        holder_1.add(key); 
+      }
+      });
+
+  // Printing all selected items on Terminal screen.
+  print(holder_1);
+  // Here you will get all your selected Checkbox items.
+
+  // Clear array after use.
+  holder_1.clear();
+}
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Container(
+    
+    return Column (children: <Widget>[
+
+      Container(
           margin: EdgeInsets.only(right: 10, left: 10, top: 10),
           // ignore: deprecated_member_use
           child: SizedBox(
@@ -123,65 +144,42 @@ class ReadPlanContent extends StatelessWidget {
               ],
             ),
           ),
-        ),
-        )],
-    );
-  }
-}
-
-class ExamplePage extends StatefulWidget {
-  ExamplePage({Key key}) : super(key: key);
-  @override
-  _ExamplePageState createState() => _ExamplePageState();
-}
-
-class _ExamplePageState extends State<ExamplePage> {
-  final items = ["國文 1~3 課", "國文 4~6 課", "國文 7~9 課", "國文 10~12 課"];
-  final _items = ["國文課", "國文課", "國文課", "國文課"];
-  Widget _buildItem(BuildContext context, int index) {
-    final title = items[index];
-    final mintitle = _items[index];
-    bool _checkboxSelected = true;
-    return Column(
+        )),
+      
+      Expanded( 
+        child :
+        ListView(
+        children: numbers.keys.map((String key) {
+          return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 10, left: 20, top: 10),
-            child: SizedBox(
-              height: 67,
-              width: double.infinity,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.black,
-                ),
-              onPressed: () async {
-                bool action = await readplanAddDialog(context);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Transform.scale(
-                  scale: 1.8,
-                  child: Checkbox(
-                    value: _checkboxSelected,
-                    activeColor: Color(0xffEFB208),//选中时的颜色
-                    onChanged: (value) {
-                      setState(() {
-                        _checkboxSelected = value;
-                      });
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
+            child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Transform.scale(
+                scale: 1.8,
+                child: Checkbox(           
+                  value: numbers[key],               
+                  activeColor: Color(0xffEFB208),                  
+                  onChanged: (bool value) {
+                    setState(() {
+                      numbers[key] = value;
+                    });
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
                   )),
                   Column(children: <Widget>[
                     Text(
-                      title,
+                      key,
                       style: TextStyle(
                         fontSize: 20,
                       ),
                     ),
                     Text(
-                      mintitle,
+                      "mintitle",
                       style: TextStyle(
                         fontSize: 15,
                       ),
@@ -192,29 +190,21 @@ class _ExamplePageState extends State<ExamplePage> {
                     iconSize: 20,
                     onPressed: () {},
                   ),
-                ],
-              ),
-            )),
-          ),
-          Container(
+                  ],
+                  
+                  
+          )),
+           Container(
             margin: EdgeInsets.only(top: 4.0),
             color: Color(0xffE3E3E3),
             constraints: BoxConstraints.expand(height: 1.0),
           ),
-        ]);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final children = List<Widget>(_items.length);
-    for (var i = 0; i < _items.length; i++) {
-      children[i] = _buildItem(context, i);
-    }
-    return ListView(shrinkWrap: true, children: children);
-    // bottomNavigationBar:
+          ]);
+        }).toList(),
+      ),
+    ),]);
   }
 }
-
 class Personal extends StatelessWidget {
   get child => null;
   get left => null;

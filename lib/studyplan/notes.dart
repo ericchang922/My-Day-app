@@ -1,3 +1,4 @@
+import 'package:My_Day_app/studyplan/1%20copy%202.dart';
 import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/rendering.dart';
@@ -68,12 +69,13 @@ class Notes extends State<App2> with SingleTickerProviderStateMixin {
                 ),
               ],
             ),
-            body: SingleChildScrollView(
-              child: Column(children: [
-                Home(),
+            body: 
+            // SingleChildScrollView(
+            //   child: Column(children: [
+                // Home(),
                 ExamplePage(),
-              ]),
-            ))));
+              ),
+            ));
   }
 }
 
@@ -183,111 +185,45 @@ class ExamplePage extends StatefulWidget {
 }
 
 class _ExamplePageState extends State<ExamplePage> {
-  final _items = ["國文 1~3 課", "國文 4~6 課", "國文 7~9 課", "國文 10~12 課",];
-  Widget _buildItem(BuildContext context, int index) {
-    final theme = Theme.of(context);
-    final name = _items[index];
-    // Draggable/LongPressDraggable 創建一個 可拖動的 源
-    return LayoutBuilder(
-      builder: (context, constraint) {
-        return Draggable(
-          // data 指定 拖動的 綁定數據
-          data: index,
-          // child 指定 源 顯示ui
-          // DragTarget 創建一個 拖動目標 來完成 拖動
-          child: DragTarget<int>(
-            builder: (context, candidate, rejects) {
-              return Container(
-                margin: EdgeInsets.only(right: 15, left: 20, top: 10),
-                child: SizedBox(
-                  height: 40,
-                  width: double.infinity,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.black,
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        name,
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      Icon(
-                        Icons.menu,
-                        color: Color(0xffE3E3E3),
-                      )
-                    ],
-                  ),
-                ),
-              ));
-            },
-            onLeave: (data) {
-              // 當 拖動源 離開當前 拖動目標時 回調
-              debugPrint("onLeave $data -> $index");
-            },
-            onWillAccept: (data) {
-              // 當源被 拖動到此 覆蓋 當前 拖動目標時 回調
-              //
-              // 如果返回 true 將 接受 拖動 否則 拒絕拖動
-              debugPrint("onWillAccept $data -> $index");
-              return _items != null && data >= 0 && data < _items.length;
-            },
-            onAccept: (data) {
-              debugPrint("onAccept $data -> $index");
-              // onWillAccept 返回 true 且 在此拖動目標上 鬆開手指時 回調
-              //
-              // 回調完成 後 通知 Draggable.onDragCompleted
-              setState(() {
-                if (data < index) {
-                  final tmp = _items[data];
-                  for (var i = data; i < index; i++) {
-                    _items[i] = _items[i + 1];
-                  }
-                  _items[index] = tmp;
-                } else {
-                  final tmp = _items[data];
-                  for (var i = data; i > index; i--) {
-                    _items[i] = _items[i - 1];
-                  }
-                  _items[index] = tmp;
-                }
-              });
-            },
-          ),
-          // childWhenDragging 指定了被拖動後 源如何顯示 如果爲null 顯示 child
-          childWhenDragging: SizedBox(
-            child: Card(
-              child: ListTile(
-                title: Text(name, style: TextStyle(color: theme.accentColor)),
-              ),
-            ),
-          ),
-          // feedback 指定了 源被 拖動走時 跟隨手指移動的 顯示ui
-          feedback: SizedBox(
-            width: constraint.maxWidth - 4,
-            height: 64,
-            child: Card(
-              child: ListTile(
-                title: Text(name),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  List<String> _list = ["Apple", "Ball", "Cat", "Dog", "Elephant"];
 
   @override
   Widget build(BuildContext context) {
-    final children = List<Widget>(_items.length);
-    for (var i = 0; i < _items.length; i++) {
-      children[i] = _buildItem(context, i);
-    }
-    return ListView(shrinkWrap: true, children: children);
-    // bottomNavigationBar:
+    return Scaffold(
+      
+      body: Container(
+        child: ReorderableListView(
+          children: _list
+            .map((item) => ListTile(
+                  key: Key("${item}"),
+                  title: Text("${item}"),
+                  trailing: Icon(Icons.menu),
+                ))
+            .toList(),
+        onReorder: (int start, int current) {
+          // dragging from top to bottom
+          if (start < current) {
+            int end = current - 1;
+            String startItem = _list[start];
+            int i = 0;
+            int local = start;
+            do {
+              _list[local] = _list[++local];
+              i++;
+            } while (i < end - start);
+            _list[end] = startItem;
+          }
+          // dragging from bottom to top
+          else if (start > current) {
+            String startItem = _list[start];
+            for (int i = start; i > current; i--) {
+              _list[i] = _list[i - 1];
+            }
+            _list[current] = startItem;
+          }
+          setState(() {});
+        },
+      ),
+    ));
   }
 }
