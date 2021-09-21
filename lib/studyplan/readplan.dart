@@ -1,6 +1,7 @@
 
 import 'package:My_Day_app/studyplan/readplan_add.dart';
 import 'package:My_Day_app/studyplan/readplan_content.dart';
+import 'package:My_Day_app/studyplan/readplan_content_over.dart';
 import 'package:flutter/material.dart';
 
 import 'readplan_content.dart';
@@ -8,9 +9,10 @@ import 'readplan_content.dart';
 class ReadPlan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       body: ReadPlanPage(),
-    );
+    ));
   }
 }
 
@@ -24,11 +26,14 @@ class ReadPlanPage extends StatefulWidget {
 }
 
 class _ReadPlanPage extends State<ReadPlanPage> {
+  
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        initialIndex: 1,
+        
         length: 3,
+        child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Color(0xffF86D67),
@@ -49,6 +54,7 @@ class _ReadPlanPage extends State<ReadPlanPage> {
               ),
             ],
             bottom: TabBar(
+              
               indicatorWeight:5,
               labelColor: Colors.white,
               unselectedLabelColor: Color(0xffE3E3E3),
@@ -63,17 +69,17 @@ class _ReadPlanPage extends State<ReadPlanPage> {
           body: TabBarView(
             children: <Widget>[
               Column(children: [
-                Personal(),
+                NotOverPersonal(),
                 Home(),
               ]),
               Column(children: [
-                Personal(),
+                OverPersonal(),
                 Home(),
               ]),
               FriendsPrivacySettingsPage(),
             ],
           ),
-        ));
+    )));
   }
 }
 
@@ -156,9 +162,13 @@ class _ExamplePageState extends State<ExamplePage> {
     final name = _items[index];
     return Container(
       margin: EdgeInsets.only(right: 10, left: 20, top: 10),
-      child: FlatButton(
+      child: SizedBox(
         height: 40,
-        minWidth: double.infinity,
+        width: double.infinity,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            primary: Colors.black,
+          ),
         onPressed: () {},
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,7 +182,7 @@ class _ExamplePageState extends State<ExamplePage> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   @override
@@ -185,8 +195,7 @@ class _ExamplePageState extends State<ExamplePage> {
     // bottomNavigationBar:
   }
 }
-
-class Personal extends StatelessWidget {
+class NotOverPersonal extends StatelessWidget {
   get child => null;
   get left => null;
 
@@ -197,9 +206,13 @@ class Personal extends StatelessWidget {
       children: <Widget>[
         Container(
           margin: EdgeInsets.only(top:10),
-          child: FlatButton(
-            height: 30,
-            minWidth: double.infinity,
+          child: SizedBox(
+              height: 40,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
             onPressed: () {},
             child: Row(
               children: <Widget>[
@@ -211,13 +224,17 @@ class Personal extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
               ]),
-        )),
+        ))),
         Container(
           margin: EdgeInsets.only(left: 20, right: 10.0, top: 10.0),
           // ignore: deprecated_member_use
-          child: FlatButton(
-            height: 60,
-            minWidth: double.infinity,
+          child: SizedBox(
+              height: 60,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
             onPressed: () {
               Navigator.push(
                 context, MaterialPageRoute(builder: (context) => ReadPlanContentPage()));
@@ -227,7 +244,7 @@ class Personal extends StatelessWidget {
                 Text(
                   '10/8',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                   ),
                 ),
                 Spacer(),
@@ -235,7 +252,7 @@ class Personal extends StatelessWidget {
                   Text(
                     '期末考',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 17,
                     ),
                   ),
                   Text(
@@ -252,7 +269,7 @@ class Personal extends StatelessWidget {
                 )
               ],
             ),
-          ),
+          )),
         ),
         Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -262,7 +279,104 @@ class Personal extends StatelessWidget {
               constraints: BoxConstraints.expand(height: 1.0),
             )),
         Container(
-          margin: EdgeInsets.only(right: 320, top: 10, bottom: 10),
+          margin: EdgeInsets.only(right: 300, top: 10, bottom: 10),
+          child: Text(
+            '群組',
+            style: TextStyle(
+                fontSize: 20,
+                color: Color(0xff7AAAD8),
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+}
+class OverPersonal extends StatelessWidget {
+  get child => null;
+  get left => null;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top:10),
+          child: SizedBox(
+              height: 40,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
+            onPressed: () {},
+            child: Row(
+              children: <Widget>[
+                Text(
+                  '個人',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xff7AAAD8),
+                      fontWeight: FontWeight.bold),
+                ),
+              ]),
+        ))),
+        Container(
+          margin: EdgeInsets.only(left: 20, right: 10.0, top: 10.0),
+          // ignore: deprecated_member_use
+          child: SizedBox(
+              height: 60,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
+            onPressed: () {
+              Navigator.push(
+                context, MaterialPageRoute(builder: (context) => OverReadPlanContentPage()));
+            },
+            child: Row(
+              children: <Widget>[
+                Text(
+                  '10/8',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Spacer(),
+                Column(children: <Widget>[
+                  Text(
+                    '期末考',
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                  Text(
+                    '8:00~12:00',
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  )
+                ]),
+                Spacer(flex: 3),
+                Icon(
+                  Icons.chevron_right,
+                  color: Colors.white,
+                )
+              ],
+            ),
+          )),
+        ),
+        Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Container(
+              margin: EdgeInsets.only(top: 4.0),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            )),
+        Container(
+          margin: EdgeInsets.only(right: 300, top: 10, bottom: 10),
           child: Text(
             '群組',
             style: TextStyle(
@@ -311,7 +425,8 @@ class FriendsPrivacySettings extends State {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       body: ListView(
         children: <Widget>[
           Container(
@@ -366,6 +481,6 @@ class FriendsPrivacySettings extends State {
           ),
         ],
       ),
-    );
+    ));
   }
 }

@@ -22,10 +22,11 @@ class LearnPage extends StatelessWidget {
         platform: TargetPlatform.iOS,
       ),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
+      home: SafeArea(
+        child: Scaffold(
         body: Learn(),
       ),
-    );
+    ));
   }
 }
 
@@ -37,15 +38,20 @@ class Learn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+           child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ReadPlan()));
@@ -65,7 +71,7 @@ class Learn extends StatelessWidget {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -74,12 +80,16 @@ class Learn extends StatelessWidget {
                 color: Color(0xffE3E3E3),
                 constraints: BoxConstraints.expand(height: 1.0),
               )),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => App()));
@@ -99,7 +109,7 @@ class Learn extends StatelessWidget {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -110,6 +120,6 @@ class Learn extends StatelessWidget {
               )),
         ],
       ),
-    );
+    ));
   }
 }

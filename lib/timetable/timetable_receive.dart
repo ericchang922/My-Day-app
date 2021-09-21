@@ -1,16 +1,19 @@
-import 'package:My_Day_app/timetable/timetable_share.dart';
+import 'package:My_Day_app/timetable/timetable_import_share.dart';
+import 'package:My_Day_app/timetable/timetable_improt_choose.dart';
 import 'package:flutter/material.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
-class TimetableChooseSharePage extends StatefulWidget {
+class TimetableReceivePage extends StatefulWidget {
   @override
-  TimetableChooseShare createState() => new TimetableChooseShare();
+  TimetableReceive createState() => new TimetableReceive();
 }
 
-class TimetableChooseShare extends State<TimetableChooseSharePage> {
+class TimetableReceive extends State<TimetableReceivePage> {
   get child => null;
   get left => null;
+  final _shareCodeController = TextEditingController();
+  String _shareCode;
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +42,11 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
     Color _textFiedBorder = Color(0xff707070);
 
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
           backgroundColor: _color,
-          title: Text('選擇課表', style: TextStyle(fontSize: _appBarSize))),
-      body: GestureDetector(
+          title: Text('接收課表', style: TextStyle(fontSize: _appBarSize)),
+        ),
+        body: GestureDetector(
           // 點擊空白處釋放焦點
           behavior: HitTestBehavior.translucent,
           onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
@@ -52,6 +56,53 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
                 top: _height * 0.02,
                 right: _height * 0.03),
             child: Column(children: [
+              Row(
+                children: [
+                  Text(
+                    '分享碼：',
+                    style: TextStyle(fontSize: _subtitleSize),
+                  ),
+                  Flexible(
+                    child: Container(
+                      height: _textFied,
+                      width: _width * 0.6,
+                      child: TextField(
+                        style: TextStyle(fontSize: _pSize),
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: _height * 0.01,
+                                vertical: _height * 0.01),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_borderRadius)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_borderRadius)),
+                              borderSide: BorderSide(color: _bule),
+                            )),
+                        controller: _shareCodeController,
+                        onChanged: (text) {
+                          setState(() {
+                            _shareCode = _shareCodeController.text;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: _width * 0.05),
+                  InkWell(
+                    child: Text("送出", style: TextStyle(fontSize: _pSize)),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  TimetableImprotSharePage()));
+                    },
+                  )
+                ],
+              ),
               SizedBox(height: _height * 0.025),
               Expanded(
                 child: GridView.count(
@@ -69,7 +120,7 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '110學年',
+                                  '109學年',
                                   style: TextStyle(fontSize: _titleSize),
                                 ),
                                 SizedBox(height: _height * 0.025),
@@ -80,7 +131,13 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
                               ],
                             ),
                           ),
-                          onTap: () async => await timetableShare(context)
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        TimetableImprotChoosePage()));
+                          },
                         ),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(

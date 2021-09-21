@@ -1,24 +1,74 @@
 import 'package:My_Day_app/timetable/timetable_create.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
 class TimetableFormPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return TimetableForm();
-  }
+  TimetableForm createState() => new TimetableForm();
 }
 
-class TimetableForm extends State {
+class TimetableForm extends State<TimetableFormPage> {
   String dropdownValueSemester = '1';
   String dropdownValueSchool = 'One';
   String dropdownValueYear = '109';
   get child => null;
   get left => null;
+  bool _allDay = false;
+  DateTime _startDateTime = DateTime.now();
+  DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+
+    Color _color = Theme.of(context).primaryColor;
+
+    CupertinoDatePickerMode _mode() {
+      if (_allDay)
+        return CupertinoDatePickerMode.date;
+      else
+        return CupertinoDatePickerMode.dateAndTime;
+    }
+
+    void _datePicker(contex, isStart) {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (_) => Container(
+          height: _height * 0.4,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CupertinoButton(
+                    child: Text('確定', style: TextStyle(color: _color)),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+              ),
+              Container(
+                height: _height * 0.28,
+                child: CupertinoDatePicker(
+                  mode: _mode(),
+                  initialDateTime: DateTime.now(),
+                  onDateTimeChanged: (value) => setState(() {
+                    if (isStart)
+                      _startDateTime = value;
+                    else
+                      _endDateTime = value;
+                  }),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
@@ -51,7 +101,7 @@ class TimetableForm extends State {
                         style: TextStyle(fontSize: 18),
                       ),
                       value: dropdownValueSchool,
-                      icon: const Icon(Icons.arrow_downward),
+                      icon: const Icon(Icons.keyboard_arrow_down_sharp),
                       iconSize: 24,
                       style: const TextStyle(color: Colors.black),
                       underline: Container(),
@@ -92,7 +142,7 @@ class TimetableForm extends State {
                         style: TextStyle(fontSize: 18),
                       ),
                       value: dropdownValueYear,
-                      icon: const Icon(Icons.arrow_downward),
+                      icon: const Icon(Icons.keyboard_arrow_down_sharp),
                       iconSize: 24,
                       style: const TextStyle(color: Colors.black),
                       underline: Container(),
@@ -133,7 +183,7 @@ class TimetableForm extends State {
                         style: TextStyle(fontSize: 18),
                       ),
                       value: dropdownValueSemester,
-                      icon: const Icon(Icons.arrow_downward),
+                      icon: const Icon(Icons.keyboard_arrow_down_sharp),
                       iconSize: 24,
                       style: const TextStyle(color: Colors.black),
                       underline: Container(),
@@ -176,14 +226,7 @@ class TimetableForm extends State {
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(8)),
-                        onPressed: () async {
-                          var result = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2025));
-                          print('$result');
-                        },
+                        onPressed: () => _datePicker(context, false),
                       ))
                 ]),
               ],
@@ -210,14 +253,7 @@ class TimetableForm extends State {
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(8)),
-                        onPressed: () async {
-                          var result = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2025));
-                          print('$result');
-                        },
+                        onPressed: () => _datePicker(context, false),
                       ))
                 ]),
               ],

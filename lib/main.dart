@@ -2,7 +2,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:My_Day_app/account/login.dart';
-import 'package:My_Day_app/home/homeUpdate.dart';
+import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/home.dart';
 
 void main() {

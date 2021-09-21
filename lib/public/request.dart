@@ -30,13 +30,7 @@ import 'package:My_Day_app/models/vote/vote_list_model.dart';
 import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/models/note/note_list.dart';
-import 'package:flutter/material.dart';
-// therd
-import 'package:http/http.dart' as http;
-// my day
-import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/public/toast.dart';
-import 'package:My_Day_app/models/schedule/schedule_model.dart';
+
 
 class Request {
   static const host = 'http://myday.sytes.net';
@@ -207,8 +201,14 @@ class Request {
   getIsError() => _isError;
 
   httpFunction(BuildContext context, dynamic response, String toastTxt) async {
-    Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-    if (responseBody['response'] == false) {
+    Map responseBody;
+    try{
+       responseBody = json.decode(utf8.decode(response.bodyBytes));
+    }catch(error){
+      print('error: ${utf8.decode(response.bodyBytes)}');
+    };
+    
+    if(responseBody != null){if (responseBody['response'] == false) {
       await alert(context, '錯誤', responseBody['message']);
       _responseBody = null;
       _isError = true;
@@ -218,7 +218,7 @@ class Request {
         toast(context, toastTxt);
       else
         _responseBody = json.decode(utf8.decode(response.bodyBytes));
-    }
+    }}
 
     print('statusCode: ${response.statusCode}');
     print('body: ${utf8.decode(response.bodyBytes)}');
@@ -257,12 +257,14 @@ class Request {
 // SCHEDULE ============================================================================================
 // create_new -------------------------------------------------------------------------------------
   scheduleCreateNew(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
     String _url = scheduleUrl['create_new'];
     await httpPost(context, data, _url, '新增成功');
   }
 
 // edit -------------------------------------------------------------------------------------------
   scheduleEdit(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
     String _url = scheduleUrl['edit'];
     await httpPost(context, data, _url, '編輯成功');
   }

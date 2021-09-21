@@ -1,6 +1,6 @@
-import 'package:My_Day_app/home/homeUpdate.dart';
+import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/setting/settings.dart';
-import 'package:My_Day_app/timetable/timetable_%20receive.dart';
+import 'package:My_Day_app/timetable/timetable_receive.dart';
 import 'package:My_Day_app/timetable/timetable_action_list.dart';
 import 'package:My_Day_app/timetable/timetable_choose_share.dart';
 import 'package:flutter/material.dart';

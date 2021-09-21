@@ -13,10 +13,11 @@ class PersonalInformationPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
         body: PersonalInformation(),
       
-    );
+    ));
   }
 }
 
@@ -26,7 +27,8 @@ class PersonalInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBar( 
         backgroundColor: Color(0xffF86D67),
         title:Text('個人資料',style: TextStyle(fontSize: 20)),
@@ -41,12 +43,16 @@ class PersonalInformation extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 20,right:170),
-            child:FlatButton(
+            child: SizedBox(
               height: 100,
-              color: Colors.white ,
-              shape: CircleBorder(side: BorderSide(color: Colors.black)),
+            child:TextButton(
+              style: TextButton.styleFrom(     
+                shape: CircleBorder(side: BorderSide(color: Colors.black)),
+                backgroundColor: Colors.white ,
+              ),
+              
               onPressed: () {}
-            ),
+            )),
           ),
           Container(
               margin: EdgeInsets.only(top: 20),
@@ -88,10 +94,14 @@ class PersonalInformation extends StatelessWidget {
               constraints: BoxConstraints.expand(height: 1.0),
           ),
           Container(
-            margin: EdgeInsets.only(top: 10,right: 190),
-            child:FlatButton(
+            margin: EdgeInsets.only(top: 10,right: 150),
+            child: SizedBox(
               height: 40,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ChangepwPersonalPage()));
@@ -99,7 +109,7 @@ class PersonalInformation extends StatelessWidget {
               child: Text('更改密碼',
                 style: TextStyle(fontSize: 20,),
               ),
-            ),
+            )),
           ),
            Container(
               margin: EdgeInsets.only(top: 10),
@@ -108,6 +118,6 @@ class PersonalInformation extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

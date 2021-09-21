@@ -15,10 +15,11 @@ class PrivacyPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
         body: Privacy(),
       
-    );
+    ));
   }
 }
 
@@ -28,7 +29,8 @@ class Privacy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBar( 
         backgroundColor: Color(0xffF86D67),
         title:Text('隱私',style: TextStyle(fontSize: 20)),
@@ -41,12 +43,16 @@ class Privacy extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => OpenClassSchedulePage()));
@@ -65,7 +71,7 @@ class Privacy extends StatelessWidget {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -74,12 +80,16 @@ class Privacy extends StatelessWidget {
                   color: Color(0xffE3E3E3),
                   constraints: BoxConstraints.expand(height: 1.0),
                 )),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
               onPressed: (){
                 Navigator.push(context,
                 MaterialPageRoute(builder: (context) => FriendsPrivacySettingsPage()));
@@ -98,7 +108,7 @@ class Privacy extends StatelessWidget {
                   )
                 ],
               ),
-            ),
+            )),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -109,6 +119,6 @@ class Privacy extends StatelessWidget {
             )),
         ],
       ),
-    );
+    ));
   }
 }

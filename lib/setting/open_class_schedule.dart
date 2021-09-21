@@ -28,7 +28,8 @@ class OpenClassSchedule extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
         title: Text('公開課表', style: TextStyle(fontSize: 20)),
@@ -41,33 +42,37 @@ class OpenClassSchedule extends State {
       ),
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          Container(
+            margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-            child: FlatButton(
+            child: SizedBox(
               height: 60,
-              minWidth: double.infinity,
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    '公開課表',
-                    style: TextStyle(
-                      fontSize: 20,
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '公開課表',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
                     ),
-                  ),
-                  Switch(
-                    value: _isCheck,
-                    onChanged: _changed,
-                    activeColor: Colors.white,
-                    activeTrackColor: Color(0xffF86D67),
-                    // inactiveThumbColor: Color(0xffF86D67),
-                    // inactiveTrackColor: Color(0xffF86D67),
-                  ),
-                ],
-              ),
-            ),
+                    Switch(
+                      value: _isCheck,
+                      onChanged: _changed,
+                      activeColor: Colors.white,
+                      activeTrackColor: Color(0xffF86D67),
+                      // inactiveThumbColor: Color(0xffF86D67),
+                      // inactiveTrackColor: Color(0xffF86D67),
+                    ),
+                  ],
+                ),
+              )),
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
@@ -186,7 +191,7 @@ class OpenClassSchedule extends State {
           ),
         ],
       ),
-    );
+    ));
   }
 
   void _changed(isCheck) {
