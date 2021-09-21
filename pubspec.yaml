@@ -95,10 +95,10 @@ flutter:
     - assets/json/vote_list.json
     - assets/json/vote_end_list.json
 
-    - assets/json/share_note_list.json
+    - assets/json/common_note_list.json
     - assets/json/note_list.json
 
-    - assets/json/share_studyplan_list.json
+    - assets/json/common_studyplan_list.json
     - assets/json/personal_share_studyplan_list.json
 
     - assets/json/common_schedule_list.json

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/studyplan_request/sharing.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_share_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/models/studyplan/personal_share_studyplan.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 import 'package:date_format/date_format.dart';
 
 class ShareStudyPlanPage extends StatefulWidget {
