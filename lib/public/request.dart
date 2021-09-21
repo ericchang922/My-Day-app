@@ -20,7 +20,7 @@ import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
-import 'package:My_Day_app/models/studyplan/share_studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/common_studyplan_list_model.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
