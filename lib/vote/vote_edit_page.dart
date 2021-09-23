@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/vote_request/edit.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
@@ -58,7 +59,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
 
   bool _visibleDeadLine = false;
   bool _visibleChooseVoteQuantity = false;
-  bool _isEnabled = true;
+  bool _isNotCreate = false;
 
   @override
   void initState() {
@@ -120,24 +121,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
     return dateString;
   }
 
-  _buttonIsOnpressed() {
-    int count = 0;
-    for (int i = 0; i < _voteValues.length; i++) {
-      if (_voteValues[i] != "") {
-        count++;
-      }
-    }
-    if (count < 2 || _voteTitleController.text.isEmpty) {
-      setState(() {
-        _isEnabled = false;
-      });
-    } else {
-      setState(() {
-        _isEnabled = true;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -162,6 +145,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
     Widget voteType;
 
     _submit() async {
+      String _alertTitle = '編輯投票失敗';
       String deadLine;
       String title = _title;
       List<Map<String, dynamic>> voteItems = [];
@@ -199,24 +183,42 @@ class _VoteEditWidget extends State<VoteEditPage> {
         voteItems.add({"voteItemNum": i + 1, "voteItemName": voteItemsName[i]});
       }
 
-      var submitWidget;
-      _submitWidgetfunc() async {
-        return Edit(
-            uid: uid,
-            voteNum: voteNum,
-            title: title,
-            voteItems: voteItems,
-            deadline: deadLine,
-            isAddItemPermit: isAddItemPermit,
-            isAnonymous: isAnonymous,
-            chooseVoteQuantity: chooseVoteQuantity);
+      if (uid == null) {
+        await alert(context, _alertTitle, '請先登入');
+        _isNotCreate = true;
+        Navigator.pop(context);
       }
-
-      submitWidget = await _submitWidgetfunc();
-      if (await submitWidget.getIsError())
+      if (title == null || title == '') {
+        await alert(context, _alertTitle, '請輸入投票問題');
+        _isNotCreate = true;
+      }
+      if (voteItems.length < 2) {
+        await alert(context, _alertTitle, '請至少新增兩個投票項目');
+        _isNotCreate = true;
+      }
+      if (_isNotCreate) {
+        _isNotCreate = false;
         return true;
-      else
-        return false;
+      } else {
+        var submitWidget;
+        _submitWidgetfunc() async {
+          return Edit(
+              uid: uid,
+              voteNum: voteNum,
+              title: title,
+              voteItems: voteItems,
+              deadline: deadLine,
+              isAddItemPermit: isAddItemPermit,
+              isAnonymous: isAnonymous,
+              chooseVoteQuantity: chooseVoteQuantity);
+        }
+
+        submitWidget = await _submitWidgetfunc();
+        if (await submitWidget.getIsError())
+          return true;
+        else
+          return false;
+      }
     }
 
     _deadLinePicker(contex) {
@@ -292,7 +294,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
                             _voteDate.add("");
                           }
                         });
-                        _buttonIsOnpressed();
                       }),
                 ),
               ),
@@ -311,19 +312,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
           ),
         ),
       );
-    }
-
-    _onPressed() {
-      var _onPressed;
-
-      if (_isEnabled == true) {
-        _onPressed = () async {
-          if (await _submit() != true) {
-            Navigator.pop(context);
-          }
-        };
-      }
-      return _onPressed;
     }
 
     if (_getVoteModel != null) {
@@ -347,7 +335,15 @@ class _VoteEditWidget extends State<VoteEditPage> {
                     child: Container(
                       margin: EdgeInsets.only(top: _height * 0.03),
                       child: TextField(
-                        controller: _voteItemController,
+                        controller: TextEditingController.fromValue(
+                            TextEditingValue(
+                                text: _voteItemController.text,
+                                // 保持光標在最後
+                                selection: TextSelection.fromPosition(
+                                    TextPosition(
+                                        affinity: TextAffinity.downstream,
+                                        offset:
+                                            _voteItemController.text.length)))),
                         cursorColor: Colors.black,
                         style: TextStyle(fontSize: _appBarSize),
                         decoration: InputDecoration(
@@ -372,7 +368,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
                               _voteValues.add("");
                             }
                           });
-                          _buttonIsOnpressed();
                         },
                       ),
                     ),
@@ -444,7 +439,12 @@ class _VoteEditWidget extends State<VoteEditPage> {
             top: _height * 0.03, right: _height * 0.05, left: _height * 0.05),
         children: [
           TextField(
-            controller: _voteTitleController,
+            controller: TextEditingController.fromValue(TextEditingValue(
+                text: _voteTitleController.text,
+                // 保持光標在最後
+                selection: TextSelection.fromPosition(TextPosition(
+                    affinity: TextAffinity.downstream,
+                    offset: _voteTitleController.text.length)))),
             cursorColor: Colors.black,
             style: TextStyle(fontSize: _titleSize),
             decoration: InputDecoration(
@@ -462,7 +462,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
             onChanged: (text) {
               setState(() {
                 _title = text;
-                _buttonIsOnpressed();
               });
             },
           ),
@@ -694,7 +693,11 @@ class _VoteEditWidget extends State<VoteEditPage> {
                                 width: _iconWidth,
                               ),
                               fillColor: _color,
-                              onPressed: _onPressed()),
+                              onPressed: () async {
+                                if (await _submit() != true) {
+                                  Navigator.pop(context);
+                                }
+                              }),
                         ),
                       )
                     ]),

@@ -116,7 +116,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
         _title = '新增選項';
       else
         _title = '新增日期';
-      _buttonIsOnpressed();
     });
   }
 
@@ -136,24 +135,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
         }
       }
     });
-  }
-
-  _buttonIsOnpressed() {
-    int count = 0;
-    for (int i = 0; i < _voteCheck.length; i++) {
-      if (_voteCheck[i] == true) {
-        count++;
-      }
-    }
-    if (count == 0) {
-      setState(() {
-        _isEnabled = false;
-      });
-    } else {
-      setState(() {
-        _isEnabled = true;
-      });
-    }
   }
 
   @override
@@ -220,7 +201,7 @@ class _VoteWidget extends State<VotePage> with RouteAware {
       for (int i = 0; i < _voteCheck.length; i++) {
         if (_voteCheck[i] == true) voteItemNum.add(i + 1);
       }
-
+      print(voteItemNum);
       var submitWidget;
       _submitWidgetfunc() async {
         return Vote(uid: uid, voteNum: voteNum, voteItemNum: voteItemNum);
@@ -550,7 +531,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
                     _voteCheck[index] = value;
                     _voteItemCount[index]--;
                   }
-                  _buttonIsOnpressed();
                 });
               },
             ),
@@ -568,7 +548,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
                   _voteItemCount[index]--;
                   _voteCheck[index] = false;
                 }
-                _buttonIsOnpressed();
               });
             },
           );
@@ -609,20 +588,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
           )
         ],
       );
-
-      _onPressed() {
-        var _onPressed;
-
-        if (_isEnabled == true) {
-          _onPressed = () async {
-            if (await _submitVote() != true) {
-              _getVoteRequest();
-              Navigator.pop(context);
-            }
-          };
-        }
-        return _onPressed;
-      }
 
       return Container(
           color: _color,
@@ -668,14 +633,18 @@ class _VoteWidget extends State<VotePage> with RouteAware {
                           child: SizedBox(
                         height: _bottomHeight,
                         child: RawMaterialButton(
-                          elevation: 0,
-                          child: Image.asset(
-                            'assets/images/confirm.png',
-                            width: _bottomIconWidth,
-                          ),
-                          fillColor: _color,
-                          onPressed: _onPressed(),
-                        ),
+                            elevation: 0,
+                            child: Image.asset(
+                              'assets/images/confirm.png',
+                              width: _bottomIconWidth,
+                            ),
+                            fillColor: _color,
+                            onPressed: () async {
+                              if (await _submitVote() != true) {
+                                _getVoteRequest();
+                                Navigator.pop(context);
+                              }
+                            }),
                       )),
                     ]),
                   ),
