@@ -1,9 +1,10 @@
-import 'dart:convert';
-
 import 'package:My_Day_app/common_studyplan/remark_dialog.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/studyplan_request/edit_studyplan.dart';
+import 'package:My_Day_app/public/studyplan_request/get.dart';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -39,9 +40,9 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
 
   FocusNode _contentFocusNode = FocusNode();
 
-  bool _isEnabled;
   bool _isAuthority;
   bool _addSubject = true;
+  bool _isNotCreate = false;
 
   List<List> _subjectTimeList = [];
   List _subjectNameList = [];
@@ -55,46 +56,39 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
   void initState() {
     super.initState();
     _getStudyPlanRequest();
-    // _buttonIsOnpressed();
   }
 
-  // _buttonIsOnpressed() {
-  //   int count = 0;
-  //   for (int i = 0; i < _studyplanCheck.length; i++) {
-  //     if (_studyplanCheck[i] == true) {
-  //       count++;
-  //     }
-  //   }
-  //   if (count != 0) {
-  //     setState(() {
-  //       _isEnabled = true;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _isEnabled = false;
-  //     });
-  //   }
-  // }
-
   _getStudyPlanRequest() async {
-    var response =
-        await rootBundle.loadString('assets/json/get_studyplan.json');
-    var responseBody = json.decode(response);
-    var _request = StudyplanModel.fromJson(responseBody);
+    // var response =
+    //     await rootBundle.loadString('assets/json/get_studyplan.json');
+    // var responseBody = json.decode(response);
+    // var _request = StudyplanModel.fromJson(responseBody);
 
-    // StudyplanModel _request =
-    //     await Get(uid: uid, studyplanNum: studyplanNum).getData();
+    StudyplanModel _request =
+        await Get(uid: uid, studyplanNum: studyplanNum).getData();
 
     setState(() {
       _getStudyplan = _request;
       _title = _getStudyplan.title;
       _date = _getStudyplan.date;
-      _startDateTime = _getStudyplan.startTime;
-      _endDateTime = _getStudyplan.endTime;
+      _startDateTime = DateTime(_date.year, _date.month, _date.day,
+          _getStudyplan.startTime.hour, _getStudyplan.startTime.minute);
+      _endDateTime = DateTime(_date.year, _date.month, _date.day,
+          _getStudyplan.endTime.hour, _getStudyplan.endTime.minute);
       _isAuthority = _getStudyplan.isAuthority;
       for (int i = 0; i < _getStudyplan.subject.length; i++) {
-        DateTime startTime = _getStudyplan.subject[i].subjectStart;
-        DateTime endTime = _getStudyplan.subject[i].subjectEnd;
+        DateTime startTime = DateTime(
+            _date.year,
+            _date.month,
+            _date.day,
+            _getStudyplan.subject[i].subjectStart.hour,
+            _getStudyplan.subject[i].subjectStart.minute);
+        DateTime endTime = DateTime(
+            _date.year,
+            _date.month,
+            _date.day,
+            _getStudyplan.subject[i].subjectEnd.hour,
+            _getStudyplan.subject[i].subjectEnd.minute);
         String subjectName = _getStudyplan.subject[i].subjectName;
         String remark = _getStudyplan.subject[i].remark;
         int noteNum = _getStudyplan.subject[i].noteNum;
@@ -151,17 +145,52 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
     _endTimeController.text = _endTime;
 
     _submit() async {
-      // var submitWidget;
-      // _submitWidgetfunc() async {
-      //   return Sharing(
-      //       uid: uid, studyplanNum: studyplanNum, groupNum: groupNum);
-      // }
+      String _alertTitle = '編輯讀書計畫失敗';
+      String scheduleName = _title;
+      String scheduleStart = _startDateTime.toString();
+      String scheduleEnd = _endDateTime.toString();
+      bool isAuthority = _isAuthority;
+      List<Map<String, dynamic>> subjects = [];
+      for (int i = 0; i < _subjectTimeList.length; i++) {
+        subjects.add({
+          'subject': _subjectNameList[i],
+          'plan_start': _subjectTimeList[i].first.toString(),
+          'plan_end': _subjectTimeList[i].last.toString(),
+          'remark': _remarkList[i],
+          'note_no': _noteNumList[i],
+          'is_rest': _restList[i]
+        });
+        if (_subjectNameList[i] == null || _subjectNameList[i] == '') {
+          await alert(context, _alertTitle, '請輸入科目名稱');
+          _isNotCreate = true;
+        }
+      }
+      if (scheduleName == null || scheduleName == '') {
+        await alert(context, _alertTitle, '請輸入標題');
+        _isNotCreate = true;
+      }
+      if (_isNotCreate) {
+        _isNotCreate = false;
+        return true;
+      } else {
+        var submitWidget;
+        _submitWidgetfunc() async {
+          return EditStudyplan(
+              uid: uid,
+              studyplanNum: studyplanNum,
+              scheduleName: scheduleName,
+              scheduleStart: scheduleStart,
+              scheduleEnd: scheduleEnd,
+              isAuthority: isAuthority,
+              subjects: subjects);
+        }
 
-      // submitWidget = await _submitWidgetfunc();
-      // if (await submitWidget.getIsError())
-      //   return true;
-      // else
-      //   return false;
+        submitWidget = await _submitWidgetfunc();
+        if (await submitWidget.getIsError())
+          return true;
+        else
+          return false;
+      }
     }
 
     void _datePicker(contex) {
@@ -182,6 +211,28 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                       Navigator.of(context).pop();
                       setState(() {
                         _date = _dateTime;
+                        _startDateTime = DateTime(
+                            _date.year,
+                            _date.month,
+                            _date.day,
+                            _startDateTime.hour,
+                            _startDateTime.minute);
+                        _endDateTime = DateTime(_date.year, _date.month,
+                            _date.day, _endDateTime.hour, _endDateTime.minute);
+                        for (int i = 0; i < _subjectTimeList.length; i++) {
+                          _subjectTimeList[i].first = DateTime(
+                              _date.year,
+                              _date.month,
+                              _date.day,
+                              _subjectTimeList[i].first.hour,
+                              _subjectTimeList[i].first.minute);
+                          _subjectTimeList[i].last = DateTime(
+                              _date.year,
+                              _date.month,
+                              _date.day,
+                              _subjectTimeList[i].last.hour,
+                              _subjectTimeList[i].last.minute);
+                        }
                       });
                     },
                   ),
@@ -220,10 +271,20 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       setState(() {
-                        if (isStart)
-                          _startDateTime = _dateTime;
-                        else
-                          _endDateTime = _dateTime;
+                        if (isStart) {
+                          if (_dateTime.isBefore(_subjectTimeList[0].last)) {
+                            _startDateTime = _dateTime;
+                            _subjectTimeList[0].first = _dateTime;
+                          }
+                        } else {
+                          if (_dateTime.isAfter(
+                              _subjectTimeList[_subjectTimeList.length - 1]
+                                  .first)) {
+                            _endDateTime = _dateTime;
+                            _subjectTimeList[_subjectTimeList.length - 1].last =
+                                _dateTime;
+                          }
+                        }
                       });
                     },
                   ),
@@ -233,6 +294,10 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                 height: _height * 0.28,
                 child: CupertinoDatePicker(
                   mode: CupertinoDatePickerMode.time,
+                  minimumDate:
+                      (DateTime(_date.year, _date.month, _date.day, 0, 0)),
+                  maximumDate:
+                      (DateTime(_date.year, _date.month, _date.day, 24, 0)),
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
                     _dateTime = value;
@@ -667,22 +732,27 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                     case 'note':
                       break;
                     case 'delete':
-                      setState(() {
-                        _subjectTimeList.removeAt(index);
-                        _subjectNameList.removeAt(index);
-                        _remarkList.removeAt(index);
-                        _noteNumList.removeAt(index);
-                        _restList.removeAt(index);
-                        _endDateTime =
-                            _subjectTimeList[_subjectTimeList.length - 1].last;
-                        _startDateTime = _subjectTimeList[0].first;
-                        for (int i = 0; i < _subjectTimeList.length; i++) {
-                          if (i != 0 && i != _subjectTimeList.length - 1) {
-                            _subjectTimeList[i].first =
-                                _subjectTimeList[i - 1].last;
+                      if (_subjectTimeList.length > 1) {
+                        setState(() {
+                          _subjectTimeList.removeAt(index);
+                          _subjectNameList.removeAt(index);
+                          _remarkList.removeAt(index);
+                          _noteNumList.removeAt(index);
+                          _restList.removeAt(index);
+                          _endDateTime =
+                              _subjectTimeList[_subjectTimeList.length - 1]
+                                  .last;
+                          _startDateTime = _subjectTimeList[0].first;
+                          for (int i = 0; i < _subjectTimeList.length; i++) {
+                            if (i != 0 && i != _subjectTimeList.length - 1) {
+                              _subjectTimeList[i].first =
+                                  _subjectTimeList[i - 1].last;
+                            }
                           }
-                        }
-                      });
+                        });
+                      } else {
+                        await alert(context, '錯誤', '至少需有一個行程');
+                      }
                       break;
                   }
                 },
@@ -736,19 +806,6 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
           });
         },
       );
-
-      _onPressed() {
-        var _onPressed;
-
-        if (_isEnabled == true) {
-          _onPressed = () async {
-            if (await _submit() != true) {
-              Navigator.pop(context);
-            }
-          };
-        }
-        return _onPressed;
-      }
 
       return Container(
         color: _color,
@@ -824,7 +881,11 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                                 width: _iconWidth,
                               ),
                               fillColor: _color,
-                              onPressed: _onPressed()),
+                              onPressed: () async {
+                                if (await _submit() != true) {
+                                  Navigator.pop(context);
+                                }
+                              }),
                         ),
                       )
                     ]),
