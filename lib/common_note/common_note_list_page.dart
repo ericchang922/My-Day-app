@@ -47,7 +47,7 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
 
   _groupNoteListRequest() async {
     // var response =
-    //     await rootBundle.loadString('assets/json/share_note_list.json');
+    //     await rootBundle.loadString('assets/json/common_note_list.json');
     // var responseBody = json.decode(response);
     // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
 

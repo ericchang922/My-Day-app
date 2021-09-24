@@ -1,4 +1,5 @@
 import 'package:My_Day_app/common_studyplan/customer_check_box_studyplan.dart';
+import 'package:My_Day_app/common_studyplan/edit_common_studyplan_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
@@ -9,15 +10,18 @@ import 'package:flutter/material.dart';
 
 class StudyplanDetailPage extends StatefulWidget {
   int studyplanNum;
-  StudyplanDetailPage(this.studyplanNum);
+  int typeId;
+  StudyplanDetailPage(this.studyplanNum, this.typeId);
 
   @override
-  _StudyplanDetailPage createState() => new _StudyplanDetailPage(studyplanNum);
+  _StudyplanDetailPage createState() =>
+      new _StudyplanDetailPage(studyplanNum, typeId);
 }
 
 class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
   int studyplanNum;
-  _StudyplanDetailPage(this.studyplanNum);
+  int typeId;
+  _StudyplanDetailPage(this.studyplanNum, this.typeId);
 
   StudyplanModel _getStudyplan;
 
@@ -91,6 +95,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).accentColor;
     Color _bule = Color(0xff7AAAD8);
+    Color _darkGrey = Color(0xff999999);
 
     if (_getStudyplan != null) {
       String _date =
@@ -129,8 +134,8 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
       _selectedItem(BuildContext context, value) async {
         switch (value) {
           case 'edit':
-            // Navigator.of(context).push(
-            //     MaterialPageRoute(builder: (context) => VoteEditPage(voteNum)));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => EditCommonStudyPlanPage(studyplanNum)));
             break;
           case 'cancel':
             if (await _submit() != true) {
@@ -190,6 +195,31 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
       _subjectWidget(
           {int index, bool isRest, String name, String remark, int noteNum}) {
         bool _isNote = noteNum == null ? false : true;
+        Widget leading;
+        if (typeId == 0) {
+          leading = CheckBoxStudyplan(
+            value: _check[index],
+            onTap: (value) {
+              setState(() {
+                _check[index] = value;
+              });
+            },
+          );
+        } else {
+          leading = Container(
+              width: _width * 0.08,
+              height: _width * 0.08,
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: _darkGrey),
+                  color: _darkGrey,
+                  borderRadius: BorderRadius.circular(_height * 0.01)),
+              child: Icon(
+                Icons.check,
+                size: _width * 0.06,
+                color: Colors.white,
+              ));
+        }
+
         if (isRest == false && remark != "") {
           return Container(
             margin: EdgeInsets.only(left: _subjectMargin),
@@ -201,14 +231,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              leading: CheckBoxStudyplan(
-                value: _check[index],
-                onTap: (value) {
-                  setState(() {
-                    _check[index] = value;
-                  });
-                },
-              ),
+              leading: leading,
               trailing: Visibility(
                 visible: _isNote,
                 child: Image.asset(
@@ -223,14 +246,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
             margin: EdgeInsets.only(left: _subjectMargin),
             child: ListTile(
                 title: Text(name, style: TextStyle(fontSize: _titleSize)),
-                leading: CheckBoxStudyplan(
-                  value: _check[index],
-                  onTap: (value) {
-                    setState(() {
-                      _check[index] = value;
-                    });
-                  },
-                ),
+                leading: leading,
                 trailing: Visibility(
                   visible: _isNote,
                   child: Image.asset(
