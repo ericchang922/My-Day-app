@@ -44,9 +44,7 @@ class ReadPlanAdd extends State<_ReadPlanAdd>
     Size size = MediaQuery.of(context).size;
     double _width = size.width;
     double _iconWidth = _width * 0.05;
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SafeArea(
+    return  SafeArea(
         child: Scaffold(
             appBar: AppBar(
               backgroundColor: Color(0xffF86D67),
@@ -109,7 +107,7 @@ class ReadPlanAdd extends State<_ReadPlanAdd>
                   },
                 ),
               ),
-    )])))));
+    )]))));
   }
 }
 
@@ -236,7 +234,7 @@ class _ReadPlanAddTitle extends State<ReadPlanAddTitle> {
             )),
           ])),
       Container(
-          margin: EdgeInsets.only(left: 30, right: 120, bottom: 15),
+          margin: EdgeInsets.only(left: 30, right: 110, bottom: 15),
           child: Row(
             children: [
               Container(
@@ -245,7 +243,7 @@ class _ReadPlanAddTitle extends State<ReadPlanAddTitle> {
               //可以通过在外面包裹一层InkWell来让某组件可以响应用户事件
               SizedBox(
                 height: 40,
-                width: 125,
+                width: 135,
                 child: TextButton(
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(side: BorderSide(color: Color(0xff707070)),

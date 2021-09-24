@@ -1,5 +1,6 @@
 
 import 'package:My_Day_app/studyplan/readplan_add.dart';
+import 'package:My_Day_app/studyplan/readplan_content%20copy.dart';
 import 'package:My_Day_app/studyplan/readplan_content.dart';
 import 'package:My_Day_app/studyplan/readplan_content_over.dart';
 import 'package:flutter/material.dart';
@@ -17,25 +18,93 @@ class ReadPlan extends StatelessWidget {
 }
 
 class ReadPlanPage extends StatefulWidget {
-  ReadPlanPage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
   @override
   _ReadPlanPage createState() => _ReadPlanPage();
 }
+ 
+class _ReadPlanPage extends State<ReadPlanPage> with SingleTickerProviderStateMixin {
+  final bodyGlobalKey = GlobalKey();
+  // final List<Widget> myTabs = [
+  //   Tab(text: '未結束'),
+  //   Tab(text: '已結束'),
+  //   Tab(text: '已共享'),
+  // ];
+  TabController _tabController;
+  ScrollController _scrollController;
+  bool fixedScroll;
 
-class _ReadPlanPage extends State<ReadPlanPage> {
-  
 
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_smoothScrollToTop);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  _scrollListener() {
+    if (fixedScroll) {
+      _scrollController.jumpTo(0);
+    }
+  }
+
+  _smoothScrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: Duration(microseconds: 300),
+      curve: Curves.ease,
+    );
+
+    setState(() {
+      fixedScroll = _tabController.index == 2;
+    });
+  }
+
+  _buildTabContext(int lineCount) => Container(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+            child: Column(children: [
+                NotOverPersonal(),
+                Home(),
+              ]),
+              
+            ),
+      );
+_buildTabContextOver(int lineCount) => Container(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+            child: Column(children: [
+                OverPersonal(),
+                Home(),
+              ]),
+              
+            ),
+      );
+      _buildTabContextshare(int lineCount) => Container(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+            child: FriendsPrivacySettingsPage(),
+              
+            ),
+      );
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        
         length: 3,
         child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
+            elevation: 0,
             backgroundColor: Color(0xffF86D67),
             title: Text('讀書計畫', style: TextStyle(fontSize: 20)),
             leading: IconButton(
@@ -53,36 +122,49 @@ class _ReadPlanPage extends State<ReadPlanPage> {
                 },
               ),
             ],
-            bottom: TabBar(
-              
-              indicatorWeight:5,
-              labelColor: Colors.white,
-              unselectedLabelColor: Color(0xffE3E3E3),
-              indicatorColor: Color(0xffEFB208),
-              tabs: <Widget>[
+            
+            ),
+      body: NestedScrollView(
+        controller: _scrollController,
+        headerSliverBuilder: (context, value) {
+          return [
+            
+            SliverToBoxAdapter(
+              child: Material(
+                  color:  Color(0xffF86D67),
+                  child: Theme(
+                    data: ThemeData(
+                      splashColor: Colors.transparent, // 点击时的水波纹颜色设置为透明
+                      highlightColor: Colors.transparent, // 点击时的背景高亮颜色设置为透明
+                    ),
+              child: TabBar(
+                
+                indicatorWeight:5,
+                labelColor: Colors.white,
+                unselectedLabelColor: Color(0xffE3E3E3),
+                indicatorColor: Color(0xffEFB208),
+                controller: _tabController,
+               
+                isScrollable: false,
+               tabs: <Widget>[
                 Tab(text: '未結束'),
                 Tab(text: '已結束'),
                 Tab(text: '已共享'),
               ],
+              ),
             ),
+            ))];
+        },
+        body: Container(
+          child: TabBarView(
+            controller: _tabController,
+            children: [_buildTabContext(1), _buildTabContextOver(1), _buildTabContextshare(1)],
           ),
-          body: TabBarView(
-            children: <Widget>[
-              Column(children: [
-                NotOverPersonal(),
-                Home(),
-              ]),
-              Column(children: [
-                OverPersonal(),
-                Home(),
-              ]),
-              FriendsPrivacySettingsPage(),
-            ],
-          ),
+        ),
+      ),
     )));
   }
 }
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -160,7 +242,8 @@ class _ExamplePageState extends State<ExamplePage> {
   Widget _buildItem(BuildContext context, int index) {
     final theme = Theme.of(context);
     final name = _items[index];
-    return Container(
+    return Column(children: [
+    Container(
       margin: EdgeInsets.only(right: 10, left: 20, top: 10),
       child: SizedBox(
         height: 40,
@@ -182,7 +265,7 @@ class _ExamplePageState extends State<ExamplePage> {
           ],
         ),
       ),
-    ));
+    ))]);
   }
 
   @override
@@ -425,9 +508,7 @@ class FriendsPrivacySettings extends State {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      body: ListView(
+    return  Column(
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 15, left: 35,top:10),
@@ -480,7 +561,7 @@ class FriendsPrivacySettings extends State {
             constraints: BoxConstraints.expand(height: 1.0),
           ),
         ],
-      ),
-    ));
+      
+    );
   }
 }

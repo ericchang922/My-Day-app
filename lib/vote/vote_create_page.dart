@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/vote/vote_setting_page.dart';
-import 'package:My_Day_app/public/alert.dart';
 
 import 'package:date_format/date_format.dart';
 
@@ -41,12 +40,55 @@ class _VoteCreateWidget extends State<VoteCreatePage>
 
   FocusNode _contentFocusNode = FocusNode();
 
-  bool _isNotCreate = false;
+  bool _isEnabled;
 
   @override
   void initState() {
     super.initState();
+
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() => {
+          if (!_tabController.indexIsChanging)
+            {_isEnabled = false, _buttonIsOnpressed()}
+        });
+    _buttonIsOnpressed();
+  }
+
+  _buttonIsOnpressed() {
+    int count = 0;
+    if (_tabController.index == 0) {
+      for (int i = 0; i < _voteValues.length; i++) {
+        if (_voteValues[i] != "") {
+          count++;
+        }
+      }
+      if (count < 2 || _voteTitleController.text.isEmpty) {
+        setState(() {
+          _isEnabled = false;
+        });
+      } else {
+        setState(() {
+          _isEnabled = true;
+        });
+      }
+    }
+    if (_tabController.index == 1) {
+      for (int i = 0; i < _voteDateValues.length; i++) {
+        if (_voteDateValues[i] != "") {
+          count++;
+        }
+      }
+      if (count < 2 || _voteDateTitleController.text.isEmpty) {
+        setState(() {
+          _isEnabled = false;
+        });
+      } else {
+        setState(() {
+          _isEnabled = true;
+        });
+      }
+    }
+    return count;
   }
 
   _voteCount() {
@@ -125,6 +167,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                             _voteDateFormat.add("");
                           }
                         });
+                        _buttonIsOnpressed();
                       }),
                 ),
               ),
@@ -190,6 +233,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                           int count = _voteCount();
                           if (count == 0) _voteValues.add("");
                         });
+                        _buttonIsOnpressed();
                       },
                     ),
                   ),
@@ -221,6 +265,9 @@ class _VoteCreateWidget extends State<VoteCreatePage>
               borderSide: BorderSide(color: _hintGray),
             ),
           ),
+          onChanged: (text) {
+            _buttonIsOnpressed();
+          },
         ),
         createVoteItem
       ],
@@ -292,10 +339,54 @@ class _VoteCreateWidget extends State<VoteCreatePage>
               borderSide: BorderSide(color: _hintGray),
             ),
           ),
+          onChanged: (text) {
+            _buttonIsOnpressed();
+          },
         ),
         createDateVoteItme
       ],
     );
+
+    _onPressed() {
+      var _onPressed;
+      if (_isEnabled == true) {
+        _onPressed = () {
+          String _title;
+          int _optionTypeId = _tabController.index;
+          setState(() {
+            // ignore: deprecated_member_use
+            _voteItems = new List();
+            // ignore: deprecated_member_use
+            _voteItemsName = new List();
+            if (_optionTypeId == 0) {
+              for (int i = 0; i < _voteValues.length; i++) {
+                if (_voteValues[i] != "") {
+                  _voteItemsName.add(_voteValues[i]);
+                }
+              }
+              _title = _voteTitleController.text;
+            } else {
+              for (int i = 0; i < _voteDateFormat.length; i++) {
+                if (_voteDateFormat[i] != "") {
+                  _voteItemsName.add(_voteDateFormat[i].toString());
+                }
+              }
+              _title = _voteDateTitleController.text;
+            }
+            for (int i = 0; i < _voteItemsName.length; i++) {
+              _voteItems.add(
+                  {"voteItemNum": i + 1, "voteItemName": _voteItemsName[i]});
+            }
+            print(_title);
+            print(_voteItems);
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => VoteSettingPage(
+                    groupNum, _optionTypeId + 1, _title, _voteItems)));
+          });
+        };
+      }
+      return _onPressed;
+    }
 
     return Container(
       color: _color,
@@ -380,64 +471,14 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                         child: SizedBox(
                       height: _bottomHeight,
                       child: RawMaterialButton(
-                          elevation: 0,
-                          child: Image.asset(
-                            'assets/images/confirm.png',
-                            width: _bottomIconWidth,
-                          ),
-                          fillColor: _color,
-                          onPressed: () async {
-                            String _alertTitle = '新增投票失敗';
-                            String _title;
-                            int _optionTypeId = _tabController.index;
-                            // ignore: deprecated_member_use
-                            _voteItems = new List();
-                            // ignore: deprecated_member_use
-                            _voteItemsName = new List();
-                            if (_optionTypeId == 0) {
-                              for (int i = 0; i < _voteValues.length; i++) {
-                                if (_voteValues[i] != "") {
-                                  _voteItemsName.add(_voteValues[i]);
-                                }
-                              }
-                              _title = _voteTitleController.text;
-                            } else {
-                              for (int i = 0; i < _voteDateFormat.length; i++) {
-                                if (_voteDateFormat[i] != "") {
-                                  _voteItemsName
-                                      .add(_voteDateFormat[i].toString());
-                                }
-                              }
-                              _title = _voteDateTitleController.text;
-                            }
-                            for (int i = 0; i < _voteItemsName.length; i++) {
-                              _voteItems.add({
-                                "voteItemNum": i + 1,
-                                "voteItemName": _voteItemsName[i]
-                              });
-                            }
-                            if (_title == '' || _title == null) {
-                              await alert(context, _alertTitle, '請輸入投票問題');
-                              _isNotCreate = true;
-                            }
-
-                            if (_voteItemsName.length < 2) {
-                              await alert(context, _alertTitle, '請至少新增兩個投票項目');
-                              _isNotCreate = true;
-                            }
-                            print(_title);
-                            print(_voteItems);
-                            if (_isNotCreate) {
-                              _isNotCreate = false;
-                            } else {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => VoteSettingPage(
-                                      groupNum,
-                                      _optionTypeId + 1,
-                                      _title,
-                                      _voteItems)));
-                            }
-                          }),
+                        elevation: 0,
+                        child: Image.asset(
+                          'assets/images/confirm.png',
+                          width: _bottomIconWidth,
+                        ),
+                        fillColor: _color,
+                        onPressed: _onPressed(),
+                      ),
                     )),
                   ]),
                 ),

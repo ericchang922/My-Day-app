@@ -10,24 +10,20 @@ String shareStudyplanListModelToJson(ShareStudyplanListModel data) => json.encod
 
 class ShareStudyplanListModel {
     ShareStudyplanListModel({
-        this.pastStudyplan,
-        this.futureStudyplan,
+        this.studyplan,
         this.response,
     });
 
-    List<Studyplan> pastStudyplan;
-    List<Studyplan> futureStudyplan;
+    List<Studyplan> studyplan;
     bool response;
 
     factory ShareStudyplanListModel.fromJson(Map<String, dynamic> json) => ShareStudyplanListModel(
-        pastStudyplan: List<Studyplan>.from(json["pastStudyplan"].map((x) => Studyplan.fromJson(x))),
-        futureStudyplan: List<Studyplan>.from(json["futureStudyplan"].map((x) => Studyplan.fromJson(x))),
+        studyplan: List<Studyplan>.from(json["studyplan"].map((x) => Studyplan.fromJson(x))),
         response: json["response"],
     );
 
     Map<String, dynamic> toJson() => {
-        "pastStudyplan": List<dynamic>.from(pastStudyplan.map((x) => x.toJson())),
-        "futureStudyplan": List<dynamic>.from(futureStudyplan.map((x) => x.toJson())),
+        "studyplan": List<dynamic>.from(studyplan.map((x) => x.toJson())),
         "response": response,
     };
 }

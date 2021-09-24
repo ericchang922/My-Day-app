@@ -135,7 +135,7 @@ class ExamplePage extends StatefulWidget {
   _ExamplePageState createState() => _ExamplePageState();
 }
 
-class _ExamplePageState extends State<ExamplePage> {
+class _ExamplePageState extends State {
   final items = ["國文 1~3 課", "國文 4~6 課", "國文 7~9 課", "國文 10~12 課"];
   final _items = ["國文課", "國文課", "國文課", "國文課"];
   Widget _buildItem(BuildContext context, int index) {
@@ -190,7 +190,10 @@ class _ExamplePageState extends State<ExamplePage> {
                   IconButton(
                     icon: Image.asset('assets/images/note.png'),
                     iconSize: 20,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => ReadPlanChoose()));
+                    },
                   ),
                 ],
               ),

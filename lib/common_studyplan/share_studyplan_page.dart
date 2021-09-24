@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/studyplan_request/sharing.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_share_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan.dart';
 import 'package:date_format/date_format.dart';
 
 class ShareStudyPlanPage extends StatefulWidget {
@@ -25,10 +24,31 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
   int studyplanNum;
   List _studyplanCheck = [];
 
+  bool _isEnabled;
+
   @override
   void initState() {
     super.initState();
     _shareStudyPlanRequest();
+    _buttonIsOnpressed();
+  }
+
+  _buttonIsOnpressed() {
+    int count = 0;
+    for (int i = 0; i < _studyplanCheck.length; i++) {
+      if (_studyplanCheck[i] == true) {
+        count++;
+      }
+    }
+    if (count != 0) {
+      setState(() {
+        _isEnabled = true;
+      });
+    } else {
+      setState(() {
+        _isEnabled = false;
+      });
+    }
   }
 
   _shareStudyPlanRequest() async {
@@ -74,23 +94,17 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
     Widget studyPlanList;
 
     _submitSharing(int studyplanNum) async {
-      String _alertTitle = '分享讀書計畫失敗';
-      if (studyplanNum == null) {
-        await alert(context, _alertTitle, '請選擇一個要分享的讀書計畫');
-        return true;
-      } else {
-        var submitWidget;
-        _submitWidgetfunc() async {
-          return Sharing(
-              uid: uid, studyplanNum: studyplanNum, groupNum: groupNum);
-        }
-
-        submitWidget = await _submitWidgetfunc();
-        if (await submitWidget.getIsError())
-          return true;
-        else
-          return false;
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return Sharing(
+            uid: uid, studyplanNum: studyplanNum, groupNum: groupNum);
       }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
     }
 
     String _studyPlanTime(index) {
@@ -176,6 +190,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                           _studyplanCheck[index] = value;
                         }
                       });
+                      _buttonIsOnpressed();
                     },
                   ),
                 ),
@@ -190,6 +205,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                       _studyplanCheck[index] = false;
                     }
                   });
+                  _buttonIsOnpressed();
                 },
               );
             },
@@ -203,6 +219,19 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
       studyPlanList = Container(
           color: Colors.white,
           child: Center(child: CircularProgressIndicator()));
+    }
+
+    _onPressed() {
+      var _onPressed;
+
+      if (_isEnabled == true) {
+        _onPressed = () async {
+          if (await _submitSharing(studyplanNum) != true) {
+            Navigator.pop(context);
+          }
+        };
+      }
+      return _onPressed;
     }
 
     return Container(
@@ -254,11 +283,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                               width: _bottomIconWidth,
                             ),
                             fillColor: _color,
-                            onPressed: () async {
-                              if (await _submitSharing(studyplanNum) != true) {
-                                Navigator.pop(context);
-                              }
-                            }),
+                            onPressed: _onPressed()),
                       ),
                     )
                   ]),

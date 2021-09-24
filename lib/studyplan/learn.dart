@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+import 'package:My_Day_app/studyplan/1%20copy.dart';
+import 'package:My_Day_app/studyplan/1.dart';
 import 'package:flutter/material.dart';
 
 import 'notes.dart';
@@ -54,7 +57,7 @@ class Learn extends StatelessWidget {
                 ),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ReadPlan()));
+                    MaterialPageRoute(builder: (context) =>  ReadPlan()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,3 +126,4 @@ class Learn extends StatelessWidget {
     ));
   }
 }
+
