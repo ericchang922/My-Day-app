@@ -20,17 +20,16 @@ import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
-import 'package:My_Day_app/models/studyplan/share_studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/common_studyplan_list_model.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
 import 'package:My_Day_app/models/vote/vote_list_model.dart';
-import 'package:My_Day_app/models/studyplan/personal_share_studyplan.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/models/note/note_list.dart';
-
 
 class Request {
   static const host = 'http://myday.sytes.net';
@@ -202,23 +201,26 @@ class Request {
 
   httpFunction(BuildContext context, dynamic response, String toastTxt) async {
     Map responseBody;
-    try{
-       responseBody = json.decode(utf8.decode(response.bodyBytes));
-    }catch(error){
+    try {
+      responseBody = json.decode(utf8.decode(response.bodyBytes));
+    } catch (error) {
       print('error: ${utf8.decode(response.bodyBytes)}');
-    };
-    
-    if(responseBody != null){if (responseBody['response'] == false) {
-      await alert(context, '錯誤', responseBody['message']);
-      _responseBody = null;
-      _isError = true;
-    } else if (responseBody['response'] == true) {
-      _isError = false;
-      if (toastTxt != null)
-        toast(context, toastTxt);
-      else
-        _responseBody = json.decode(utf8.decode(response.bodyBytes));
-    }}
+    }
+    ;
+
+    if (responseBody != null) {
+      if (responseBody['response'] == false) {
+        await alert(context, '錯誤', responseBody['message']);
+        _responseBody = null;
+        _isError = true;
+      } else if (responseBody['response'] == true) {
+        _isError = false;
+        if (toastTxt != null)
+          toast(context, toastTxt);
+        else
+          _responseBody = json.decode(utf8.decode(response.bodyBytes));
+      }
+    }
 
     print('statusCode: ${response.statusCode}');
     print('body: ${utf8.decode(response.bodyBytes)}');
@@ -235,6 +237,14 @@ class Request {
     Uri _uri = Uri.parse(_url);
     dynamic response =
         await http.post(_uri, headers: headers, body: json.encode(data));
+    await httpFunction(context, response, toastTxt);
+  }
+
+  httpPut(BuildContext context, Map<String, dynamic> data, String _url,
+      String toastTxt) async {
+    Uri _uri = Uri.parse(_url);
+    dynamic response =
+        await http.put(_uri, headers: headers, body: json.encode(data));
     await httpFunction(context, response, toastTxt);
   }
 
@@ -580,6 +590,12 @@ class Request {
       BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['cancel_sharing'];
     await httpPatch(context, data, _url, '已取消');
+  }
+
+  // edit_studyplan -------------------------------------------------------------------------------
+  studyplanEdit(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['edit_studyplan'];
+    await httpPut(context, data, _url, '編輯成功');
   }
 
   // NOTE ==============================================================================================

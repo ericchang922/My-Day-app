@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/note_request/share.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/public/note_request/get_group_list.dart';
@@ -27,31 +28,10 @@ class _ShareNoteWidget extends State<ShareNotePage> {
 
   List _noteCheck = [];
 
-  bool _isEnabled;
-
   @override
   void initState() {
     super.initState();
     _noteListRequest();
-    _buttonIsOnpressed();
-  }
-
-  _buttonIsOnpressed() {
-    int count = 0;
-    for (int i = 0; i < _noteCheck.length; i++) {
-      if (_noteCheck[i] == true) {
-        count++;
-      }
-    }
-    if (count != 0) {
-      setState(() {
-        _isEnabled = true;
-      });
-    } else {
-      setState(() {
-        _isEnabled = false;
-      });
-    }
   }
 
   _noteListRequest() async {
@@ -105,16 +85,22 @@ class _ShareNoteWidget extends State<ShareNotePage> {
     Widget noteList;
 
     _submitShare(int noteNum) async {
-      var submitWidget;
-      _submitWidgetfunc() async {
-        return Share(uid: uid, noteNum: noteNum, groupNum: groupNum);
-      }
-
-      submitWidget = await _submitWidgetfunc();
-      if (await submitWidget.getIsError())
+      String _alertTitle = '分享筆記失敗';
+      if (noteNum == null) {
+        await alert(context, _alertTitle, '請選擇一個要分享的筆記');
         return true;
-      else
-        return false;
+      } else {
+        var submitWidget;
+        _submitWidgetfunc() async {
+          return Share(uid: uid, noteNum: noteNum, groupNum: groupNum);
+        }
+
+        submitWidget = await _submitWidgetfunc();
+        if (await submitWidget.getIsError())
+          return true;
+        else
+          return false;
+      }
     }
 
     int _noteCount() {
@@ -156,7 +142,6 @@ class _ShareNoteWidget extends State<ShareNotePage> {
                         _noteCheck[index] = value;
                       }
                     });
-                    _buttonIsOnpressed();
                   },
                 ),
                 onTap: () {
@@ -170,7 +155,6 @@ class _ShareNoteWidget extends State<ShareNotePage> {
                       _noteCheck[index] = false;
                     }
                   });
-                  _buttonIsOnpressed();
                 },
               );
             },
@@ -186,76 +170,67 @@ class _ShareNoteWidget extends State<ShareNotePage> {
           child: Center(child: CircularProgressIndicator()));
     }
 
-    _onPressed() {
-      var _onPressed;
-
-      if (_isEnabled == true) {
-        _onPressed = () async {
-          if (await _submitShare(noteNum) != true) {
-            Navigator.pop(context);
-          }
-        };
-      }
-      return _onPressed;
-    }
-
     return Container(
       color: _color,
       child: SafeArea(
         bottom: false,
         child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).primaryColor,
-              title: Text('選擇筆記', style: TextStyle(fontSize: _appBarSize)),
-              leading: Container(
-                margin: EdgeInsets.only(left: _leadingL),
-                child: GestureDetector(
-                  child: Icon(Icons.chevron_left),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text('選擇筆記', style: TextStyle(fontSize: _appBarSize)),
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ),
-            body: Container(color: Colors.white, child: noteList),
-            bottomNavigationBar: Container(
-              color: Theme.of(context).bottomAppBarColor,
-              child: SafeArea(
-                top: false,
-                child: BottomAppBar(
-                  elevation: 0,
-                  child: Row(children: <Widget>[
-                    Expanded(
-                      child: SizedBox(
-                        height: _bottomHeight,
-                        child: RawMaterialButton(
-                            elevation: 0,
-                            child: Image.asset(
-                              'assets/images/cancel.png',
-                              width: _bottomIconWidth,
-                            ),
-                            fillColor: _light,
-                            onPressed: () => Navigator.pop(context)),
-                      ),
-                    ), // 取消按鈕
-                    Expanded(
-                      child: SizedBox(
-                        height: _bottomHeight,
-                        child: RawMaterialButton(
+          ),
+          body: Container(color: Colors.white, child: noteList),
+          bottomNavigationBar: Container(
+            color: Theme.of(context).bottomAppBarColor,
+            child: SafeArea(
+              top: false,
+              child: BottomAppBar(
+                elevation: 0,
+                child: Row(children: <Widget>[
+                  Expanded(
+                    child: SizedBox(
+                      height: _bottomHeight,
+                      child: RawMaterialButton(
+                          elevation: 0,
+                          child: Image.asset(
+                            'assets/images/cancel.png',
+                            width: _bottomIconWidth,
+                          ),
+                          fillColor: _light,
+                          onPressed: () => Navigator.pop(context)),
+                    ),
+                  ), // 取消按鈕
+                  Expanded(
+                    child: SizedBox(
+                      height: _bottomHeight,
+                      child: RawMaterialButton(
                           elevation: 0,
                           child: Image.asset(
                             'assets/images/confirm.png',
                             width: _bottomIconWidth,
                           ),
                           fillColor: _color,
-                          onPressed: _onPressed()
-                        ),
-                      ),
-                    )
-                  ]),
-                ),
+                          onPressed: () async {
+                            if (await _submitShare(noteNum) != true) {
+                              Navigator.pop(context);
+                            }
+                          }),
+                    ),
+                  )
+                ]),
               ),
-            ),),
+            ),
+          ),
+        ),
       ),
     );
   }
