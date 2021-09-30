@@ -51,10 +51,7 @@ class TimetableReceivePreview extends State<TimetableReceivePreviewPage> {
                     ),
                     fillColor: Theme.of(context).primaryColorLight,
                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TimetableReceivePage()));
+                        Navigator.pop(context);
                       }
                   ),
                 ),
@@ -70,10 +67,8 @@ class TimetableReceivePreview extends State<TimetableReceivePreviewPage> {
                       ),
                       fillColor: Theme.of(context).primaryColor,
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TimetableReceivePage()));
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                       }),
                 ),
               )
