@@ -44,6 +44,13 @@ class TimetableInformation extends State<TimetableInformationPage> {
     Color _bule = Color(0xff7AAAD8);
     Color _textFiedBorder = Color(0xff707070);
 
+    double _timeSize = _width * 0.045;
+
+    String _startView =
+        '${_startDateTime.year.toString().padLeft(4, '0')} 年 ${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ';
+
+    String _endView =
+        '${_endDateTime.year.toString().padLeft(4, '0')} 年 ${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ';
     CupertinoDatePickerMode _mode() {
       if (_allDay)
         return CupertinoDatePickerMode.date;
@@ -71,15 +78,14 @@ class TimetableInformation extends State<TimetableInformationPage> {
               Container(
                 height: _height * 0.28,
                 child: CupertinoDatePicker(
-                  mode: _mode(),
-                  initialDateTime: DateTime.now(),
-                  onDateTimeChanged: (value) => setState(() {
-                    if (isStart)
-                      _startDateTime = value;
-                    else
-                      _endDateTime = value;
-                  }),
-                ),
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: DateTime.now(),
+                    onDateTimeChanged: (dateTime) => setState(() {
+                          if (isStart)
+                            _startDateTime = dateTime;
+                          else
+                            _endDateTime = dateTime;
+                        })),
               ),
             ],
           ),
@@ -366,15 +372,23 @@ class TimetableInformation extends State<TimetableInformationPage> {
                     ),
                   ),
                   SizedBox(
-                      width: _width * 0.4,
-                      child: OutlineButton(
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(8)),
-                        onPressed: () => _datePicker(context, false),
+                      width: _width * 0.5,
+                      child: TextButton(
+                        child: Text(
+                          _startView,
+                          style: TextStyle(
+                              fontSize: _timeSize,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            side: MaterialStateProperty.all(BorderSide(
+                                color: Color(0xff707070),
+                                width: _width * 0.001))),
+                        onPressed: () => _datePicker(context, true),
                       ))
                 ]),
               ],
@@ -394,15 +408,23 @@ class TimetableInformation extends State<TimetableInformationPage> {
                     ),
                   ),
                   SizedBox(
-                      width: _width * 0.4,
-                      child: OutlineButton(
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(8)),
-                        onPressed: () => _datePicker(context, false),
+                      width: _width * 0.5,
+                      child: TextButton(
+                        child: Text(
+                          _startView,
+                          style: TextStyle(
+                              fontSize: _timeSize,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            side: MaterialStateProperty.all(BorderSide(
+                                color: Color(0xff707070),
+                                width: _width * 0.001))),
+                        onPressed: () => _datePicker(context, true),
                       ))
                 ]),
               ],
