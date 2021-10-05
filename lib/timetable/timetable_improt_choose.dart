@@ -14,45 +14,69 @@ class TimetableImportChoose extends State<TimetableImprotChoosePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
+
+    double _listLR = _height * 0.02;
+    double _textFied = _height * 0.045;
+    double _borderRadius = _height * 0.01;
+    double _iconWidth = _width * 0.05;
+    double _listPaddingH = _width * 0.06;
+    double _textL = _height * 0.03;
+    double _textBT = _height * 0.02;
+    double _leadingL = _height * 0.02;
+    double _bottomHeight = _height * 0.07;
+
+    double _titleSize = _height * 0.025;
+    double _pSize = _height * 0.023;
+    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _light = Theme.of(context).primaryColorLight;
+    Color _bule = Color(0xff7AAAD8);
+    Color _textFiedBorder = Color(0xff707070);
+
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xffF86D67),
-          title: Text('接收課表', style: TextStyle(fontSize: 20)),
+          backgroundColor: _color,
+          title: Text('接收課表', style: TextStyle(fontSize: _appBarSize)),
         ),
         body: ListView(children: <Widget>[
           Container(
-              margin: EdgeInsets.only(left: 35, top: 20),
+              margin: EdgeInsets.only(left: _height * 0.06, top: _height * 0.03),
               child: Row(children: [
                 Image.asset(
                   "assets/images/search.png",
-                  width: 20,
+                  width: _width * 0.06,
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 35),
-                  child: Text('xxxxxx', style: TextStyle(fontSize: 20)),
+                  margin: EdgeInsets.only(left: _height * 0.06),
+                  child:
+                      Text('xxxxxx', style: TextStyle(fontSize: _appBarSize)),
                 ),
-                Padding(padding: EdgeInsets.fromLTRB(0, 0, 90, 0)),
-                SizedBox(
-                    child: FlatButton(
-                  minWidth: 10,
-                  child: Text("刪除", style: TextStyle(fontSize: 18)),
-                )),
-                Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                SizedBox(
-                    child: FlatButton(
-                  minWidth: 10,
-                  child: Text(
-                    "預覽",
-                    style: TextStyle(fontSize: 18, color: Color(0xffF86D67)),
-                  ),
-                  onPressed: () {
+                SizedBox(width: _width * 0.2),
+                InkWell(
+                  child: Text("刪除", style: TextStyle(fontSize: _pSize)),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  
+                ),
+                SizedBox(width: _width * 0.05),
+                InkWell(
+                  child: Text("預覽",
+                      style: TextStyle(
+                          fontSize: _pSize, color: Color(0xffF86D67))),
+                  onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
                                 TimetableReceivePreviewPage()));
                   },
-                )),
+                ),
               ])),
           Padding(
               padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
