@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/vote/vote_end_detail_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/vote_request/get_list.dart';
 import 'package:My_Day_app/public/vote_request/get_end_list.dart';
@@ -191,11 +192,16 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
               itemBuilder: (BuildContext context, int index) {
                 var vote = _voteEndListModel.vote[index];
                 return ListTile(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: _height * 0.04, vertical: _height * 0.008),
-                    title: Text(vote.title,
-                        style: TextStyle(fontSize: _titleSize)),
-                    subtitle: _voteResult(index));
+                  contentPadding: EdgeInsets.symmetric(
+                      horizontal: _height * 0.04, vertical: _height * 0.008),
+                  title:
+                      Text(vote.title, style: TextStyle(fontSize: _titleSize)),
+                  subtitle: _voteResult(index),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => VoteEndDetailPage(61, groupNum)));
+                  },
+                );
               },
               separatorBuilder: (context, index) {
                 return Divider(
