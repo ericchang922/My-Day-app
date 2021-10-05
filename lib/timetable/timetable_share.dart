@@ -39,8 +39,8 @@ Future<bool> timetableShare(BuildContext context) async {
                 ),
                 SizedBox(height: _height * 0.02),
                 Container(
-                  margin: EdgeInsets.only(
-                      left: _width * 0.15, right: _width * 0.15),
+                  margin:
+                      EdgeInsets.only(left: _width * 0.1, right: _width * 0.1),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -68,19 +68,20 @@ Future<bool> timetableShare(BuildContext context) async {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      width: _width * 0.5,
-                      decoration: new BoxDecoration(
-                        color: Color(0xffF8F8F8),
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(_height * 0.01)),
-                      ),
-                      margin: EdgeInsets.only(left: _width * 0.05),
-                      child: Padding(
-                        padding: EdgeInsets.all(_height * 0.01),
-                        child: Text(
-                          'NoMz2onE',
-                          style: TextStyle(fontSize: _height * 0.02),
+                    Expanded(
+                      child: Container(
+                        decoration: new BoxDecoration(
+                          color: Color(0xffF8F8F8),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(_height * 0.01)),
+                        ),
+                        margin: EdgeInsets.only(left: _width * 0.05),
+                        child: Padding(
+                          padding: EdgeInsets.all(_height * 0.01),
+                          child: Text(
+                            'NoMz2onE',
+                            style: TextStyle(fontSize: _height * 0.02),
+                          ),
                         ),
                       ),
                     ),
