@@ -107,6 +107,7 @@ flutter:
 
     - assets/json/common_note_list.json
     - assets/json/note_list.json
+    - assets/json/get_note.json
 
     - assets/json/common_studyplan_list.json
     - assets/json/personal_share_studyplan_list.json
