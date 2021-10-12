@@ -317,9 +317,15 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
         body: Container(color: Colors.white, child: groupListWiget),
       );
     } else {
-      return Container(
-        color: Colors.white,
-        child: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('群組', style: TextStyle(fontSize: _appBarSize)),
+        ),
+        body: Container(
+          color: Colors.white,
+          child: Center(child: CircularProgressIndicator()),
+        ),
       );
     }
   }

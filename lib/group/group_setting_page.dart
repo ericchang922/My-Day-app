@@ -48,6 +48,7 @@ class _GroupSettingWidget extends State<GroupSettingPage> {
                 child: Text('通知', style: TextStyle(fontSize: _titleSize))),
             trailing: Switch(
               value: _settingCheck,
+              activeColor:_color,
               onChanged: (value) {
                 setState(() {
                   _settingCheck = value;

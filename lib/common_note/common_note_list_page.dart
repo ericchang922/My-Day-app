@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/common_note/common_note_detail_page.dart';
 import 'package:My_Day_app/public/note_request/cancel_share.dart';
 import 'package:My_Day_app/common_note/share_note_page.dart';
 import 'package:My_Day_app/main.dart';
@@ -124,14 +125,20 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
             itemBuilder: (BuildContext context, int index) {
               var note = _shareNoteListModel.note[index];
               return ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: _height * 0.01, vertical: _height * 0.008),
-                  title: Container(
-                    margin: EdgeInsets.only(left: _height * 0.03),
-                    child: Text(note.title,
-                        style: TextStyle(fontSize: _titleSize)),
-                  ),
-                  trailing: _popupMenu(note.createId, note.noteNum));
+                contentPadding: EdgeInsets.symmetric(
+                    horizontal: _height * 0.01, vertical: _height * 0.008),
+                title: Container(
+                  margin: EdgeInsets.only(left: _height * 0.03),
+                  child:
+                      Text(note.title, style: TextStyle(fontSize: _titleSize)),
+                ),
+                trailing: _popupMenu(note.createId, note.noteNum),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          CommonNoteDetailPage(note.noteNum)));
+                },
+              );
             },
             separatorBuilder: (context, index) {
               return Divider(
