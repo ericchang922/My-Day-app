@@ -9,7 +9,7 @@ import 'package:animations/animations.dart';
 import 'package:My_Day_app/my_day_icon.dart';
 import 'package:My_Day_app/public/schedule_request/get_list.dart';
 import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
-import 'package:My_Day_app/schedule/schedule_table.dart';
+import 'package:My_Day_app/home/home_schedule/schedule_table.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/home/home_popup_menu.dart';
