@@ -1,4 +1,5 @@
 import 'package:My_Day_app/timetable/timetable_create.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,23 +16,43 @@ class TimetableForm extends State<TimetableFormPage> {
   String dropdownValueYear = '109';
   get child => null;
   get left => null;
-  bool _allDay = false;
   DateTime _startDateTime = DateTime.now();
   DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
 
   @override
   Widget build(BuildContext context) {
+    final _schoolNameController = TextEditingController();
+    String _schoolName;
     Size size = MediaQuery.of(context).size;
+    double _width = size.width;
     double _height = size.height;
 
-    Color _color = Theme.of(context).primaryColor;
+    double _leadingL = _height * 0.02;
+    double _listPaddingH = _width * 0.08;
+    double _subtitleT = _height * 0.005;
 
-    CupertinoDatePickerMode _mode() {
-      if (_allDay)
-        return CupertinoDatePickerMode.date;
-      else
-        return CupertinoDatePickerMode.dateAndTime;
-    }
+    double _appBarSize = _width * 0.052;
+    double _pSize = _height * 0.023;
+    double _titleSize = _height * 0.025;
+    double _subtitleSize = _height * 0.02;
+    double _iconWidth = _width * 0.05;
+    double _borderRadius = _height * 0.03;
+    double _textLBR = _height * 0.02;
+    double _textFied = _height * 0.045;
+    double _inkwellH = _height * 0.06;
+
+    Color _color = Theme.of(context).primaryColor;
+    Color _light = Theme.of(context).primaryColorLight;
+    Color _bule = Color(0xff7AAAD8);
+    Color _textFiedBorder = Color(0xff707070);
+
+    double _timeSize = _width * 0.045;
+
+    String _startView =
+        '${_startDateTime.year.toString().padLeft(4, '0')} 年 ${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ';
+
+    String _endView =
+        '${_endDateTime.year.toString().padLeft(4, '0')} 年 ${_endDateTime.month.toString().padLeft(2, '0')} 月 ${_endDateTime.day.toString().padLeft(2, '0')} 日 ';
 
     void _datePicker(contex, isStart) {
       showCupertinoModalPopup(
@@ -53,20 +74,164 @@ class TimetableForm extends State<TimetableFormPage> {
               Container(
                 height: _height * 0.28,
                 child: CupertinoDatePicker(
-                  mode: _mode(),
-                  initialDateTime: DateTime.now(),
-                  onDateTimeChanged: (value) => setState(() {
-                    if (isStart)
-                      _startDateTime = value;
-                    else
-                      _endDateTime = value;
-                  }),
-                ),
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: DateTime.now(),
+                    onDateTimeChanged: (dateTime) => setState(() {
+                          if (isStart)
+                            _startDateTime = dateTime;
+                          else
+                            _endDateTime = dateTime;
+                        })),
               ),
             ],
           ),
         ),
       );
+    }
+
+    Future<bool> timetableEditDialog(BuildContext context) async {
+      return showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(_borderRadius))),
+              contentPadding: EdgeInsets.only(top: _height * 0.02),
+              content: Container(
+                  width: _width * 0.2,
+                  height: _height * 0.25,
+                  child: GestureDetector(
+                    // 點擊空白處釋放焦點
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () =>
+                        FocusScope.of(context).requestFocus(FocusNode()),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: ListView(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    "更改學校名稱",
+                                    style: TextStyle(fontSize: _pSize),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: _textLBR,
+                                    right: _textLBR,
+                                    bottom: _textLBR,
+                                    top: _height * 0.015),
+                                child: Text('學校名稱：',
+                                    style: TextStyle(fontSize: _pSize)),
+                              ),
+                              Container(
+                                  height: _textFied,
+                                  margin: EdgeInsets.only(
+                                    left: _textLBR,
+                                    right: _textLBR,
+                                  ),
+                                  child: new TextField(
+                                    style: TextStyle(fontSize: _pSize),
+                                    decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: _height * 0.01,
+                                            vertical: _height * 0.01),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(_height * 0.01)),
+                                          borderSide: BorderSide(
+                                            color: _textFiedBorder,
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(_height * 0.01)),
+                                          borderSide: BorderSide(color: _bule),
+                                        )),
+                                    controller: _schoolNameController,
+                                    onChanged: (text) {
+                                      setState(() {
+                                        _schoolName =
+                                            _schoolNameController.text;
+                                      });
+                                    },
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                child: Container(
+                                  height: _inkwellH,
+                                  padding: EdgeInsets.only(
+                                      top: _height * 0.015,
+                                      bottom: _height * 0.015),
+                                  decoration: BoxDecoration(
+                                    color: _light,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft:
+                                          Radius.circular(_borderRadius),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "取消",
+                                    style: TextStyle(
+                                        fontSize: _subtitleSize,
+                                        color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: InkWell(
+                                child: Container(
+                                  height: _inkwellH,
+                                  padding: EdgeInsets.only(
+                                      top: _height * 0.015,
+                                      bottom: _height * 0.015),
+                                  decoration: BoxDecoration(
+                                    color: _color,
+                                    borderRadius: BorderRadius.only(
+                                        bottomRight:
+                                            Radius.circular(_borderRadius)),
+                                  ),
+                                  child: Text(
+                                    "確認",
+                                    style: TextStyle(
+                                        fontSize: _subtitleSize,
+                                        color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+            );
+          });
     }
 
     return Scaffold(
@@ -83,48 +248,26 @@ class TimetableForm extends State<TimetableFormPage> {
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(42, 106, 0, 0),
+            padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text(
-                        '學校：',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                    DropdownButton(
-                      hint: Text(
-                        ' ',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      value: dropdownValueSchool,
-                      icon: const Icon(Icons.keyboard_arrow_down_sharp),
-                      iconSize: 24,
-                      style: const TextStyle(color: Colors.black),
-                      underline: Container(),
-                      items: <String>['One', 'Two', 'Free', 'Four']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          dropdownValueSchool = newValue;
-                        });
-                      },
-                    )
-                  ],
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(
+                      horizontal: _listPaddingH, vertical: 0.0),
+                  title: Text('學校', style: TextStyle(fontSize: _titleSize)),
+                  subtitle: Container(
+                      margin: EdgeInsets.only(top: _subtitleT),
+                      child: Text('北商大',
+                          style: TextStyle(fontSize: _subtitleSize))),
+                  onTap: () async {
+                    await timetableEditDialog(context);
+                  },
                 ),
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(42, 26, 0, 0),
+            padding: EdgeInsets.fromLTRB(30, 18, 0, 0),
             child: Column(
               children: [
                 Row(
@@ -165,7 +308,7 @@ class TimetableForm extends State<TimetableFormPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(42, 26, 0, 0),
+            padding: EdgeInsets.fromLTRB(30, 18, 0, 0),
             child: Column(
               children: [
                 Row(
@@ -206,7 +349,7 @@ class TimetableForm extends State<TimetableFormPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(42, 26, 0, 0),
+            padding: EdgeInsets.fromLTRB(30, 18, 0, 0),
             child: Column(
               children: [
                 Row(children: [
@@ -218,22 +361,30 @@ class TimetableForm extends State<TimetableFormPage> {
                     ),
                   ),
                   SizedBox(
-                      width: 150,
-                      child: OutlineButton(
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(8)),
-                        onPressed: () => _datePicker(context, false),
+                      width: _width * 0.5,
+                      child: TextButton(
+                        child: Text(
+                          _startView,
+                          style: TextStyle(
+                              fontSize: _timeSize,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            side: MaterialStateProperty.all(BorderSide(
+                                color: Color(0xff707070),
+                                width: _width * 0.001))),
+                        onPressed: () => _datePicker(context, true),
                       ))
                 ]),
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(42, 26, 0, 0),
+            padding: EdgeInsets.fromLTRB(30, 18, 0, 0),
             child: Column(
               children: [
                 Row(children: [
@@ -245,14 +396,22 @@ class TimetableForm extends State<TimetableFormPage> {
                     ),
                   ),
                   SizedBox(
-                      width: 150,
-                      child: OutlineButton(
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(8)),
+                      width: _width * 0.5,
+                      child: TextButton(
+                        child: Text(
+                          _endView,
+                          style: TextStyle(
+                              fontSize: _timeSize,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            side: MaterialStateProperty.all(BorderSide(
+                                color: Color(0xff707070),
+                                width: _width * 0.001))),
                         onPressed: () => _datePicker(context, false),
                       ))
                 ]),

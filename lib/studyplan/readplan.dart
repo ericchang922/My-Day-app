@@ -1,6 +1,4 @@
-
 import 'package:My_Day_app/studyplan/readplan_add.dart';
-import 'package:My_Day_app/studyplan/readplan_content%20copy.dart';
 import 'package:My_Day_app/studyplan/readplan_content.dart';
 import 'package:My_Day_app/studyplan/readplan_content_over.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +19,9 @@ class ReadPlanPage extends StatefulWidget {
   @override
   _ReadPlanPage createState() => _ReadPlanPage();
 }
- 
-class _ReadPlanPage extends State<ReadPlanPage> with SingleTickerProviderStateMixin {
+
+class _ReadPlanPage extends State<ReadPlanPage>
+    with SingleTickerProviderStateMixin {
   final bodyGlobalKey = GlobalKey();
   // final List<Widget> myTabs = [
   //   Tab(text: '未結束'),
@@ -32,8 +31,6 @@ class _ReadPlanPage extends State<ReadPlanPage> with SingleTickerProviderStateMi
   TabController _tabController;
   ScrollController _scrollController;
   bool fixedScroll;
-
-
 
   @override
   void initState() {
@@ -73,36 +70,33 @@ class _ReadPlanPage extends State<ReadPlanPage> with SingleTickerProviderStateMi
   _buildTabContext(int lineCount) => Container(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
-            child: Column(children: [
-                NotOverPersonal(),
-                Home(),
-              ]),
-              
-            ),
+          child: Column(children: [
+            NotOverPersonal(),
+            Home(),
+          ]),
+        ),
       );
-_buildTabContextOver(int lineCount) => Container(
+  _buildTabContextOver(int lineCount) => Container(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
-            child: Column(children: [
-                OverPersonal(),
-                Home(),
-              ]),
-              
-            ),
+          child: Column(children: [
+            OverPersonal(),
+            Home(),
+          ]),
+        ),
       );
-      _buildTabContextshare(int lineCount) => Container(
+  _buildTabContextshare(int lineCount) => Container(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
-            child: FriendsPrivacySettingsPage(),
-              
-            ),
+          child: FriendsPrivacySettingsPage(),
+        ),
       );
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 3,
         child: SafeArea(
-        child: Scaffold(
+            child: Scaffold(
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Color(0xffF86D67),
@@ -117,54 +111,58 @@ _buildTabContextOver(int lineCount) => Container(
               IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ReadPlanAddPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReadPlanAddPage()));
                 },
               ),
             ],
-            
-            ),
-      body: NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (context, value) {
-          return [
-            
-            SliverToBoxAdapter(
-              child: Material(
-                  color:  Color(0xffF86D67),
+          ),
+          body: NestedScrollView(
+            controller: _scrollController,
+            headerSliverBuilder: (context, value) {
+              return [
+                SliverToBoxAdapter(
+                    child: Material(
+                  color: Color(0xffF86D67),
                   child: Theme(
                     data: ThemeData(
                       splashColor: Colors.transparent, // 点击时的水波纹颜色设置为透明
                       highlightColor: Colors.transparent, // 点击时的背景高亮颜色设置为透明
                     ),
-              child: TabBar(
-                
-                indicatorWeight:5,
-                labelColor: Colors.white,
-                unselectedLabelColor: Color(0xffE3E3E3),
-                indicatorColor: Color(0xffEFB208),
+                    child: TabBar(
+                      indicatorWeight: 5,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Color(0xffE3E3E3),
+                      indicatorColor: Color(0xffEFB208),
+                      controller: _tabController,
+                      isScrollable: false,
+                      tabs: <Widget>[
+                        Tab(text: '未結束'),
+                        Tab(text: '已結束'),
+                        Tab(text: '已共享'),
+                      ],
+                    ),
+                  ),
+                ))
+              ];
+            },
+            body: Container(
+              child: TabBarView(
                 controller: _tabController,
-               
-                isScrollable: false,
-               tabs: <Widget>[
-                Tab(text: '未結束'),
-                Tab(text: '已結束'),
-                Tab(text: '已共享'),
-              ],
+                children: [
+                  _buildTabContext(1),
+                  _buildTabContextOver(1),
+                  _buildTabContextshare(1)
+                ],
               ),
             ),
-            ))];
-        },
-        body: Container(
-          child: TabBarView(
-            controller: _tabController,
-            children: [_buildTabContext(1), _buildTabContextOver(1), _buildTabContextshare(1)],
           ),
-        ),
-      ),
-    )));
+        )));
   }
 }
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -183,7 +181,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     const items = <String>[
-      '專題','讀書會','學生會',
+      '專題',
+      '讀書會',
+      '學生會',
     ];
     return Container(
       child: SingleChildScrollView(
@@ -243,29 +243,30 @@ class _ExamplePageState extends State<ExamplePage> {
     final theme = Theme.of(context);
     final name = _items[index];
     return Column(children: [
-    Container(
-      margin: EdgeInsets.only(right: 10, left: 20, top: 10),
-      child: SizedBox(
-        height: 40,
-        width: double.infinity,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            primary: Colors.black,
-          ),
-        onPressed: () {},
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 20,
+      Container(
+          margin: EdgeInsets.only(right: 10, left: 20, top: 10),
+          child: SizedBox(
+            height: 40,
+            width: double.infinity,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.black,
+              ),
+              onPressed: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    name,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    ))]);
+          ))
+    ]);
   }
 
   @override
@@ -278,6 +279,7 @@ class _ExamplePageState extends State<ExamplePage> {
     // bottomNavigationBar:
   }
 }
+
 class NotOverPersonal extends StatelessWidget {
   get child => null;
   get left => null;
@@ -288,26 +290,25 @@ class NotOverPersonal extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top:10),
-          child: SizedBox(
-              height: 40,
-              width: double.infinity,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.black,
-                ),
-            onPressed: () {},
-            child: Row(
-              children: <Widget>[
-                Text(
-                  '個人',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Color(0xff7AAAD8),
-                      fontWeight: FontWeight.bold),
-                ),
-              ]),
-        ))),
+            margin: EdgeInsets.only(top: 10),
+            child: SizedBox(
+                height: 40,
+                width: double.infinity,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.black,
+                  ),
+                  onPressed: () {},
+                  child: Row(children: <Widget>[
+                    Text(
+                      '個人',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Color(0xff7AAAD8),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ]),
+                ))),
         Container(
           margin: EdgeInsets.only(left: 20, right: 10.0, top: 10.0),
           // ignore: deprecated_member_use
@@ -318,41 +319,43 @@ class NotOverPersonal extends StatelessWidget {
                 style: TextButton.styleFrom(
                   primary: Colors.black,
                 ),
-            onPressed: () {
-              Navigator.push(
-                context, MaterialPageRoute(builder: (context) => ReadPlanContentPage()));
-            },
-            child: Row(
-              children: <Widget>[
-                Text(
-                  '10/8',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReadPlanContentPage()));
+                },
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      '10/8',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    Spacer(),
+                    Column(children: <Widget>[
+                      Text(
+                        '期末考',
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
+                      ),
+                      Text(
+                        '8:00~12:00',
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      )
+                    ]),
+                    Spacer(flex: 3),
+                    Icon(
+                      Icons.chevron_right,
+                      color: Colors.white,
+                    )
+                  ],
                 ),
-                Spacer(),
-                Column(children: <Widget>[
-                  Text(
-                    '期末考',
-                    style: TextStyle(
-                      fontSize: 17,
-                    ),
-                  ),
-                  Text(
-                    '8:00~12:00',
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  )
-                ]),
-                Spacer(flex: 3),
-                Icon(
-                  Icons.chevron_right,
-                  color: Colors.white,
-                )
-              ],
-            ),
-          )),
+              )),
         ),
         Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -375,6 +378,7 @@ class NotOverPersonal extends StatelessWidget {
     );
   }
 }
+
 class OverPersonal extends StatelessWidget {
   get child => null;
   get left => null;
@@ -385,26 +389,25 @@ class OverPersonal extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top:10),
-          child: SizedBox(
-              height: 40,
-              width: double.infinity,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.black,
-                ),
-            onPressed: () {},
-            child: Row(
-              children: <Widget>[
-                Text(
-                  '個人',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Color(0xff7AAAD8),
-                      fontWeight: FontWeight.bold),
-                ),
-              ]),
-        ))),
+            margin: EdgeInsets.only(top: 10),
+            child: SizedBox(
+                height: 40,
+                width: double.infinity,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.black,
+                  ),
+                  onPressed: () {},
+                  child: Row(children: <Widget>[
+                    Text(
+                      '個人',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Color(0xff7AAAD8),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ]),
+                ))),
         Container(
           margin: EdgeInsets.only(left: 20, right: 10.0, top: 10.0),
           // ignore: deprecated_member_use
@@ -415,41 +418,43 @@ class OverPersonal extends StatelessWidget {
                 style: TextButton.styleFrom(
                   primary: Colors.black,
                 ),
-            onPressed: () {
-              Navigator.push(
-                context, MaterialPageRoute(builder: (context) => OverReadPlanContentPage()));
-            },
-            child: Row(
-              children: <Widget>[
-                Text(
-                  '10/8',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OverReadPlanContentPage()));
+                },
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      '10/8',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    Spacer(),
+                    Column(children: <Widget>[
+                      Text(
+                        '期末考',
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
+                      ),
+                      Text(
+                        '8:00~12:00',
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      )
+                    ]),
+                    Spacer(flex: 3),
+                    Icon(
+                      Icons.chevron_right,
+                      color: Colors.white,
+                    )
+                  ],
                 ),
-                Spacer(),
-                Column(children: <Widget>[
-                  Text(
-                    '期末考',
-                    style: TextStyle(
-                      fontSize: 17,
-                    ),
-                  ),
-                  Text(
-                    '8:00~12:00',
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  )
-                ]),
-                Spacer(flex: 3),
-                Icon(
-                  Icons.chevron_right,
-                  color: Colors.white,
-                )
-              ],
-            ),
-          )),
+              )),
         ),
         Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -506,62 +511,62 @@ class FriendsPrivacySettings extends State {
       expandStateList.add(ExpandState(i, false));
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(right: 15, left: 35,top:10),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  '10/8',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(right: 15, left: 35, top: 10),
+          child: Row(children: <Widget>[
+            Text(
+              '10/8',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            Spacer(),
+            Column(children: <Widget>[
+              Text(
+                '讀書計畫',
+                style: TextStyle(
+                  fontSize: 20,
                 ),
-                Spacer(),
-                Column(children: <Widget>[
-                  Text(
-                    '讀書計畫',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  Text(
-                    '8:00~12:00',
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  )
-                ]),
-                Spacer(flex: 3),
-                PopupMenuButton<int>(
-                  offset: Offset(-50, 0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                  icon: Icon(Icons.more_vert),
-                  itemBuilder: (context) => [
-                    PopupMenuItem<int>(
-                      value: 0,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('取消分享',style: TextStyle(fontSize: 20
-                              ),
-                            ),
-                          ])),
-                  ],
+              ),
+              Text(
+                '8:00~12:00',
+                style: TextStyle(
+                  fontSize: 15,
                 ),
+              )
             ]),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-        ],
-      
+            Spacer(flex: 3),
+            PopupMenuButton<int>(
+              offset: Offset(-50, 0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              icon: Icon(Icons.more_vert),
+              itemBuilder: (context) => [
+                PopupMenuItem<int>(
+                    value: 0,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            '取消分享',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ])),
+              ],
+            ),
+          ]),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          color: Color(0xffE3E3E3),
+          constraints: BoxConstraints.expand(height: 1.0),
+        ),
+      ],
     );
   }
 }

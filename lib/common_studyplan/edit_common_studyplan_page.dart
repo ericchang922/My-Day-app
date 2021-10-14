@@ -1,4 +1,5 @@
 import 'package:My_Day_app/common_studyplan/remark_dialog.dart';
+import 'package:My_Day_app/common_studyplan/select_note_page.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/studyplan_request/edit_studyplan.dart';
@@ -10,16 +11,18 @@ import 'package:flutter/services.dart';
 
 class EditCommonStudyPlanPage extends StatefulWidget {
   int studyplanNum;
-  EditCommonStudyPlanPage(this.studyplanNum);
+  int groupNum;
+  EditCommonStudyPlanPage(this.studyplanNum, this.groupNum);
 
   @override
   _EditCommonStudyPlanPage createState() =>
-      new _EditCommonStudyPlanPage(studyplanNum);
+      new _EditCommonStudyPlanPage(studyplanNum, groupNum);
 }
 
 class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
   int studyplanNum;
-  _EditCommonStudyPlanPage(this.studyplanNum);
+  int groupNum;
+  _EditCommonStudyPlanPage(this.studyplanNum, this.groupNum);
 
   StudyplanModel _getStudyplan;
 
@@ -43,6 +46,7 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
   bool _isAuthority;
   bool _addSubject = true;
   bool _isNotCreate = false;
+  bool _isCreate = false;
 
   List<List> _subjectTimeList = [];
   List _subjectNameList = [];
@@ -98,6 +102,7 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
         _remarkList.add(remark);
         _noteNumList.add(noteNum);
         _restList.add(rest);
+        if (_getStudyplan.creatorId == uid) _isCreate = true;
       }
     });
   }
@@ -663,6 +668,20 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                       children: [
                         Text('休息：', style: TextStyle(fontSize: _subtitleSize)),
                         Radio(
+                          value: false,
+                          activeColor: _color,
+                          onChanged: (value) {
+                            setState(() {
+                              _restList[index] = value;
+                            });
+                          },
+                          groupValue: _restList[index],
+                        ),
+                        SizedBox(
+                          width: _width * 0.01,
+                        ),
+                        Text('否', style: TextStyle(fontSize: _subtitleSize)),
+                        Radio(
                           value: true,
                           activeColor: _color,
                           onChanged: (value) {
@@ -673,20 +692,6 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                           groupValue: _restList[index],
                         ),
                         Text('是', style: TextStyle(fontSize: _subtitleSize)),
-                        SizedBox(
-                          width: _width * 0.01,
-                        ),
-                        Radio(
-                          value: false,
-                          activeColor: _color,
-                          onChanged: (value) {
-                            setState(() {
-                              _restList[index] = value;
-                            });
-                          },
-                          groupValue: _restList[index],
-                        ),
-                        Text('否', style: TextStyle(fontSize: _subtitleSize)),
                       ],
                     ),
                   ),
@@ -730,6 +735,11 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                       });
                       break;
                     case 'note':
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => SelectNotePage(
+                                  groupNum, _noteNumList[index], _isCreate)))
+                          .then((value) => _noteNumList[index] = value);
                       break;
                     case 'delete':
                       if (_subjectTimeList.length > 1) {
@@ -839,7 +849,7 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                             title,
                             date,
                             time,
-                            authority,
+                            Visibility(visible: _isCreate, child: authority),
                             Divider(
                               height: 1,
                             ),

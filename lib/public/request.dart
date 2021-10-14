@@ -29,7 +29,7 @@ import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
 import 'package:My_Day_app/models/vote/vote_list_model.dart';
 import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
-import 'package:My_Day_app/models/note/note_list.dart';
+import 'package:My_Day_app/models/note/note_list_model.dart';
 
 class Request {
   static const host = 'http://myday.sytes.net';

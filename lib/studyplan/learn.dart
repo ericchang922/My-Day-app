@@ -3,8 +3,6 @@
 // found in the LICENSE file.
 
 
-import 'package:My_Day_app/studyplan/1%20copy.dart';
-import 'package:My_Day_app/studyplan/1.dart';
 import 'package:flutter/material.dart';
 
 import 'notes.dart';

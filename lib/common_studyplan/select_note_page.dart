@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/public/note_request/share.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/public/note_request/get_group_list.dart';
 import 'package:My_Day_app/public/note_request/get_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
 
-class ShareNotePage extends StatefulWidget {
+class SelectNotePage extends StatefulWidget {
   int groupNum;
-  ShareNotePage(this.groupNum);
+  int noteNum;
+  bool isCreate;
+  SelectNotePage(this.groupNum, this.noteNum, this.isCreate);
 
   @override
-  _ShareNoteWidget createState() => new _ShareNoteWidget(groupNum);
+  _SelectNotePage createState() =>
+      new _SelectNotePage(groupNum, noteNum, isCreate);
 }
 
-class _ShareNoteWidget extends State<ShareNotePage> {
+class _SelectNotePage extends State<SelectNotePage> {
   int groupNum;
-  _ShareNoteWidget(this.groupNum);
+  int noteNum;
+  bool isCreate;
+  _SelectNotePage(this.groupNum, this.noteNum, this.isCreate);
 
   List _noteListModel = [];
   ShareNoteListModel _shareNoteList;
 
   String uid = 'lili123';
-  int noteNum;
 
   List _noteCheck = [];
 
@@ -47,19 +49,30 @@ class _ShareNoteWidget extends State<ShareNotePage> {
 
     setState(() {
       _shareNoteList = _shareNoteListRequest;
-      for (int i = 0; i < _noteList.note.length; i++) {
-        int count = 0;
-        var note = _noteList.note[i];
+      if (isCreate) {
+        for (int i = 0; i < _noteList.note.length; i++) {
+          int count = 0;
+          var note = _noteList.note[i];
+          for (int j = 0; j < _shareNoteList.note.length; j++) {
+            var groupNote = _shareNoteList.note[j];
+            if (note.noteNum == groupNote.noteNum) count++;
+            _noteListModel.add(groupNote);
+          }
+          if (count == 0) {
+            _noteListModel.add(note);
+          }
+        }
+      } else {
         for (int j = 0; j < _shareNoteList.note.length; j++) {
           var groupNote = _shareNoteList.note[j];
-          if (note.noteNum == groupNote.noteNum) count++;
-        }
-        if (count == 0) {
-          _noteListModel.add(note);
+          _noteListModel.add(groupNote);
         }
       }
       for (int i = 0; i < _noteListModel.length; i++) {
-        _noteCheck.add(false);
+        if (_noteListModel[i].noteNum == noteNum)
+          _noteCheck.add(true);
+        else
+          _noteCheck.add(false);
       }
     });
   }
@@ -79,29 +92,9 @@ class _ShareNoteWidget extends State<ShareNotePage> {
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
-    Color _hintGray = Color(0xffCCCCCC);
 
     Widget noNote = Center(child: Text('目前沒有任何筆記!'));
     Widget noteList;
-
-    _submitShare(int noteNum) async {
-      String _alertTitle = '分享筆記失敗';
-      if (noteNum == null) {
-        await alert(context, _alertTitle, '請選擇一個要分享的筆記');
-        return true;
-      } else {
-        var submitWidget;
-        _submitWidgetfunc() async {
-          return Share(uid: uid, noteNum: noteNum, groupNum: groupNum);
-        }
-
-        submitWidget = await _submitWidgetfunc();
-        if (await submitWidget.getIsError())
-          return true;
-        else
-          return false;
-      }
-    }
 
     int _noteCount() {
       int _noteCount = 0;
@@ -206,7 +199,7 @@ class _ShareNoteWidget extends State<ShareNotePage> {
                             width: _bottomIconWidth,
                           ),
                           fillColor: _light,
-                          onPressed: () => Navigator.pop(context)),
+                          onPressed: () => Navigator.pop(context, noteNum)),
                     ),
                   ), // 取消按鈕
                   Expanded(
@@ -219,11 +212,7 @@ class _ShareNoteWidget extends State<ShareNotePage> {
                             width: _bottomIconWidth,
                           ),
                           fillColor: _color,
-                          onPressed: () async {
-                            if (await _submitShare(noteNum) != true) {
-                              Navigator.pop(context);
-                            }
-                          }),
+                          onPressed: () => Navigator.pop(context, noteNum)),
                     ),
                   )
                 ]),
