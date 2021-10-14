@@ -1,82 +1,56 @@
 // import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/public/note_request/create_new.dart';
+import 'package:My_Day_app/studyplan/note_fail.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:multi_image_picker/multi_image_picker.dart';
 
-class NotesAddPage extends StatelessWidget {
+
+
+class NotesAddPage extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      body: NotesAddPageWidget(),
+      child: Scaffold(
+        resizeToAvoidBottomInset:false,
+        
+      
     ));
   }
+   @override
+  NotesAddPageWidget createState() => new NotesAddPageWidget();
 }
 
 enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
-class NotesAddPageWidget extends StatelessWidget {
+class NotesAddPageWidget extends State<NotesAddPage> {
+  
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _iconWidth = _width * 0.05;
+  Size size = MediaQuery.of(context).size;
+  double _width = size.width;
+  double _iconWidth = _width * 0.05;
+
+    
+
+
     return SafeArea(
         child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Color(0xffF86D67),
-              title: Text('新增筆記', style: TextStyle(fontSize: 20)),
-              leading: IconButton(
-                icon: Icon(Icons.chevron_left),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-            body: NotesAdd(),
-            bottomNavigationBar: Container(
-                child: Row(children: <Widget>[
-              Expanded(
-                // ignore: deprecated_member_use
-                child: SizedBox(
-                    height: 50,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: Color(0xffFFAAA6)),
-                      child: Image.asset(
-                        'assets/images/cancel.png',
-                        width: _iconWidth,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )),
-              ),
-              Expanded(
-                // ignore: deprecated_member_use
-                child: SizedBox(
-                  height: 50,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        backgroundColor: Color(0xffF86D67)),
-                    child: Image.asset(
-                      'assets/images/confirm.png',
-                      width: _iconWidth,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              )
-            ]))));
+          resizeToAvoidBottomInset:false,
+        appBar: AppBar(
+          backgroundColor: Color(0xffF86D67),
+          title: Text('新增筆記', style: TextStyle(fontSize: 20)),
+          leading: IconButton(
+            icon: Icon(Icons.chevron_left),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: NotesAdd(),
+        ));
   }
 }
 
@@ -85,25 +59,38 @@ class NotesAdd extends StatefulWidget {
   _NotesAdd createState() => _NotesAdd();
 }
 
-class _NotesAdd extends State<NotesAdd> {
+class _NotesAdd extends State< NotesAdd> {
+  String noteid = "lili123";
+  final notetypeName = TextEditingController();
+  final notetitle = TextEditingController();
+  final notecontent = TextEditingController();
+
+  String _alertTitle = '新增失敗';
+  String _alertTxt = '請確認是否有填寫欄位';
   List<Asset> images = List<Asset>();
   String _error = '';
-
+  
   @override
   void initState() {
     super.initState();
   }
 
   Widget buildGridView() {
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _frame = _height * 0.005;
     return GridView.count(
+      padding: EdgeInsets.all(_frame),
       crossAxisCount: 3,
       children: List.generate(images.length, (index) {
         Asset asset = images[index];
-        return AssetThumb(
-          asset: asset,
-          width: 300,
-          height: 300,
-        );
+        return Container(
+          margin: EdgeInsets.all(2),
+            child:AssetThumb(
+              asset: asset,
+              width: 300,
+              height: 300,
+        ));
       }),
     );
   }
@@ -138,22 +125,121 @@ class _NotesAdd extends State<NotesAdd> {
   }
 
   final FocusNode focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Container(
-            margin: EdgeInsets.only(left: 30, right: 100, bottom: 15, top: 15),
-            child: Row(
-              children: [
-                Text('標題: ', style: TextStyle(fontSize: 20)),
-                Flexible(
-                    child: TextField(
-                  // focusNode: focusNode,
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _iconWidth = _width * 0.05;
+
+_submit() async { 
+      String uid = noteid;
+      String typeName = notetypeName.text;
+      String title = notetitle.text;
+      String content = notecontent.text;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return CreateNewNote(uid: uid, typeName:  typeName , title:title, content:content);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    return  SafeArea(
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: GestureDetector(
+      // 點擊空白處釋放焦點
+      behavior: HitTestBehavior.translucent,
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+              Container(
+                  margin: EdgeInsets.only(left: 30, right: 100, bottom: 15,top:15),
+                  child: Row(
+                    children: [
+                      Text('標題: ', style: TextStyle(fontSize: 20)),
+                      Flexible(
+                        child: TextField(
+                          controller: notetitle,
+                          // focusNode: focusNode,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 20,
+                          minLines: 1,
+                          decoration: InputDecoration(
+                            isCollapsed: true,
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(10)), //设置边框四个角的弧度
+                              borderSide: BorderSide(
+                                //用来配置边框的样式
+                                color: Color(0xff707070), //设置边框的颜色
+                                width: 2.0, //设置边框的粗细
+                              ),
+                            ),
+                          ),
+                        )),
+                    ],
+                  )),
+                  Container(
+                  margin: EdgeInsets.only(left: 30, right: 150),
+                  child: Row(
+                    children: [
+                      Text('分類: ', style: TextStyle(fontSize: 20)),
+                      Flexible(
+                        child: TextField(
+                          controller: notetypeName,
+                        focusNode: focusNode,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 20,
+                        minLines: 1,
+                        decoration: InputDecoration(
+                          isCollapsed: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10)), //设置边框四个角的弧度
+                            borderSide: BorderSide(
+                              //用来配置边框的样式
+                              color: Color(0xff707070), //设置边框的颜色
+                              width: 2.0, //设置边框的粗细
+                            ),
+                          ),
+                        ),
+                      )),
+                    ],
+                  )),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Container(
+                    margin: EdgeInsets.only(top: 4.0),
+                    color: Color(0xffE3E3E3),
+                    constraints: BoxConstraints.expand(height: 1.0),
+                  )),
+                  Padding(
+                padding: EdgeInsets.fromLTRB(18, 0, 0, 0),
+                child: ListTile(
+                  title: Text('內容：', style: TextStyle(fontSize: 20)),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 30.0, right: 26.0),
+                child: TextField(
+                  controller: notecontent,
+                  focusNode: _focusNode,
                   keyboardType: TextInputType.multiline,
                   maxLines: 20,
                   minLines: 1,
+                  
                   decoration: InputDecoration(
                     isCollapsed: true,
                     contentPadding:
@@ -163,35 +249,7 @@ class _NotesAdd extends State<NotesAdd> {
                           BorderRadius.all(Radius.circular(10)), //设置边框四个角的弧度
                       borderSide: BorderSide(
                         //用来配置边框的样式
-                        color: Color(0xff707070), //设置边框的颜色
-                        width: 2.0, //设置边框的粗细
-                      ),
-                    ),
-                  ),
-                )),
-              ],
-            )),
-        Container(
-            margin: EdgeInsets.only(left: 30, right: 150),
-            child: Row(
-              children: [
-                Text('分類: ', style: TextStyle(fontSize: 20)),
-                Flexible(
-                    child: TextField(
-                  focusNode: focusNode,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 20,
-                  minLines: 1,
-                  decoration: InputDecoration(
-                    isCollapsed: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(10)), //设置边框四个角的弧度
-                      borderSide: BorderSide(
-                        //用来配置边框的样式
-                        color: Color(0xff707070), //设置边框的颜色
+                        color: Color(0xffE3E3E3), //设置边框的颜色
                         width: 2.0, //设置边框的粗细
                       ),
                     ),
@@ -231,23 +289,77 @@ class _NotesAdd extends State<NotesAdd> {
                   width: 2.0, //设置边框的粗细
                 ),
               ),
-            ),
-          ),
-        ),
-        Container(
-            margin: EdgeInsets.only(right: 220),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.black,
+              Container(
+                    margin: EdgeInsets.only(right:220),
+              child: TextButton(
+                      style: TextButton.styleFrom(
+                    primary: Color(0xffF86D67),
+                  ),
+                child: Text('上傳檔案',style: TextStyle(fontSize: 18) ),
+                      
+                onPressed: loadAssets,
+              )),
+              Expanded(
+                child: buildGridView(),
               ),
-              child: Text('上傳檔案', style: TextStyle(fontSize: 18)),
-              onPressed: loadAssets,
-            )),
-        Expanded(
-          child: buildGridView(),
-        ),
-      ],
-    );
+              
+            ])),
+            bottomNavigationBar: Container(
+              child: Row(children: <Widget>[
+                Expanded(
+                  // ignore: deprecated_member_use
+                  child: SizedBox(
+                    height: 50,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                        backgroundColor:Color(0xffFFAAA6)
+                        ),
+                  
+                    child: Image.asset(
+                          'assets/images/cancel.png',
+                          width: _iconWidth,
+                        ),
+                    
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )),
+                ),
+                Expanded(
+                  // ignore: deprecated_member_use
+                  child: SizedBox(
+                    height: 50,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                        backgroundColor: Color(0xffF86D67)
+                        ),
+                    
+                    child: Image.asset(
+                          'assets/images/confirm.png',
+                          width: _iconWidth,
+                        ),
+                  
+                    onPressed: () async{
+                      if (notetypeName.text.isNotEmpty &&  
+                            notetitle.text.isNotEmpty &&
+                            notecontent.text.isNotEmpty) {
+                            if (await _submit() != true) {
+                              Navigator.of(context).pop();
+                            }
+                          } else {
+                            bool action = await notefailDialog(
+                                context, _alertTitle, _alertTxt);
+                          }
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+          )
+            ]))));
   }
 }
 

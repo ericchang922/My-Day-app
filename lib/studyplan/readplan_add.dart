@@ -486,7 +486,7 @@ class ReadPlanAddListAdd extends StatefulWidget {
 }
 
 // Randomly colored Container
-Container createNewContainer() {
+Container createNewList() {
   return Container(
     child: ReadPlanAddList(),
   );
@@ -499,7 +499,7 @@ class _ReadPlanAddListAdd extends State<ReadPlanAddListAdd> {
 
   // Add
   void addContainer() {
-    containerList.add(createNewContainer());
+    containerList.add(createNewList());
   }
 
   // _childrenList
