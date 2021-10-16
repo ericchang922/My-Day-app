@@ -7,11 +7,14 @@ class ChangepwPersonalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false, home: ChangepwPersonalWidget());
+        debugShowCheckedModeBanner: false, home: ChangepwPersonalWidget(context));
   }
 }
 
 class ChangepwPersonalWidget extends StatelessWidget {
+  BuildContext pageContext;
+
+  ChangepwPersonalWidget(this.pageContext);
   @override
   Widget build(BuildContext context) {
   Size size = MediaQuery.of(context).size;
@@ -45,8 +48,7 @@ class ChangepwPersonalWidget extends StatelessWidget {
                   ),
               
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PersonalInformationPage()));
+                Navigator.of(pageContext).pop();
               },
             )),
           ),
@@ -67,8 +69,7 @@ class ChangepwPersonalWidget extends StatelessWidget {
                   ),
               
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PersonalInformationPage()));
+                Navigator.of(pageContext).pop();
               },
             ),
           )),

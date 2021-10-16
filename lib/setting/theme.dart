@@ -3,12 +3,9 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-
-
+import 'package:My_Day_app/public/setting_request/theme.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
-
-
 
 class ThemePage extends StatelessWidget {
   // This widget is the root of your application.
@@ -16,28 +13,45 @@ class ThemePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-        body: SwitchDemo(),
-    
+      body: ThemeWidget(),
     ));
   }
 }
 
-class SwitchDemo extends StatefulWidget {
+class ThemeWidget extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => Theme();
+  State<StatefulWidget> createState() => _ThemeWidget();
 }
 
-class Theme extends State {
+class _ThemeWidget extends State<ThemeWidget> {
   get child => null;
   get left => null;
-  bool _hasBeenPressed = false;
- 
+  bool _hasBeenPressed = true;
+  String id = 'lili123';
+  int themesId = 1;
   @override
   Widget build(BuildContext context) {
+    _submit() async {
+      String uid = id;
+      int themeId = themesId;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return Themes(uid: uid, themeId: themeId);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-          backgroundColor: _hasBeenPressed?Color(0xff29527A):Color(0xffF86D67),
+          backgroundColor:
+              _hasBeenPressed ? Color(0xff29527A) : Color(0xffF86D67),
           title: Text('主題', style: TextStyle(fontSize: 20)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
@@ -66,18 +80,30 @@ class Theme extends State {
                       height: 40,
                       width: 20,
                       child: TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor:
-                              _hasBeenPressed ? Colors.white : Color(0xffF86D67),
-                          shape: _hasBeenPressed? CircleBorder(side: BorderSide(color: Colors.black),)
-                              : CircleBorder(),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _hasBeenPressed = !_hasBeenPressed;
-                          });
-                        }),
-          )])),
+                          style: TextButton.styleFrom(
+                            backgroundColor: _hasBeenPressed
+                                ? Colors.white
+                                : Color(0xffF86D67),
+                            shape: _hasBeenPressed
+                                ? CircleBorder(
+                                    side: BorderSide(color: Colors.black),
+                                  )
+                                : CircleBorder(),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              if (_hasBeenPressed = false) {
+                                if ( _submit() != true) {
+                                  _hasBeenPressed = true;
+                                  
+                                } else {
+                                  _hasBeenPressed = false;
+                                }
+                              }
+                            });
+                          }),
+                    )
+                  ])),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Container(
@@ -101,25 +127,35 @@ class Theme extends State {
                       ),
                     ),
                     // ignore: deprecated_member_use
-                   SizedBox(
+                    SizedBox(
                       height: 40,
                       width: 20,
                       child: TextButton(
-                        style: TextButton.styleFrom(
-                        backgroundColor:
-                            _hasBeenPressed ? Color(0xffF86D67) : Colors.white,
-                        shape: _hasBeenPressed
-                            ? CircleBorder()
-                            : CircleBorder(
-                                side: BorderSide(color: Colors.black),
-                              ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: _hasBeenPressed
+                                ? Color(0xffF86D67)
+                                : Colors.white,
+                            shape: _hasBeenPressed
+                                ? CircleBorder()
+                                : CircleBorder(
+                                    side: BorderSide(color: Colors.black),
+                                  ),
                           ),
-                        onPressed: () {
-                          setState(() {
-                            _hasBeenPressed = !_hasBeenPressed;
-                          });
-                        }),
-                  )])),
+                          onPressed: () {
+                            setState(() {
+                              if (_hasBeenPressed = true) {
+                                if ( _submit() != true) {
+                                  _hasBeenPressed = true;
+                                  
+                                } else {
+                                  _hasBeenPressed = false;
+                                  
+                                }
+                              }
+                            });
+                          }),
+                    )
+                  ])),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Container(

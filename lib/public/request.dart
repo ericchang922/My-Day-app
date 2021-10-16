@@ -78,6 +78,19 @@ class Request {
     'temporary_list': '${path['temporaryGroup']}/temporary_list/',
     'get_invite': '${path['temporaryGroup']}/get_invite/',
   };
+  static Map accountUrl = {
+    'login': '$host${path['account']}/login/',
+    'register': '$host${path['account']}/register/',
+    'change_pw': '$host${path['account']}/change_pw/',
+    'forget_pw': '$host${path['account']}/forget_pw/',
+    'send_code': '$host${path['account']}/send_code/',
+  };
+  static Map settingUrl = {
+    'friend_privacy': '$host${path['setting']}/friend_privacy/',
+    'notice': '$host${path['setting']}/notice/',
+    'privacy': '$host${path['setting']}/privacy/',
+    'themes': '$host${path['setting']}/themes/',
+  };
   static Map friendUrl = {
     'get': '${path['friend']}/get/',
     'friend_list': '${path['friend']}/friend_list/',
@@ -481,6 +494,11 @@ class Request {
       _bestFriendList = BestFriendListModel.fromJson(_responseBody);
     }
   }
+   // add_friend ------------------------------------------------------------------------------
+  add(BuildContext context, Map<String, dynamic> data) async {
+    String _url = friendUrl['add'];
+    await httpPost(context, data, _url, '新增成功');
+  }
 
   // TIMETABLE =========================================================================================
   mainTimetableListGet(BuildContext context, Map<String, dynamic> data) async {
@@ -628,4 +646,83 @@ class Request {
     String _url = noteUrl['cancel_share'];
     await httpPost(context, data, _url, '已取消');
   }
+  // cancel_share ---------------------------------------------------------------------------------
+  createnew(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['create_new'];
+    await httpPost(context, data, _url, '新增成功');
+  }
+
+  // ACCOUNT ============================================================================================
+  // login ----------------------------------------------------------------------------------
+  login(BuildContext context, Map<String, String> data) async {
+    print(data);
+    String _url = accountUrl['login'];
+    await httpPost(context, data, _url, '登入成功');
+  }
+
+  // ACCOUNT ============================================================================================
+  // register ----------------------------------------------------------------------------------
+  register(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = accountUrl['register'];
+    await httpPost(context, data, _url, '註冊成功');
+  }
+
+  // ACCOUNT ============================================================================================
+  // change_pw ----------------------------------------------------------------------------------
+  changepw(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = accountUrl['change_pw'];
+    await httpPost(context, data, _url, '更改成功');
+  }
+
+  // ACCOUNT ============================================================================================
+  // forget_pw ----------------------------------------------------------------------------------
+  forgetpw(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = accountUrl['forget_pw'];
+    await httpPost(context, data, _url, '驗證成功');
+  }
+
+  // ACCOUNT ============================================================================================
+  // send_code ----------------------------------------------------------------------------------
+   sendcode(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = accountUrl['send_code'];
+    await httpPost(context, data, _url, '發送成功');
+  }
+
+  // SETTING ============================================================================================
+  // friend_privacy ----------------------------------------------------------------------------------
+  friendprivacy(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = accountUrl['friend_privacy'];
+    await httpPost(context, data, _url, '好友隱私設定成功');
+  }
+
+  // SETTING ============================================================================================
+  // notice ----------------------------------------------------------------------------------
+  notice(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = accountUrl['notice'];
+    await httpPost(context, data, _url, '通知設定成功');
+  }
+
+  // SETTING ============================================================================================
+  // privacy ----------------------------------------------------------------------------------
+  privacy(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = accountUrl['privacy'];
+    await httpPost(context, data, _url, '隱私設定成功');
+  }
+
+  // SETTING ============================================================================================
+  // theme ----------------------------------------------------------------------------------
+  themes(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = accountUrl['theme'];
+    await httpPost(context, data, _url, '主題設定成功');
+  }
+
+
 }
