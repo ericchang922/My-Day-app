@@ -1,6 +1,9 @@
+import 'package:My_Day_app/timetable/timetable_share_friend.dart';
+import 'package:My_Day_app/timetable/timetable_share_group.dart';
 import 'package:flutter/material.dart';
 
-Future<bool> timetableShare(BuildContext context) async {
+Future<bool> timetableShare(
+    BuildContext context, String sharecode, int timetableNo) async {
   Size size = MediaQuery.of(context).size;
   double _width = size.width;
   double _height = size.height;
@@ -47,12 +50,24 @@ Future<bool> timetableShare(BuildContext context) async {
                       IconButton(
                         icon: Image.asset('assets/images/friend_choose.png'),
                         iconSize: _iconSize,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      TimetableShareFriendPage(timetableNo)));
+                        },
                       ),
                       IconButton(
                         icon: Image.asset('assets/images/group_choose.png'),
                         iconSize: _iconSize,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      TimetableShareGroupPage(timetableNo)));
+                        },
                       )
                     ],
                   ),
@@ -79,7 +94,7 @@ Future<bool> timetableShare(BuildContext context) async {
                       child: Padding(
                         padding: EdgeInsets.all(_height * 0.01),
                         child: Text(
-                          'NoMz2onE',
+                          sharecode,
                           style: TextStyle(fontSize: _height * 0.02),
                         ),
                       ),
