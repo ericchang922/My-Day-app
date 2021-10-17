@@ -205,7 +205,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                     child: InkWell(
                   child: Text(
                     '確認',
-                    style: TextStyle(fontSize: _pSize, color: _color),
+                    style: TextStyle(fontSize: _pSize, color: _gray),
                   ),
                   onTap: () async {
                     hideWidget();
@@ -218,7 +218,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                   child: InkWell(
                     child: Text(
                       '刪除',
-                      style: TextStyle(fontSize: _pSize, color: _gray),
+                      style: TextStyle(fontSize: _pSize, color: _color),
                     ),
                     onTap: () async {
                     hideWidget();
@@ -253,7 +253,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                     child: InkWell(
                   child: Text(
                     '確認',
-                    style: TextStyle(fontSize: _pSize, color: _color),
+                    style: TextStyle(fontSize: _pSize, color: _gray),
                   ),
                   onTap: () async {
                     hideWidget();
@@ -266,7 +266,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                   child: InkWell(
                     child: Text(
                       '刪除',
-                      style: TextStyle(fontSize: _pSize, color: _gray),
+                      style: TextStyle(fontSize: _pSize, color: _color),
                     ),
                     onTap: () async {
                     hideWidget();
@@ -369,14 +369,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
               Navigator.of(context).pop();
             },
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () async {
-                bool action = await friendsAddDialog(context);
-              },
-            ),
-          ],
+          
         ),
         body: GestureDetector(
             child: Container(
@@ -401,14 +394,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
               Navigator.of(context).pop();
             },
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () async {
-                bool action = await friendsAddDialog(context);
-              },
-            ),
-          ],
+          
         ),
         body: SafeArea(
           bottom: false,
@@ -450,7 +436,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                     child: InkWell(
                   child: Text(
                     '確認',
-                    style: TextStyle(fontSize: _pSize, color: _color),
+                    style: TextStyle(fontSize: _pSize, color: _gray),
                   ),
                   onTap: () async {
                     hideWidget();
@@ -463,7 +449,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                   child: InkWell(
                     child: Text(
                       '刪除',
-                      style: TextStyle(fontSize: _pSize, color: _gray),
+                      style: TextStyle(fontSize: _pSize, color: _color),
                     ),
                     onTap: () async {
                     hideWidget();
@@ -513,7 +499,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                     child: InkWell(
                   child: Text(
                     '確認',
-                    style: TextStyle(fontSize: _pSize, color: _color),
+                    style: TextStyle(fontSize: _pSize, color:_gray ),
                   ),
                   onTap: () async {
                     hideWidget();
@@ -526,7 +512,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                   child: InkWell(
                     child: Text(
                       '刪除',
-                      style: TextStyle(fontSize: _pSize, color: _gray),
+                      style: TextStyle(fontSize: _pSize, color:_color ),
                     ),
                     onTap: () async {
                     hideWidget();

@@ -63,7 +63,7 @@ class _ExamplePageState extends State<ExamplePage> {
           visible: viewVisible,
           child: Column(children: <Widget>[
             Container(
-              margin: EdgeInsets.only(right: 15, left: 35,top:10),
+              margin: EdgeInsets.only(right: 15, left: 35,top:15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -80,7 +80,7 @@ class _ExamplePageState extends State<ExamplePage> {
                   )),
                   SizedBox(
                     height: 40,
-                    width: 15,
+                    width: 60,
                     child:TextButton(
                       style: TextButton.styleFrom(
                         primary: Colors.white,
@@ -99,7 +99,7 @@ class _ExamplePageState extends State<ExamplePage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10),
+              margin: EdgeInsets.only(top: 15),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),

@@ -11,17 +11,19 @@ import 'package:flutter/material.dart';
 class StudyplanDetailPage extends StatefulWidget {
   int studyplanNum;
   int typeId;
-  StudyplanDetailPage(this.studyplanNum, this.typeId);
+  int groupNum;
+  StudyplanDetailPage(this.studyplanNum, this.typeId, this.groupNum);
 
   @override
   _StudyplanDetailPage createState() =>
-      new _StudyplanDetailPage(studyplanNum, typeId);
+      new _StudyplanDetailPage(studyplanNum, typeId, groupNum);
 }
 
 class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
   int studyplanNum;
   int typeId;
-  _StudyplanDetailPage(this.studyplanNum, this.typeId);
+  int groupNum;
+  _StudyplanDetailPage(this.studyplanNum, this.typeId, this.groupNum);
 
   StudyplanModel _getStudyplan;
 
@@ -134,8 +136,8 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
       _selectedItem(BuildContext context, value) async {
         switch (value) {
           case 'edit':
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => EditCommonStudyPlanPage(studyplanNum)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EditCommonStudyPlanPage(studyplanNum, groupNum)));
             break;
           case 'cancel':
             if (await _submit() != true) {

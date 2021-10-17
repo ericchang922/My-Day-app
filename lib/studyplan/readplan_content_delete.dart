@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Future<bool> readplanDeleteDialog(BuildContext context) async {
-  final _groupIDController = TextEditingController();
+  
   String _inputGroupID = '';
 
   return showDialog<bool>(

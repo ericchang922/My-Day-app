@@ -1,4 +1,4 @@
-import 'package:My_Day_app/studyplan/readplan_add_note.dart';
+
 import 'package:My_Day_app/studyplan/readplan_content_delete.dart';
 import 'package:My_Day_app/studyplan/readplan_edit.dart';
 import 'package:flutter/material.dart';

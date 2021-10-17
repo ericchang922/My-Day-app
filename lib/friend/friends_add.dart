@@ -1,8 +1,28 @@
+import 'package:My_Day_app/friend/friend_fail.dart';
+import 'package:My_Day_app/public/friend_request/add.dart';
 import 'package:flutter/material.dart';
 
 Future<bool> friendsAddDialog(BuildContext context) async {
-  final _groupIDController = TextEditingController();
-  String _inputGroupID = '';
+  final fid = TextEditingController();
+  String _alertTitle = '加入失敗';
+  String _alertTxt = '請確認是否有填寫欄位';
+  String id = 'lili123';
+
+  _submit() async {
+    String uid = id;
+    String friendId = fid.text;
+
+    var submitWidget;
+    _submitWidgetfunc() async {
+      return AddFriend(uid: uid, friendId: friendId);
+    }
+
+    submitWidget = await _submitWidgetfunc();
+    if (await submitWidget.getIsError())
+      return true;
+    else
+      return false;
+  }
 
   return showDialog<bool>(
       context: context,
@@ -90,10 +110,7 @@ Future<bool> friendsAddDialog(BuildContext context) async {
                                   borderSide:
                                       BorderSide(color: Color(0xff7AAAD8)),
                                 )),
-                            controller: _groupIDController,
-                            onChanged: (text) {
-                              _inputGroupID = _groupIDController.text;
-                            },
+                            controller: fid,
                           )),
                     ],
                   ),
@@ -148,9 +165,17 @@ Future<bool> friendsAddDialog(BuildContext context) async {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        onTap: () {
-                          print(_inputGroupID);
-                          Navigator.of(context).pop(true);
+                        onTap: () async {
+                          if (fid.text.isNotEmpty) {
+                            if (await _submit() != true) {
+                              Navigator.of(context).pop(true);
+                            }
+                          }else{
+                            bool action = await friendfailDialog(
+                                context, _alertTitle, _alertTxt);
+                          }
+
+                          
                         },
                       ),
                     )

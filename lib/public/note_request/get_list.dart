@@ -1,4 +1,4 @@
-import 'package:My_Day_app/models/note/note_list.dart';
+import 'package:My_Day_app/models/note/note_list_model.dart';
 import 'package:My_Day_app/public/request.dart';
 import 'package:flutter/material.dart';
 
