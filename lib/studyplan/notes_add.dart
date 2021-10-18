@@ -255,8 +255,8 @@ _submit() async {
                     ),
                   ),
                 )),
-              ],
-            )),
+              
+            
         Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: Container(
@@ -288,7 +288,7 @@ _submit() async {
                   color: Color(0xffE3E3E3), //设置边框的颜色
                   width: 2.0, //设置边框的粗细
                 ),
-              ),
+              )))),
               Container(
                     margin: EdgeInsets.only(right:220),
               child: TextButton(
