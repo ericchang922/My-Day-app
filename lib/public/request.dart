@@ -1,6 +1,8 @@
 // dart
 import 'dart:convert';
 // flutter
+import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:flutter/material.dart';
 // therd
@@ -159,6 +161,8 @@ class Request {
   StudyplanModel _studyplan;
   ShareStudyplanListModel _shareStudyplanList;
   PersonalShareStudyplanListModel _personalShareStudyplanList;
+  StudyplanListModel _studyplanList;
+  GroupStudyplanListModel _groupStudyplanList;
 
   ShareNoteListModel _shareNoteList;
   NoteListModel _noteList;
@@ -193,6 +197,8 @@ class Request {
   getStudyplan() => _studyplan;
   getShareStudyplanList() => _shareStudyplanList;
   getPersonalShareStudyplanList() => _personalShareStudyplanList;
+  getStudyplanList() => _studyplanList;
+  getGroupStudyplanList() => _groupStudyplanList;
 
   getShareNoteList() => _shareNoteList;
   getNoteList() => _noteList;
@@ -206,7 +212,6 @@ class Request {
     } catch (error) {
       print('error: ${utf8.decode(response.bodyBytes)}');
     }
-    ;
 
     if (responseBody != null) {
       if (responseBody['response'] == false) {
@@ -577,6 +582,30 @@ class Request {
       _personalShareStudyplanList =
           PersonalShareStudyplanListModel.fromJson(_responseBody);
     }
+  }
+
+  // personal_list --------------------------------------------------------------------------
+  studyplanPersonalList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['personal_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _studyplanList = StudyplanListModel.fromJson(_responseBody);
+    }
+  }
+
+  // group_list --------------------------------------------------------------------------
+  studyplanGroupList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['group_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _groupStudyplanList = GroupStudyplanListModel.fromJson(_responseBody);
+    }
+  }
+
+  // delete --------------------------------------------------------------------------------------
+  studyplanDelete(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['delete'];
+    await httpDelete(context, data, _url, '刪除成功');
   }
 
   // sharing --------------------------------------------------------------------------------------

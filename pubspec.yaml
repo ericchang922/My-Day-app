@@ -120,6 +120,8 @@ flutter:
     - assets/json/get_temporary_group_invite.json
 
     - assets/json/get_studyplan.json
+    - assets/json/studyplan_list.json
+    - assets/json/group_studyplan_list.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
