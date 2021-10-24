@@ -1,6 +1,6 @@
 import 'package:My_Day_app/common_note/common_note_detail_page.dart';
 import 'package:My_Day_app/common_studyplan/customer_check_box_studyplan.dart';
-import 'package:My_Day_app/common_studyplan/edit_common_studyplan_page.dart';
+import 'package:My_Day_app/study/edit_studyplan_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
@@ -157,12 +157,12 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
           case 'edit':
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    EditCommonStudyPlanPage(studyplanNum, null)));
+                    EditStudyPlanPage(studyplanNum, null)));
             break;
           case 'edit_common':
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    EditCommonStudyPlanPage(studyplanNum, groupNum)));
+                    EditStudyPlanPage(studyplanNum, groupNum)));
             break;
           case 'cancel':
             if (await _submitCancelSharing() != true) {

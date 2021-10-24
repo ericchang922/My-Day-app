@@ -9,20 +9,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class EditCommonStudyPlanPage extends StatefulWidget {
+class EditStudyPlanPage extends StatefulWidget {
   int studyplanNum;
   int groupNum;
-  EditCommonStudyPlanPage(this.studyplanNum, this.groupNum);
+  EditStudyPlanPage(this.studyplanNum, this.groupNum);
 
   @override
-  _EditCommonStudyPlanPage createState() =>
-      new _EditCommonStudyPlanPage(studyplanNum, groupNum);
+  _EditStudyPlanPage createState() =>
+      new _EditStudyPlanPage(studyplanNum, groupNum);
 }
 
-class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
+class _EditStudyPlanPage extends State<EditStudyPlanPage> {
   int studyplanNum;
   int groupNum;
-  _EditCommonStudyPlanPage(this.studyplanNum, this.groupNum);
+  _EditStudyPlanPage(this.studyplanNum, this.groupNum);
 
   StudyplanModel _getStudyplan;
 

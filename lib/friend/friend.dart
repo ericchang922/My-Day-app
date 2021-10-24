@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:My_Day_app/friend/bestfriend.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/friend/friends_invitation.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
@@ -486,7 +487,7 @@ class FriendsPageWidget extends StatelessWidget {
             minWidth: double.infinity,
             onPressed: (){
               Navigator.push(context,
-              MaterialPageRoute(builder: (context) =>FriendInvitationPage()));
+                    MaterialPageRoute(builder: (context) => FriendInvitationPage()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

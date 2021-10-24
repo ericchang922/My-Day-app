@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 
+import 'package:My_Day_app/friend/bestfriend_add.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 
 import 'package:flutter/material.dart';
@@ -357,7 +358,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                bool action = await friendsAddDialog(context);
+                Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BestFriendAddPage()));
               },
             ),
           ],

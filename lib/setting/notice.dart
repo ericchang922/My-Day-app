@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'play_together_invite.dart';
-import 'settings.dart';
+
 const PrimaryColor = const Color(0xFFF86D67);
 class NoticePage extends StatefulWidget {
   @override
