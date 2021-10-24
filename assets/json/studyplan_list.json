@@ -1,0 +1,35 @@
+{
+    "pastStudyplan": [
+        {
+            "studyplanNum": 2,
+            "title": "複習英文文法",
+            "date": "2021-10-10",
+            "startTime": "2021-10-10T09:00:00",
+            "endTime": "2021-10-10T21:00:00"
+        },
+        {
+            "studyplanNum": 94,
+            "title": "多益練習",
+            "date": "2021-10-05",
+            "startTime": "2021-10-05T10:00:00",
+            "endTime": "2021-10-05T20:00:00"
+        }
+    ],
+    "futureStudyplan": [
+        {
+            "studyplanNum": 3,
+            "title": "複習",
+            "date": "2022-05-05",
+            "startTime": "2022-05-05T18:00:00",
+            "endTime": "2022-05-05T23:00:00"
+        },
+        {
+            "studyplanNum": 93,
+            "title": "複習英文文法",
+            "date": "2021-11-13",
+            "startTime": "2021-11-13T09:01:00",
+            "endTime": "2021-11-13T21:00:00"
+        }
+    ],
+    "response": true
+}

@@ -341,8 +341,13 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
           Container(
             color: _light,
             child: Theme(
-              data:
-                  Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              data: Theme.of(context).copyWith(
+                unselectedWidgetColor: _gray,
+                colorScheme: ColorScheme.light(
+                  primary: _color,
+                ),
+                dividerColor: Colors.transparent,
+              ),
               child: ExpansionTile(
                   title: Text('投票',
                       style:

@@ -120,6 +120,8 @@ flutter:
     - assets/json/get_temporary_group_invite.json
 
     - assets/json/get_studyplan.json
+    - assets/json/studyplan_list.json
+    - assets/json/group_studyplan_list.json
 
     - assets/json/get_timetable_list.json
 
