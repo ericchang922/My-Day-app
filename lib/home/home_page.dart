@@ -1,8 +1,6 @@
 // flutter
-import 'package:My_Day_app/home/home_page_functions.dart';
 import 'package:My_Day_app/public/convert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
