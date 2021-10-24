@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'privacy.dart';
+
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -196,7 +196,16 @@ class OpenClassSchedule extends State {
 
   void _changed(isCheck) {
     setState(() {
-      _isCheck = isCheck;
+      if(_isCheck=isCheck){
+        _isCheckstroke = true;
+        _isCheckreciprocal = true;
+        _isCheckgroup = true;
+      }else{
+        _isCheckstroke = false;
+        _isCheckreciprocal = false;
+        _isCheckgroup = false;
+      }
+     
     });
   }
 
