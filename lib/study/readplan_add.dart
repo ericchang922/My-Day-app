@@ -1,4 +1,4 @@
-import 'package:My_Day_app/studyplan/readplan_add_note.dart';
+import 'package:My_Day_app/study/readplan_add_note.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/rendering.dart';

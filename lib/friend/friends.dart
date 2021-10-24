@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:My_Day_app/friend/bestfriend.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
-import 'package:My_Day_app/friend/friends_invitation%20copy.dart';
 import 'package:My_Day_app/friend/friends_invitation.dart';
 import 'package:flutter/material.dart';
 
