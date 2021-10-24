@@ -1,8 +1,10 @@
+import 'package:My_Day_app/common_note/common_note_detail_page.dart';
 import 'package:My_Day_app/common_studyplan/customer_check_box_studyplan.dart';
 import 'package:My_Day_app/common_studyplan/edit_common_studyplan_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
+import 'package:My_Day_app/public/studyplan_request/delete.dart';
 import 'package:My_Day_app/public/studyplan_request/get.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -12,18 +14,22 @@ class StudyplanDetailPage extends StatefulWidget {
   int studyplanNum;
   int typeId;
   int groupNum;
-  StudyplanDetailPage(this.studyplanNum, this.typeId, this.groupNum);
+  bool isCommon;
+  StudyplanDetailPage(
+      this.studyplanNum, this.typeId, this.groupNum, this.isCommon);
 
   @override
   _StudyplanDetailPage createState() =>
-      new _StudyplanDetailPage(studyplanNum, typeId, groupNum);
+      new _StudyplanDetailPage(studyplanNum, typeId, groupNum, isCommon);
 }
 
 class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
   int studyplanNum;
   int typeId;
   int groupNum;
-  _StudyplanDetailPage(this.studyplanNum, this.typeId, this.groupNum);
+  bool isCommon;
+  _StudyplanDetailPage(
+      this.studyplanNum, this.typeId, this.groupNum, this.isCommon);
 
   StudyplanModel _getStudyplan;
 
@@ -120,10 +126,23 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
 
       double _subjectMargin = _showTimeString == true ? _height * 0.04 : 0;
 
-      _submit() async {
+      _submitCancelSharing() async {
         var submitWidget;
         _submitWidgetfunc() async {
           return CancelSharing(uid: uid, studyplanNum: studyplanNum);
+        }
+
+        submitWidget = await _submitWidgetfunc();
+        if (await submitWidget.getIsError())
+          return true;
+        else
+          return false;
+      }
+
+      _submitDelete() async {
+        var submitWidget;
+        _submitWidgetfunc() async {
+          return Delete(uid: uid, studyplanNum: studyplanNum);
         }
 
         submitWidget = await _submitWidgetfunc();
@@ -137,10 +156,21 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
         switch (value) {
           case 'edit':
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EditCommonStudyPlanPage(studyplanNum, groupNum)));
+                builder: (context) =>
+                    EditCommonStudyPlanPage(studyplanNum, null)));
+            break;
+          case 'edit_common':
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    EditCommonStudyPlanPage(studyplanNum, groupNum)));
             break;
           case 'cancel':
-            if (await _submit() != true) {
+            if (await _submitCancelSharing() != true) {
+              Navigator.pop(context);
+            }
+            break;
+          case 'delete':
+            if (await _submitDelete() != true) {
               Navigator.pop(context);
             }
             break;
@@ -148,7 +178,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
       }
 
       _studyplanAction() {
-        if (uid == _getStudyplan.creatorId) {
+        if (isCommon == true && uid == _getStudyplan.creatorId) {
           return PopupMenuButton<String>(
             offset: Offset(50, 50),
             shape: RoundedRectangleBorder(
@@ -156,7 +186,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
             icon: Icon(Icons.more_vert),
             itemBuilder: (context) => [
               PopupMenuItem<String>(
-                  value: 'edit',
+                  value: 'edit_common',
                   child: Container(
                       alignment: Alignment.center,
                       child: Text("編輯",
@@ -173,7 +203,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
             ],
             onSelected: (value) => _selectedItem(context, value),
           );
-        } else if (_getStudyplan.isAuthority) {
+        } else if (isCommon == false) {
           return PopupMenuButton<String>(
             offset: Offset(50, 50),
             shape: RoundedRectangleBorder(
@@ -182,6 +212,31 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
             itemBuilder: (context) => [
               PopupMenuItem<String>(
                   value: 'edit',
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: Text("編輯",
+                          style: TextStyle(fontSize: _subtitleSize)))),
+              PopupMenuDivider(
+                height: 1,
+              ),
+              PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: Text("刪除",
+                          style: TextStyle(fontSize: _subtitleSize)))),
+            ],
+            onSelected: (value) => _selectedItem(context, value),
+          );
+        } else if (_getStudyplan.isAuthority) {
+          return PopupMenuButton<String>(
+            offset: Offset(50, 50),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(_height * 0.01)),
+            icon: Icon(Icons.more_vert),
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                  value: 'edit_common',
                   child: Container(
                       alignment: Alignment.center,
                       child: Text("編輯",
@@ -236,9 +291,13 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
               leading: leading,
               trailing: Visibility(
                 visible: _isNote,
-                child: Image.asset(
-                  'assets/images/note.png',
-                  height: _height * 0.05,
+                child: IconButton(
+                  icon: Image.asset(
+                    'assets/images/note.png',
+                    height: _width * 1,
+                  ),
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CommonNoteDetailPage(noteNum))),
                 ),
               ),
             ),
@@ -251,9 +310,15 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                 leading: leading,
                 trailing: Visibility(
                   visible: _isNote,
-                  child: Image.asset(
-                    'assets/images/note.png',
-                    height: _height * 0.05,
+                  child: IconButton(
+                    icon: Image.asset(
+                      'assets/images/note.png',
+                      height: _width * 1,
+                    ),
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CommonNoteDetailPage(noteNum))),
                   ),
                 )),
           );

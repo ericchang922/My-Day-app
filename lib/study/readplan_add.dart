@@ -1,31 +1,30 @@
-import 'package:My_Day_app/studyplan/note_choose.dart';
-import 'package:My_Day_app/studyplan/readplan_add_note.dart';
+import 'package:My_Day_app/study/readplan_add_note.dart';
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/rendering.dart';
 import 'dart:ui';
 import 'package:date_format/date_format.dart';
 
-class ReadPlanEdit extends StatelessWidget {
-  const ReadPlanEdit({Key key}) : super(key: key);
+class ReadPlanAddPage extends StatelessWidget {
+  const ReadPlanAddPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return App2();
+    return _ReadPlanAdd();
   }
 }
 
-class App2 extends StatefulWidget {
-  App2({Key key}) : super(key: key);
+class _ReadPlanAdd extends StatefulWidget {
+  _ReadPlanAdd({Key key}) : super(key: key);
 
   @override
-  Notes createState() => Notes();
+  ReadPlanAdd createState() => ReadPlanAdd();
 }
 
-class Notes extends State<App2> with SingleTickerProviderStateMixin {
-  // List _page=[Home3(),Home2(),Home4()];
-  // int index=0;
+class ReadPlanAdd extends State<_ReadPlanAdd>
+    with SingleTickerProviderStateMixin {
   TabController con;
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -42,16 +41,14 @@ class Notes extends State<App2> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-  Size size = MediaQuery.of(context).size;
-  double _width = size.width;
-  double _iconWidth = _width * 0.05;
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SafeArea(
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _iconWidth = _width * 0.05;
+    return  SafeArea(
         child: Scaffold(
             appBar: AppBar(
               backgroundColor: Color(0xffF86D67),
-              title: Text('編輯讀書計畫', style: TextStyle(fontSize: 20)),
+              title: Text('新增讀書計畫', style: TextStyle(fontSize: 20)),
               leading: IconButton(
                 icon: Icon(Icons.chevron_left),
                 onPressed: () {
@@ -61,9 +58,9 @@ class Notes extends State<App2> with SingleTickerProviderStateMixin {
             ),
             body: SingleChildScrollView(
               child: Column(children: [
-                Home(),
-                TimePickerPage(),
-                HomePage(),
+                ReadPlanAddTitle(),
+                ReadPlanAddList(),
+                ReadPlanAddListAdd(),
               ]),
             ),
             bottomNavigationBar: Container(
@@ -83,6 +80,7 @@ class Notes extends State<App2> with SingleTickerProviderStateMixin {
                     'assets/images/cancel.png',
                     width: _iconWidth,
                   ),
+                  
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -103,55 +101,110 @@ class Notes extends State<App2> with SingleTickerProviderStateMixin {
                     'assets/images/confirm.png',
                     width: _iconWidth,
                   ),
+                  
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
               ),
-    )])))));
+    )]))));
   }
 }
 
-class Home extends StatefulWidget {
+class ReadPlanAddTitle extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _ReadPlanAddTitle createState() => _ReadPlanAddTitle();
 }
 
-class _HomeState extends State<Home> {
-  DateTime _selectedDate = DateTime.now(); //当前选中的日期
-  TimeOfDay _selectedTime = TimeOfDay.now();
-
+class _ReadPlanAddTitle extends State<ReadPlanAddTitle> {
+  var _dateTime = DateTime.now(); //当前选中的日期
+  TimeOfDay _Time = TimeOfDay.now();
+  var now = DateTime.now();
   get child => null; //当前选中的时间
   @override
   Widget build(BuildContext context) {
-    _showDatePicker() {
-      //获取异步方法里面的值的第一种方式：then
-      showDatePicker(
-        //如下四个参数为必填参数
+    String _dateFormat(dateTime) {
+        String dateString = formatDate(
+            DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+                dateTime.minute),
+            [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
+        return dateString;
+      }
+
+    void _datePicker(context) {
+      var screenSize = MediaQuery.of(context).size;
+      showCupertinoModalPopup(
         context: context,
-        initialDate: _selectedDate, //选中的日期
-        firstDate: DateTime(1980), //日期选择器上可选择的最早日期
-        lastDate: DateTime(2100), //日期选择器上可选择的最晚日期
-      ).then((selectedValue) {
-        setState(() {
-          //将选中的值传递出来
-          this._selectedDate = selectedValue;
-        });
-      });
+        builder: (_) => Container(
+          height: screenSize.height * 0.35,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                height: screenSize.height * 0.065,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CupertinoButton(
+                      child: Text('確定',style: TextStyle(color: Color(0xffF86D67))),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          print(_dateTime);
+                        });
+                      }),
+                ),
+              ),
+              Container(
+                height: screenSize.height * 0.28,
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  initialDateTime: DateTime.now(),
+                  onDateTimeChanged: (value) {
+                    setState(() {
+                      _dateTime = value;
+                    });
+                  }),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
-    //调起时间选择器
-    _showTimePicker() async {
-      // 获取异步方法里面的值的第二种方式：async+await
-      //await的作用是等待异步方法showDatePicker执行完毕之后获取返回值
-      var result = await showTimePicker(
+  void _timePicker(context) {
+      var screenSize = MediaQuery.of(context).size;
+      showCupertinoModalPopup(
         context: context,
-        initialTime: _selectedTime, //选中的时间
+        builder: (_) => Container(
+          height: screenSize.height * 0.35,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                height: screenSize.height * 0.065,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CupertinoButton(
+                      child: Text('確定',style: TextStyle(color: Color(0xffF86D67))),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        // setState(() {
+                        //   print(_dateTime);
+                        // });
+                      }),
+                ),
+              ),
+              Container(
+                height: screenSize.height * 0.28,
+                child: CupertinoTimerPicker(
+                  initialTimerDuration: Duration(hours: now.hour,minutes: now.minute,seconds: now.second),
+                  onTimerDurationChanged: (Duration duration) {},
+                ),
+              ),
+            ],
+          ),
+        ),
       );
-      //将选中的值传递出来
-      setState(() {
-        this._selectedTime = result;
-      });
     }
 
     return Column(children: <Widget>[
@@ -181,7 +234,7 @@ class _HomeState extends State<Home> {
             )),
           ])),
       Container(
-          margin: EdgeInsets.only(left: 30, right: 120, bottom: 15),
+          margin: EdgeInsets.only(left: 30, right: 110, bottom: 15),
           child: Row(
             children: [
               Container(
@@ -190,28 +243,28 @@ class _HomeState extends State<Home> {
               //可以通过在外面包裹一层InkWell来让某组件可以响应用户事件
               SizedBox(
                 height: 40,
-                width: 125,
+                width: 135,
                 child: TextButton(
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(side: BorderSide(color: Color(0xff707070)),
                       borderRadius: BorderRadius.circular(10)),
                   ),
-            
+                
                 child: InkWell(
                   onTap: () {
                     //调起日期选择器
-                    _showDatePicker();
+                    _datePicker(context);
                   },
                   child: Row(
                     children: <Widget>[
                       Text(formatDate(
-                          this._selectedDate, [yyyy, "-", mm, "-", "dd"])),
+                          this._dateTime, [yyyy, "-", mm, "-", "dd"])),
                       Icon(Icons.arrow_drop_down)
                     ],
                   ),
                 ),
               )
-            )],
+              )],
           )),
       Container(
         margin: EdgeInsets.only(left: 30, bottom: 15, right: 70),
@@ -227,39 +280,40 @@ class _HomeState extends State<Home> {
                     shape: RoundedRectangleBorder(side: BorderSide(color: Color(0xff707070)),
                       borderRadius: BorderRadius.circular(10)),
                     ),
+                    child: InkWell(
+                      onTap: () {
+                        //调起时间选择器
+                        _timePicker(context);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("${this._Time.format(context)}"),
+                        ],
+                      ),
+            )))),
+            Text(' - ', style: TextStyle(fontSize: 20)),
+            Flexible(
+                child: SizedBox(
+                    height: 40,
+                    width: 80,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        
+                        shape: RoundedRectangleBorder(side: BorderSide(color: Color(0xff707070)),
+                          borderRadius: BorderRadius.circular(10)),
+                        
+                        ),
                     
                     child: InkWell(
                       onTap: () {
                         //调起时间选择器
-                        _showTimePicker();
+                         _timePicker(context);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text("${this._selectedTime.format(context)}"),
-                        ],
-                      ),
-                    )))),
-            Text(' - ', style: TextStyle(fontSize: 20)),
-            Flexible(
-               child: SizedBox(
-                height: 40,
-                width: 80,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(side: BorderSide(color: Color(0xff707070)),
-                      borderRadius: BorderRadius.circular(10)),
-                    ),
-                   
-                    child: InkWell(
-                      onTap: () {
-                        //调起时间选择器
-                        _showTimePicker();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("${this._selectedTime.format(context)}"),
+                          Text("${this._Time.format(context)}"),
                         ],
                       ),
                     )))
@@ -275,28 +329,60 @@ class _HomeState extends State<Home> {
   }
 }
 
-class TimePickerPage extends StatefulWidget {
-  TimePickerPage({Key key}) : super(key: key);
+class ReadPlanAddList extends StatefulWidget {
+  ReadPlanAddList({Key key}) : super(key: key);
 
-  _TimePickerPageState createState() => _TimePickerPageState();
+  _ReadPlanAddList createState() => _ReadPlanAddList();
 }
 
-class _TimePickerPageState extends State<TimePickerPage> {
-  TimeOfDay _selectedTime = TimeOfDay.now(); //当前选中的时间
+class _ReadPlanAddList extends State<ReadPlanAddList> {
+  TimeOfDay _Time = TimeOfDay.now();
+  var now = DateTime.now();
+  var _dateTime = DateTime.now(); //当前选中的时间
   @override
   Widget _buildItem(BuildContext context, int index) {
     //调起时间选择器
-    _showTimePicker() async {
-      // 获取异步方法里面的值的第二种方式：async+await
-      //await的作用是等待异步方法showDatePicker执行完毕之后获取返回值
-      var result = await showTimePicker(
+    String _dateFormat(dateTime) {
+        String dateString = formatDate(
+            DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+                dateTime.minute),
+            [yyyy, '年', mm, '月', dd, '日 ', HH, ':', nn]);
+        return dateString;
+      }
+    void _timePicker(context) {
+      var screenSize = MediaQuery.of(context).size;
+      showCupertinoModalPopup(
         context: context,
-        initialTime: _selectedTime, //选中的时间
+        builder: (_) => Container(
+          height: screenSize.height * 0.35,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                height: screenSize.height * 0.065,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: CupertinoButton(
+                      child: Text('確定',style: TextStyle(color: Color(0xffF86D67))),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        // setState(() {
+                        //   print(_dateTime);
+                        // });
+                      }),
+                ),
+              ),
+              Container(
+                height: screenSize.height * 0.28,
+                child: CupertinoTimerPicker(
+                  initialTimerDuration: Duration(hours: now.hour,minutes: now.minute,seconds: now.second),
+                  onTimerDurationChanged: (Duration duration) {},
+                ),
+              ),
+            ],
+          ),
+        ),
       );
-      //将选中的值传递出来
-      setState(() {
-        this._selectedTime = result;
-      });
     }
 
     return Column(
@@ -311,11 +397,11 @@ class _TimePickerPageState extends State<TimePickerPage> {
                       child: InkWell(
                     onTap: () {
                       //调起时间选择器
-                      _showTimePicker();
+                      _timePicker(context);
                     },
                     child: Row(
                       children: <Widget>[
-                        Text("${this._selectedTime.format(context)}"),
+                        Text("${this._Time.format(context)}"),
                       ],
                     ),
                   ))),
@@ -346,11 +432,11 @@ class _TimePickerPageState extends State<TimePickerPage> {
                       child: InkWell(
                     onTap: () {
                       //调起时间选择器
-                      _showTimePicker();
+                     _timePicker(context);
                     },
                     child: Row(
                       children: <Widget>[
-                        Text("${this._selectedTime.format(context)}"),
+                        Text("${this._Time.format(context)}"),
                       ],
                     ),
                   )),
@@ -365,30 +451,12 @@ class _TimePickerPageState extends State<TimePickerPage> {
                       ),
                       label: Text(
                         '備註',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 16),
                       ),
-                      onPressed: () async{
+                      onPressed: () async {
                         bool action = await readplanAddDialog(context);
                       },
-                  )),
-                  SizedBox(
-                    height: 40,
-                    child:TextButton.icon(
-                    icon: Icon(Icons.add, color: Color(0xffF86D67)),
-                    style: TextButton.styleFrom(
-                        primary: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      ),
-                    label: Text(
-                      '筆記',
-                      style: TextStyle(fontSize: 18),
                     ),
-                    onPressed: () async{
-                      Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ReadPlanChoose()));
-                    },
-                  ),
         )])),
         Container(
           margin: EdgeInsets.only(top: 4.0),
@@ -401,7 +469,7 @@ class _TimePickerPageState extends State<TimePickerPage> {
 
   @override
   Widget build(BuildContext context) {
-    var _items = 3;
+    var _items = 1;
     final children = List<Widget>(_items);
     for (var i = 0; i < _items; i++) {
       children[i] = _buildItem(context, i);
@@ -412,28 +480,27 @@ class _TimePickerPageState extends State<TimePickerPage> {
 }
 
 // HomePage
-class HomePage extends StatefulWidget {
+class ReadPlanAddListAdd extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _ReadPlanAddListAdd createState() => _ReadPlanAddListAdd();
 }
 
 // Randomly colored Container
 Container createNewContainer() {
   return Container(
-    child: TimePickerPage(),
+    child: ReadPlanAddList(),
   );
 }
 
 // _HomePageState
-class _HomePageState extends State<HomePage> {
+class _ReadPlanAddListAdd extends State<ReadPlanAddListAdd> {
   // Init
-  List<Container> containerList = [ ];
+  List<Container> containerList = [];
 
   // Add
   void addContainer() {
     containerList.add(createNewContainer());
   }
-
 
   // _childrenList
   List<Widget> _childrenList() {
@@ -450,20 +517,24 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(top: 4.0,right:230),
-          child:TextButton.icon(
+          margin: EdgeInsets.only(top: 4.0, right: 230),
+          child: TextButton.icon(
             style: TextButton.styleFrom(
                   primary: Colors.black,
                 ),
-            label:Text('新增欄位',style: TextStyle(fontSize: 18)),  
+            label: Text('新增欄位', style: TextStyle(fontSize: 18)),
             onPressed: () {
               setState(() {
                 addContainer();
               });
             },
-           icon:Icon(Icons.add,color: Color(0xffF86D67),),
-        ),
-        )],
+            icon: Icon(
+              Icons.add,
+              color: Color(0xffF86D67),
+            ),
+          ),
+        )
+      ],
     );
   }
 }

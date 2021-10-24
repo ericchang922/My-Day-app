@@ -1,14 +1,16 @@
 // flutter
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
+import 'package:My_Day_app/study/study_page.dart';
 import 'package:My_Day_app/my_day_icon.dart';
 import 'package:My_Day_app/group/group_list_page.dart';
 import 'package:My_Day_app/home/home_page.dart';
 import 'package:My_Day_app/home/home_Update.dart';
-import 'package:My_Day_app/studyplan/learn.dart';
+
 import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
 
 class Home extends StatefulWidget {
@@ -23,7 +25,7 @@ class _Home extends State<Home> {
     HomePage(),
     GroupListPage(),
     TemporaryGroupListPage(),
-    Learn()
+    StudyPage()
   ];
 
   void _onTapped(int index) {
@@ -40,7 +42,7 @@ class _Home extends State<Home> {
       homePageAppBar(context, nowMon, weekCount),
       groupListAppBar(context),
       temporaryGroupListAppBar(context),
-      learnAppBar
+      studyAppBar(context)
     ];
     Color color = Theme.of(context).primaryColor;
     var size = MediaQuery.of(context).size;
