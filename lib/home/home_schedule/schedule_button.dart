@@ -24,6 +24,7 @@ class ScheduleButton {
 
   List<Widget> _allDay = [];
   List<Widget> _schedules = [];
+  double _position;
 
   void _scheduleArrange() {
     DateTime _today;
@@ -47,7 +48,7 @@ class ScheduleButton {
         DateTime _startTime = s.startTime;
         DateTime _endTime = s.endTime;
         int _scheduleType = s.typeId;
-        Color _color = typeColor(_scheduleType);
+        _position = 0;
 
         TimeRange _startTimeRange = TimeRange(_startTime);
         TimeRange _endTimeRange = TimeRange(_endTime);
@@ -71,10 +72,10 @@ class ScheduleButton {
           DateTime _thisStart;
           DateTime _thisEnd;
           double _scheduleHeight = 0;
-          double _position = 0;
 
           for (int j = 0; j < timeLineList.length; j++) {
             // 表格的每一個時間段檢查一遍
+            bool isStart = false;
 
             String timeLineStart = timeLineList[j]['start'];
             String timeLineEnd = timeLineList[j]['end'];
@@ -86,32 +87,42 @@ class ScheduleButton {
 
             if (timeLineStart == '' || timeLineEnd == '') {
               timeLineStart = timeLineList[j - 1]['end'];
-              timeLineStart = timeLineList[j + 1]['start'];
+              timeLineEnd = timeLineList[j + 1]['start'];
             } // 如果「開始」和「結束」為空上一段的結束作為「開始」下一段的開始作為「結束」
 
             _thisStart = _today.add(ConvertString.toDuration(timeLineStart));
             _thisEnd = _today.add(ConvertString.toDuration(timeLineEnd));
 
+            if (_thisStart.isBefore(_today
+                .add(ConvertString.toDuration(timeLineList[0]['start'])))) {
+              // 如果此段時間在今天表格開始之前 => 加一天表示明天的這個時段
+              // 例如課表是 8:00 開始 如果出現 7:00 表示是明天的時間（在表格最下方）=
+              _thisStart = _thisStart.add(Duration(days: 1));
+              _thisEnd = _thisEnd.add(Duration(days: 1));
+            }
+
             if (_startTimeRange.inTime(_thisStart, _thisEnd)) {
               // 在這格開始 => 開始時間＝行程開始
+              isStart = true;
               _heightStart = timeOfDateTime(_startTime);
 
               _position += timeHeight(
-                  ConvertDuration.toShortTime(timeOfDateTime(_thisStart)),
+                  timeLineStart,
                   ConvertDuration.toShortTime(timeOfDateTime(_startTime)),
                   _fullHeight); // 如果在這格開始 => 上方的空間增加「這格開始～行程開始」
 
             } else if (_startTimeRange.notAfter(_thisStart)) {
               // 在這格之前開始(不在這格之後) => 開始時間=這格開始
+              isStart = true;
               _heightStart = timeOfDateTime(_thisStart);
-            } else if (_endTimeRange.notBefore(_endTime)) {
+            } else if (_startTimeRange.notBefore(_thisStart)) {
               // 在這格之後開始(不在這格之前) => 沒有開始時間
               _heightStart = null;
 
-              _position += timeHeight(
-                  ConvertDuration.toShortTime(timeOfDateTime(_thisStart)),
-                  ConvertDuration.toShortTime(timeOfDateTime(_thisEnd)),
-                  _fullHeight); // 如果行程還沒開始 => 上方的空間增加
+              if (!isStart) {
+                _position += timeHeight(timeLineStart, timeLineEnd,
+                    _fullHeight); // 如果行程還沒開始 => 上方的空間增加
+              }
             }
 
             if (_endTimeRange.inTime(_thisStart, _thisEnd)) {
