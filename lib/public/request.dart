@@ -1,6 +1,7 @@
 // dart
 import 'dart:convert';
 // flutter
+import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:flutter/material.dart';
 // therd
@@ -175,7 +176,7 @@ class Request {
 
   ShareNoteListModel _shareNoteList;
   NoteListModel _noteList;
-
+  GetNoteModel _getnote;
   bool _isError;
 
   getScheduleGet() => _scheduleGet;
@@ -209,6 +210,7 @@ class Request {
 
   getShareNoteList() => _shareNoteList;
   getNoteList() => _noteList;
+  getNote() => _getnote;
 
   getIsError() => _isError;
 
@@ -494,7 +496,8 @@ class Request {
       _bestFriendList = BestFriendListModel.fromJson(_responseBody);
     }
   }
-   // add_friend ------------------------------------------------------------------------------
+
+  // add_friend ------------------------------------------------------------------------------
   add(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['add'];
     await httpPost(context, data, _url, '新增成功');
@@ -635,6 +638,15 @@ class Request {
     }
   }
 
+  // get -------------------------------------------------------------------------------------
+  noteGet(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['get'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _getnote = GetNoteModel.fromJson(_responseBody);
+    }
+  }
+
   // share ----------------------------------------------------------------------------------------
   noteShare(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['share'];
@@ -646,10 +658,23 @@ class Request {
     String _url = noteUrl['cancel_share'];
     await httpPost(context, data, _url, '已取消');
   }
-  // cancel_share ---------------------------------------------------------------------------------
+
+  // create_new ---------------------------------------------------------------------------------
   createnew(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['create_new'];
     await httpPost(context, data, _url, '新增成功');
+  }
+
+  // edit ---------------------------------------------------------------------------------
+  edit(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['edit'];
+    await httpPost(context, data, _url, '編輯成功');
+  }
+
+  // delete ---------------------------------------------------------------------------------
+  delete(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['delete'];
+    await httpPost(context, data, _url, '刪除成功');
   }
 
   // ACCOUNT ============================================================================================
@@ -686,7 +711,7 @@ class Request {
 
   // ACCOUNT ============================================================================================
   // send_code ----------------------------------------------------------------------------------
-   sendcode(BuildContext context, Map<String, dynamic> data) async {
+  sendcode(BuildContext context, Map<String, dynamic> data) async {
     print(data);
     String _url = accountUrl['send_code'];
     await httpPost(context, data, _url, '發送成功');
@@ -723,6 +748,4 @@ class Request {
     String _url = accountUrl['theme'];
     await httpPost(context, data, _url, '主題設定成功');
   }
-
-
 }
