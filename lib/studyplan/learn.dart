@@ -93,7 +93,7 @@ class Learn extends StatelessWidget {
                 ),
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => App()));
+                    context, MaterialPageRoute(builder: (context) => NoteListPage()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
