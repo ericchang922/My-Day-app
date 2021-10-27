@@ -34,7 +34,7 @@ dependencies:
   dio: any
   keyboard_avoider: ^0.1.2
   numberpicker: ^2.0.1
-
+  image_picker: ^0.5.0+3
 
 
   # The following adds the Cupertino Icons font to your application.
