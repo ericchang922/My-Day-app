@@ -1,48 +1,167 @@
-import "package:flutter/material.dart";
-import 'package:flutter/rendering.dart';
-import 'notes_add.dart';
-import 'dart:ui';
 
-class App extends StatelessWidget {
-  const App({Key key}) : super(key: key);
+import 'package:My_Day_app/common_note/common_note_detail_page.dart';
+import 'package:My_Day_app/models/note/note_list_model.dart';
+import 'package:My_Day_app/public/note_request/delete.dart';
+import 'package:My_Day_app/public/note_request/get_list.dart';
+import 'package:My_Day_app/studyplan/note_detail_page.dart';
+import 'package:My_Day_app/studyplan/notes_add.dart';
+import 'package:My_Day_app/studyplan/notes_edit.dart';
+import 'package:flutter/material.dart';
+import 'package:My_Day_app/main.dart';
 
+AppBar noteListAppBar(context) {
+  return null;
+}
+
+class NoteListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return App2();
+    return NoteListWidget();
   }
 }
 
-class App2 extends StatefulWidget {
-  App2({Key key}) : super(key: key);
-
+class NoteListWidget extends StatefulWidget {
   @override
-  Notes createState() => Notes();
+  _NoteListState createState() => new _NoteListState();
 }
 
-class Notes extends State<App2> with SingleTickerProviderStateMixin {
-  // List _page=[Home3(),Home2(),Home4()];
-  // int index=0;
-  TabController con;
-
+class _NoteListState extends State<NoteListWidget> with RouteAware {
+  NoteListModel _noteListModel;
+  String uid = 'lili123';
+  
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    con = new TabController(length: 3, vsync: this);
+    _getNoteListRequest();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    con.dispose();
+    routeObserver.unsubscribe(this);
   }
 
   @override
+  void didPopNext() {
+  
+    _getNoteListRequest();
+  }
+
+  _getNoteListRequest() async {
+    // var response = await rootBundle.loadString('assets/json/group_list.json');
+    // var responseBody = json.decode(response);
+
+    NoteListModel _request = await GetList(uid: uid).getData();
+
+    setState(() {
+      _noteListModel = _request;
+    });
+  }
+  
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SafeArea(
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
+    double _listPaddingH = _width * 0.06;
+    double _widthSize = _width * 0.01;
+    double _textL = _height * 0.03;
+    double _textBT = _height * 0.02;
+    double _subtitleT = _height * 0.005;
+
+    double _appBarSize = _width * 0.052;
+    double _p2Size = _height * 0.02;
+    double _pSize = _height * 0.023;
+    double _titleSize = _height * 0.025;
+    double _subtitleSize = _height * 0.02;
+    double _typeSize = _width * 0.045;
+
+    Color _bule = Color(0xff7AAAD8);
+    Color _gray = Color(0xff959595);
+    Color _color = Theme.of(context).primaryColor;
+    List<String> _list = ["Apple", "Ball", "Cat", "Dog", "Elephant"];
+    Widget noteListWiget;
+
+    _submitDelete(int noteNum) async {
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return DeleteNote(uid: uid, noteNum: noteNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+    _popupMenu(String id, int noteNum) {
+      if (id == uid) {
+        return PopupMenuButton(
+          offset: Offset(-40, 0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_height * 0.01)),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: 1,
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Text("刪除",
+                        style: TextStyle(fontSize: _subtitleSize))),
+              ),
+            ];
+          },
+          onSelected: (int value) async {
+            if (await _submitDelete(noteNum) != true) {
+              _getNoteListRequest()();
+            }
+          },
+        );
+      }
+    }
+
+      Widget noteList = ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _noteListModel.note.length,
+        itemBuilder: (BuildContext context, int index) {
+          var note = _noteListModel.note[index];
+          return ListTile(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          NoteDetailPage(uid,note.noteNum)));
+            },
+            title: Text(
+              '${note.title} ',
+              style: TextStyle(fontSize: _titleSize),
+            ),
+            trailing: _popupMenu(uid, note.noteNum),
+                );
+        },
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+      );
+
+      Widget noGroup = Center(child: Text('目前沒有任何筆記喔！'));
+
+       if (_noteListModel.note.length != 0) {
+        noteListWiget = ListView(
+          padding: EdgeInsets.only(top: _width * 0.03),
+          children: [noteList],
+        );
+      } else
+        noteListWiget = noGroup;
+
+      return SafeArea(
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Color(0xffF86D67),
@@ -65,160 +184,42 @@ class Notes extends State<App2> with SingleTickerProviderStateMixin {
                 ),
               ],
             ),
-            body:
-                // SingleChildScrollView(
-                //   child: Column(children: [
-                // Home(),
-                ExamplePage(),
-          ),
-        ));
+        body: Container(child: noteListWiget
+    //   child: ReorderableListView(
+    //     children: _list
+    //         .map((item) => ListTile(
+    //               key: Key("${item}"),
+    //               title: Text("${item}"),
+    //               trailing: Icon(Icons.menu),
+    //             ))
+    //         .toList(),
+    //     onReorder: (int start, int current) {
+    //       // dragging from top to bottom
+    //       if (start < current) {
+    //         int end = current - 1;
+    //         String startItem = _list[start];
+    //         int i = 0;
+    //         int local = start;
+    //         do {
+    //           _list[local] = _list[++local];
+    //           i++;
+    //         } while (i < end - start);
+    //         _list[end] = startItem;
+    //       }
+    //       // dragging from bottom to top
+    //       else if (start > current) {
+    //         String startItem = _list[start];
+    //         for (int i = start; i > current; i--) {
+    //           _list[i] = _list[i - 1];
+    //         }
+    //         _list[current] = startItem;
+    //       }
+    //       setState(() {});
+    //     },
+    //   ),
+    // )
+      )));
+    } 
   }
-}
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
 
-class _HomeState extends State<Home> {
-  List<int> mList = new List();
-  List<ExpandState> expandStateList = new List();
-
-  void initState() {
-    for (int i = 0; i < 1; i++) {
-      mList.add(i);
-      expandStateList.add(ExpandState(i, false));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-        child: ExpansionPanelList(
-          elevation: 0,
-          expansionCallback: (index, bool) {
-            //回调
-            setState(() {
-              expandStateList[index].isOpen = !expandStateList[index].isOpen;
-            });
-          },
-          children: mList.map((index) {
-            return ExpansionPanel(
-                headerBuilder: (context, isExpanded) {
-                  Divider(
-                    color: Color(0xffcccccc),
-                    height: 1,
-                  );
-                  return Container(
-                      margin: EdgeInsets.only(right: 15, left: 35, top: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text.rich(TextSpan(
-                            children: <InlineSpan>[
-                              WidgetSpan(
-                                child: new Image.asset(
-                                  "assets/images/search.png",
-                                  width: 20,
-                                ),
-                              ),
-                              TextSpan(
-                                  text: 'xxxxxx',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  )),
-                            ],
-                          )),
-                        ],
-                      ));
-                },
-                body: Container(
-                    margin: EdgeInsets.only(top: 10, left: 20, right: 15),
-                    child: SizedBox(
-                      height: 40,
-                      width: double.infinity,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.black,
-                        ),
-                        onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              '國文 1~3 課',
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            Icon(
-                              Icons.menu,
-                              color: Color(0xffE3E3E3),
-                            )
-                          ],
-                        ),
-                      ),
-                    )),
-                isExpanded: expandStateList[index].isOpen);
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}
-
-class ExpandState {
-  var isOpen;
-  var index;
-  ExpandState(this.index, this.isOpen);
-}
-
-class ExamplePage extends StatefulWidget {
-  ExamplePage({Key key}) : super(key: key);
-  @override
-  _ExamplePageState createState() => _ExamplePageState();
-}
-
-class _ExamplePageState extends State<ExamplePage> {
-  List<String> _list = ["Apple", "Ball", "Cat", "Dog", "Elephant"];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      child: ReorderableListView(
-        children: _list
-            .map((item) => ListTile(
-                  key: Key("${item}"),
-                  title: Text("${item}"),
-                  trailing: Icon(Icons.menu),
-                ))
-            .toList(),
-        onReorder: (int start, int current) {
-          // dragging from top to bottom
-          if (start < current) {
-            int end = current - 1;
-            String startItem = _list[start];
-            int i = 0;
-            int local = start;
-            do {
-              _list[local] = _list[++local];
-              i++;
-            } while (i < end - start);
-            _list[end] = startItem;
-          }
-          // dragging from bottom to top
-          else if (start > current) {
-            String startItem = _list[start];
-            for (int i = start; i > current; i--) {
-              _list[i] = _list[i - 1];
-            }
-            _list[current] = startItem;
-          }
-          setState(() {});
-        },
-      ),
-    ));
-  }
-}
