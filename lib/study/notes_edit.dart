@@ -1,33 +1,93 @@
 // import 'package:My_Day_app/main.dart';
+import 'dart:convert';
+
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/public/note_request/create_new.dart';
-import 'package:My_Day_app/study/note_fail.dart';
+import 'package:My_Day_app/public/note_request/get.dart';
+import 'package:My_Day_app/studyplan/note_fail.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+class NotesEditPage extends StatefulWidget {
+  int noteNum;
+  String uid;
+  NotesEditPage();
 
-
-
-class NotesAddPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset:false,
-        
-      
-    ));
-  }
-   @override
-  NotesAddPageWidget createState() => new NotesAddPageWidget();
+  _NotesEditPage createState() => new _NotesEditPage();
 }
 
-enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
+class _NotesEditPage extends State<NotesEditPage> with RouteAware {
+   int noteNum;
+  String uid;
+  _NotesEditPage();
 
-class NotesAddPageWidget extends State<NotesAddPage> {
-  
+  GetNoteModel _getNote;
+
+  @override
+  void initState() {
+    super.initState();
+    _getNoteRequest();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
+
+  @override
+  void didPopNext() {
+    _getNoteRequest();
+  }
+
+  _getNoteRequest() async {
+    var response = await rootBundle.loadString('assets/json/get_note.json');
+    var responseBody = json.decode(response);
+
+    GetNoteModel _request = await Get(uid: uid, noteNum: noteNum).getData();
+
+    setState(() {
+      _getNote = _request;
+    });
+  }
+
+  getImage(String imageString) {
+    bool isGetImage;
+    
+    const Base64Codec base64 = Base64Codec();
+    Image image = Image.memory(
+      base64.decode(imageString),
+    );
+    var resolve = image.image.resolve(ImageConfiguration.empty);
+    resolve.addListener(ImageStreamListener((_, __) {
+      isGetImage = true;
+    }, onError: (Object exception, StackTrace stackTrace) {
+      isGetImage = false;
+      print('error');
+    }));
+
+    if (isGetImage == null) {
+      return image;
+    } else {
+      return 
+      Center(
+        child: Text('無法讀取'),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +103,7 @@ class NotesAddPageWidget extends State<NotesAddPage> {
           resizeToAvoidBottomInset:false,
         appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
-          title: Text('新增筆記', style: TextStyle(fontSize: 20)),
+          title: Text('編輯筆記', style: TextStyle(fontSize: 20)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
@@ -108,7 +168,7 @@ class _NotesAdd extends State< NotesAdd> {
     double _width = size.width;
     double _iconWidth = _width * 0.05;
 
-    _submit() async { 
+_submit() async { 
       String uid = noteid;
       String typeName = notetypeName.text;
       String title = notetitle.text;
