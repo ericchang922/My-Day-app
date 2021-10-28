@@ -15,13 +15,18 @@ double timeHeight(String start, String end, double fullHeight) {
 
 class Create {
   BuildContext context;
+  Size _size;
   double height;
   double width;
   Color _topColor = Color(0xffF6E0A4);
   Color _weekDayColor = Color(0xffF6F6F6);
   Color _sectionColor = Color(0xffFFFAF0);
 
-  Create({this.context, this.height = 0, this.width = 0});
+  Create({this.context}){
+    _size = MediaQuery.of(context).size;
+    height = _size.height;
+    width = _size.width;
+  }
 
   static Container _createTableRow(String txt, Color bkcolor, double _height) =>
       Container(

@@ -9,20 +9,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class EditCommonStudyPlanPage extends StatefulWidget {
+class EditStudyPlanPage extends StatefulWidget {
   int studyplanNum;
   int groupNum;
-  EditCommonStudyPlanPage(this.studyplanNum, this.groupNum);
+  EditStudyPlanPage(this.studyplanNum, this.groupNum);
 
   @override
-  _EditCommonStudyPlanPage createState() =>
-      new _EditCommonStudyPlanPage(studyplanNum, groupNum);
+  _EditStudyPlanPage createState() =>
+      new _EditStudyPlanPage(studyplanNum, groupNum);
 }
 
-class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
+class _EditStudyPlanPage extends State<EditStudyPlanPage> {
   int studyplanNum;
   int groupNum;
-  _EditCommonStudyPlanPage(this.studyplanNum, this.groupNum);
+  _EditStudyPlanPage(this.studyplanNum, this.groupNum);
 
   StudyplanModel _getStudyplan;
 
@@ -376,7 +376,7 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                         _addSubject = true;
                     } else if (!isStart &&
                         value.isAfter(_subjectTimeList[index].first) &&
-                        value.isBefore(_subjectTimeList[index + 1].last)) {
+                        value.isBefore(_subjectTimeList[index].last)) {
                       _dateTime = value;
                       if (_dateTime ==
                           (DateTime(_date.year, _date.month, _date.day, 24, 0)))
@@ -658,6 +658,9 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                       onChanged: (text) {
                         setState(() {
                           _subjectNameList[index] = text;
+                          _endDateTime =
+                              _subjectTimeList[_subjectTimeList.length - 1]
+                                  .last;
                         });
                       },
                     ),
@@ -754,7 +757,7 @@ class _EditCommonStudyPlanPage extends State<EditCommonStudyPlanPage> {
                                   .last;
                           _startDateTime = _subjectTimeList[0].first;
                           for (int i = 0; i < _subjectTimeList.length; i++) {
-                            if (i != 0 && i != _subjectTimeList.length - 1) {
+                            if (i != 0 && i != _subjectTimeList.length) {
                               _subjectTimeList[i].first =
                                   _subjectTimeList[i - 1].last;
                             }

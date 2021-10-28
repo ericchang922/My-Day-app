@@ -1,8 +1,11 @@
 // dart
 import 'dart:convert';
 // flutter
-import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
+import 'package:My_Day_app/models/timetable/sharecode_model.dart';
+import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:http/http.dart' as http;
@@ -104,7 +107,11 @@ class Request {
     'delete_best': '$host${path['friend']}/delete_best/'
   };
   static Map timetableUrl = {
-    'main_timetable_list': '${path['timetable']}/main_timetable_list/'
+    'main_timetable_list': '${path['timetable']}/main_timetable_list/',
+    'get_timetable_list': '${path['timetable']}/get_timetable_list/',
+    'get_timetable': '${path['timetable']}/get_timetable/',
+    'get_section_time': '${path['timetable']}/get_section_time/',
+    'get_sharecode': '${path['timetable']}/get_sharecode/'
   };
   static Map voteUrl = {
     'create_new': '$host${path['vote']}/create_new/',
@@ -165,6 +172,8 @@ class Request {
   BestFriendListModel _bestFriendList;
 
   MainTimetableListGet _mainTimetableListGet;
+  TimetableListModel _timetableList;
+  SharecodeModel _sharecodeModel;
 
   VoteListModel _voteList;
   VoteEndListModel _voteEndList;
@@ -173,6 +182,8 @@ class Request {
   StudyplanModel _studyplan;
   ShareStudyplanListModel _shareStudyplanList;
   PersonalShareStudyplanListModel _personalShareStudyplanList;
+  StudyplanListModel _studyplanList;
+  GroupStudyplanListModel _groupStudyplanList;
 
   ShareNoteListModel _shareNoteList;
   NoteListModel _noteList;
@@ -199,6 +210,8 @@ class Request {
   getBestFriendGet() => _bestFriendList;
 
   getMainTimetableListGet() => _mainTimetableListGet;
+  getTimetableList() => _timetableList;
+  getSharecode() => _sharecodeModel;
 
   getVoteList() => _voteList;
   getVoteEndList() => _voteEndList;
@@ -207,6 +220,8 @@ class Request {
   getStudyplan() => _studyplan;
   getShareStudyplanList() => _shareStudyplanList;
   getPersonalShareStudyplanList() => _personalShareStudyplanList;
+  getStudyplanList() => _studyplanList;
+  getGroupStudyplanList() => _groupStudyplanList;
 
   getShareNoteList() => _shareNoteList;
   getNoteList() => _noteList;
@@ -221,7 +236,6 @@ class Request {
     } catch (error) {
       print('error: ${utf8.decode(response.bodyBytes)}');
     }
-    ;
 
     if (responseBody != null) {
       if (responseBody['response'] == false) {
@@ -512,6 +526,23 @@ class Request {
     }
   }
 
+  timetableList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = timetableUrl['get_timetable_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _timetableList = TimetableListModel.fromJson(_responseBody);
+    }
+  }
+
+  sharecode(BuildContext context, Map<String, dynamic> data) async {
+    String _url = timetableUrl['get_sharecode'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _sharecodeModel = SharecodeModel.fromJson(_responseBody);
+    }
+  }
+
+
   // VOTE ==============================================================================================
   // vote_list ------------------------------------------------------------------------------------
   voteList(BuildContext context, Map<String, dynamic> data) async {
@@ -598,6 +629,30 @@ class Request {
       _personalShareStudyplanList =
           PersonalShareStudyplanListModel.fromJson(_responseBody);
     }
+  }
+
+  // personal_list --------------------------------------------------------------------------
+  studyplanPersonalList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['personal_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _studyplanList = StudyplanListModel.fromJson(_responseBody);
+    }
+  }
+
+  // group_list --------------------------------------------------------------------------
+  studyplanGroupList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['group_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _groupStudyplanList = GroupStudyplanListModel.fromJson(_responseBody);
+    }
+  }
+
+  // delete --------------------------------------------------------------------------------------
+  studyplanDelete(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['delete'];
+    await httpDelete(context, data, _url, '刪除成功');
   }
 
   // sharing --------------------------------------------------------------------------------------

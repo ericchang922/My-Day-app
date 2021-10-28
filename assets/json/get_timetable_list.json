@@ -1,0 +1,15 @@
+{
+    "timetable": [
+        {
+            "schoolYear": "100",
+            "semester": "1",
+            "timetableNo": 85
+        },
+        {
+            "schoolYear": "100",
+            "semester": "2",
+            "timetableNo": 84
+        }
+    ],
+    "response": true
+}

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/common_studyplan/studyplan_detail_page.dart';
+import 'package:My_Day_app/study/studyplan_detail_page.dart';
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
 import 'package:My_Day_app/public/studyplan_request/one_group_list.dart';
 import 'package:My_Day_app/common_studyplan/share_studyplan_page.dart';
@@ -207,8 +207,8 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
                       _popupMenu(studyplan.creatorId, studyplan.studyplanNum),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            StudyplanDetailPage(studyplan.studyplanNum, typeId, groupNum)));
+                        builder: (context) => StudyplanDetailPage(
+                            studyplan.studyplanNum, typeId, groupNum, true)));
                   },
                 );
               },

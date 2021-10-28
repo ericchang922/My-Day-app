@@ -1,0 +1,84 @@
+{
+    "pastStudyplan": [
+        {
+            "groupNum": 11,
+            "groupName": "學生會",
+            "studyplanCount": 2,
+            "studyplanContent": [
+                {
+                    "studyplanNum": 2,
+                    "title": "複習英文文法",
+                    "date": "2021-10-10",
+                    "startTime": "2021-10-10T09:00:00",
+                    "endTime": "2021-10-10T21:00:00"
+                },
+                {
+                    "studyplanNum": 100,
+                    "title": "英文複習",
+                    "date": "2021-07-12",
+                    "startTime": "2021-07-12T10:00:00",
+                    "endTime": "2021-07-12T20:00:00"
+                }
+            ]
+        },
+        {
+            "groupNum": 64,
+            "groupName": "郊遊",
+            "studyplanCount": 1,
+            "studyplanContent": [
+                {
+                    "studyplanNum": 86,
+                    "title": "英文總複習",
+                    "date": "2021-08-14",
+                    "startTime": "2021-08-14T10:00:00",
+                    "endTime": "2021-08-14T23:00:00"
+                }
+            ]
+        },
+        {
+            "groupNum": 201,
+            "groupName": "專題",
+            "studyplanCount": 1,
+            "studyplanContent": [
+                {
+                    "studyplanNum": 94,
+                    "title": "多益練習",
+                    "date": "2021-10-05",
+                    "startTime": "2021-10-05T10:00:00",
+                    "endTime": "2021-10-05T20:00:00"
+                }
+            ]
+        }
+    ],
+    "futureStudyplan": [
+        {
+            "groupNum": 11,
+            "groupName": "學生會",
+            "studyplanCount": 1,
+            "studyplanContent": [
+                {
+                    "studyplanNum": 7,
+                    "title": "小考複習",
+                    "date": "2022-05-05",
+                    "startTime": "2022-05-05T18:00:00",
+                    "endTime": "2022-05-05T23:00:00"
+                }
+            ]
+        },
+        {
+            "groupNum": 199,
+            "groupName": "準備考試~",
+            "studyplanCount": 1,
+            "studyplanContent": [
+                {
+                    "studyplanNum": 93,
+                    "title": "複習英文文法",
+                    "date": "2021-11-13",
+                    "startTime": "2021-11-13T09:01:00",
+                    "endTime": "2021-11-13T21:00:00"
+                }
+            ]
+        }
+    ],
+    "response": true
+}
