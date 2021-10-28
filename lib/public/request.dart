@@ -1,6 +1,7 @@
 // dart
 import 'dart:convert';
 // flutter
+import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
