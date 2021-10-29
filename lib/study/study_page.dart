@@ -65,8 +65,8 @@ class _StudyPage extends State<StudyPage> {
               color: _lightGray,
             ),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => App()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NoteListWidget()));
             },
           ),
         ],
