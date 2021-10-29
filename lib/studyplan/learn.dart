@@ -2,12 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
+import 'package:My_Day_app/study/notes.dart';
+import 'package:My_Day_app/study/studyplan_list_page.dart';
 import 'package:flutter/material.dart';
-
-import 'notes.dart';
-import 'readplan.dart';
-
 
 AppBar learnAppBar = AppBar(
   backgroundColor: Color(0xffF86D67),
@@ -19,19 +16,17 @@ class LearnPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        platform: TargetPlatform.iOS,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: Scaffold(
-        body: Learn(),
-      ),
-    ));
+        theme: ThemeData(
+          platform: TargetPlatform.iOS,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: SafeArea(
+          child: Scaffold(
+            body: Learn(),
+          ),
+        ));
   }
 }
-
-
 
 class Learn extends StatelessWidget {
   get child => null;
@@ -46,33 +41,35 @@ class Learn extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
-           child: SizedBox(
-              height: 60,
-              width: double.infinity,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.black,
-                ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) =>  ReadPlan()));
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    '讀書計畫',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+            child: SizedBox(
+                height: 60,
+                width: double.infinity,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.black,
                   ),
-                  Icon(
-                    Icons.chevron_right,
-                    color: Color(0xffE3E3E3),
-                  )
-                ],
-              ),
-            )),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StudyplanListPage()));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        '讀書計畫',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        color: Color(0xffE3E3E3),
+                      )
+                    ],
+                  ),
+                )),
           ),
           Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -85,32 +82,34 @@ class Learn extends StatelessWidget {
             margin: EdgeInsets.only(right: 5, left: 28),
             // ignore: deprecated_member_use
             child: SizedBox(
-              height: 60,
-              width: double.infinity,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.black,
-                ),
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => NoteListPage()));
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    '筆記',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                height: 60,
+                width: double.infinity,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.black,
                   ),
-                  Icon(
-                    Icons.chevron_right,
-                    color: Color(0xffE3E3E3),
-                  )
-                ],
-              ),
-            )),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NoteListPage()));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        '筆記',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        color: Color(0xffE3E3E3),
+                      )
+                    ],
+                  ),
+                )),
           ),
           Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -124,4 +123,3 @@ class Learn extends StatelessWidget {
     ));
   }
 }
-
