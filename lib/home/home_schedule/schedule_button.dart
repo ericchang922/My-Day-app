@@ -65,6 +65,7 @@ class ScheduleButton {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
                       typeColor(_scheduleType))),
+              onPressed: () {},
             ),
           ));
         } else {
