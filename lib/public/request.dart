@@ -1,12 +1,8 @@
 // dart
 import 'dart:convert';
 // flutter
-import 'package:My_Day_app/models/note/get_note_model.dart';
-import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
-import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
-import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
-import 'package:My_Day_app/models/timetable/sharecode_model.dart';
-import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
+
+import 'package:My_Day_app/models/timetable/section_time_model.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:http/http.dart' as http;
@@ -35,6 +31,12 @@ import 'package:My_Day_app/models/vote/vote_list_model.dart';
 import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
+import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
+import 'package:My_Day_app/models/timetable/sharecode_model.dart';
+import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
 
 class Request {
   static const host = 'http://myday.sytes.net';
@@ -112,7 +114,8 @@ class Request {
     'get_timetable_list': '${path['timetable']}/get_timetable_list/',
     'get_timetable': '${path['timetable']}/get_timetable/',
     'get_section_time': '${path['timetable']}/get_section_time/',
-    'get_sharecode': '${path['timetable']}/get_sharecode/'
+    'get_sharecode': '${path['timetable']}/get_sharecode/',
+    'get_section_time': '${path['timetable']}/get_section_time'
   };
   static Map voteUrl = {
     'create_new': '$host${path['vote']}/create_new/',
@@ -175,6 +178,7 @@ class Request {
   MainTimetableListGet _mainTimetableListGet;
   TimetableListModel _timetableList;
   SharecodeModel _sharecodeModel;
+  SectionTime _sectionTime;
 
   VoteListModel _voteList;
   VoteEndListModel _voteEndList;
@@ -213,6 +217,7 @@ class Request {
   getMainTimetableListGet() => _mainTimetableListGet;
   getTimetableList() => _timetableList;
   getSharecode() => _sharecodeModel;
+  getSectionTime() => _sectionTime;
 
   getVoteList() => _voteList;
   getVoteEndList() => _voteEndList;
@@ -543,6 +548,13 @@ class Request {
     }
   }
 
+  sectionTime(BuildContext context, Map<String, dynamic> data) async {
+    String _url = timetableUrl['get_section_time'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _sectionTime = SectionTime.fromJson(_responseBody);
+    }
+  }
 
   // VOTE ==============================================================================================
   // vote_list ------------------------------------------------------------------------------------
