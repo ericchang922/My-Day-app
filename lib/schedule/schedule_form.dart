@@ -1,5 +1,7 @@
 // flutter
-
+import 'package:My_Day_app/home/home_page_functions.dart';
+import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/schedule_request/get_list.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +10,7 @@ import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/schedule_request/create_new.dart';
 import 'package:My_Day_app/public/schedule_request/edit.dart';
 import 'package:My_Day_app/schedule/remind_item.dart';
+import 'package:localstorage/localstorage.dart';
 
 List<String> weekdayName = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
 
@@ -23,17 +26,18 @@ class ScheduleForm extends StatefulWidget {
   bool isCountdown;
   String remark;
 
-  ScheduleForm(
-      {String submitType = 'create_new',
-      int scheduleNum,
-      String title,
-      DateTime startDateTime,
-      DateTime endDateTime,
-      int type,
-      String location,
-      List remindTimeList,
-      bool isCountdown = false,
-      String remark}) {
+  ScheduleForm({
+    String submitType = 'create_new',
+    int scheduleNum,
+    String title,
+    DateTime startDateTime,
+    DateTime endDateTime,
+    int type,
+    String location,
+    List remindTimeList,
+    bool isCountdown = false,
+    String remark,
+  }) {
     this.submitType = submitType;
     this.scheduleNum = scheduleNum;
     this.title = title;
@@ -61,6 +65,8 @@ class ScheduleForm extends StatefulWidget {
 }
 
 class _ScheduleForm extends State<ScheduleForm> {
+  LocalStorage localStorage = LocalStorage('week');
+
   int scheduleNum;
   String _submitType;
   Map _submitMap = {'create_new': 1, 'edit': 2};
@@ -104,6 +110,9 @@ class _ScheduleForm extends State<ScheduleForm> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime _semesterStart = DateTime.parse(localStorage.getItem('start'));
+    DateTime _semesterEnd = DateTime.parse(localStorage.getItem('end'));
+
     _titleController.text = _title;
     _locationController.text = _location;
     _remarkController.text = _remark;
@@ -123,6 +132,7 @@ class _ScheduleForm extends State<ScheduleForm> {
 
     double _paddingLR = _width * 0.06;
     double _paddingTB = _width * 0.03;
+    double _timePaddingLR = _width * 0.02; //時間選擇區域padding
     double _listPaddingLR = _width * 0.1;
     double _listItemHeight = _height * 0.08;
 
@@ -131,7 +141,15 @@ class _ScheduleForm extends State<ScheduleForm> {
     double _h2Size = _height * 0.03;
     double _pSize = _height * 0.025;
     double _pickerTextSize = _height * 0.02;
-    double _timeSize = _width * 0.045;
+    double _weekSize = _width * 0.04; // 第幾週字體大小
+    double _timeSize = _width * 0.04;
+
+    String _startWeek = ConvertInt.toChineseWeek(
+        getMon(_startDateTime).difference(getMon(_semesterStart)).inDays ~/ 7 +
+            1);
+    String _endWeek = ConvertInt.toChineseWeek(
+        getMon(_endDateTime).difference(getMon(_semesterStart)).inDays ~/ 7 +
+            1);
 
     String _startView = _allDay
         ? '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]}'
@@ -156,6 +174,16 @@ class _ScheduleForm extends State<ScheduleForm> {
         ? null
         : TextStyle(fontSize: _h2Size, color: Colors.grey);
 
+    int _totalWeek =
+        getMon(_semesterEnd).difference(getMon(_semesterStart)).inDays ~/ 7 + 1;
+
+    List<Widget> _totalWeekList = [];
+    for (int i = 0; i < _totalWeek; i++) {
+      _totalWeekList.add(Text(
+        ConvertInt.toChineseWeek(i + 1),
+        style: TextStyle(color: _color),
+      ));
+    }
     // _submit -----------------------------------------------------------------------------------------
     _submit() async {
       String _alertTitle = '新增行程失敗';
@@ -307,7 +335,7 @@ class _ScheduleForm extends State<ScheduleForm> {
       );
     }
 
-    void _timePicker(context, index) {
+    void _timePicker(context) {
       _remindTime = Duration(hours: 0, minutes: 0);
       showCupertinoModalPopup(
         context: context,
@@ -364,6 +392,51 @@ class _ScheduleForm extends State<ScheduleForm> {
       );
     }
 
+    void _weekPicker(BuildContext context, bool isStart) {
+      showCupertinoModalPopup(
+          context: context,
+          builder: (_) => Container(
+                height: _height * 0.4,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Container(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: CupertinoButton(
+                          child: Text('確定', style: TextStyle(color: _color)),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: _height * 0.28,
+                      child: CupertinoPicker(
+                        backgroundColor: Colors.white,
+                        itemExtent: 30,
+                        scrollController:
+                            FixedExtentScrollController(initialItem: 1),
+                        children: _totalWeekList,
+                        onSelectedItemChanged: (int value) {
+                          setState(() {
+                            if (isStart) {
+                              _startWeek = ConvertInt.toChineseWeek(value);
+                              _startDateTime = getMon(_semesterStart)
+                                  .add(Duration(days: value * 7));
+                            } else {
+                              _endWeek = ConvertInt.toChineseWeek(value);
+                              _endDateTime = getMon(_semesterStart)
+                                  .add(Duration(days: value * 7));
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ));
+    }
+
     // createScheduleList ------------------------------------------------------------------------------
     Widget createScheduleList = ListView(
       children: [
@@ -414,11 +487,22 @@ class _ScheduleForm extends State<ScheduleForm> {
                 // 開始-------------------------------------------------------
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(_paddingLR, 0, _paddingLR, 0),
+                    padding: EdgeInsets.fromLTRB(
+                        _timePaddingLR, 0, _timePaddingLR * 0.5, 0),
                     child: Text(
                       '開始',
                       style: TextStyle(fontSize: _pSize),
                     ),
+                  ),
+                  TextButton(
+                    child: Text(
+                      _startWeek,
+                      style: TextStyle(
+                          fontSize: _weekSize,
+                          color: _color,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    onPressed: () => _weekPicker(context, true),
                   ),
                   TextButton(
                     child: Text(
@@ -438,11 +522,22 @@ class _ScheduleForm extends State<ScheduleForm> {
                 // 結束 ------------------------------------------------------
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(_paddingLR, 0, _paddingLR, 0),
+                    padding: EdgeInsets.fromLTRB(
+                        _timePaddingLR, 0, _timePaddingLR * 0.5, 0),
                     child: Text(
                       '結束',
                       style: TextStyle(fontSize: _pSize),
                     ),
+                  ),
+                  TextButton(
+                    child: Text(
+                      _endWeek,
+                      style: TextStyle(
+                          fontSize: _weekSize,
+                          color: _color,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    onPressed: () => _weekPicker(context, false),
                   ),
                   TextButton(
                     child: Text(
@@ -491,7 +586,7 @@ class _ScheduleForm extends State<ScheduleForm> {
           ),
         ),
 
-        // dropdown buttn ------------------------------------------------------------------------- type
+        // dropdown button ------------------------------------------------------------------------- type
         Padding(
           padding: EdgeInsets.fromLTRB(_listPaddingLR, 0, _listPaddingLR, 0),
           child: Container(
@@ -642,7 +737,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                     IconButton(
                         onPressed: () {
                           FocusScope.of(context).requestFocus(FocusNode());
-                          _timePicker(context, 0);
+                          _timePicker(context);
                         },
                         icon:
                             Icon(Icons.add, size: _h2Size * 1.2, color: _color))
@@ -743,7 +838,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                       width: _bottomIconWidth,
                     ),
                     fillColor: _light,
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(context, 'return'),
                   ),
                 ),
               ), // 取消按鈕
@@ -758,11 +853,14 @@ class _ScheduleForm extends State<ScheduleForm> {
                     ),
                     fillColor: _color,
                     onPressed: () async {
-                      if (await _submit() != true) {
-                        Navigator.pop(context);
+                      if (_startDateTime.isBefore(_endDateTime)) {
+                        if (await _submit() != true) {
+                          Navigator.pop(context,
+                              GetList(context: context, uid: 'amy123'));
+                        }
+                      }else{
+                        alert(context, '時間錯誤', '結束時間必須在開始時間之後');
                       }
-
-                      // if (await _submit() != true) Navigator.pop(context);
                     },
                   ),
                 ),

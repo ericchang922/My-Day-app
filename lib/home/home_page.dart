@@ -1,8 +1,13 @@
 // flutter
+import 'package:My_Day_app/models/timetable/section_time_model.dart';
 import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/time_range.dart';
+import 'package:My_Day_app/public/timetable_request/get_section_time.dart';
+import 'package:My_Day_app/public/timetable_request/get_timetable_list.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
+import 'package:localstorage/localstorage.dart';
 // my day
 import 'package:My_Day_app/my_day_icon.dart';
 import 'package:My_Day_app/public/schedule_request/get_list.dart';
@@ -20,12 +25,51 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  LocalStorage weekStorage = LocalStorage('week');
+
+  String _uid = 'amy123';
+
+  Future<MainTimetableListGet> getTimetableData() async {
+    MainTimetableList request = MainTimetableList(context: context, uid: _uid);
+    MainTimetableListGet _data = await request.getData();
+
+    await weekStorage.setItem('start', _data.timetable[0].startDate.toString());
+    await weekStorage.setItem('end', _data.timetable[0].endDate.toString());
+    return _data;
+  }
+
+  Future<ScheduleGetList> getScheduleList() async {
+    GetList request = GetList(context: context, uid: _uid);
+    ScheduleGetList _data = await request.getData();
+    return _data;
+  }
+
+  Future<SectionTime> getSectionTime() async {
+    GetSectionTime request = GetSectionTime(context: context, uid: _uid);
+    SectionTime _data = await request.getData();
+    return _data;
+  }
+
   double _fabDimension = 56.0;
+
   @override
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
+    HomePageBody homePageBody = new HomePageBody(
+      futureTimetableData: getTimetableData(),
+      futureScheduleList: getScheduleList(),
+      futureSectionTime: getSectionTime(),
+    );
+
     return Scaffold(
-      body: HomePageBody(),
+      body: homePageBody,
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+      //   onPressed: () => Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => CreateSchedule()),
+      //       (route) => false),
+      // ),
       floatingActionButton: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (BuildContext context, VoidCallback _) {
@@ -48,11 +92,17 @@ class _HomePage extends State<HomePage> {
             ),
           );
         },
+        onClosed: (value) {
+          homePageBody = new HomePageBody(
+            futureTimetableData: getTimetableData(),
+            futureScheduleList: getScheduleList(),
+          );
+          print(value);
+        },
       ),
     );
   }
 }
-
 
 AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
   Color color = Theme.of(context).primaryColor;
@@ -99,22 +149,31 @@ AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
 }
 
 class HomePageBody extends StatefulWidget {
+  Future<MainTimetableListGet> futureTimetableData;
+  Future<ScheduleGetList> futureScheduleList;
+  Future<SectionTime> futureSectionTime;
+
+  HomePageBody(
+      {this.futureTimetableData,
+      this.futureScheduleList,
+      this.futureSectionTime});
   @override
   State<HomePageBody> createState() => _HomePageBody();
 }
 
 class _HomePageBody extends State<HomePageBody> {
-  String _uid = 'amy123';
   Future<bool> _isOk;
-  Future<MainTimetableListGet> _futureData;
-  Future<ScheduleGetList> _futureScheduleList;
+
   MainTimetableListGet _data;
   ScheduleGetList _scheduleList;
+  SectionTime _sectionTime;
+
   DateTime now = DateTime.now();
   int homeIndex = 4;
   PageController pageController;
   List<DateTime> mondayList = [];
   List<ScheduleTable> pageList = [];
+
   List<Map<String, String>> sectionList = [
     {'start': '08:10', 'end': '09:00'},
     {'start': '09:10', 'end': '10:00'},
@@ -126,16 +185,7 @@ class _HomePageBody extends State<HomePageBody> {
   ];
   FloatingActionButton _floatingActionButton;
 
-  Future<MainTimetableListGet> getThisData() async {
-    MainTimetableList request = MainTimetableList(context: context, uid: _uid);
-    return request.getData();
-  }
-
-  Future<ScheduleGetList> getScheduleList() async {
-    GetList request = GetList(context: context, uid: _uid);
-    return request.getData();
-  }
-
+  @override
   _getMon(DateTime today) {
     int daysAfter = today.weekday - 1;
     return DateTime.utc(today.year, today.month, today.day - daysAfter);
@@ -192,7 +242,10 @@ class _HomePageBody extends State<HomePageBody> {
     } else {
       setState(() {
         _floatingActionButton = FloatingActionButton(
-            child: Icon(MyDayIcon.home, color: Colors.white,),
+            child: Icon(
+              MyDayIcon.home,
+              color: Colors.white,
+            ),
             backgroundColor: Theme.of(context).primaryColor,
             onPressed: () {
               pageController.animateToPage(homeIndex,
@@ -203,8 +256,22 @@ class _HomePageBody extends State<HomePageBody> {
   }
 
   Future<bool> setTable() async {
-    _scheduleList = await _futureScheduleList;
-    _data = await _futureData;
+    _scheduleList = await widget.futureScheduleList;
+    _data = await widget.futureTimetableData;
+    _sectionTime = await widget.futureSectionTime;
+
+    for (var s in _sectionTime.timetable) {
+      if (TimeRange(DateTime.now()).inTime(s.startDate, s.endDate)) {
+        sectionList = [];
+        for (var sub in s.subject) {
+          sectionList.add({
+            'start': ConvertDuration.toShortTime(sub.startTime),
+            'end': ConvertDuration.toShortTime(sub.endTime)
+          });
+        }
+      }
+      print(sectionList);
+    }
 
     pageList.insert(0, ScheduleTable());
     for (int i = 0; i < mondayList.length; i++) {
@@ -215,7 +282,6 @@ class _HomePageBody extends State<HomePageBody> {
         scheduleList: _scheduleList,
       ));
     }
-
     return true;
   }
 
@@ -226,9 +292,6 @@ class _HomePageBody extends State<HomePageBody> {
     pageController.addListener(() {});
 
     setState(() {
-      _futureScheduleList = getScheduleList();
-      _futureData = getThisData();
-
       mondayList = [
         _getLastWeek(_getLastWeek(_getLastWeek(now))),
         _getLastWeek(_getLastWeek(now)),

@@ -1,5 +1,4 @@
 // flutter
-import 'package:My_Day_app/home/home_schedule/schedule_button.dart';
 import 'package:My_Day_app/public/convert.dart';
 import 'package:My_Day_app/timetable/template/timetable_template.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +43,9 @@ class _ScheduleTable extends State<ScheduleTable> {
   Duration classEnd;
   Duration timeAddNow;
   DateTime check = DateTime.utc(2000, 01, 01, 00, 00);
+
+  DateTime semesterStart = DateTime.now();
+  DateTime semesterEnd = DateTime.now();
 
   _ScheduleTable(this.monday, this.data);
 
@@ -128,12 +130,11 @@ class _ScheduleTable extends State<ScheduleTable> {
     }
 
     _runSection(var d, int count, bool isStart) {
-      semester = '${d.schoolYear}-${d.semester}';
+      semester = '${d.schoolYear}-${d.semester}'; //ex: 110-1
 
       setState(() {
         widget.weekCount =
-            ((getMon(monday).difference(getMon(d.startDate)).inDays / 7) + 1)
-                .toInt();
+            getMon(monday).difference(getMon(d.startDate)).inDays ~/ 7 + 1;
       });
       if (isStart == null) {
         for (var s in d.subject) {
@@ -157,29 +158,31 @@ class _ScheduleTable extends State<ScheduleTable> {
     _getSection() async {
       for (var d in data.timetable) {
         // 週一在開學後，週日在結業前
-        if (!monday.isBefore(d.startDate) &&
-            !monday.add(Duration(days: 6)).isAfter(d.endDate)) {
+        semesterStart = d.startDate;
+        semesterEnd = d.endDate;
+        if (!monday.isBefore(semesterStart) &&
+            !monday.add(Duration(days: 6)).isAfter(semesterEnd)) {
           _runSection(d, null, null);
         } else if (!monday
                 .add(Duration(days: 6))
-                .isBefore(d.startDate) && // 週日在開學後，週一在結業前
-            !monday.isAfter(d.startDate)) {
+                .isBefore(semesterStart) && // 週日在開學後，週一在結業前
+            !monday.isAfter(semesterStart)) {
           int count;
           countloop:
           for (int c = 0; c < 6; c++) {
-            if (!monday.add(Duration(days: c + 1)).isBefore(d.startDate)) {
+            if (!monday.add(Duration(days: c + 1)).isBefore(semesterStart)) {
               count = c + 1;
               break countloop;
             }
           }
           _runSection(d, count, true);
-        } else if (!monday.isBefore(d.startDate) &&
-            !monday.isAfter(d.endDate) &&
-            !monday.add(Duration(days: 6)).isBefore(d.endDate)) {
+        } else if (!monday.isBefore(semesterStart) &&
+            !monday.isAfter(semesterEnd) &&
+            !monday.add(Duration(days: 6)).isBefore(semesterEnd)) {
           int count;
           countloop:
           for (int c = 0; c < 6; c++) {
-            if (!monday.add(Duration(days: c + 1)).isBefore(d.endDate)) {
+            if (!monday.add(Duration(days: c + 1)).isBefore(semesterEnd)) {
               count = c + 1;
               break countloop;
             }
@@ -200,32 +203,6 @@ class _ScheduleTable extends State<ScheduleTable> {
         sectionNumList: sectionNumList,
         tableSchedule:
             TableSchedule(monday: monday, scheduleList: widget.scheduleList));
-
-    ScheduleButton scheduleButton = ScheduleButton(
-        context: context,
-        scheduleList: widget.scheduleList,
-        monday: monday,
-        timeLineList: timeLineList);
-
-// 在過長的時間間隔加上空白「的時段」
-    // List<int> insertList = [];
-
-    // for (int i = 0; i < timeLineList.length - 1; i++) {
-    //   DateTime thisEnd =
-    //       check.add(ConvertString.toDuration(timeLineList[i]['end']));
-    //   DateTime nextStart =
-    //       check.add(ConvertString.toDuration(timeLineList[i + 1]['start']));
-    //   if (nextStart.difference(thisEnd).inMinutes /
-    //           Duration(hours: 1).inMinutes >=
-    //       1) {
-    //     insertList.add(i);
-    //   }
-    // }
-
-    // for (int i = 0; i < insertList.length; i++) {
-    //   int index = insertList[i];
-    //   timeLineList.insert(index + 1 + i, {'start': '', 'end': ''});
-    // }
 
     return ConstrainedBox(
       constraints: BoxConstraints.expand(),

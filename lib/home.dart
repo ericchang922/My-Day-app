@@ -1,7 +1,5 @@
 // flutter
-
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
