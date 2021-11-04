@@ -335,15 +335,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                     child: Container(
                       margin: EdgeInsets.only(top: _height * 0.03),
                       child: TextField(
-                        controller: TextEditingController.fromValue(
-                            TextEditingValue(
-                                text: _voteItemController.text,
-                                // 保持光標在最後
-                                selection: TextSelection.fromPosition(
-                                    TextPosition(
-                                        affinity: TextAffinity.downstream,
-                                        offset:
-                                            _voteItemController.text.length)))),
+                        controller: _voteItemController,
                         cursorColor: Colors.black,
                         style: TextStyle(fontSize: _appBarSize),
                         decoration: InputDecoration(
@@ -439,12 +431,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
             top: _height * 0.03, right: _height * 0.05, left: _height * 0.05),
         children: [
           TextField(
-            controller: TextEditingController.fromValue(TextEditingValue(
-                text: _voteTitleController.text,
-                // 保持光標在最後
-                selection: TextSelection.fromPosition(TextPosition(
-                    affinity: TextAffinity.downstream,
-                    offset: _voteTitleController.text.length)))),
+            controller: _voteTitleController,
             cursorColor: Colors.black,
             style: TextStyle(fontSize: _titleSize),
             decoration: InputDecoration(

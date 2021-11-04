@@ -114,8 +114,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
         await alert(context, _alertTitle, '請選擇類別');
         _isNotCreate = true;
       }
-      if (_startDateTime.isBefore(DateTime.now()) ||
-          _endDateTime.isBefore(DateTime.now())) {
+      if (_endDateTime.isBefore(DateTime.now())) {
         await alert(context, _alertTitle, '請選擇未來時間');
         _isNotCreate = true;
       }
