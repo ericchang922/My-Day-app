@@ -312,7 +312,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
                   ),
                 ),
                 SizedBox(
-                  width: _width * 0.17,
+                  width: _width * 0.18,
                   child: Container(
                     margin: EdgeInsets.only(left: _listLR),
                     child: Column(

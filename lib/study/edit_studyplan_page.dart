@@ -452,7 +452,7 @@ class _EditStudyPlanPage extends State<EditStudyPlanPage> {
             Flexible(
               child: Container(
                 height: _textFied,
-                width: _width * 0.36,
+                width: _width * 0.38,
                 child: TextField(
                     style: TextStyle(fontSize: _pSize),
                     decoration: InputDecoration(
@@ -494,7 +494,7 @@ class _EditStudyPlanPage extends State<EditStudyPlanPage> {
               padding: EdgeInsets.only(right: _width * 0.01),
               child: Container(
                 height: _textFied,
-                width: _width * 0.14,
+                width: _width * 0.17,
                 child: TextField(
                     style: TextStyle(fontSize: _pSize),
                     decoration: InputDecoration(
@@ -523,7 +523,7 @@ class _EditStudyPlanPage extends State<EditStudyPlanPage> {
               padding: EdgeInsets.only(left: _width * 0.01),
               child: Container(
                 height: _textFied,
-                width: _width * 0.14,
+                width: _width * 0.17,
                 child: TextField(
                     style: TextStyle(fontSize: _pSize),
                     decoration: InputDecoration(
@@ -610,18 +610,22 @@ class _EditStudyPlanPage extends State<EditStudyPlanPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    InkWell(
-                        child:
-                            Text(startView, style: TextStyle(fontSize: _pSize)),
-                        onTap: () {
-                          if (index == 0)
-                            _subjectTimePicker(context, index, true);
-                        }),
+                    Expanded(
+                      child: InkWell(
+                          child:
+                              Text(startView, style: TextStyle(fontSize: _pSize)),
+                          onTap: () {
+                            if (index == 0)
+                              _subjectTimePicker(context, index, true);
+                          }),
+                    ),
                     SizedBox(height: _height * 0.01),
-                    InkWell(
-                        child:
-                            Text(endView, style: TextStyle(fontSize: _pSize)),
-                        onTap: () => _subjectTimePicker(context, index, false))
+                    Expanded(
+                      child: InkWell(
+                          child:
+                              Text(endView, style: TextStyle(fontSize: _pSize)),
+                          onTap: () => _subjectTimePicker(context, index, false)),
+                    )
                   ],
                 ),
               ),

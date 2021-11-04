@@ -77,6 +77,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
     double _textL = _height * 0.02;
     double _subtitleT = _height * 0.008;
     double _tabH = _height * 0.04683;
+    double _listLR = _width * 0.06;
 
     double _tabSize = _width * 0.041;
     double _p2Size = _height * 0.02;
@@ -138,58 +139,77 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
           itemCount: _commonScheduleListModel.futureSchedule.length,
           itemBuilder: (BuildContext context, int index) {
             var schedule = _commonScheduleListModel.futureSchedule[index];
-            return ListTile(
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: _heightSize, vertical: _heightSize),
-              leading: SizedBox(
-                width: _width * 0.17,
-                child: Container(
-                    margin: EdgeInsets.only(left: _leadingL),
-                    child: Column(
-                      children: [
-                        Text(schedule.startTime.month.toString() + "月",
-                            style: TextStyle(fontSize: _subtitleSize)),
-                        Text(schedule.startTime.day.toString() + "日",
-                            style: TextStyle(fontSize: _titleSize)),
-                      ],
-                    )),
-              ),
-              title: Container(
-                margin: EdgeInsets.only(left: _textL),
-                child: Text(schedule.title,
-                    style: TextStyle(fontSize: _titleSize)),
-              ),
-              subtitle: Container(
-                margin: EdgeInsets.only(left: _textL, top: _subtitleT),
-                child: Text(_scheduleTime(index, true),
-                    style: TextStyle(fontSize: _subtitleSize, color: _gray)),
-              ),
-              trailing: PopupMenuButton<int>(
-                offset: Offset(-40, 0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(_heightSize)),
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem<int>(
-                      value: 1,
-                      child: Container(
-                          alignment: Alignment.center,
-                          child:
-                              Text("刪除", style: TextStyle(fontSize: _p2Size))),
-                    ),
-                  ];
-                },
-                onSelected: (int value) async {
-                  if (await _submitDelete(schedule.scheduleNum) != true) {
-                    _groupScheduleListRequest();
-                  }
-                },
-              ),
+            return InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
                         EditCommonSchedule(scheduleNum: schedule.scheduleNum)));
               },
+              child: Container(
+                margin: EdgeInsets.only(
+                    top: _height * 0.01, bottom: _height * 0.01),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: _width * 0.18,
+                      child: Container(
+                        margin: EdgeInsets.only(left: _listLR),
+                        child: Column(
+                          children: [
+                            Text(schedule.startTime.month.toString() + "月",
+                                style: TextStyle(fontSize: _subtitleSize)),
+                            Text(schedule.startTime.day.toString() + "日",
+                                style: TextStyle(fontSize: _titleSize)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: _width * 0.7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: _textL),
+                            child: Text(schedule.title,
+                                style: TextStyle(fontSize: _titleSize)),
+                          ),
+                          Container(
+                            margin:
+                                EdgeInsets.only(left: _textL, top: _subtitleT),
+                            child: Text(_scheduleTime(index, true),
+                                style: TextStyle(
+                                    fontSize: _subtitleSize, color: _gray)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: PopupMenuButton<int>(
+                        offset: Offset(-40, 0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(_heightSize)),
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem<int>(
+                              value: 1,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text("刪除",
+                                      style: TextStyle(fontSize: _p2Size))),
+                            ),
+                          ];
+                        },
+                        onSelected: (int value) async {
+                          if (await _submitDelete(schedule.scheduleNum) != true) {
+                            _groupScheduleListRequest();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             );
           },
           separatorBuilder: (context, index) {
@@ -211,58 +231,77 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
           itemCount: _commonScheduleListModel.pastSchedule.length,
           itemBuilder: (BuildContext context, int index) {
             var schedule = _commonScheduleListModel.pastSchedule[index];
-            return ListTile(
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: _heightSize, vertical: _heightSize),
-              leading: SizedBox(
-                width: _width * 0.17,
-                child: Container(
-                    margin: EdgeInsets.only(left: _leadingL),
-                    child: Column(
-                      children: [
-                        Text(schedule.startTime.month.toString() + "月",
-                            style: TextStyle(fontSize: _subtitleSize)),
-                        Text(schedule.startTime.day.toString() + "日",
-                            style: TextStyle(fontSize: _titleSize)),
-                      ],
-                    )),
-              ),
-              title: Container(
-                margin: EdgeInsets.only(left: _textL),
-                child: Text(schedule.title,
-                    style: TextStyle(fontSize: _titleSize)),
-              ),
-              subtitle: Container(
-                margin: EdgeInsets.only(left: _textL, top: _subtitleT),
-                child: Text(_scheduleTime(index, false),
-                    style: TextStyle(fontSize: _subtitleSize, color: _gray)),
-              ),
-              trailing: PopupMenuButton<int>(
-                offset: Offset(-40, 0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(_heightSize)),
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem<int>(
-                      value: 1,
-                      child: Container(
-                          alignment: Alignment.center,
-                          child:
-                              Text("刪除", style: TextStyle(fontSize: _p2Size))),
-                    ),
-                  ];
-                },
-                onSelected: (int value) async {
-                  if (await _submitDelete(schedule.scheduleNum) != true) {
-                    _groupScheduleListRequest();
-                  }
-                },
-              ),
+            return InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
                         EditCommonSchedule(scheduleNum: schedule.scheduleNum)));
               },
+              child: Container(
+                margin: EdgeInsets.only(
+                    top: _height * 0.01, bottom: _height * 0.01),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: _width * 0.18,
+                      child: Container(
+                        margin: EdgeInsets.only(left: _listLR),
+                        child: Column(
+                          children: [
+                            Text(schedule.startTime.month.toString() + "月",
+                                style: TextStyle(fontSize: _subtitleSize)),
+                            Text(schedule.startTime.day.toString() + "日",
+                                style: TextStyle(fontSize: _titleSize)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: _width * 0.7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: _textL),
+                            child: Text(schedule.title,
+                                style: TextStyle(fontSize: _titleSize)),
+                          ),
+                          Container(
+                            margin:
+                                EdgeInsets.only(left: _textL, top: _subtitleT),
+                            child: Text(_scheduleTime(index, false),
+                                style: TextStyle(
+                                    fontSize: _subtitleSize, color: _gray)),
+                          ),
+                        ],
+                      ),
+                    ), 
+                    Expanded(
+                      child: PopupMenuButton<int>(
+                        offset: Offset(-40, 0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(_heightSize)),
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem<int>(
+                              value: 1,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text("刪除",
+                                      style: TextStyle(fontSize: _p2Size))),
+                            ),
+                          ];
+                        },
+                        onSelected: (int value) async {
+                          if (await _submitDelete(schedule.scheduleNum) != true) {
+                            _groupScheduleListRequest();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             );
           },
           separatorBuilder: (context, index) {
