@@ -681,6 +681,12 @@ class Request {
     await httpPatch(context, data, _url, '已取消');
   }
 
+  // create_studyplan -------------------------------------------------------------------------------
+  studyplanCreate(BuildContext context, Map<String, dynamic> data) async {
+    String _url = studyplanUrl['create_studyplan'];
+    await httpPost(context, data, _url, '新增成功');
+  }
+
   // edit_studyplan -------------------------------------------------------------------------------
   studyplanEdit(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['edit_studyplan'];

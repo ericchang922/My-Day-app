@@ -7,6 +7,7 @@ import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
 import 'package:My_Day_app/study/readplan_add.dart';
+import 'package:My_Day_app/study/studyplan_form.dart';
 import 'package:date_format/date_format.dart';
 
 import 'package:flutter/material.dart';
@@ -481,7 +482,7 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ReadPlanAddPage()));
+                              builder: (context) => StudyPlanForm()));
                     },
                   ),
                 ],
