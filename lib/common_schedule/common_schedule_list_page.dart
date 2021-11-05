@@ -1,7 +1,7 @@
+import 'package:My_Day_app/common_schedule/edit_common_schedule_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
-import 'package:My_Day_app/common_schedule/edit_common_schedule.dart';
 import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
@@ -143,7 +143,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
-                        EditCommonSchedule(scheduleNum: schedule.scheduleNum)));
+                        EditCommonSchedulePage(scheduleNum: schedule.scheduleNum)));
               },
               child: Container(
                 margin: EdgeInsets.only(
@@ -235,7 +235,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
-                        EditCommonSchedule(scheduleNum: schedule.scheduleNum)));
+                        EditCommonSchedulePage(scheduleNum: schedule.scheduleNum)));
               },
               child: Container(
                 margin: EdgeInsets.only(
