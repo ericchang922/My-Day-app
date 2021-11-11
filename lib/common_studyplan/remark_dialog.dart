@@ -73,15 +73,7 @@ Future<String> remarkDialog(BuildContext context, String remark) async {
                                     Radius.circular(_height * 0.01)),
                                 borderSide: BorderSide(color: _bule),
                               )),
-                          controller: TextEditingController.fromValue(
-                              TextEditingValue(
-                                  text: _remarkController.text,
-                                  // 保持光標在最後
-                                  selection: TextSelection.fromPosition(
-                                      TextPosition(
-                                          affinity: TextAffinity.downstream,
-                                          offset:
-                                              _remarkController.text.length)))),
+                          controller: _remarkController,
                           onChanged: (text) => newRemark = text,
                         ),
                       )

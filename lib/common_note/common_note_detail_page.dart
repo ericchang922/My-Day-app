@@ -2,23 +2,26 @@ import 'dart:convert';
 
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/public/note_request/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CommonNoteDetailPage extends StatefulWidget {
-  int groupNum;
-  CommonNoteDetailPage(this.groupNum);
+  int noteNum;
+  CommonNoteDetailPage(this.noteNum);
 
   @override
-  _CommonNoteDetailPage createState() => new _CommonNoteDetailPage(groupNum);
+  _CommonNoteDetailPage createState() => new _CommonNoteDetailPage(noteNum);
 }
 
 class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
     with RouteAware {
-  int groupNum;
-  _CommonNoteDetailPage(this.groupNum);
+  int noteNum;
+  _CommonNoteDetailPage(this.noteNum);
 
   GetNoteModel _getNote;
+
+  String uid = 'lili123';
 
   @override
   void initState() {
@@ -44,12 +47,11 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
   }
 
   _getNoteRequest() async {
-    var response = await rootBundle.loadString('assets/json/get_note.json');
-    var responseBody = json.decode(response);
-    var _request = GetNoteModel.fromJson(responseBody);
+    // var response = await rootBundle.loadString('assets/json/get_note.json');
+    // var responseBody = json.decode(response);
+    // var _request = GetNoteModel.fromJson(responseBody);
 
-    // GetNoteModel _request =
-    //     await Get(uid: uid, studyplanNum: studyplanNum).getData();
+    GetNoteModel _request = await Get(uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _getNote = _request;

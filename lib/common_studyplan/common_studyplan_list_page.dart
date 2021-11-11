@@ -75,6 +75,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
     double _textL = _height * 0.03;
     double _subtitleT = _height * 0.008;
     double _tabH = _height * 0.04683;
+    double _listLR = _width * 0.06;
 
     double _tabSize = _width * 0.041;
     double _p2Size = _height * 0.02;
@@ -176,40 +177,57 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
                   studyplan = _groupStudyplanListModel.futureStudyplan[index];
                 else
                   studyplan = _groupStudyplanListModel.pastStudyplan[index];
-                return ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: _heightSize, vertical: _heightSize),
-                  leading: SizedBox(
-                    width: _width * 0.17,
-                    child: Container(
-                        margin: EdgeInsets.only(left: _leadingL),
-                        child: Column(
-                          children: [
-                            Text(studyplan.date.month.toString() + "月",
-                                style: TextStyle(fontSize: _subtitleSize)),
-                            Text(studyplan.date.day.toString() + "日",
-                                style: TextStyle(fontSize: _titleSize)),
-                          ],
-                        )),
-                  ),
-                  title: Container(
-                    margin: EdgeInsets.only(left: _textL),
-                    child: Text(studyplan.title,
-                        style: TextStyle(fontSize: _titleSize)),
-                  ),
-                  subtitle: Container(
-                    margin: EdgeInsets.only(left: _textL, top: _subtitleT),
-                    child: Text(_studyPlanTime(index, typeId),
-                        style:
-                            TextStyle(fontSize: _subtitleSize, color: _gray)),
-                  ),
-                  trailing:
-                      _popupMenu(studyplan.creatorId, studyplan.studyplanNum),
+                return InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => StudyplanDetailPage(
                             studyplan.studyplanNum, typeId, groupNum, true)));
                   },
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        top: _height * 0.01, bottom: _height * 0.01),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: _width * 0.18,
+                          child: Container(
+                            margin: EdgeInsets.only(left: _listLR),
+                            child: Column(
+                              children: [
+                                Text(studyplan.date.month.toString() + "月",
+                                    style: TextStyle(fontSize: _subtitleSize)),
+                                Text(studyplan.date.day.toString() + "日",
+                                    style: TextStyle(fontSize: _titleSize)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: _width * 0.7,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: _textL),
+                                child: Text(studyplan.title,
+                                    style: TextStyle(fontSize: _titleSize)),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: _textL, top: _subtitleT),
+                                child: Text(_studyPlanTime(index, typeId),
+                                    style: TextStyle(
+                                        fontSize: _subtitleSize, color: _gray)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                            child: _popupMenu(
+                                studyplan.creatorId, studyplan.studyplanNum)),
+                      ],
+                    ),
+                  ),
                 );
               },
               separatorBuilder: (context, index) {

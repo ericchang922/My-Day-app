@@ -5,30 +5,24 @@ import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/schedule_request/get_common.dart';
-import 'package:My_Day_app/public/schedule_request/get.dart';
-import 'package:My_Day_app/models/schedule/schedule_model.dart';
 
-class EditCommonSchedule extends StatefulWidget {
+class EditCommonSchedulePage extends StatefulWidget {
   int scheduleNum;
 
-  EditCommonSchedule({this.scheduleNum});
+  EditCommonSchedulePage({this.scheduleNum});
   @override
-  State<EditCommonSchedule> createState() =>
-      _EditCommonSchedule(this.scheduleNum);
+  State<EditCommonSchedulePage> createState() =>
+      _EditCommonSchedulePage(this.scheduleNum);
 }
 
-class _EditCommonSchedule extends State<EditCommonSchedule> with RouteAware {
+class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
+    with RouteAware {
   String uid = 'lili123';
   int scheduleNum;
-  _EditCommonSchedule(this.scheduleNum);
+  _EditCommonSchedulePage(this.scheduleNum);
 
   GetCommonScheduleModel data;
   List _typeNameList = <String>['讀書', '工作', '會議', '休閒', '社團', '吃飯', '班級', '個人'];
-
-  Future<ScheduleGet> getThisData() async {
-    Get request = new Get(context: context, uid: uid, scheduleNum: scheduleNum);
-    return request.getData();
-  }
 
   @override
   void initState() {

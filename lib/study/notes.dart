@@ -1,11 +1,8 @@
-
-import 'package:My_Day_app/common_note/common_note_detail_page.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
 import 'package:My_Day_app/public/note_request/delete.dart';
 import 'package:My_Day_app/public/note_request/get_list.dart';
-import 'package:My_Day_app/studyplan/note_detail_page.dart';
+import 'package:My_Day_app/study/note_detail_page.dart';
 import 'package:My_Day_app/study/notes_add.dart';
-import 'package:My_Day_app/studyplan/notes_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/main.dart';
 

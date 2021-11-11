@@ -20,8 +20,10 @@ class TemporaryGroupCreatePage extends StatefulWidget {
 
 class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
   int _type;
-  DateTime _startDateTime = DateTime.now();
-  DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
+  DateTime _startDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
+  DateTime _endDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 9, 0);
   String _title;
   String _location;
   TextEditingController _titleController = TextEditingController();
@@ -114,8 +116,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
         await alert(context, _alertTitle, '請選擇類別');
         _isNotCreate = true;
       }
-      if (_startDateTime.isBefore(DateTime.now()) ||
-          _endDateTime.isBefore(DateTime.now())) {
+      if (_endDateTime.isBefore(DateTime.now())) {
         await alert(context, _alertTitle, '請選擇未來時間');
         _isNotCreate = true;
       }
@@ -138,10 +139,16 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
 
     void _datePicker(contex, isStart) {
       DateTime _dateTime;
-      if (isStart)
+      DateTime _minimumDate;
+
+      if (isStart) {
         _dateTime = _startDateTime;
-      else
+        _minimumDate = DateTime.now();
+      } else {
         _dateTime = _startDateTime.add(Duration(hours: 1));
+        _minimumDate = DateTime.now().add(Duration(minutes: 1));
+      }
+
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
@@ -162,6 +169,12 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
                 height: _height * 0.28,
                 child: CupertinoDatePicker(
                   mode: _mode(),
+                  minimumDate: (DateTime(
+                      _minimumDate.year,
+                      _minimumDate.month,
+                      _minimumDate.day,
+                      _minimumDate.hour,
+                      _minimumDate.minute)),
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
                     if (isStart) {

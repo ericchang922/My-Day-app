@@ -165,15 +165,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                   child: Container(
                     margin: EdgeInsets.only(top: _height * 0.03),
                     child: TextField(
-                      controller: TextEditingController.fromValue(
-                          TextEditingValue(
-                              text: _voteItemController.text,
-                              // 保持光標在最後
-                              selection: TextSelection.fromPosition(
-                                  TextPosition(
-                                      affinity: TextAffinity.downstream,
-                                      offset:
-                                          _voteItemController.text.length)))),
+                      controller: _voteItemController,
                       cursorColor: Colors.black,
                       style: TextStyle(fontSize: _appBarSize),
                       decoration: InputDecoration(

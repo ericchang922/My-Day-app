@@ -7,6 +7,7 @@ import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
 import 'package:My_Day_app/study/readplan_add.dart';
+import 'package:My_Day_app/study/studyplan_form.dart';
 import 'package:date_format/date_format.dart';
 
 import 'package:flutter/material.dart';
@@ -104,6 +105,7 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
     double _textBT = _height * 0.01;
     double _subtitleT = _height * 0.008;
     double _tab = _height * 0.04683;
+    double _listLR = _width * 0.06;
 
     double _tabSize = _width * 0.041;
     double _pSize = _height * 0.023;
@@ -155,34 +157,7 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                   studyplan = _studyplanListModel.futureStudyplan[index];
                 else
                   studyplan = _studyplanListModel.pastStudyplan[index];
-                return ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: _heightSize, vertical: _heightSize),
-                  leading: SizedBox(
-                    width: _width * 0.17,
-                    child: Container(
-                        margin: EdgeInsets.only(left: _leadingL),
-                        child: Column(
-                          children: [
-                            Text(studyplan.date.month.toString() + "月",
-                                style: TextStyle(fontSize: _subtitleSize)),
-                            Text(studyplan.date.day.toString() + "日",
-                                style: TextStyle(fontSize: _titleSize)),
-                          ],
-                        )),
-                  ),
-                  title: Container(
-                    margin: EdgeInsets.only(left: _textL),
-                    child: Text(studyplan.title,
-                        style: TextStyle(fontSize: _titleSize)),
-                  ),
-                  subtitle: Container(
-                    margin: EdgeInsets.only(left: _textL, top: _subtitleT),
-                    child: Text(
-                        _studyPlanTime(studyplan.startTime, studyplan.endTime),
-                        style:
-                            TextStyle(fontSize: _subtitleSize, color: _gray)),
-                  ),
+                return InkWell(
                   onTap: () {
                     print(studyplan.studyplanNum);
                     Navigator.of(context).push(MaterialPageRoute(
@@ -193,6 +168,47 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                             _shareStudyplanNumList
                                 .contains(studyplan.studyplanNum))));
                   },
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        top: _height * 0.01, bottom: _height * 0.01),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: _width * 0.18,
+                          child: Container(
+                            margin: EdgeInsets.only(left: _listLR),
+                            child: Column(
+                              children: [
+                                Text(studyplan.date.month.toString() + "月",
+                                    style: TextStyle(fontSize: _subtitleSize)),
+                                Text(studyplan.date.day.toString() + "日",
+                                    style: TextStyle(fontSize: _titleSize)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: _textL),
+                              child: Text(studyplan.title,
+                                  style: TextStyle(fontSize: _titleSize)),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: _textL, top: _subtitleT),
+                              child: Text(
+                                  _studyPlanTime(
+                                      studyplan.startTime, studyplan.endTime),
+                                  style: TextStyle(
+                                      fontSize: _subtitleSize, color: _gray)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
               separatorBuilder: (context, index) {
@@ -219,15 +235,26 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
               else
                 studyplan = _groupStudyplanListModel
                     .pastStudyplan[value].studyplanContent[index];
-              return Column(
-                children: [
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: _heightSize, vertical: _heightSize),
-                    leading: SizedBox(
-                      width: _width * 0.17,
-                      child: Container(
-                          margin: EdgeInsets.only(left: _leadingL),
+              return InkWell(
+                onTap: () {
+                  print(studyplan.studyplanNum);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => StudyplanDetailPage(
+                          studyplan.studyplanNum,
+                          typeId,
+                          null,
+                          _shareStudyplanNumList
+                              .contains(studyplan.studyplanNum))));
+                },
+                child: Container(
+                  margin: EdgeInsets.only(
+                      top: _height * 0.01, bottom: _height * 0.01),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: _width * 0.18,
+                        child: Container(
+                          margin: EdgeInsets.only(left: _listLR),
                           child: Column(
                             children: [
                               Text(studyplan.date.month.toString() + "月",
@@ -235,28 +262,31 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                               Text(studyplan.date.day.toString() + "日",
                                   style: TextStyle(fontSize: _titleSize)),
                             ],
-                          )),
-                    ),
-                    title: Container(
-                      margin: EdgeInsets.only(left: _textL),
-                      child: Text(studyplan.title,
-                          style: TextStyle(fontSize: _titleSize)),
-                    ),
-                    subtitle: Container(
-                      margin: EdgeInsets.only(left: _textL, top: _subtitleT),
-                      child: Text(
-                          _studyPlanTime(
-                              studyplan.startTime, studyplan.endTime),
-                          style:
-                              TextStyle(fontSize: _subtitleSize, color: _gray)),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => StudyplanDetailPage(
-                              studyplan.studyplanNum, typeId, null, true)));
-                    },
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: _textL),
+                            child: Text(studyplan.title,
+                                style: TextStyle(fontSize: _titleSize)),
+                          ),
+                          Container(
+                            margin:
+                                EdgeInsets.only(left: _textL, top: _subtitleT),
+                            child: Text(
+                                _studyPlanTime(
+                                    studyplan.startTime, studyplan.endTime),
+                                style: TextStyle(
+                                    fontSize: _subtitleSize, color: _gray)),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
+                ),
               );
             },
             separatorBuilder: (context, index) {
@@ -366,39 +396,54 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                 typeId = 1;
               else
                 typeId = 0;
-              return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: _heightSize, vertical: _heightSize),
-                leading: SizedBox(
-                  width: _width * 0.17,
-                  child: Container(
-                      margin: EdgeInsets.only(left: _leadingL),
-                      child: Column(
-                        children: [
-                          Text(studyplan.date.month.toString() + "月",
-                              style: TextStyle(fontSize: _subtitleSize)),
-                          Text(studyplan.date.day.toString() + "日",
-                              style: TextStyle(fontSize: _titleSize)),
-                        ],
-                      )),
-                ),
-                title: Container(
-                  margin: EdgeInsets.only(left: _textL),
-                  child: Text(studyplan.title,
-                      style: TextStyle(fontSize: _titleSize)),
-                ),
-                subtitle: Container(
-                  margin: EdgeInsets.only(left: _textL, top: _subtitleT),
-                  child: Text(
-                      _studyPlanTime(studyplan.startTime, studyplan.endTime),
-                      style: TextStyle(fontSize: _subtitleSize, color: _gray)),
-                ),
+              return InkWell(
                 onTap: () {
                   print(studyplan.studyplanNum);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => StudyplanDetailPage(
                           studyplan.studyplanNum, typeId, null, true)));
                 },
+                child: Container(
+                  margin: EdgeInsets.only(
+                      top: _height * 0.01, bottom: _height * 0.01),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: _width * 0.18,
+                        child: Container(
+                          margin: EdgeInsets.only(left: _listLR),
+                          child: Column(
+                            children: [
+                              Text(studyplan.date.month.toString() + "月",
+                                  style: TextStyle(fontSize: _subtitleSize)),
+                              Text(studyplan.date.day.toString() + "日",
+                                  style: TextStyle(fontSize: _titleSize)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: _textL),
+                            child: Text(studyplan.title,
+                                style: TextStyle(fontSize: _titleSize)),
+                          ),
+                          Container(
+                            margin:
+                                EdgeInsets.only(left: _textL, top: _subtitleT),
+                            child: Text(
+                                _studyPlanTime(
+                                    studyplan.startTime, studyplan.endTime),
+                                style: TextStyle(
+                                    fontSize: _subtitleSize, color: _gray)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
             separatorBuilder: (context, index) {
@@ -437,7 +482,7 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ReadPlanAddPage()));
+                              builder: (context) => StudyPlanForm()));
                     },
                   ),
                 ],
