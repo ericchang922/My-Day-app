@@ -14,7 +14,7 @@ class GetList {
     this._response = await request.getNoteList();
   }
 
-  GetList({this.uid}) {
+  GetList({this.uid, int noteNum}) {
     _data = {'uid': uid};
   }
 
