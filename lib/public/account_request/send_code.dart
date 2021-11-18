@@ -6,7 +6,6 @@ import 'package:My_Day_app/public/request.dart';
 class Sendcode {
   BuildContext context;
   String uid;
-
   Map<String, dynamic> data;
 
   bool _isError;//驗證帳號結果
