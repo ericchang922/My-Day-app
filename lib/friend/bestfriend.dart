@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:My_Day_app/friend/bestfriend_add.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
+import 'package:My_Day_app/public/friend_request/delete_best.dart';
 
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 
 import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/public/group_request/create_group.dart';
+
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
@@ -145,43 +146,18 @@ class _BestfriendWidget extends State<BestfriendPage> {
 
     Widget friendListWidget;
 
-    _submit() async {
-      String _alertTitle = '新增群組失敗';
-
-      List<Map<String, dynamic>> friend = [];
-      for (int i = 0; i < _friendListModel.friend.length; i++) {
-        var _friend = _friendListModel.friend[i];
-        if (_friendCheck[_friend.friendId] == true)
-          friend.add({'friendId': _friend.friendId});
-      }
-      for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
-        var _friend = _bestFriendListModel.friend[i];
-
-        if (_bestFriendCheck[_friend.friendId] == true)
-          friend.add({'friendId': _friend.friendId});
+  _submitDelete(String friendId) async {
+      var submitWidget;
+      
+      _submitWidgetfunc() async {
+        return DeleteBestFriend(uid: uid, friendId: friendId);
       }
 
-      if (uid == null) {
-        await alert(context, _alertTitle, '請先登入');
-        _isNotCreate = true;
-        Navigator.pop(context);
-      }
-
-      if (_isNotCreate) {
-        _isNotCreate = false;
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
         return true;
-      } else {
-        var submitWidget;
-        _submitWidgetfunc() async {
-          return CreateGroup(uid: uid, friend: friend);
-        }
-
-        submitWidget = await _submitWidgetfunc();
-        if (await submitWidget.getIsError())
-          return true;
-        else
-          return false;
-      }
+      else
+        return false;
     }
 
     if (_friendListModel != null && _bestFriendListModel != null) {
@@ -216,9 +192,13 @@ class _BestfriendWidget extends State<BestfriendPage> {
                 style: TextStyle(fontSize: 18),
               ),
              
-              onPressed: hideWidget,
+              onPressed: () async {
+                  if (await _submitDelete(friends.friendId) != true) {
+                    _bestFriendListRequest();
+                  }
+                }),
             ),
-          ));
+          );
         },
         separatorBuilder: (context, index) {
           return Divider();
@@ -256,9 +236,12 @@ class _BestfriendWidget extends State<BestfriendPage> {
                 style: TextStyle(fontSize: 18),
               ),
               
-              onPressed: hideWidget,
+              onPressed: () async {
+                  
+                  }
+                ),
             ),
-          ));
+          );
         },
         separatorBuilder: (context, index) {
           return Divider();
@@ -293,14 +276,14 @@ class _BestfriendWidget extends State<BestfriendPage> {
               bestFriendList
             ],
           );
-        } else if (_friendListModel.friend.length != 0) {
+        } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
             children: [
               // friendList
             ],
           );
         } else {
-          friendListWidget = Center(child: Text('目前沒有任何好友!'));
+          friendListWidget = Center(child: Text('目前沒有任何摯友!'));
         }
       } else {
         // ignore: deprecated_member_use
@@ -328,7 +311,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
             children: [
               _buildSearchBestFriendList(context),
               Divider(),
-              _buildSearchFriendList(context)
+              // _buildSearchFriendList(context)
             ],
           );
         } else {
@@ -336,7 +319,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
             children: [
               if (_filteredBestFriend.length > 0)
                 _buildSearchBestFriendList(context),
-              if (_filteredFriend.length > 0) _buildSearchFriendList(context)
+              // if (_filteredFriend.length > 0) _buildSearchFriendList(context)
             ],
           );
         }
@@ -346,7 +329,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Color(0xffF86D67),
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text('摯友', style: TextStyle(fontSize: 20)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
@@ -358,8 +341,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                Navigator.push(context,
-            MaterialPageRoute(builder: (context) => BestFriendAddPage()));
+                bool action = await bestfriendsAddDialog(context);
               },
             ),
           ],
@@ -379,7 +361,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
       return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xffF86D67),
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text('摯友', style: TextStyle(fontSize: 20)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
@@ -411,6 +393,20 @@ class _BestfriendWidget extends State<BestfriendPage> {
 
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
+     
+    _submitDelete(String friendId) async {
+      var submitWidget;
+      
+      _submitWidgetfunc() async {
+        return DeleteBestFriend(uid: uid, friendId: friendId);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
 
     return ListView.separated(
       shrinkWrap: true,
@@ -443,9 +439,13 @@ class _BestfriendWidget extends State<BestfriendPage> {
               style: TextStyle(fontSize: 18),
             ),
            
-            onPressed: hideWidget,
+            onPressed: () async {
+                  if (await _submitDelete(friends.friendId) != true) {
+                    _bestFriendListRequest();
+                  }
+                }),
           ),
-        ));
+        );
       },
       separatorBuilder: (context, index) {
         return Divider();
@@ -492,9 +492,11 @@ class _BestfriendWidget extends State<BestfriendPage> {
               style: TextStyle(fontSize: 18),
             ),
             
-            onPressed: hideWidget,
+            onPressed: () async {
+                  
+                }),
           ),
-        ));
+        );
       },
       separatorBuilder: (context, index) {
         return Divider();
