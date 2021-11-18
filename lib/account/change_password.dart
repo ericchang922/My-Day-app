@@ -1,7 +1,6 @@
 import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/public/account_request/change_pw.dart';
 import 'package:flutter/material.dart';
-import 'forget_password.dart';
 import 'login.dart';
 
 var primaryColor = Color(0xffF86D67);
