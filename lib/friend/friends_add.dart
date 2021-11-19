@@ -168,6 +168,7 @@ Future<bool> friendsAddDialog(BuildContext context) async {
                         onTap: () async {
                           if (fid.text.isNotEmpty) {
                             if (await _submit() != true) {
+                              
                               Navigator.of(context).pop(true);
                             }
                           }else{

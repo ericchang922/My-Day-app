@@ -35,7 +35,7 @@ class Theme extends State {
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
-                backgroundColor: Color(0xffF86D67),
+                backgroundColor: Theme.of(context).primaryColor,
                 title: Text('選擇筆記', style: TextStyle(fontSize: 20)),
                 leading: IconButton(
                   icon: Icon(Icons.chevron_left),
@@ -134,7 +134,7 @@ class Theme extends State {
                           primary: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: Color(0xffFFAAA6)),
+                          backgroundColor: Theme.of(context).primaryColorLight,),
                       child: Image.asset(
                         'assets/images/cancel.png',
                         width: _iconWidth,
@@ -153,7 +153,7 @@ class Theme extends State {
                         primary: Colors.white,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(0)),
-                        backgroundColor: Color(0xffF86D67)),
+                        backgroundColor: Theme.of(context).primaryColor,),
                     child: Image.asset(
                       'assets/images/confirm.png',
                       width: _iconWidth,
@@ -166,4 +166,6 @@ class Theme extends State {
               )
             ]))));
   }
+
+  static of(BuildContext context) {}
 }

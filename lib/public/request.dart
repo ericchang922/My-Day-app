@@ -2,7 +2,10 @@
 import 'dart:convert';
 // flutter
 
+import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
+import 'package:My_Day_app/models/setting/theme_model.dart';
 import 'package:My_Day_app/models/timetable/section_time_model.dart';
+import 'package:My_Day_app/public/friend_request/make-friend-invite-list.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:http/http.dart' as http;
@@ -95,8 +98,11 @@ class Request {
   static Map settingUrl = {
     'friend_privacy': '$host${path['setting']}/friend_privacy/',
     'notice': '$host${path['setting']}/notice/',
-    'privacy': '$host${path['setting']}/privacy/',
+    'notice_timetable': '$host${path['setting']}/notice_timetable/',
+    'privacy_location': '$host${path['setting']}/privacy_location/',
+    'privacy_timetable': '$host${path['setting']}/privacy_timetable/',
     'themes': '$host${path['setting']}/themes/',
+    'get_themes': '$host${path['setting']}/get_themes/',
   };
   static Map friendUrl = {
     'get': '${path['friend']}/get/',
@@ -174,6 +180,7 @@ class Request {
 
   FriendListModel _friendList;
   BestFriendListModel _bestFriendList;
+  MakeFriendInviteListModel _makefriendinviteList;
 
   MainTimetableListGet _mainTimetableListGet;
   TimetableListModel _timetableList;
@@ -193,6 +200,9 @@ class Request {
   ShareNoteListModel _shareNoteList;
   NoteListModel _noteList;
   GetNoteModel _getnote;
+
+  GetThemesModel _getThemes;
+
   bool _isError;
 
   getScheduleGet() => _scheduleGet;
@@ -213,6 +223,7 @@ class Request {
 
   getFriendListGet() => _friendList;
   getBestFriendGet() => _bestFriendList;
+  getMakeFriendInviteListGet() => _makefriendinviteList;
 
   getMainTimetableListGet() => _mainTimetableListGet;
   getTimetableList() => _timetableList;
@@ -232,6 +243,8 @@ class Request {
   getShareNoteList() => _shareNoteList;
   getNoteList() => _noteList;
   getNote() => _getnote;
+
+  getThemesGet()=> _getThemes;
 
   getIsError() => _isError;
 
@@ -517,10 +530,43 @@ class Request {
     }
   }
 
+  // make-friend-invite-list ----------------------------------------------------------------------------------
+  makefriendinviteList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = friendUrl['make_invite_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _makefriendinviteList = MakeFriendInviteListModel.fromJson(_responseBody);
+    }
+  }
+
   // add_friend ------------------------------------------------------------------------------
   add(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['add'];
     await httpPost(context, data, _url, '新增成功');
+  }
+
+  // add_bestfriend ------------------------------------------------------------------------------
+  addBest(BuildContext context, Map<String, dynamic> data) async {
+    String _url = friendUrl['add_best'];
+    await httpPatch(context, data, _url, '新增成功');
+  }
+
+  // add_reply ------------------------------------------------------------------------------
+  addReply(BuildContext context, Map<String, dynamic> data) async {
+    String _url = friendUrl['add_reply'];
+    await httpPatch(context, data, _url, '新增成功');
+  }
+
+  // friend_delete ----------------------------------------------------------------------------------
+  frienddelete(BuildContext context, Map<String, dynamic> data) async {
+    String _url = friendUrl['delete'];
+    await httpDelete(context, data, _url, '刪除成功');
+  }
+
+  // bestfriend_delete ----------------------------------------------------------------------------------
+  bestfrienddelete(BuildContext context, Map<String, dynamic> data) async {
+    String _url = friendUrl['delete_best'];
+    await httpPatch(context, data, _url, '刪除成功');
   }
 
   // TIMETABLE =========================================================================================
@@ -795,7 +841,7 @@ class Request {
   // friend_privacy ----------------------------------------------------------------------------------
   friendprivacy(BuildContext context, Map<String, dynamic> data) async {
     print(data);
-    String _url = accountUrl['friend_privacy'];
+    String _url = settingUrl['friend_privacy'];
     await httpPost(context, data, _url, '好友隱私設定成功');
   }
 
@@ -803,15 +849,29 @@ class Request {
   // notice ----------------------------------------------------------------------------------
   notice(BuildContext context, Map<String, dynamic> data) async {
     print(data);
-    String _url = accountUrl['notice'];
+    String _url = settingUrl['notice'];
+    await httpPost(context, data, _url, '通知設定成功');
+  }
+
+  // notice ----------------------------------------------------------------------------------
+  noticetemporary(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = settingUrl['notice'];
     await httpPost(context, data, _url, '通知設定成功');
   }
 
   // SETTING ============================================================================================
-  // privacy ----------------------------------------------------------------------------------
-  privacy(BuildContext context, Map<String, dynamic> data) async {
+  // privacy-location ----------------------------------------------------------------------------------
+  privacylocation(BuildContext context, Map<String, dynamic> data) async {
     print(data);
-    String _url = accountUrl['privacy'];
+    String _url = settingUrl['privacy_location'];
+    await httpPost(context, data, _url, '隱私設定成功');
+  }
+
+  // privacy-location ----------------------------------------------------------------------------------
+  privacytimetable(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
+    String _url = settingUrl['privacy_timetable'];
     await httpPost(context, data, _url, '隱私設定成功');
   }
 
@@ -819,7 +879,16 @@ class Request {
   // theme ----------------------------------------------------------------------------------
   themes(BuildContext context, Map<String, dynamic> data) async {
     print(data);
-    String _url = accountUrl['theme'];
+    String _url = settingUrl['themes'];
     await httpPost(context, data, _url, '主題設定成功');
   }
 }
+// // get_theme -----------------------------------------------------------------------------
+//   getthemes(BuildContext context, Map<String, dynamic> data) async {
+//     String _url = settingUrl['get_themes'];
+//     await httpGet(context, data, _url);
+//     if (_responseBody != null) {
+//       _getThemes = GetThemesModel.fromJson(_responseBody);
+//     }
+//   }
+

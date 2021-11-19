@@ -41,7 +41,7 @@ class NotesAddPageWidget extends State<NotesAddPage> {
         child: Scaffold(
           resizeToAvoidBottomInset:false,
         appBar: AppBar(
-          backgroundColor: Color(0xffF86D67),
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text('新增筆記', style: TextStyle(fontSize: 20)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
@@ -205,7 +205,7 @@ class _NotesAdd extends State< NotesAdd> {
                     margin: EdgeInsets.only(right:220),
               child: TextButton(
                       style: TextButton.styleFrom(
-                    primary: Color(0xffF86D67),
+                    primary: Theme.of(context).primaryColor,
                   ),
                 child: Text('上傳圖片',style: TextStyle(fontSize: 18) ),
                       
@@ -226,7 +226,7 @@ class _NotesAdd extends State< NotesAdd> {
                       style: TextButton.styleFrom(
                         primary: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                        backgroundColor:Color(0xffFFAAA6)
+                        backgroundColor:Theme.of(context).primaryColorLight,
                         ),
                   
                     child: Image.asset(
@@ -247,7 +247,7 @@ class _NotesAdd extends State< NotesAdd> {
                       style: TextButton.styleFrom(
                         primary: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                        backgroundColor: Color(0xffF86D67)
+                        backgroundColor: Theme.of(context).primaryColor,
                         ),
                     
                     child: Image.asset(

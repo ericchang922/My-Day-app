@@ -46,27 +46,28 @@ class Forgetpw extends StatelessWidget {
   final forgetcode = TextEditingController();
   String _alertTitle = '驗證失敗';
   String _alertTxt = '請確認是否有漏填欄位';
+  String _alertTxtforget = '請確認資料是否正確';
   String _alertTitlecode = '發送失敗';
   String _alertTxtcode = '請確認是否有填電子信箱';
   @override
   Widget build(BuildContext context) {
-    // _submit() async {
-    //   String uid = forgetuid.text;
-    //   String verificationCode = forgetcode.text;
+    _submitforget() async {
+      String uid = forgetuid.text;
+      String verificationCode = forgetcode.text;
 
-    //   var submitWidget;
-    //   _submitWidgetfunc() async {
-    //     return ForgetPw(uid: uid, verificationCode: verificationCode);
-    //   }
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return ForgetPw(uid: uid, verificationCode: verificationCode);
+      }
 
-    //   submitWidget = await _submitWidgetfunc();
-    //   if (await submitWidget.getIsError())
-    //     return true;
-    //   else
-    //     return false;
-    // }
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
 
-    _submit() async {
+    _submitcode() async {
       String uid = forgetuid.text;
 
       var submitWidget;
@@ -142,8 +143,8 @@ class Forgetpw extends StatelessWidget {
                                 ),
                                 onPressed: () async {
                                   if (forgetuid.text.isNotEmpty) {
-                                    if (await _submit() != true) {
-                                      print(_submit());
+                                    if (await _submitcode() != true) {
+                                      
                                     }
                                   }else{
                                     bool action = await codefailDialog(
@@ -162,8 +163,9 @@ class Forgetpw extends StatelessWidget {
                           padding: EdgeInsets.fromLTRB(52, 0, 52, 0),
                           child: TextField(
                             controller: forgetcode,
-                            obscureText: true,
+                            obscureText: false,
                             decoration: InputDecoration(
+                              hintText: '大小寫需一致',
                               fillColor: Color(0xfff3f3f4),
                               filled: true,
                               isCollapsed: true,
@@ -221,19 +223,19 @@ class Forgetpw extends StatelessWidget {
                             width: _iconWidth,
                           ),
                           onPressed: () async {
-                            // if (forgetuid.text.isNotEmpty &&
-                            //   forgetcode.text.isNotEmpty) {
-                            //     if (await _submit() != true) {
-                            //           print(_submit()); 
-                            //         }
-                            // } else {
-                            //   bool action = await forgetfailDialog(
-                            //       context, _alertTitle, _alertTxt);
-                            // }
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChangepwPage()));
+                            if (forgetuid.text.isNotEmpty &&
+                              forgetcode.text.isNotEmpty) {
+                                if (await _submitforget() != true) {
+                                  Navigator.push( context,
+                                    MaterialPageRoute(builder: (context) => ChangepwPage()));
+                                    }else{
+                                      bool action = await forgetfailDialog(
+                                        context, _alertTitle, _alertTxtforget);
+                                    }
+                            } else {
+                              bool action = await forgetfailDialog(
+                                  context, _alertTitle, _alertTxt);
+                            }
                           },
                         )),
                   ),

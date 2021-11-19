@@ -23,9 +23,9 @@ class NoteListWidget extends StatefulWidget {
 }
 
 class _NoteListState extends State<NoteListWidget> with RouteAware {
-  NoteListModel _noteListModel;
+  NoteListModel _noteList;
   String uid = 'lili123';
-  
+  int noteNum;
   @override
   void initState() {
     super.initState();
@@ -46,7 +46,6 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
 
   @override
   void didPopNext() {
-  
     _getNoteListRequest();
   }
 
@@ -54,13 +53,14 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
     // var response = await rootBundle.loadString('assets/json/group_list.json');
     // var responseBody = json.decode(response);
 
-    NoteListModel _request = await GetList(uid: uid).getData();
+    NoteListModel _request =
+        await GetList(uid: uid, noteNum: noteNum).getData();
 
     setState(() {
-      _noteListModel = _request;
+      _noteList = _request;
     });
   }
-  
+
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double _height = size.height;
@@ -84,139 +84,126 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
     List<String> _list = ["Apple", "Ball", "Cat", "Dog", "Elephant"];
     Widget noteListWiget;
 
-    _submitDelete(int noteNum) async {
-      var submitWidget;
-      _submitWidgetfunc() async {
-        return DeleteNote(uid: uid, noteNum: noteNum);
-      }
-
-      submitWidget = await _submitWidgetfunc();
-      if (await submitWidget.getIsError())
-        return true;
-      else
-        return false;
-    }
-    _popupMenu(String id, int noteNum) {
-      if (id == uid) {
-        return PopupMenuButton(
-          offset: Offset(-40, 0),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.01)),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                value: 1,
-                child: Container(
-                    alignment: Alignment.center,
-                    child: Text("刪除",
-                        style: TextStyle(fontSize: _subtitleSize))),
-              ),
-            ];
+    Widget noteList = ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: _noteList.note.length,
+      itemBuilder: (BuildContext context, int index) {
+        var note = _noteList.note[index];
+        return ListTile(
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => NoteDetailPage(uid, note.noteNum)));
           },
-          onSelected: (int value) async {
-            if (await _submitDelete(noteNum) != true) {
-              _getNoteListRequest()();
-            }
-          },
+          title: Text(
+            '${note.title} ',
+            style: TextStyle(fontSize: _titleSize),
+          ),
         );
-      }
-    }
+      },
+      separatorBuilder: (context, index) {
+        return Divider();
+      },
+    );
 
-      Widget noteList = ListView.separated(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: _noteListModel.note.length,
-        itemBuilder: (BuildContext context, int index) {
-          var note = _noteListModel.note[index];
-          return ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          NoteDetailPage(uid,note.noteNum)));
-            },
-            title: Text(
-              '${note.title} ',
-              style: TextStyle(fontSize: _titleSize),
-            ),
-            trailing: _popupMenu(uid, note.noteNum),
-                );
-        },
-        separatorBuilder: (context, index) {
-          return Divider();
-        },
+    if (_noteList.note.length != 0) {
+      noteListWiget = ListView(
+        padding: EdgeInsets.only(top: _width * 0.03),
+        children: [noteList],
       );
-
-      Widget noGroup = Center(child: Text('目前沒有任何筆記喔！'));
-
-       if (_noteListModel.note.length != 0) {
-        noteListWiget = ListView(
-          padding: EdgeInsets.only(top: _width * 0.03),
-          children: [noteList],
-        );
-      } else
-        noteListWiget = noGroup;
-
+    } else {
+      noteListWiget = Center(child: Text('目前沒有任何筆記！'));
+    }
+    if (_noteList != null) {
       return SafeArea(
-          child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Color(0xffF86D67),
-              title: Text('筆記', style: TextStyle(fontSize: 20)),
-              leading: IconButton(
-                icon: Icon(Icons.chevron_left),
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text('筆記', style: TextStyle(fontSize: 20)),
+            leading: IconButton(
+              icon: Icon(Icons.chevron_left),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NotesAddPage()));
                 },
               ),
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.add),
+            ],
+          ),
+          body: Container(child: noteListWiget),
+        ),
+      );
+    } else {
+      return SafeArea(
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                title: Text('筆記', style: TextStyle(fontSize: 20)),
+                leading: IconButton(
+                  icon: Icon(Icons.chevron_left),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotesAddPage()));
+                    Navigator.of(context).pop();
                   },
                 ),
-              ],
-            ),
-        body: Container(child: noteListWiget
-    //   child: ReorderableListView(
-    //     children: _list
-    //         .map((item) => ListTile(
-    //               key: Key("${item}"),
-    //               title: Text("${item}"),
-    //               trailing: Icon(Icons.menu),
-    //             ))
-    //         .toList(),
-    //     onReorder: (int start, int current) {
-    //       // dragging from top to bottom
-    //       if (start < current) {
-    //         int end = current - 1;
-    //         String startItem = _list[start];
-    //         int i = 0;
-    //         int local = start;
-    //         do {
-    //           _list[local] = _list[++local];
-    //           i++;
-    //         } while (i < end - start);
-    //         _list[end] = startItem;
-    //       }
-    //       // dragging from bottom to top
-    //       else if (start > current) {
-    //         String startItem = _list[start];
-    //         for (int i = start; i > current; i--) {
-    //           _list[i] = _list[i - 1];
-    //         }
-    //         _list[current] = startItem;
-    //       }
-    //       setState(() {});
-    //     },
-    //   ),
-    // )
-      )));
-    } 
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotesAddPage()));
+                    },
+                  ),
+                ],
+              ),
+              body: SafeArea(
+                bottom: false,
+                child: Center(child: CircularProgressIndicator()),
+              )));
+    }
   }
+}
 
 
+//   child: ReorderableListView(
+                //     children: _list
+                //         .map((item) => ListTile(
+                //               key: Key("${item}"),
+                //               title: Text("${item}"),
+                //               trailing: Icon(Icons.menu),
+                //             ))
+                //         .toList(),
+                //     onReorder: (int start, int current) {
+                //       // dragging from top to bottom
+                //       if (start < current) {
+                //         int end = current - 1;
+                //         String startItem = _list[start];
+                //         int i = 0;
+                //         int local = start;
+                //         do {
+                //           _list[local] = _list[++local];
+                //           i++;
+                //         } while (i < end - start);
+                //         _list[end] = startItem;
+                //       }
+                //       // dragging from bottom to top
+                //       else if (start > current) {
+                //         String startItem = _list[start];
+                //         for (int i = start; i > current; i--) {
+                //           _list[i] = _list[i - 1];
+                //         }
+                //         _list[current] = startItem;
+                //       }
+                //       setState(() {});
+                //     },
+                //   ),
+                // )

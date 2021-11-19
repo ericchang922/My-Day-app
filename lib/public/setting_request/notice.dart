@@ -8,7 +8,6 @@ class Notice {
   bool isSchedule;
   bool isCountdown;
   bool isGroup;
-  bool isTemporary;
   Map<String, dynamic> data;
 
   bool _isError;
@@ -19,8 +18,8 @@ class Notice {
     this._isError = await request.getIsError();
   }
 
-  Notice({this.context, this.uid, this.isSchedule, this.isCountdown, this.isGroup, this.isTemporary }) {
-    data = {'uid': uid, 'isSchedule': isSchedule, 'isCountdown': isCountdown, 'isGroup': isGroup, 'isPublic': isTemporary};
+  Notice({this.context, this.uid, this.isSchedule, this.isCountdown, this.isGroup,  }) {
+    data = {'uid': uid, 'isSchedule': isSchedule, 'isCountdown': isCountdown, 'isGroup': isGroup};
   }
   getIsError() async {
     await _request();

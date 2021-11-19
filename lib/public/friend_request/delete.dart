@@ -3,21 +3,23 @@
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class Sendcode {
+class DeleteFriend {
   BuildContext context;
   String uid;
+  String friendId;
+  
   Map<String, dynamic> data;
 
-  bool _isError;//驗證帳號結果
+  bool _isError;//註冊結果
 
   _request() async {
     Request request = Request();
-    await request.sendcode(context, data);
+    await request.frienddelete(context, data);
     this._isError = await request.getIsError();
   }
 
-  Sendcode({this.context, this.uid}) {
-    data = {'uid': uid };
+  DeleteFriend({this.context, this.uid, this.friendId }) {
+    data = {'uid': uid, 'friendId': friendId };
   }
   getIsError() async {
     await _request();

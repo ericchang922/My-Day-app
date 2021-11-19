@@ -1,121 +1,194 @@
-// import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/friend/friend_fail.dart';
+import 'package:My_Day_app/public/friend_request/add.dart';
+import 'package:My_Day_app/public/friend_request/add_best.dart';
 import 'package:flutter/material.dart';
 
-class BestFriendAddPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BestFriendAddPageWidget(),
-     
-    ));
-  }
-}
+Future<bool> bestfriendsAddDialog(BuildContext context) async {
+  final fid = TextEditingController();
+  String _alertTitle = '加入失敗';
+  String alertTxt = '請確認是否有此好友';
+  String _alertTxt = '請確認是否有填寫欄位';
+  String id = 'lili123';
+_submit() async {
+    String uid = id;
+    String friendId = fid.text;
 
-enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
-
-class BestFriendAddPageWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xffF86D67),
-        title:Text('新增摯友',style: TextStyle(fontSize: 20)),
-        leading:IconButton(
-          icon: Icon(Icons.chevron_left),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ), 
-        
-      ), 
-      body: ExamplePage(),
-    ));
-  }
-}
-class ExamplePage extends StatefulWidget {
-  ExamplePage({Key key}) : super(key: key);
-  @override
-  _ExamplePageState createState() => _ExamplePageState();
-}
-
-class _ExamplePageState extends State<ExamplePage> {
-  final _items = ["國文 1~3 課"];
-  get child => null;
-  bool viewVisible = true;
-
-  void hideWidget() {
-    setState(() {
-      viewVisible = false;
-    });
-  }
-
-  Widget _buildItem(BuildContext context, int index) {
-    final theme = Theme.of(context);
-    final name = _items[index];
-    return Column(
-      children: <Widget>[ 
-        Visibility(
-          maintainSize: true,
-          maintainAnimation: true,
-          maintainState: true,
-          visible: viewVisible,
-          child: Column(children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(right: 15, left: 35,top:15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text.rich(TextSpan(
-                    children: <InlineSpan>[
-                      WidgetSpan(
-                        child: new Image.asset(
-                          "assets/images/search.png",
-                          width: 20,
-                        ),
-                      ),
-                      TextSpan(text:_items[index], style: TextStyle(fontSize: 20)),
-                    ],
-                  )),
-                  SizedBox(
-                    height: 40,
-                    width: 60,
-                    child:TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                        backgroundColor: Color(0xffF86D67)
-                        ),
-                      
-                      child: Text(
-                        '新增',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      
-                      onPressed: hideWidget,
-                    )
-                )],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 15),
-              color: Color(0xffE3E3E3),
-              constraints: BoxConstraints.expand(height: 1.0),
-            ),
-        ]))]);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final children = List<Widget>(_items.length);
-    for (var i = 0; i < _items.length; i++) {
-      children[i] = _buildItem(context, i);
+    var submitWidget;
+    _submitWidgetfunc() async {
+      return AddBestFriend(uid: uid, friendId: friendId);
     }
-    return ListView(shrinkWrap: true, children: children);
-    // bottomNavigationBar:
+
+    submitWidget = await _submitWidgetfunc();
+    if (await submitWidget.getIsError())
+      return true;
+    else
+      return false;
   }
+  
+
+  return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        var screenSize = MediaQuery.of(context).size;
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(screenSize.height * 0.03))),
+          contentPadding: EdgeInsets.only(top: screenSize.height * 0.02),
+          content: Container(
+            width: screenSize.width * 0.2,
+            height: screenSize.height * 0.2459,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            "加摯友",
+                            style:
+                                TextStyle(fontSize: screenSize.width * 0.041),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: screenSize.height * 0.02,
+                            right: screenSize.height * 0.02,
+                            bottom: screenSize.height * 0.02,
+                            top: screenSize.height * 0.015),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/search.png',
+                              width: screenSize.width * 0.05,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: screenSize.height * 0.01),
+                              child: Text('摯友ID：',
+                                  style: TextStyle(
+                                      fontSize: screenSize.width * 0.041)),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                          height: screenSize.height * 0.04683,
+                          margin: EdgeInsets.only(
+                            left: screenSize.height * 0.02,
+                            right: screenSize.height * 0.02,
+                            bottom: screenSize.height * 0.0384,
+                          ),
+                          child: new TextField(
+                            style:
+                                TextStyle(fontSize: screenSize.width * 0.041),
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: screenSize.height * 0.01,
+                                    vertical: screenSize.height * 0.01),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          screenSize.height * 0.01)),
+                                  borderSide: BorderSide(
+                                    color: Color(0xff070707),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          screenSize.height * 0.01)),
+                                  borderSide:
+                                      BorderSide(color: Color(0xff7AAAD8)),
+                                )),
+                            controller: fid,
+                          )),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                          height: screenSize.height * 0.06,
+                          padding: EdgeInsets.only(
+                              top: screenSize.height * 0.015,
+                              bottom: screenSize.height * 0.015),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColorLight,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft:
+                                  Radius.circular(screenSize.height * 0.03),
+                            ),
+                          ),
+                          child: Text(
+                            "取消",
+                            style: TextStyle(
+                                fontSize: screenSize.width * 0.035,
+                                color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                          height: screenSize.height * 0.06,
+                          padding: EdgeInsets.only(
+                              top: screenSize.height * 0.015,
+                              bottom: screenSize.height * 0.015),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.only(
+                                bottomRight:
+                                    Radius.circular(screenSize.height * 0.03)),
+                          ),
+                          child: Text(
+                            "確認",
+                            style: TextStyle(
+                                fontSize: screenSize.width * 0.035,
+                                color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () async {
+                          if (fid.text.isNotEmpty) {
+                            if (await _submit() != true) {
+                              Navigator.of(context).pop(true);
+                            }else{
+                              bool action = await friendfailDialog(
+                                context, _alertTitle, alertTxt);
+                            }
+                          }else{
+                            bool action = await friendfailDialog(
+                                context, _alertTitle, _alertTxt);
+                          }
+
+                          
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      });
 }
-
-
-

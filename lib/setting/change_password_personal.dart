@@ -39,7 +39,7 @@ class ChangepwPersonalWidget extends StatelessWidget {
                   style: TextButton.styleFrom(
                     primary: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                    backgroundColor: Color(0xffFFAAA6)
+                    backgroundColor: Theme.of(context).primaryColorLight,
                     ),
               
               child: Image.asset(

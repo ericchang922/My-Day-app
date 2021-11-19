@@ -1,5 +1,7 @@
+
+import 'package:My_Day_app/setting/play_together_invite.dart';
 import 'package:flutter/material.dart';
-import 'play_together_invite.dart';
+
 
 const PrimaryColor = const Color(0xFFF86D67);
 class NoticePage extends StatefulWidget {

@@ -2,7 +2,10 @@ import 'dart:convert';
 
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/public/note_request/delete.dart';
+
 import 'package:My_Day_app/public/note_request/get.dart';
+import 'package:My_Day_app/study/notes_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,7 +20,7 @@ class NoteDetailPage extends StatefulWidget {
 
 class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
   int noteNum;
-  String uid;
+  String uid = 'lili123';
   _NoteDetailPage(this.uid, this.noteNum);
 
   GetNoteModel _getNote;
@@ -46,19 +49,21 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
   }
 
   _getNoteRequest() async {
-    var response = await rootBundle.loadString('assets/json/get_note.json');
-    var responseBody = json.decode(response);
+    // var response = await rootBundle.loadString('assets/json/get_note.json');
+    // var responseBody = json.decode(response);
+    // var _request = GetNoteModel.fromJson(responseBody);
 
     GetNoteModel _request = await Get(uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _getNote = _request;
     });
+    print(noteNum);
   }
 
   getImage(String imageString) {
     bool isGetImage;
-    
+
     const Base64Codec base64 = Base64Codec();
     Image image = Image.memory(
       base64.decode(imageString),
@@ -74,8 +79,7 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
     if (isGetImage == null) {
       return image;
     } else {
-      return 
-      Center(
+      return Center(
         child: Text('無法讀取'),
       );
     }
@@ -86,11 +90,69 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
     Size size = MediaQuery.of(context).size;
     double _height = size.height;
     double _width = size.width;
-
     double _leadingL = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _appBarSize = _width * 0.058;
+    double _titleSize = _height * 0.025;
+    double _pSize = _height * 0.023;
+    double _subtitleSize = _height * 0.02;
 
     Color _color = Theme.of(context).primaryColor;
+
+    _submitDelete() async {
+      var submitWidget;
+
+      _submitWidgetfunc() async {
+        return DeleteNote(uid: uid, noteNum: noteNum);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    _selectedItem(BuildContext context, value) async {
+      switch (value) {
+        case 'edit':
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => NotesEditPage(noteNum)));
+          break;
+
+        case 'delete':
+          if (await _submitDelete() != true) {
+            Navigator.pop(context);
+          }
+          break;
+      }
+    }
+
+    _studyplanAction() {
+      return PopupMenuButton<String>(
+        offset: Offset(50, 50),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(_height * 0.01)),
+        icon: Icon(Icons.more_vert),
+        itemBuilder: (context) => [
+          PopupMenuItem<String>(
+              value: 'edit',
+              child: Container(
+                  alignment: Alignment.center,
+                  child:
+                      Text("編輯", style: TextStyle(fontSize: _subtitleSize)))),
+          PopupMenuDivider(
+            height: 1,
+          ),
+          PopupMenuItem<String>(
+              value: 'delete',
+              child: Container(
+                  alignment: Alignment.center,
+                  child:
+                      Text("刪除", style: TextStyle(fontSize: _subtitleSize)))),
+        ],
+        onSelected: (value) => _selectedItem(context, value),
+      );
+    }
 
     if (_getNote != null) {
       return Container(
@@ -111,6 +173,12 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
                   },
                 ),
               ),
+              actions: [
+                Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: _height * 0.01),
+                    child: _studyplanAction())
+              ],
             ),
             body: Container(
                 color: Colors.white,
