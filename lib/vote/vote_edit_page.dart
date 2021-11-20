@@ -174,7 +174,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
       } else {
         for (int i = 0; i < _voteDate.length; i++) {
           if (_voteDate[i] != "") {
-            voteItemsName.add(_voteDate[i]);
+            voteItemsName.add(_voteDate[i].toString());
           }
         }
       }
