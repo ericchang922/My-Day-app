@@ -1,5 +1,5 @@
 // import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/public/note_request/create_new.dart';
+import 'package:My_Day_app/public/note_request/create_note.dart';
 import 'package:My_Day_app/study/note_fail.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
