@@ -6,7 +6,6 @@ import 'package:My_Day_app/study/studyplan_detail_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
-import 'package:My_Day_app/study/readplan_add.dart';
 import 'package:My_Day_app/study/studyplan_form.dart';
 import 'package:date_format/date_format.dart';
 
