@@ -114,7 +114,7 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
             ),
             body: Container(
                 color: Colors.white,
-                child: SafeArea(top: false, child: getImage(_getNote.content))),
+                child: SafeArea(top: false, child: Center(child: getImage(_getNote.content)))),
           ),
         ),
       );

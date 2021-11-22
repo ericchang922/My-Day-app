@@ -182,7 +182,7 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
             ),
             body: Container(
                 color: Colors.white,
-                child: SafeArea(top: false, child: getImage(_getNote.content))),
+                child: SafeArea(top: false, child: Center(child: getImage(_getNote.content)))),
           ),
         ),
       );
