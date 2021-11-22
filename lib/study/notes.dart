@@ -106,14 +106,15 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
           return Divider();
         },
       );
-      noteListWiget = ListView(
-        padding: EdgeInsets.only(top: _width * 0.03),
-        children: [noteList],
-      );
-    } else {
-      noteListWiget = Center(child: Text('目前沒有任何筆記！'));
-    }
-    if (_noteList != null) {
+      if (_noteList.note.length == 0) {
+        noteListWiget = Center(child: Text('目前沒有任何筆記！'));
+      } else {
+        noteListWiget = ListView(
+          padding: EdgeInsets.only(top: _width * 0.03),
+          children: [noteList],
+        );
+      }
+
       return Container(
         color: _color,
         child: SafeArea(
