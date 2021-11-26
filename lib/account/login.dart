@@ -1,10 +1,12 @@
 import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/home.dart';
+import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:flutter/material.dart';
 import 'register.dart';
 import 'forget_password.dart';
 import 'package:My_Day_app/public/account_request/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var primaryColor = Color(0xffF86D67);
 
@@ -21,83 +23,10 @@ class LoginPage extends StatefulWidget {
   }
 
   @override
-  LoginWidget createState() => new LoginWidget();
+  _Login createState() => new _Login();
 }
 
-class LoginWidget extends State<LoginPage> {
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
-        child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: SafeArea(
-                child: Scaffold(
-                    appBar: AppBar(
-                      title: Text('登入',
-                          style: TextStyle(color: Colors.white, fontSize: 22)),
-                      backgroundColor: primaryColor,
-                    ),
-                    body: _Login(),
-                    bottomNavigationBar: Container(
-                        child: Row(children: <Widget>[
-                      Expanded(
-                        // ignore: deprecated_member_use
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 0, 150),
-                          child: SizedBox(
-                              height: 60,
-                              child: TextButton(
-                                child: Text('忘記密碼',
-                                    style: TextStyle(fontSize: 15)),
-                                style: TextButton.styleFrom(
-                                  primary: primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0)),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgetpwPage()));
-                                },
-                              )),
-                        ),
-                      ),
-                      Expanded(
-                        // ignore: deprecated_member_use
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 10, 150),
-                          child: SizedBox(
-                              height: 60,
-                              child: TextButton(
-                                style: TextButton.styleFrom(
-                                  primary: primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0)),
-                                ),
-                                child: Text(
-                                  '我要註冊',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              RegisterPage()));
-                                },
-                              )),
-                        ),
-                      ),
-                    ]))))));
-  }
-}
-
-class _Login extends StatelessWidget {
+class _Login extends State {
   get direction => null;
   get border => null;
   get decoration => null;
@@ -114,6 +43,27 @@ class _Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
+
+    double _listLR = _height * 0.05;
+    double _listB = _height * 0.18;
+    double _textFied = _height * 0.045;
+    double _borderRadius = _height * 0.01;
+    double _iconWidth = _width * 0.05;
+    double _listPaddingH = _width * 0.06;
+    double _textL = _height * 0.03;
+    double _textBT = _height * 0.02;
+    double _leadingL = _height * 0.02;
+    double _bottomHeight = _height * 0.06;
+    double _titleSize = _height * 0.025;
+    double _pSize = _height * 0.023;
+    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _width * 0.052;
+    Color _bule = Color(0xff7AAAD8);
+    Color _textFiedBorder = Color(0xff707070);
+
     _submit() async {
       String uid = myuid.text;
       String password = mypw.text;
@@ -130,119 +80,221 @@ class _Login extends StatelessWidget {
         return false;
     }
 
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SafeArea(
-            child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                body: GestureDetector(
-                    // 點擊空白處釋放焦點
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () =>
-                        FocusScope.of(context).requestFocus(FocusNode()),
-                    child: ListView(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(35, 100, 35, 0),
-                          child: ListTile(
-                            title: Text('帳號：', style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(52, 0, 52, 0),
-                          child: TextField(
-                            controller: myuid,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              filled: true,
-                              isCollapsed: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(10)), //设置边框四个角的弧度
-                                borderSide: BorderSide(
-                                  //用来配置边框的样式
-                                  color: Colors.red, //设置边框的颜色
-                                  width: 2.0, //设置边框的粗细
-                                ),
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: SafeArea(
+                child: Scaffold(
+                    appBar: AppBar(
+                      title: Text("登入",
+                          style: TextStyle(
+                              color: Colors.white, fontSize: _appBarSize)),
+                      backgroundColor: primaryColor,
+                    ),
+                    body: GestureDetector(
+                        // 點擊空白處釋放焦點
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () =>
+                            FocusScope.of(context).requestFocus(FocusNode()),
+                        child: ListView(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _listLR,
+                                top: _height * 0.1,
+                                right: _listLR,
+                              ),
+                              child: ListTile(
+                                title: Text('帳號：',
+                                    style: TextStyle(fontSize: _titleSize)),
                               ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(35, 0, 35, 0),
-                          child: ListTile(
-                            title: Text('密碼：', style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(52, 0, 52, 0),
-                          child: TextField(
-                            controller: mypw,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              fillColor: Color(0xfff3f3f4),
-                              filled: true,
-                              isCollapsed: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(10)), //设置边框四个角的弧度
-                                borderSide: BorderSide(
-                                  //用来配置边框的样式
-                                  color: Colors.red, //设置边框的颜色
-                                  width: 2.0, //设置边框的粗细
-                                ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _height * 0.07,
+                                top: _height * 0.0001,
+                                right: _height * 0.07,
                               ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(55, 25, 55, 0),
-                          child: SizedBox(
-                              height: 40,
-                              child: TextButton(
-                                  style: TextButton.styleFrom(
-                                      primary: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      backgroundColor: primaryColor),
-                                  child: Text(
-                                    '登入',
-                                    style: TextStyle(fontSize: 20),
+                              child: TextField(
+                                controller: myuid,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  isCollapsed: true,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: _height * 0.015,
+                                      vertical: _height * 0.015),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                            _borderRadius)), //设置边框四个角的弧度
+                                    borderSide: BorderSide(color: _bule),
                                   ),
-                                  onPressed: () async {
-                                    if (myuid.text.isNotEmpty &&
-                                        mypw.text.isNotEmpty) {
-                                      if (await _submit() != true) {
-                                        print(_submit());
-                                        Navigator.push(context,
-                                          MaterialPageRoute(
-                                            builder: (context) => MyApp()));
-                                      }
-                                    } else {
-                                      bool action = await loginfailDialog(
-                                          context, _alertTitle, _alertTxt);
-                                    }
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _listLR,
+                                top: _height * 0.02,
+                                right: _listLR,
+                              ),
+                              child: ListTile(
+                                title: Text('密碼：',
+                                    style: TextStyle(fontSize: _titleSize)),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _height * 0.07,
+                                top: _height * 0.0001,
+                                right: _height * 0.07,
+                              ),
+                              child: TextField(
+                                controller: mypw,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  fillColor: Color(0xfff3f3f4),
+                                  filled: true,
+                                  isCollapsed: true,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: _height * 0.015,
+                                      vertical: _height * 0.015),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                            _borderRadius)), //设置边框四个角的弧度
+                                    borderSide: BorderSide(color: _bule),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _height * 0.07,
+                                top: _height * 0.05,
+                                right: _height * 0.07,
+                              ),
+                              child: SizedBox(
+                                  height: _bottomHeight,
+                                  child: TextButton(
+                                      style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      _borderRadius)),
+                                          backgroundColor: primaryColor),
+                                      child: Text(
+                                        '登入',
+                                        style: TextStyle(fontSize: _titleSize),
+                                      ),
+                                      onPressed: () async {
+                                        if (myuid.text.isNotEmpty &&
+                                            mypw.text.isNotEmpty) {
+                                          if (await _submit() != true) {
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setString(
+                                                'TestString_Key', myuid.text);
 
-                                    // if (uid.contains(myuid.text) && pw == mypw.text) {
-                                    //   Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //         builder: (context) => MyApp(),
-                                    //       ));
-                                    // } else {
-                                    //   // print("帳號或密碼錯誤");
-                                    //   // loginfail(context, _alertTitle, '請確認帳號和密碼是否正確');
-                                    //   bool action = await loginfailDialog(
-                                    //       context, _alertTitle, _alertTxt);
-                                    // }
-                                  })),
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HomeWidget()));
+                                          } else {
+                                            bool action = await loginfailDialog(
+                                                context,
+                                                _alertTitle,
+                                                _alertTxt);
+                                          }
+                                        } else {
+                                          bool action = await loginfailDialog(
+                                              context, _alertTitle, _alertTxt);
+                                        }
+
+                                        // if (uid.contains(myuid.text) && pw == mypw.text) {
+                                        //   Navigator.push(
+                                        //       context,
+                                        //       MaterialPageRoute(
+                                        //         builder: (context) => MyApp(),
+                                        //       ));
+                                        // } else {
+                                        //   // print("帳號或密碼錯誤");
+                                        //   // loginfail(context, _alertTitle, '請確認帳號和密碼是否正確');
+                                        //   bool action = await loginfailDialog(
+                                        //       context, _alertTitle, _alertTxt);
+                                        // }
+                                      })),
+                            ),
+                          ],
+                        )),
+                    bottomNavigationBar: Container(
+                        child: Row(children: <Widget>[
+                      Expanded(
+                        // ignore: deprecated_member_use
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            left: _listLR,
+                            bottom: _listB,
+                          ),
+                          child: SizedBox(
+                              height: _bottomHeight,
+                              child: TextButton(
+                                child: Text('忘記密碼',
+                                    style: TextStyle(fontSize: _height * 0.02)),
+                                style: TextButton.styleFrom(
+                                  primary: primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0)),
+                                ),
+                                onPressed: () async {
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.remove('TestString_Key');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ForgetpwPage()));
+                                },
+                              )),
                         ),
-                      ],
-                    )))));
+                      ),
+                      Expanded(
+                        // ignore: deprecated_member_use
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            right: _listLR,
+                            bottom: _listB,
+                          ),
+                          child: SizedBox(
+                              height: _bottomHeight,
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  primary: primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0)),
+                                ),
+                                child: Text(
+                                  '我要註冊',
+                                  style: TextStyle(fontSize: _height * 0.02),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              RegisterPage()));
+                                },
+                              )),
+                        ),
+                      ),
+                    ]))))));
   }
 }
