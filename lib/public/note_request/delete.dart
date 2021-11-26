@@ -14,7 +14,7 @@ class DeleteNote {
 
   _request() async {
     Request request = Request();
-    await request.delete(context, data);
+    await request.noteedelete(context, data);
     this._isError = await request.getIsError();
   }
 
