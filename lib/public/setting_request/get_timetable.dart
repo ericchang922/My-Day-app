@@ -1,20 +1,20 @@
-import 'package:My_Day_app/models/setting/themes_model.dart';
+import 'package:My_Day_app/models/setting/get_timetable.dart';
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class GetThemes {
+class GetTimetable {
   BuildContext context;
   String uid;
   Map<String, String> data;
-  GetThemesModel _response;
+  GetTimetableModel _response;
 
   _request() async {
     Request request = Request();
-    await request.getthemes(context, data);
-    _response = await request.getThemesGet();
+    await request.gettimetable(context, data);
+    _response = await request.getTimetableGet();
   }
 
-  GetThemes({this.uid}) {
+  GetTimetable({this.uid}) {
     data = {'uid': uid};
   }
 

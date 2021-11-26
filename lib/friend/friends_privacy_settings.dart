@@ -1,8 +1,15 @@
+import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
+import 'package:My_Day_app/models/friend/friend_list_model.dart';
+import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
+import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
+import 'package:My_Day_app/public/friend_request/friend_list.dart';
+import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
+import 'package:My_Day_app/public/setting_request/get_friend_privacy.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
 
-
-// 
+//
 
 class FriendsPrivacySettingsPage extends StatefulWidget {
   @override
@@ -10,82 +17,316 @@ class FriendsPrivacySettingsPage extends StatefulWidget {
     return FriendsPrivacySettings();
   }
 }
+
 class FriendsPrivacySettings extends State {
-  bool switchValue = false;
+  get child => null;
+  get left => null;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: block.darkThemeEnabled,
-      initialData: false,
-      builder: (context, snapshot) {
-        switchValue = snapshot.data;
-        return SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text('好友隱私設定', style: TextStyle(fontSize: 20)),
-            leading: IconButton(
-              icon: Icon(Icons.chevron_left),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-          body: ListView(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(right: 15, left: 35),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text.rich(TextSpan(
-                      children: <InlineSpan>[
-                        WidgetSpan(
-                          child: new Image.asset(
-                            "assets/images/search.png",
-                            width: 20,
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'xxxxxx',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  PopupMenuButton<int>(
-                    offset: Offset(0, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                    icon: Icon(Icons.more_vert),
-                    itemBuilder: (context) => [
-                      PopupMenuItem<int>(
-                        value: 1,
-                        child: ListTile(
-                          title: Text(
-                                  '玩聚邀請',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                          ),
-                          trailing: StatefulBuilder(builder:
-                            (BuildContext context, StateSetter setState) {
-                              return Switch(        
-                                value: switchValue,
-                                onChanged: (newValue) {
-                                  block.changeTheme1(newValue);
-                                  print(switchValue);
-                                  setState(() {});
+    return SafeArea(child: Scaffold(body: friendPage()));
+  }
+}
+
+class friendPage extends StatefulWidget {
+  @override
+  _friendWidget createState() => new _friendWidget();
+}
+
+class _friendWidget extends State<friendPage> {
+  FriendListModel _friendListModel;
+  BestFriendListModel _bestFriendListModel;
+  GetFriendPrivacyModel _friendprivacy;
+
+  final _friendNameController = TextEditingController();
+
+  String _searchText = "";
+  String _dropdownValue = '讀書';
+  String id = 'lili123';
+  String friendId ;
+
+  Map<String, dynamic> _friendCheck = {};
+  Map<String, dynamic> _bestFriendCheck = {};
+
+  List _filteredFriend = [];
+  List _filteredBestFriend = [];
+
+  bool _isCheck;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _friendListRequest();
+    _bestFriendListRequest();
+    _friendNameControlloer();
+    _getFriendPrivacyRequest();
+    _isCheck = false;
+  }
+
+  _getFriendPrivacyRequest() async {
+    // var response = await rootBundle.loadString('assets/json/group_list.json');
+    // var responseBody = json.decode(response);
+
+    GetFriendPrivacyModel _request =
+        await GetFriendPrivacy(uid: id, friendId:friendId).getData();
+
+    setState(() {
+      _friendprivacy = _request;
+      print(_friendprivacy);
+    });
+    
+  }
+
+  void _friendNameControlloer() {
+    _friendNameController.addListener(() {
+      if (_friendNameController.text.isEmpty) {
+        setState(() {
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _searchText = _friendNameController.text;
+        });
+      }
+    });
+  }
+
+  _bestFriendListRequest() async {
+    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
+    // var responseBody = json.decode(response);
+
+    BestFriendListModel _request = await BestFriendList(uid: id).getData();
+
+    setState(() {
+      _bestFriendListModel = _request;
+
+      for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
+        _bestFriendCheck[_bestFriendListModel.friend[i].friendId] = false;
+      }
+    });
+  }
+
+  _friendListRequest() async {
+    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
+    // var responseBody = json.decode(response);
+
+    FriendListModel _request = await FriendList(uid: id).getData();
+
+    setState(() {
+      _friendListModel = _request;
+
+      for (int i = 0; i < _friendListModel.friend.length; i++) {
+        _friendCheck[_friendListModel.friend[i].friendId] = false;
+      }
+    });
+  }
+
+  Image getImage(String imageString) {
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _imgSize = _height * 0.045;
+    bool isGetImage;
+
+    Image friendImage = Image.asset(
+      'assets/images/friend_choose.png',
+      width: _imgSize,
+    );
+    const Base64Codec base64 = Base64Codec();
+    Image image = Image.memory(base64.decode(imageString),
+        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
+    var resolve = image.image.resolve(ImageConfiguration.empty);
+    resolve.addListener(ImageStreamListener((_, __) {
+      isGetImage = true;
+    }, onError: (Object exception, StackTrace stackTrace) {
+      isGetImage = false;
+      print('error');
+    }));
+
+    if (isGetImage == null) {
+      return image;
+    } else {
+      return friendImage;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
+    double _titleSize = _height * 0.025;
+    double _listPaddingH = _width * 0.06;
+    double _textL = _height * 0.03;
+    double _textBT = _height * 0.02;
+    double _leadingL = _height * 0.02;
+
+    double _pSize = _height * 0.023;
+
+    double _appBarSize = _width * 0.052;
+
+    Color _color = Theme.of(context).primaryColor;
+
+    Color _bule = Color(0xff7AAAD8);
+
+    Widget friendListWidget;
+
+    _submitfriend(String friendId) async {
+      String uid = id;
+      bool isPublic = _isCheck;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    if (_friendListModel != null && _bestFriendListModel != null) {
+      Widget bestFriendList = ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _bestFriendListModel.friend.length,
+        itemBuilder: (BuildContext context, int index) {
+          var friends = _bestFriendListModel.friend[index];
+          return ListTile(
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: _listPaddingH, vertical: 0.0),
+              leading: ClipOval(
+                child: getImage(friends.photo),
+              ),
+              title: Text(
+                friends.friendName,
+                style: TextStyle(fontSize: _pSize),
+              ),
+              trailing: PopupMenuButton<int>(
+                  offset: Offset(0, 50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(_height * 0.01)),
+                  icon: Icon(Icons.more_vert),
+                  itemBuilder: (context) => [
+                        PopupMenuItem<int>(
+                          value: 1,
+                          child: ListTile(
+                            title: Text(
+                              '玩聚邀請',
+                              style: TextStyle(
+                                fontSize: _pSize,
+                              ),
+                            ),
+                            trailing: StatefulBuilder(builder:
+                                (BuildContext context, StateSetter setState) {
+                              return Switch(
+                                value: _friendCheck[friends.friendId],
+                                onChanged: (value) async {
+                                  if (await _submitfriend(friends.friendId) !=
+                                      true) {
+                                    setState(() {
+                                      _friendCheck[friends.friendId] = value;
+                                    });
+                                  }
                                 },
                                 activeColor: Colors.white,
                                 activeTrackColor: Color(0xffF86D67),
                                 // inactiveThumbColor: Color(0xffF86D67),
                                 // inactiveTrackColor: Color(0xffF86D67),
-                            );}
+                              );
+                            }),
                           ),
+                        ),
+                        PopupMenuDivider(
+                          height: 1,
+                        ),
+                        PopupMenuItem<int>(
+                            value: 1,
+                            child: ListTile(
+                              title: Text(
+                                '公開課表',
+                                style: TextStyle(
+                                  fontSize: _pSize,
+                                ),
+                              ),
+                              trailing: StatefulBuilder(builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return Switch(
+                                  value: _bestFriendCheck[friends.friendId],
+                                  onChanged: (value) async {
+                                    if (await _submitfriend(friends.friendId) !=
+                                        true) {
+                                      setState(() {
+                                        _bestFriendCheck[friends.friendId] =
+                                            value;
+                                      });
+                                    }
+                                  },
+                                  activeColor: Colors.white,
+                                  activeTrackColor: Color(0xffF86D67),
+                                  // inactiveThumbColor: Color(0xffF86D67),
+                                  // inactiveTrackColor: Color(0xffF86D67),
+                                );
+                              }),
+                            ))
+                      ]));
+        },
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+      );
+
+      Widget friendList = ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _friendListModel.friend.length,
+        itemBuilder: (BuildContext context, int index) {
+          var friends = _friendListModel.friend[index];
+          return ListTile(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(friends.photo),
+            ),
+            title: Text(
+              friends.friendName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            trailing: PopupMenuButton<int>(
+                offset: Offset(0, 50),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(_height * 0.01)),
+                icon: Icon(Icons.more_vert),
+                itemBuilder: (context) => [
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: ListTile(
+                          title: Text(
+                            '玩聚邀請',
+                            style: TextStyle(
+                              fontSize: _pSize,
+                            ),
+                          ),
+                          trailing: StatefulBuilder(builder:
+                              (BuildContext context, StateSetter setState) {
+                            return Switch(
+                              value: _friendCheck[friends.friendId],
+                              onChanged: (value) async {
+                                if (await _submitfriend(friends.friendId) !=
+                                    true) {
+                                  setState(() {
+                                    _friendCheck[friends.friendId] = value;
+                                  });
+                                }
+                              },
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(0xffF86D67),
+                              // inactiveThumbColor: Color(0xffF86D67),
+                              // inactiveTrackColor: Color(0xffF86D67),
+                            );
+                          }),
                         ),
                       ),
                       PopupMenuDivider(
@@ -95,67 +336,529 @@ class FriendsPrivacySettings extends State {
                         value: 1,
                         child: ListTile(
                           title: Text(
-                                  '公開課表',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
+                            '公開課表',
+                            style: TextStyle(
+                              fontSize: _pSize,
+                            ),
                           ),
                           trailing: StatefulBuilder(builder:
-                            (BuildContext context, StateSetter setState) {
-                              return Switch(        
-                                value: switchValue,
-                                onChanged: (newValue) {
-                                  block.changeTheme1(newValue);
-                                  print(switchValue);
-                                  setState(() {});
-                                },
-                                activeColor: Colors.white,
-                                activeTrackColor: Color(0xffF86D67),
-                                // inactiveThumbColor: Color(0xffF86D67),
-                                // inactiveTrackColor: Color(0xffF86D67),
-                            );}
-                          ),
+                              (BuildContext context, StateSetter setState) {
+                            return Switch(
+                              value: _bestFriendCheck[friends.friendId],
+                              onChanged: (value) async {
+                                if (await _submitfriend(friends.friendId) !=
+                                    true) {
+                                  setState(() {
+                                    _bestFriendCheck[friends.friendId] = value;
+                                  });
+                                }
+                              },
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(0xffF86D67),
+                              // inactiveThumbColor: Color(0xffF86D67),
+                              // inactiveTrackColor: Color(0xffF86D67),
+                            );
+                          }),
                         ),
                       ),
                     ]),
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+      );
+
+      if (_searchText.isEmpty) {
+        if (_bestFriendListModel.friend.length != 0 &&
+            _friendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              // Container(
+              //   margin: EdgeInsets.only(
+              //       left: _textL, bottom: _textBT, top: _textBT),
+              //   child: Text('摯友',
+              //       style: TextStyle(fontSize: _pSize, color: _bule)),
+              // ),
+              bestFriendList,
+
+              friendList
+            ],
+          );
+        } else if (_bestFriendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [
+              // Container(
+              //   margin: EdgeInsets.only(
+              //       left: _textL, bottom: _textBT, top: _textBT),
+              //   child: Text('摯友',
+              //       style: TextStyle(fontSize: _pSize, color: _bule)),
+              // ),
+              bestFriendList
+            ],
+          );
+        } else if (_friendListModel.friend.length != 0) {
+          friendListWidget = ListView(
+            children: [friendList],
+          );
+        } else {
+          friendListWidget = Center(child: Text('目前沒有任何好友!'));
+        }
+      } else {
+        // ignore: deprecated_member_use
+        _filteredBestFriend = new List();
+        // ignore: deprecated_member_use
+        _filteredFriend = new List();
+
+        for (int i = 0; i < _friendListModel.friend.length; i++) {
+          if (_friendListModel.friend[i].friendName
+              .toLowerCase()
+              .contains(_searchText.toLowerCase())) {
+            _filteredFriend.add(_friendListModel.friend[i]);
+          }
+        }
+        for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
+          if (_bestFriendListModel.friend[i].friendName
+              .toLowerCase()
+              .contains(_searchText.toLowerCase())) {
+            _filteredBestFriend.add(_bestFriendListModel.friend[i]);
+          }
+        }
+
+        if (_filteredBestFriend.length > 0 && _filteredFriend.length > 0) {
+          friendListWidget = ListView(
+            children: [
+              _buildSearchBestFriendList(context),
+              Divider(),
+              _buildSearchFriendList(context)
+            ],
+          );
+        } else {
+          friendListWidget = ListView(
+            children: [
+              if (_filteredBestFriend.length > 0)
+                _buildSearchBestFriendList(context),
+              if (_filteredFriend.length > 0) _buildSearchFriendList(context)
+            ],
+          );
+        }
+      }
+
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('好友隱私設定', style: TextStyle(fontSize: _titleSize)),
+          leading: IconButton(
+            icon: Icon(Icons.chevron_left),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: GestureDetector(
+            child: Container(
+          margin: EdgeInsets.only(top: _height * 0.02),
+          child: Column(
+            children: [
+              Expanded(child: friendListWidget),
+            ],
+          ),
+        )),
+      );
+    } else {
+      return SafeArea(
+          child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('好友隱私設定', style: TextStyle(fontSize: _titleSize)),
+          leading: IconButton(
+            icon: Icon(Icons.chevron_left),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: SafeArea(
+          bottom: false,
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      ));
+    }
+  }
+
+  Widget _buildSearchBestFriendList(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
+
+    double _listPaddingH = _width * 0.06;
+    double _pSize = _height * 0.023;
+
+    _submitfriend(String friendId) async {
+      String uid = id;
+      bool isPublic = _isCheck;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: _filteredBestFriend.length,
+      itemBuilder: (BuildContext context, int index) {
+        var friends = _filteredBestFriend[index];
+        return ListTile(
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+          leading: ClipOval(
+            child: getImage(friends.photo),
+          ),
+          title: Text(
+            friends.friendName,
+            style: TextStyle(fontSize: _pSize),
+          ),
+          trailing: PopupMenuButton<int>(
+              offset: Offset(0, 50),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(_height * 0.01)),
+              icon: Icon(Icons.more_vert),
+              itemBuilder: (context) => [
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: ListTile(
+                        title: Text(
+                          '玩聚邀請',
+                          style: TextStyle(
+                            fontSize: _pSize,
+                          ),
+                        ),
+                        trailing: StatefulBuilder(builder:
+                            (BuildContext context, StateSetter setState) {
+                          return Switch(
+                            value: _friendCheck[friends.friendId],
+                            onChanged: (value) async {
+                              if (await _submitfriend(friends.friendId) !=
+                                  true) {
+                                setState(() {
+                                  _friendCheck[friends.friendId] = value;
+                                });
+                              }
+                            },
+                            activeColor: Colors.white,
+                            activeTrackColor: Color(0xffF86D67),
+                            // inactiveThumbColor: Color(0xffF86D67),
+                            // inactiveTrackColor: Color(0xffF86D67),
+                          );
+                        }),
+                      ),
+                    ),
+                    PopupMenuDivider(
+                      height: 1,
+                    ),
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: ListTile(
+                        title: Text(
+                          '公開課表',
+                          style: TextStyle(
+                            fontSize: _pSize,
+                          ),
+                        ),
+                        trailing: StatefulBuilder(builder:
+                            (BuildContext context, StateSetter setState) {
+                          return Switch(
+                            value: _bestFriendCheck[friends.friendId],
+                            onChanged: (value) async {
+                              if (await _submitfriend(friends.friendId) !=
+                                  true) {
+                                setState(() {
+                                  _bestFriendCheck[friends.friendId] = value;
+                                });
+                              }
+                            },
+                            activeColor: Colors.white,
+                            activeTrackColor: Color(0xffF86D67),
+                            // inactiveThumbColor: Color(0xffF86D67),
+                            // inactiveTrackColor: Color(0xffF86D67),
+                          );
+                        }),
+                      ),
+                    ),
                   ]),
-          ),
-            
-             
-          
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-              // actions: <Widget>[
-              //   PopupMenuButton(itemBuilder: (context) {
-              //     return [
-              //       PopupMenuItem(
-              //           child: ListTile(
-              //         title: Text("Dark Theme"),
-              //         trailing: StatefulBuilder(builder:
-              //             (BuildContext context, StateSetter setState) {
-              //           return Switch(
-              //             value: switchValue,
-              //             onChanged: (newValue) {
-              //               block.changeTheme1(newValue);
-              //               print(switchValue);
-              //               setState(() {});
-              //             },
-              //           );
-              //         }),
-              //       )), //Problem
-              //     ];
-              //   })
-              // ],
-            ]),
-          ),
         );
+      },
+      separatorBuilder: (context, index) {
+        return Divider();
       },
     );
   }
+
+  Widget _buildSearchFriendList(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _height = size.height;
+    double _width = size.width;
+
+    double _listPaddingH = _width * 0.06;
+    double _pSize = _height * 0.023;
+
+    _submitfriend(String friendId) async {
+      String uid = id;
+      bool isPublic = _isCheck;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    return ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _filteredFriend.length,
+        itemBuilder: (BuildContext context, int index) {
+          var friends = _filteredFriend[index];
+          return ListTile(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(friends.photo),
+            ),
+            title: Text(
+              friends.friendName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            trailing: PopupMenuButton<int>(
+                offset: Offset(0, 50),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(_height * 0.01)),
+                icon: Icon(Icons.more_vert),
+                itemBuilder: (context) => [
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: ListTile(
+                          title: Text(
+                            '玩聚邀請',
+                            style: TextStyle(
+                              fontSize: _pSize,
+                            ),
+                          ),
+                          trailing: StatefulBuilder(builder:
+                              (BuildContext context, StateSetter setState) {
+                            return Switch(
+                              value: _friendCheck[friends.friendId],
+                              onChanged: (value) async {
+                                if (await _submitfriend(friends.friendId) !=
+                                    true) {
+                                  setState(() {
+                                    _friendCheck[friends.friendId] = value;
+                                  });
+                                }
+                              },
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(0xffF86D67),
+                              // inactiveThumbColor: Color(0xffF86D67),
+                              // inactiveTrackColor: Color(0xffF86D67),
+                            );
+                          }),
+                        ),
+                      ),
+                      PopupMenuDivider(
+                        height: 1,
+                      ),
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: ListTile(
+                          title: Text(
+                            '公開課表',
+                            style: TextStyle(
+                              fontSize: _pSize,
+                            ),
+                          ),
+                          trailing: StatefulBuilder(builder:
+                              (BuildContext context, StateSetter setState) {
+                            return Switch(
+                              value: _bestFriendCheck[friends.friendId],
+                              onChanged: (value) async {
+                                if (await _submitfriend(friends.friendId) !=
+                                    true) {
+                                  setState(() {
+                                    _bestFriendCheck[friends.friendId] = value;
+                                  });
+                                }
+                              },
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(0xffF86D67),
+                              // inactiveThumbColor: Color(0xffF86D67),
+                              // inactiveTrackColor: Color(0xffF86D67),
+                            );
+                          }),
+                        ),
+                      ),
+                    ]),
+          );
+        });
+  }
 }
+
+//   bool switchValue = false;
+//   bool openValue = false;
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamBuilder(
+//       stream: block.darkThemeEnabled,
+//       initialData: false,
+//       builder: (context, snapshot) {
+//         switchValue = snapshot.data;
+//         return SafeArea(
+//         child: Scaffold(
+//           appBar: AppBar(
+//             backgroundColor: Theme.of(context).primaryColor,
+//             title: Text('好友隱私設定', style: TextStyle(fontSize: 20)),
+//             leading: IconButton(
+//               icon: Icon(Icons.chevron_left),
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//             ),
+//           ),
+//           body: ListView(
+//             children: <Widget>[
+//               Container(
+//                 margin: EdgeInsets.only(right: 15, left: 35),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Text.rich(TextSpan(
+//                       children: <InlineSpan>[
+//                         WidgetSpan(
+//                           child: new Image.asset(
+//                             "assets/images/search.png",
+//                             width: 20,
+//                           ),
+//                         ),
+//                         TextSpan(
+//                           text: 'xxxxxx',
+//                           style: TextStyle(
+//                             fontSize: 20,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   PopupMenuButton<int>(
+//                     offset: Offset(0, 50),
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(10)),
+//                     icon: Icon(Icons.more_vert),
+//                     itemBuilder: (context) => [
+//                       PopupMenuItem<int>(
+//                         value: 1,
+//                         child: ListTile(
+//                           title: Text(
+//                                   '玩聚邀請',
+//                                   style: TextStyle(
+//                                     fontSize: 18,
+//                                   ),
+//                           ),
+//                           trailing: StatefulBuilder(builder:
+//                             (BuildContext context, StateSetter setState) {
+//                               return Switch(
+//                                 value: openValue,
+//                                onChanged: (value) {
+//                                   setState(() {
+//                                     openValue = value;
+//                                   });
+//                                 },
+//                                 activeColor: Colors.white,
+//                                 activeTrackColor: Color(0xffF86D67),
+//                                 // inactiveThumbColor: Color(0xffF86D67),
+//                                 // inactiveTrackColor: Color(0xffF86D67),
+//                             );}
+//                           ),
+//                         ),
+//                       ),
+//                       PopupMenuDivider(
+//                         height: 1,
+//                       ),
+//                       PopupMenuItem<int>(
+//                         value: 1,
+//                         child: ListTile(
+//                           title: Text(
+//                                   '公開課表',
+//                                   style: TextStyle(
+//                                     fontSize: 18,
+//                                   ),
+//                           ),
+//                           trailing: StatefulBuilder(builder:
+//                             (BuildContext context, StateSetter setState) {
+//                               return Switch(
+//                                 value: switchValue,
+//                                  onChanged: (value) {
+//                                   setState(() {
+//                                     switchValue = value;
+//                                   });
+//                                 },
+//                                 activeColor: Colors.white,
+//                                 activeTrackColor: Color(0xffF86D67),
+//                                 // inactiveThumbColor: Color(0xffF86D67),
+//                                 // inactiveTrackColor: Color(0xffF86D67),
+//                             );}
+//                           ),
+//                         ),
+//                       ),
+//                     ]),
+//                   ]),
+//           ),
+
+//           Container(
+//             margin: EdgeInsets.only(top: 10),
+//             color: Color(0xffE3E3E3),
+//             constraints: BoxConstraints.expand(height: 1.0),
+//           ),
+//               // actions: <Widget>[
+//               //   PopupMenuButton(itemBuilder: (context) {
+//               //     return [
+//               //       PopupMenuItem(
+//               //           child: ListTile(
+//               //         title: Text("Dark Theme"),
+//               //         trailing: StatefulBuilder(builder:
+//               //             (BuildContext context, StateSetter setState) {
+//               //           return Switch(
+//               //             value: switchValue,
+//               //             onChanged: (newValue) {
+//               //               block.changeTheme1(newValue);
+//               //               print(switchValue);
+//               //               setState(() {});
+//               //             },
+//               //           );
+//               //         }),
+//               //       )), //Problem
+//               //     ];
+//               //   })
+//               // ],
+//             ]),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
 class Block {
   final _themeContol = StreamController<bool>();

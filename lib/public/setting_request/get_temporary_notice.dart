@@ -1,20 +1,20 @@
-import 'package:My_Day_app/models/setting/themes_model.dart';
+import 'package:My_Day_app/models/setting/get_temporary_notice.dart';
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class GetThemes {
+class GetTimetableNotice {
   BuildContext context;
   String uid;
   Map<String, String> data;
-  GetThemesModel _response;
+  GetTimetableNoticeModel _response;
 
   _request() async {
     Request request = Request();
-    await request.getthemes(context, data);
-    _response = await request.getThemesGet();
+    await request.gettimetablenotice(context, data);
+    _response = await request.getTimetableNoticeGet();
   }
 
-  GetThemes({this.uid}) {
+  GetTimetableNotice({this.uid}) {
     data = {'uid': uid};
   }
 

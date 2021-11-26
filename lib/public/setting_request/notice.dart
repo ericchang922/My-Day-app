@@ -18,7 +18,7 @@ class Notice {
     this._isError = await request.getIsError();
   }
 
-  Notice({this.context, this.uid, this.isSchedule, this.isCountdown, this.isGroup,  }) {
+  Notice({this.context, this.uid, this.isSchedule, this.isCountdown, this.isGroup  }) {
     data = {'uid': uid, 'isSchedule': isSchedule, 'isCountdown': isCountdown, 'isGroup': isGroup};
   }
   getIsError() async {

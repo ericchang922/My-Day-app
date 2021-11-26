@@ -1,20 +1,20 @@
-import 'package:My_Day_app/models/setting/themes_model.dart';
+import 'package:My_Day_app/models/profile/profile_list.dart';
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class GetThemes {
+class GetProfileList {
   BuildContext context;
   String uid;
   Map<String, String> data;
-  GetThemesModel _response;
+  GetProfileListModel _response;
 
   _request() async {
     Request request = Request();
-    await request.getthemes(context, data);
-    _response = await request.getThemesGet();
+    await request.getprofilelist(context, data);
+    _response = await request.getProfileListGet();
   }
 
-  GetThemes({this.uid}) {
+  GetProfileList({this.uid}) {
     data = {'uid': uid};
   }
 

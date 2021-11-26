@@ -99,7 +99,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     Size size = MediaQuery.of(context).size;
     double _width = size.width;
     double _height = size.height;
-
+    double _titleSize = _height * 0.025;
     double _listPaddingH = _width * 0.06;
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
@@ -234,7 +234,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text('交友邀請', style: TextStyle(fontSize: 20)),
+          title: Text('交友邀請', style: TextStyle(fontSize: _titleSize)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
@@ -258,7 +258,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
           child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text('交友邀請', style: TextStyle(fontSize: 20)),
+          title: Text('交友邀請', style: TextStyle(fontSize: _titleSize)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {

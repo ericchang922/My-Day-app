@@ -3,25 +3,23 @@
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class EditNote {
+class EditProfile {
   BuildContext context;
   String uid;
-  int noteNum;
-  String typeName;
-  String title;
-  String content;
+  String userName;
+  String photo;
   Map<String, dynamic> data;
 
   bool _isError;//編輯結果
 
   _request() async {
     Request request = Request();
-    await request.noteedit(context, data);
+    await request.editprofile(context, data);
     this._isError = await request.getIsError();
   }
 
-  EditNote({this.context, this.uid,this. noteNum, this. typeName, this.title, this.content }) {
-    data = {'uid': uid, 'noteNum':  noteNum ,'typeName':  typeName , 'title':title, 'content':content};
+  EditProfile({this.context, this.uid,this. userName, this. photo}) {
+    data = {'uid': uid, 'userName': userName ,'photo':  photo };
   }
   getIsError() async {
     await _request();

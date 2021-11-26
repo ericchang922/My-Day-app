@@ -29,11 +29,22 @@ class Privacy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
+    double _appBarSize = _width * 0.052;
+    double _leadingL = _height * 0.02;
+    double _bottomHeight = _height * 0.07;
+    double _listPaddingH = _width * 0.06;
+    double _textL = _height * 0.03;
+    double _textBT = _height * 0.02;
+    double _pSize = _height * 0.023;
+    Color _color = Theme.of(context).primaryColor;
     return SafeArea(
         child: Scaffold(
       appBar: AppBar( 
         backgroundColor: Color(0xffF86D67),
-        title:Text('隱私',style: TextStyle(fontSize: 20)),
+        title:Text('隱私',style: TextStyle(fontSize: _appBarSize)),
         leading:IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
@@ -44,10 +55,10 @@ class Privacy extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(right: 5, left: 28),
+            margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
             // ignore: deprecated_member_use
             child: SizedBox(
-              height: 60,
+              height: _bottomHeight,
               width: double.infinity,
               child: TextButton(
                 style: TextButton.styleFrom(
@@ -62,7 +73,7 @@ class Privacy extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     '公開課表',
-                    style: TextStyle(fontSize: 20,
+                    style: TextStyle(fontSize: _appBarSize,
                     ),
                   ),
                   Icon(
@@ -73,18 +84,16 @@ class Privacy extends StatelessWidget {
               ),
             )),
           ),
-          Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Container(
-                  margin: EdgeInsets.only(top: 4.0),
-                  color: Color(0xffE3E3E3),
-                  constraints: BoxConstraints.expand(height: 1.0),
-                )),
           Container(
-            margin: EdgeInsets.only(right: 5, left: 28),
+        margin: EdgeInsets.only(top: _height * 0.001),
+        color: Color(0xffE3E3E3),
+        constraints: BoxConstraints.expand(height: 1.0),
+      ),
+          Container(
+             margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
             // ignore: deprecated_member_use
             child: SizedBox(
-              height: 60,
+              height: _bottomHeight,
               width: double.infinity,
               child: TextButton(
                 style: TextButton.styleFrom(
@@ -99,7 +108,7 @@ class Privacy extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     '好友隱私設定',
-                    style: TextStyle(fontSize: 20,
+                    style: TextStyle(fontSize: _appBarSize,
                     ),
                   ),
                   Icon(
@@ -110,13 +119,12 @@ class Privacy extends StatelessWidget {
               ),
             )),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Container(
-              margin: EdgeInsets.only(top: 4.0),
-              color: Color(0xffE3E3E3),
-              constraints: BoxConstraints.expand(height: 1.0),
-            )),
+          Container(
+        margin: EdgeInsets.only(top: _height * 0.001),
+        color: Color(0xffE3E3E3),
+        constraints: BoxConstraints.expand(height: 1.0),
+      ),
+      
         ],
       ),
     ));

@@ -1,16 +1,17 @@
 import 'dart:convert';
 
 import 'package:My_Day_app/friend/bestfriend.dart';
+import 'package:My_Day_app/friend/friend_home.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/friend/friends_invitation.dart';
+import 'package:My_Day_app/home.dart';
+import 'package:My_Day_app/home/home_Update.dart';
+import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/friend_request/delete.dart';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
-
-import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/public/group_request/create_group.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
@@ -24,9 +25,10 @@ class _friendWidget extends State<FriendPage> {
   BestFriendListModel _bestFriendListModel;
 
   final _friendNameController = TextEditingController();
-  String uid = "lili123";
 
   String _searchText = "";
+  String uid = prefs.getString('TestString_Key');
+  
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -36,10 +38,10 @@ class _friendWidget extends State<FriendPage> {
 
   bool _isNotCreate = false;
   bool viewVisible = true;
+
   @override
   void initState() {
     super.initState();
-
     _friendListRequest();
     _bestFriendListRequest();
     _friendNameControlloer();
@@ -128,7 +130,7 @@ class _friendWidget extends State<FriendPage> {
     Size size = MediaQuery.of(context).size;
     double _width = size.width;
     double _height = size.height;
-
+    double _titleSize = _height * 0.025;
     double _listPaddingH = _width * 0.06;
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
@@ -145,7 +147,7 @@ class _friendWidget extends State<FriendPage> {
     Widget friendListWidget;
     _submitDelete(String friendId) async {
       var submitWidget;
-      
+
       _submitWidgetfunc() async {
         return DeleteFriend(uid: uid, friendId: friendId);
       }
@@ -178,7 +180,7 @@ class _friendWidget extends State<FriendPage> {
                 style: TextButton.styleFrom(primary: Color(0xffF86D67)),
                 child: Text(
                   '移除',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: _pSize),
                 ),
                 onPressed: () async {}),
           );
@@ -200,15 +202,24 @@ class _friendWidget extends State<FriendPage> {
             leading: ClipOval(
               child: getImage(friends.photo),
             ),
-            title: Text(
-              friends.friendName,
-              style: TextStyle(fontSize: _pSize),
-            ),
+            title: TextButton(
+                style: TextButton.styleFrom(primary: Colors.black),
+                child: Text(
+                  friends.friendName,
+                  style: TextStyle(fontSize: _pSize),
+                ),
+                onPressed: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomeUpdate(child: FriendHome())));
+                }),
             trailing: TextButton(
                 style: TextButton.styleFrom(primary: Color(0xffF86D67)),
                 child: Text(
                   '移除',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: _pSize),
                 ),
                 onPressed: () async {
                   if (await _submitDelete(friends.friendId) != true) {
@@ -302,7 +313,7 @@ class _friendWidget extends State<FriendPage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text('好友', style: TextStyle(fontSize: 20)),
+          title: Text('好友', style: TextStyle(fontSize: _titleSize)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
@@ -320,7 +331,6 @@ class _friendWidget extends State<FriendPage> {
         ),
         body: GestureDetector(
             child: Container(
-          margin: EdgeInsets.only(top: _height * 0.02),
           child: Column(
             children: [
               FriendsPageWidget(),
@@ -335,7 +345,7 @@ class _friendWidget extends State<FriendPage> {
           child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text('好友', style: TextStyle(fontSize: 20)),
+          title: Text('好友', style: TextStyle(fontSize: _titleSize)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
@@ -387,11 +397,9 @@ class _friendWidget extends State<FriendPage> {
               style: TextButton.styleFrom(primary: Color(0xffF86D67)),
               child: Text(
                 '移除',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: _pSize),
               ),
-              onPressed: () async {
-                
-              }),
+              onPressed: () async {}),
         );
       },
       separatorBuilder: (context, index) {
@@ -433,15 +441,22 @@ class _friendWidget extends State<FriendPage> {
           leading: ClipOval(
             child: getImage(friends.photo),
           ),
-          title: Text(
-            friends.friendName,
-            style: TextStyle(fontSize: _pSize),
-          ),
+          title: TextButton(
+              child: Text(
+                friends.friendName,
+                style: TextStyle(fontSize: _pSize),
+              ),
+              onPressed: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeUpdate(child: FriendHome())));
+              }),
           trailing: TextButton(
               style: TextButton.styleFrom(primary: Color(0xffF86D67)),
               child: Text(
                 '移除',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: _pSize),
               ),
               onPressed: () async {
                 if (await _submitDelete(friends.friendId) != true) {
@@ -460,13 +475,19 @@ class _friendWidget extends State<FriendPage> {
 class FriendsPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double _width = size.width;
+    double _height = size.height;
+    double _titleSize = _height * 0.025;
+    double _bottomHeight = _height * 0.07;
+
     return Container(
         child: Column(children: <Widget>[
       Container(
-        margin: EdgeInsets.only(top: 4.0, left: 15),
+        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
         // ignore: deprecated_member_use
         child: SizedBox(
-            height: 60,
+            height: _bottomHeight,
             width: double.infinity,
             child: TextButton(
               style: TextButton.styleFrom(
@@ -482,7 +503,7 @@ class FriendsPageWidget extends StatelessWidget {
                   Text(
                     '摯友',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: _titleSize,
                     ),
                   ),
                   Icon(
@@ -494,15 +515,15 @@ class FriendsPageWidget extends StatelessWidget {
             )),
       ),
       Container(
-        margin: EdgeInsets.only(top: 4.0),
+        margin: EdgeInsets.only(top: _height * 0.001),
         color: Color(0xffE3E3E3),
         constraints: BoxConstraints.expand(height: 1.0),
       ),
       Container(
-        margin: EdgeInsets.only(top: 4.0, left: 15),
+        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
         // ignore: deprecated_member_use
         child: SizedBox(
-            height: 60,
+            height: _bottomHeight,
             width: double.infinity,
             child: TextButton(
               style: TextButton.styleFrom(
@@ -520,7 +541,7 @@ class FriendsPageWidget extends StatelessWidget {
                   Text(
                     '交友邀請',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: _titleSize,
                     ),
                   ),
                   Icon(
@@ -532,7 +553,7 @@ class FriendsPageWidget extends StatelessWidget {
             )),
       ),
       Container(
-        margin: EdgeInsets.only(top: 4.0),
+        margin: EdgeInsets.only(top: _height * 0.001),
         color: Color(0xffE3E3E3),
         constraints: BoxConstraints.expand(height: 1.0),
       ),

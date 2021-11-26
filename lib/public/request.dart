@@ -3,7 +3,13 @@ import 'dart:convert';
 // flutter
 
 import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
-import 'package:My_Day_app/models/setting/theme_model.dart';
+import 'package:My_Day_app/models/profile/profile_list.dart';
+import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
+import 'package:My_Day_app/models/setting/get_location.dart';
+import 'package:My_Day_app/models/setting/get_notice.dart';
+import 'package:My_Day_app/models/setting/get_temporary_notice.dart';
+import 'package:My_Day_app/models/setting/get_timetable.dart';
+import 'package:My_Day_app/models/setting/themes_model.dart';
 import 'package:My_Day_app/models/timetable/section_time_model.dart';
 import 'package:My_Day_app/public/friend_request/make-friend-invite-list.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +109,10 @@ class Request {
     'privacy_timetable': '$host${path['setting']}/privacy_timetable/',
     'themes': '$host${path['setting']}/themes/',
     'get_themes': '$host${path['setting']}/get_themes/',
+    'get_location': '$host${path['setting']}/get_location/',
+    'get_timetable': '$host${path['setting']}/get_timetable/',
+    'get_notice': '$host${path['setting']}/get_notice/',
+    'get_friend_privacy': '$host${path['setting']}/get_friend_privacy/',
   };
   static Map friendUrl = {
     'get': '${path['friend']}/get/',
@@ -155,6 +165,11 @@ class Request {
     'share': '$host${path['note']}/share/',
     'cancel_share': '$host${path['note']}/cancel_share/',
   };
+  static Map profileUrl = {
+    'profile_list': '$host${path['profile']}/profile_list/',
+    'edit_profile': '$host${path['profile']}/edit_profile/',
+    
+  };
 
   Map headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
@@ -202,6 +217,14 @@ class Request {
   GetNoteModel _getnote;
 
   GetThemesModel _getThemes;
+  GetLocationModel _getLocation;
+  GetTimetableModel _getTimetable;
+  GetNoticeModel _getNotice;
+  GetTimetableNoticeModel _getTimetableNotice;
+  GetFriendPrivacyModel _getFriendPrivacy;
+
+  GetProfileListModel _getProfileList;
+
 
   bool _isError;
 
@@ -245,6 +268,13 @@ class Request {
   getNote() => _getnote;
 
   getThemesGet()=> _getThemes;
+  getLocationGet()=> _getLocation;
+  getTimetableGet()=> _getTimetable;
+  getNoticeGet()=> _getNotice;
+  getTimetableNoticeGet()=> _getTimetableNotice;
+  getFriendPrivacyGet()=> _getFriendPrivacy;
+
+  getProfileListGet()=> _getProfileList;
 
   getIsError() => _isError;
 
@@ -786,13 +816,13 @@ class Request {
   }
 
   // edit ---------------------------------------------------------------------------------
-  edit(BuildContext context, Map<String, dynamic> data) async {
+  noteedit(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['edit'];
     await httpPost(context, data, _url, '編輯成功');
   }
 
   // delete ---------------------------------------------------------------------------------
-  delete(BuildContext context, Map<String, dynamic> data) async {
+  noteedelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['delete'];
     await httpPost(context, data, _url, '刪除成功');
   }
@@ -840,7 +870,6 @@ class Request {
   // SETTING ============================================================================================
   // friend_privacy ----------------------------------------------------------------------------------
   friendprivacy(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = settingUrl['friend_privacy'];
     await httpPost(context, data, _url, '好友隱私設定成功');
   }
@@ -848,14 +877,12 @@ class Request {
   // SETTING ============================================================================================
   // notice ----------------------------------------------------------------------------------
   notice(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = settingUrl['notice'];
     await httpPost(context, data, _url, '通知設定成功');
   }
 
   // notice ----------------------------------------------------------------------------------
   noticetemporary(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = settingUrl['notice'];
     await httpPost(context, data, _url, '通知設定成功');
   }
@@ -863,14 +890,12 @@ class Request {
   // SETTING ============================================================================================
   // privacy-location ----------------------------------------------------------------------------------
   privacylocation(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = settingUrl['privacy_location'];
-    await httpPost(context, data, _url, '隱私設定成功');
+    await httpPost(context, data, _url, '定位設定成功');
   }
 
   // privacy-location ----------------------------------------------------------------------------------
   privacytimetable(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = settingUrl['privacy_timetable'];
     await httpPost(context, data, _url, '隱私設定成功');
   }
@@ -878,17 +903,71 @@ class Request {
   // SETTING ============================================================================================
   // theme ----------------------------------------------------------------------------------
   themes(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = settingUrl['themes'];
     await httpPost(context, data, _url, '主題設定成功');
   }
+  // get_theme -----------------------------------------------------------------------------
+  getthemes(BuildContext context, Map<String, dynamic> data) async {
+    String _url = settingUrl['get_themes'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _getThemes = GetThemesModel.fromJson(_responseBody);
+    }
+  }
+  // get_theme -----------------------------------------------------------------------------
+  getlocation(BuildContext context, Map<String, dynamic> data) async {
+    String _url = settingUrl['get_location'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _getLocation = GetLocationModel.fromJson(_responseBody);
+    }
+  }
+  // get_timetable -----------------------------------------------------------------------------
+  gettimetable(BuildContext context, Map<String, dynamic> data) async {
+    String _url = settingUrl['get_timetable'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _getTimetable = GetTimetableModel.fromJson(_responseBody);
+    }
+  }
+  // get_notice -----------------------------------------------------------------------------
+  getnotice(BuildContext context, Map<String, dynamic> data) async {
+    String _url = settingUrl['get_notice'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _getNotice = GetNoticeModel.fromJson(_responseBody);
+    }
+  }
+  // get_timetable_notice -----------------------------------------------------------------------------
+  gettimetablenotice(BuildContext context, Map<String, dynamic> data) async {
+    String _url = settingUrl['get_timetable'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _getTimetableNotice = GetTimetableNoticeModel.fromJson(_responseBody);
+    }
+  }
+  // get_friend_privacy -----------------------------------------------------------------------------
+  getfriendprivacy(BuildContext context, Map<String, dynamic> data) async {
+    String _url = settingUrl['get_friend_privacy'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _getFriendPrivacy = GetFriendPrivacyModel.fromJson(_responseBody);
+    }
+  }
+  // profile ============================================================================================
+  // edit-profile ----------------------------------------------------------------------------------
+  editprofile(BuildContext context, Map<String, dynamic> data) async {
+    String _url = profileUrl['edit_profile'];
+    await httpPost(context, data, _url, '個人資料設定成功');
+  }
+  // profile-list -----------------------------------------------------------------------------
+  getprofilelist(BuildContext context, Map<String, dynamic> data) async {
+    String _url = profileUrl['profile_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _getProfileList = GetProfileListModel.fromJson(_responseBody);
+    }
+  }
 }
-// // get_theme -----------------------------------------------------------------------------
-//   getthemes(BuildContext context, Map<String, dynamic> data) async {
-//     String _url = settingUrl['get_themes'];
-//     await httpGet(context, data, _url);
-//     if (_responseBody != null) {
-//       _getThemes = GetThemesModel.fromJson(_responseBody);
-//     }
-//   }
+
 

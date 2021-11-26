@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:My_Day_app/friend/bestfriend_add.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/public/friend_request/delete_best.dart';
@@ -130,7 +129,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
     Size size = MediaQuery.of(context).size;
     double _width = size.width;
     double _height = size.height;
-
+    double _titleSize = _height * 0.025;
     double _listPaddingH = _width * 0.06;
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
@@ -146,9 +145,9 @@ class _BestfriendWidget extends State<BestfriendPage> {
 
     Widget friendListWidget;
 
-  _submitDelete(String friendId) async {
+    _submitDelete(String friendId) async {
       var submitWidget;
-      
+
       _submitWidgetfunc() async {
         return DeleteBestFriend(uid: uid, friendId: friendId);
       }
@@ -173,30 +172,28 @@ class _BestfriendWidget extends State<BestfriendPage> {
             opacity: hideWidget != null ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 500),
             // The green box must be a child of the AnimatedOpacity widget.
-          child: ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-            leading: ClipOval(
-              child: getImage(friends.photo),
-            ),
-            title: Text(
-              friends.friendName,
-              style: TextStyle(fontSize: _pSize),
-            ),
-            trailing: TextButton(
-              style: TextButton.styleFrom(
-                primary: Color(0xffF86D67)
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: _listPaddingH, vertical: 0.0),
+              leading: ClipOval(
+                child: getImage(friends.photo),
               ),
-              child: Text(
-                '移除',
-                style: TextStyle(fontSize: 18),
+              title: Text(
+                friends.friendName,
+                style: TextStyle(fontSize: _pSize),
               ),
-             
-              onPressed: () async {
-                  if (await _submitDelete(friends.friendId) != true) {
-                    _bestFriendListRequest();
-                  }
-                }),
+              trailing: TextButton(
+                  style: TextButton.styleFrom(primary: Color(0xffF86D67)),
+                  child: Text(
+                    '移除',
+                    style: TextStyle(fontSize: _pSize),
+                  ),
+                  onPressed: () async {
+                    if (await _submitDelete(friends.friendId) != true) {
+                      _bestFriendListRequest();
+                      _friendListRequest();
+                    }
+                  }),
             ),
           );
         },
@@ -217,29 +214,23 @@ class _BestfriendWidget extends State<BestfriendPage> {
             opacity: hideWidget != null ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 500),
             // The green box must be a child of the AnimatedOpacity widget.
-              child: ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-            leading: ClipOval(
-              child: getImage(friends.photo),
-            ),
-            title: Text(
-              friends.friendName,
-              style: TextStyle(fontSize: _pSize),
-            ),
-            trailing: TextButton(
-              style: TextButton.styleFrom(
-                primary: Color(0xffF86D67)
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: _listPaddingH, vertical: 0.0),
+              leading: ClipOval(
+                child: getImage(friends.photo),
               ),
-              child: Text(
-                '移除',
-                style: TextStyle(fontSize: 18),
+              title: Text(
+                friends.friendName,
+                style: TextStyle(fontSize: _pSize),
               ),
-              
-              onPressed: () async {
-                  
-                  }
-                ),
+              trailing: TextButton(
+                  style: TextButton.styleFrom(primary: Color(0xffF86D67)),
+                  child: Text(
+                    '移除',
+                    style: TextStyle(fontSize: _pSize),
+                  ),
+                  onPressed: () async {}),
             ),
           );
         },
@@ -326,11 +317,11 @@ class _BestfriendWidget extends State<BestfriendPage> {
       }
 
       return SafeArea(
-      child: Scaffold(
+          child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text('摯友', style: TextStyle(fontSize: 20)),
+          title: Text('摯友', style: TextStyle(fontSize: _titleSize)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
@@ -359,10 +350,10 @@ class _BestfriendWidget extends State<BestfriendPage> {
       ));
     } else {
       return SafeArea(
-      child: Scaffold(
+          child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text('摯友', style: TextStyle(fontSize: 20)),
+          title: Text('摯友', style: TextStyle(fontSize: _titleSize)),
           leading: IconButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
@@ -393,10 +384,10 @@ class _BestfriendWidget extends State<BestfriendPage> {
 
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
-     
+
     _submitDelete(String friendId) async {
       var submitWidget;
-      
+
       _submitWidgetfunc() async {
         return DeleteBestFriend(uid: uid, friendId: friendId);
       }
@@ -415,33 +406,31 @@ class _BestfriendWidget extends State<BestfriendPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredBestFriend[index];
         return AnimatedOpacity(
-            // If the widget is visible, animate to 0.0 (invisible).
-            // If the widget is hidden, animate to 1.0 (fully visible).
-            opacity: hideWidget != null ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 500),
-            // The green box must be a child of the AnimatedOpacity widget.
-          child:ListTile(
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-          leading: ClipOval(
-            child: getImage(friends.photo),
-          ),
-          title: Text(
-            friends.friendName,
-            style: TextStyle(fontSize: _pSize),
-          ),
-          trailing: TextButton(
-            style: TextButton.styleFrom(
-                primary: Color(0xffF86D67)
-              ),
-            child: Text(
-              '移除',
-              style: TextStyle(fontSize: 18),
+          // If the widget is visible, animate to 0.0 (invisible).
+          // If the widget is hidden, animate to 1.0 (fully visible).
+          opacity: hideWidget != null ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 500),
+          // The green box must be a child of the AnimatedOpacity widget.
+          child: ListTile(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(friends.photo),
             ),
-           
-            onPressed: () async {
+            title: Text(
+              friends.friendName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            trailing: TextButton(
+                style: TextButton.styleFrom(primary: Color(0xffF86D67)),
+                child: Text(
+                  '移除',
+                  style: TextStyle(fontSize: _pSize),
+                ),
+                onPressed: () async {
                   if (await _submitDelete(friends.friendId) != true) {
                     _bestFriendListRequest();
+                    _friendListRequest();
                   }
                 }),
           ),
@@ -468,33 +457,28 @@ class _BestfriendWidget extends State<BestfriendPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredFriend[index];
         return AnimatedOpacity(
-            // If the widget is visible, animate to 0.0 (invisible).
-            // If the widget is hidden, animate to 1.0 (fully visible).
-            opacity: hideWidget != null ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 500),
-            // The green box must be a child of the AnimatedOpacity widget.
-          child:ListTile(
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-          leading: ClipOval(
-            child: getImage(friends.photo),
-          ),
-          title: Text(
-            friends.friendName,
-            style: TextStyle(fontSize: _pSize),
-          ),
-          trailing: TextButton(
-            style: TextButton.styleFrom(
-                primary: Color(0xffF86D67)
-              ),
-            child: Text(
-              '移除',
-              style: TextStyle(fontSize: 18),
+          // If the widget is visible, animate to 0.0 (invisible).
+          // If the widget is hidden, animate to 1.0 (fully visible).
+          opacity: hideWidget != null ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 500),
+          // The green box must be a child of the AnimatedOpacity widget.
+          child: ListTile(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
+            leading: ClipOval(
+              child: getImage(friends.photo),
             ),
-            
-            onPressed: () async {
-                  
-                }),
+            title: Text(
+              friends.friendName,
+              style: TextStyle(fontSize: _pSize),
+            ),
+            trailing: TextButton(
+                style: TextButton.styleFrom(primary: Color(0xffF86D67)),
+                child: Text(
+                  '移除',
+                  style: TextStyle(fontSize: _pSize),
+                ),
+                onPressed: () async {}),
           ),
         );
       },

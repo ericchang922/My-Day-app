@@ -1,29 +1,26 @@
 
-
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/request.dart';
 
-class DeleteNote {
+class Themes{
   BuildContext context;
   String uid;
-  int noteNum;
-  
-  Map<String, dynamic> data;
-
-  bool _isError;//編輯結果
+  int themeId;
+  Map<String,dynamic> data;
+  bool _isError;//
 
   _request() async {
     Request request = Request();
-    await request.noteedelete(context, data);
+    await request.themes(context, data);
     this._isError = await request.getIsError();
   }
 
-  DeleteNote({this.context, this.uid,this. noteNum}) {
-    data = {'uid': uid, 'noteNum':  noteNum };
+  Themes({this.context, this.uid, this.themeId }) {
+    data = {'uid': uid, 'themeId': themeId};
   }
-  getIsError() async {
+
+  getData() async {
     await _request();
     return this._isError;
   }
 }
-

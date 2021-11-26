@@ -1,7 +1,11 @@
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
+import 'package:My_Day_app/models/setting/get_notice.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
+import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
+import 'package:My_Day_app/public/setting_request/get_notice.dart';
+import 'package:My_Day_app/public/setting_request/notice_temporary%20.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -19,10 +23,7 @@ class _PlayTogetherInvite extends State {
   get left => null;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            
-            body: friendPage()));
+    return SafeArea(child: Scaffold(body: friendPage()));
   }
 }
 
@@ -34,12 +35,13 @@ class friendPage extends StatefulWidget {
 class _friendWidget extends State<friendPage> {
   FriendListModel _friendListModel;
   BestFriendListModel _bestFriendListModel;
+  GetNoticeModel _notice;
 
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
   String _dropdownValue = '讀書';
-  String uid = 'lili123';
+  String id = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -57,10 +59,30 @@ class _friendWidget extends State<friendPage> {
     _friendListRequest();
     _bestFriendListRequest();
     _friendNameControlloer();
-    _isCheck = false;
+    _getNoticeRequest();
+   if (_notice == null) {
+       _isCheck = false;
+
+      // ignore: unrelated_type_equality_checks
+    } else if (_notice == 1) {
+      _isCheck = true;
+    } else {
+      _isCheck = false;
+    }
   }
 
- 
+  _getNoticeRequest() async {
+    // var response = await rootBundle.loadString('assets/json/group_list.json');
+    // var responseBody = json.decode(response);
+
+    GetNoticeModel _request = await GetNotice(uid: id).getData();
+
+    setState(() {
+      _notice = _request;
+      print(_notice);
+    });
+  }
+
   void _friendNameControlloer() {
     _friendNameController.addListener(() {
       if (_friendNameController.text.isEmpty) {
@@ -79,7 +101,7 @@ class _friendWidget extends State<friendPage> {
     // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
     // var responseBody = json.decode(response);
 
-    BestFriendListModel _request = await BestFriendList(uid: uid).getData();
+    BestFriendListModel _request = await BestFriendList(uid: id).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -94,7 +116,7 @@ class _friendWidget extends State<friendPage> {
     // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
     // var responseBody = json.decode(response);
 
-    FriendListModel _request = await FriendList(uid: uid).getData();
+    FriendListModel _request = await FriendList(uid: id).getData();
 
     setState(() {
       _friendListModel = _request;
@@ -138,21 +160,51 @@ class _friendWidget extends State<friendPage> {
     Size size = MediaQuery.of(context).size;
     double _width = size.width;
     double _height = size.height;
-
+    double _appBarSize = _width * 0.052;
+    double _leadingL = _height * 0.02;
+    double _bottomHeight = _height * 0.07;
     double _listPaddingH = _width * 0.06;
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-
     double _pSize = _height * 0.023;
-
-    double _appBarSize = _width * 0.052;
-
     Color _color = Theme.of(context).primaryColor;
 
     Color _bule = Color(0xff7AAAD8);
 
+
     Widget friendListWidget;
+
+    _submitTimetable() async {
+      String uid = id;
+      bool isTemporary = _isCheck;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return NoticeTemporary(uid: uid, isTemporary: isTemporary);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
+    _submitfriend(String friendId) async {
+      String uid = id;
+      bool isPublic = _isCheck;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
 
     if (_friendListModel != null && _bestFriendListModel != null) {
       Widget bestFriendList = ListView.separated(
@@ -173,11 +225,12 @@ class _friendWidget extends State<friendPage> {
             ),
             trailing: Switch(
               value: _bestFriendCheck[friends.friendId],
-              onChanged: (value) {
+              onChanged: (value) async {
+                if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
-                  _bestFriendCheck[friends.friendId] = value;
+                  _friendCheck[friends.friendId] = value;
                 });
-              },
+              }},
               activeColor: Colors.white,
               activeTrackColor: Color(0xffF86D67),
               // inactiveThumbColor: Color(0xffF86D67),
@@ -208,11 +261,12 @@ class _friendWidget extends State<friendPage> {
             ),
             trailing: Switch(
               value: _friendCheck[friends.friendId],
-              onChanged: (value) {
+              onChanged: (value) async {
+                if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
                   _friendCheck[friends.friendId] = value;
                 });
-              },
+              }},
               activeColor: Colors.white,
               activeTrackColor: Color(0xffF86D67),
               // inactiveThumbColor: Color(0xffF86D67),
@@ -301,10 +355,10 @@ class _friendWidget extends State<friendPage> {
       }
       Widget playtogetherinvite = Column(children: <Widget>[
         Container(
-          margin: EdgeInsets.only(right: 13, left: 20),
+          margin: EdgeInsets.only(top: _height * 0.00, right: _height * 0.018,left: _height * 0.018),
           // ignore: deprecated_member_use
           child: SizedBox(
-              height: 60,
+              height: _bottomHeight,
               width: double.infinity,
               child: TextButton(
                 style: TextButton.styleFrom(
@@ -317,43 +371,45 @@ class _friendWidget extends State<friendPage> {
                     Text(
                       '玩聚邀請',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: _appBarSize,
                       ),
                     ),
                     Switch(
                       value: _isCheck,
-                      onChanged: (value) {
-                        setState(() {
-                          if (_isCheck = value) {
-                            _isCheck = true;
-                            for (int i = 0;
-                                i < _friendListModel.friend.length;
-                                i++) {
-                              _friendCheck[
-                                  _friendListModel.friend[i].friendId] = true;
+                      onChanged: (value) async {
+                        if (await _submitTimetable() != true) {
+                          setState(() {
+                            if (_isCheck = value) {
+                              _isCheck = true;
+                              for (int i = 0;
+                                  i < _friendListModel.friend.length;
+                                  i++) {
+                                _friendCheck[
+                                    _friendListModel.friend[i].friendId] = true;
+                              }
+                              for (int i = 0;
+                                  i < _bestFriendListModel.friend.length;
+                                  i++) {
+                                _bestFriendCheck[_bestFriendListModel
+                                    .friend[i].friendId] = true;
+                              }
+                            } else {
+                              _isCheck = false;
+                              for (int i = 0;
+                                  i < _friendListModel.friend.length;
+                                  i++) {
+                                _friendCheck[_friendListModel
+                                    .friend[i].friendId] = false;
+                              }
+                              for (int i = 0;
+                                  i < _bestFriendListModel.friend.length;
+                                  i++) {
+                                _bestFriendCheck[_bestFriendListModel
+                                    .friend[i].friendId] = false;
+                              }
                             }
-                            for (int i = 0;
-                                i < _bestFriendListModel.friend.length;
-                                i++) {
-                              _bestFriendCheck[_bestFriendListModel
-                                  .friend[i].friendId] = true;
-                            }
-                          }else{
-                            _isCheck = false;
-                            for (int i = 0;
-                                i < _friendListModel.friend.length;
-                                i++) {
-                              _friendCheck[
-                                  _friendListModel.friend[i].friendId] = false;
-                            }
-                            for (int i = 0;
-                                i < _bestFriendListModel.friend.length;
-                                i++) {
-                              _bestFriendCheck[_bestFriendListModel
-                                  .friend[i].friendId] = false;
-                            }
-                          }
-                        });
+                          });
+                        }
                       },
                       activeColor: Colors.white,
                       activeTrackColor: Color(0xffF86D67),
@@ -365,25 +421,25 @@ class _friendWidget extends State<friendPage> {
               )),
         ),
         Container(
-          margin: EdgeInsets.only(top: 10),
-          color: Color(0xffE3E3E3),
-          constraints: BoxConstraints.expand(height: 1.0),
-        )
+        margin: EdgeInsets.only(top: _height * 0.001),
+        color: Color(0xffE3E3E3),
+        constraints: BoxConstraints.expand(height: 1.0),
+      ),
       ]);
 
       return SafeArea(
-        child:Scaffold(
+          child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-              backgroundColor: Color(0xffF86D67),
-              title: Text('玩聚邀請', style: TextStyle(fontSize: 20)),
-              leading: IconButton(
-                icon: Icon(Icons.chevron_left),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
+          backgroundColor: Color(0xffF86D67),
+          title: Text('玩聚邀請', style: TextStyle(fontSize: _appBarSize)),
+          leading: IconButton(
+            icon: Icon(Icons.chevron_left),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
         body: GestureDetector(
             child: Container(
           margin: EdgeInsets.only(top: _height * 0.02),
@@ -395,19 +451,19 @@ class _friendWidget extends State<friendPage> {
           ),
         )),
       ));
-    }else {
+    } else {
       return SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-              backgroundColor: Color(0xffF86D67),
-              title: Text('玩聚邀請', style: TextStyle(fontSize: 20)),
-              leading: IconButton(
-                icon: Icon(Icons.chevron_left),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
+          child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xffF86D67),
+          title: Text('玩聚邀請', style: TextStyle(fontSize: _appBarSize)),
+          leading: IconButton(
+            icon: Icon(Icons.chevron_left),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
         body: SafeArea(
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
@@ -415,7 +471,6 @@ class _friendWidget extends State<friendPage> {
       ));
     }
   }
-  
 
   Widget _buildSearchBestFriendList(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -424,6 +479,22 @@ class _friendWidget extends State<friendPage> {
 
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
+
+    _submitfriend(String friendId) async {
+      String uid = id;
+      bool isPublic = _isCheck;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
 
     return ListView.separated(
       shrinkWrap: true,
@@ -443,11 +514,12 @@ class _friendWidget extends State<friendPage> {
           ),
           trailing: Switch(
             value: _bestFriendCheck[friends.friendId],
-            onChanged: (value) {
-              setState(() {
-                _bestFriendCheck[friends.friendId] = value;
-              });
-            },
+            onChanged: (value) async {
+                if (await _submitfriend(friends.friendId) != true) {
+                setState(() {
+                  _friendCheck[friends.friendId] = value;
+                });
+              }},
             activeColor: Colors.white,
             activeTrackColor: Color(0xffF86D67),
             // inactiveThumbColor: Color(0xffF86D67),
@@ -469,6 +541,22 @@ class _friendWidget extends State<friendPage> {
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
 
+    _submitfriend(String friendId) async {
+      String uid = id;
+      bool isPublic = _isCheck;
+
+      var submitWidget;
+      _submitWidgetfunc() async {
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
+      }
+
+      submitWidget = await _submitWidgetfunc();
+      if (await submitWidget.getIsError())
+        return true;
+      else
+        return false;
+    }
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -487,11 +575,12 @@ class _friendWidget extends State<friendPage> {
           ),
           trailing: Switch(
             value: _friendCheck[friends.friendId],
-            onChanged: (value) {
-              setState(() {
-                _friendCheck[friends.friendId] = value;
-              });
-            },
+            onChanged: (value) async {
+                if (await _submitfriend(friends.friendId) != true) {
+                setState(() {
+                  _friendCheck[friends.friendId] = value;
+                });
+              }},
             activeColor: Colors.white,
             activeTrackColor: Color(0xffF86D67),
             // inactiveThumbColor: Color(0xffF86D67),
