@@ -20,20 +20,20 @@ import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 
 class FriendHomePage extends StatefulWidget {
-  // String friendId;
-  // FriendHomePage(this.friendId);
+  String friendId;
+  FriendHomePage(this.friendId);
   @override
-  State<FriendHomePage> createState() => _FriendHomePage();
+  State<FriendHomePage> createState() => _FriendHomePage(friendId);
 }
 
 class _FriendHomePage extends State<FriendHomePage> {
   // LocalStorage weekStorage = LocalStorage('week');
-  // String friendId;
-  // _FriendHomePage(this.friendId);
-  String _uid = 'james123';
+  String friendId;
+  _FriendHomePage(this.friendId);
+  // String _uid = 'james123';
 
   Future<MainTimetableListGet> getTimetableData() async {
-    MainTimetableList request = MainTimetableList(context: context, uid: _uid);
+    MainTimetableList request = MainTimetableList(context: context, uid: friendId);
     MainTimetableListGet _data = await request.getData();
 
     // await weekStorage.setItem('start', _data.timetable[0].startDate.toString());
@@ -42,13 +42,13 @@ class _FriendHomePage extends State<FriendHomePage> {
   }
 
   Future<ScheduleGetList> getScheduleList() async {
-    GetList request = GetList(context: context, uid: _uid);
+    GetList request = GetList(context: context, uid: friendId);
     ScheduleGetList _data = await request.getData();
     return _data;
   }
 
   Future<SectionTime> getSectionTime() async {
-    GetSectionTime request = GetSectionTime(context: context, uid: _uid);
+    GetSectionTime request = GetSectionTime(context: context, uid: friendId);
     SectionTime _data = await request.getData();
     return _data;
   }
