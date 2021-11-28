@@ -7,16 +7,20 @@ String getTimetableModelToJson(GetTimetableModel data) => json.encode(data.toJso
 class GetTimetableModel {
     GetTimetableModel({
         this.timetable				,
+        this.response,
     });
     
     bool timetable		;
+    bool response		;
 
     factory GetTimetableModel.fromJson(Map<String, dynamic> json) => GetTimetableModel(
       timetable	: json["timetable	"],
+      response	: json["response	"],
     );
 
     Map<String, dynamic> toJson() => {
         "timetable	": timetable	,
+         "response	": response	,
     };
 }
 
