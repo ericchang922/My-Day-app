@@ -58,7 +58,6 @@ class _friendWidget extends State<friendPage> {
 
     _friendListRequest();
     _bestFriendListRequest();
-    _friendNameControlloer();
     _getTimetableRequest();
     if (_timetable == null) {
        _isCheck = false;
@@ -75,26 +74,15 @@ class _friendWidget extends State<friendPage> {
     // var responseBody = json.decode(response);
 
     GetTimetableModel _request = await GetTimetable(uid: id).getData();
-
+    
     setState(() {
       _timetable = _request;
       print(_timetable);
+      print("_timetable");
     });
   }
 
-  void _friendNameControlloer() {
-    _friendNameController.addListener(() {
-      if (_friendNameController.text.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
-      } else {
-        setState(() {
-          _searchText = _friendNameController.text;
-        });
-      }
-    });
-  }
+
 
   _bestFriendListRequest() async {
     // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
