@@ -1,10 +1,7 @@
+import 'package:My_Day_app/account/login.dart';
 import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/public/account_request/change_pw.dart';
 import 'package:flutter/material.dart';
-import 'login.dart';
-
-var primaryColor = Color(0xffF86D67);
-var primaryColorLight = Color(0xffFFAAA6);
 
 class ChangepwPage extends StatefulWidget {
   // This widget is the root of your application.
@@ -18,7 +15,6 @@ class ChangepwPage extends StatefulWidget {
 }
 
 class ChangepwWidget extends State<ChangepwPage> {
-  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -26,22 +22,26 @@ class ChangepwWidget extends State<ChangepwPage> {
     double _width = size.width;
     double _appBarSize = _width * 0.052;
     double _leadingL = _height * 0.02;
+
+    Color _color = Color(0xffF86D67);
+    Color _light = Color(0xffFFAAA6);
+
     return SafeArea(
         child: Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title:
-            Text('更改密碼', style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
-        backgroundColor: primaryColor,
+        title: Text('更改密碼',
+            style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
+        backgroundColor: _color,
         leading: Container(
-                margin: EdgeInsets.only(left: _leadingL),
-                child: GestureDetector(
-                  child: Icon(Icons.chevron_left),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
+          margin: EdgeInsets.only(left: _leadingL),
+          child: GestureDetector(
+            child: Icon(Icons.chevron_left),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
       ),
       body: _Changepw(),
     ));
@@ -117,17 +117,22 @@ class _Changepw extends StatelessWidget {
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.only(
-                            left: _listLR,bottom: _listB, 
-                            top: _height * 0.05,right: _listLR,
+                            left: _listLR,
+                            bottom: _listB,
+                            top: _height * 0.05,
+                            right: _listLR,
                           ),
                           child: ListTile(
-                            title: Text('新密碼：', style: TextStyle(fontSize: _titleSize)),
+                            title: Text('新密碼：',
+                                style: TextStyle(fontSize: _titleSize)),
                           ),
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                            left: _height * 0.07,bottom: _listB, 
-                            top: _height * 0.0001,right: _height * 0.07,
+                            left: _height * 0.07,
+                            bottom: _listB,
+                            top: _height * 0.0001,
+                            right: _height * 0.07,
                           ),
                           child: TextField(
                             controller: newpw,
@@ -136,31 +141,34 @@ class _Changepw extends StatelessWidget {
                               filled: true,
                               isCollapsed: true,
                               contentPadding: EdgeInsets.symmetric(
-                                  horizontal: _height * 0.015, vertical: _height * 0.015),
+                                  horizontal: _height * 0.015,
+                                  vertical: _height * 0.015),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(_borderRadius)), //设置边框四个角的弧度
-                                borderSide: BorderSide(
-                                  color:  _bule 
-                                ),
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    _borderRadius)), //设置边框四个角的弧度
+                                borderSide: BorderSide(color: _bule),
                               ),
                             ),
                           ),
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                            left: _listLR,bottom: _listB, 
-                            top: _height * 0.01,right: _listLR,
+                            left: _listLR,
+                            bottom: _listB,
+                            top: _height * 0.01,
+                            right: _listLR,
                           ),
                           child: ListTile(
-                            title:
-                                Text('再次輸入密碼：', style: TextStyle(fontSize: _titleSize)),
+                            title: Text('再次輸入密碼：',
+                                style: TextStyle(fontSize: _titleSize)),
                           ),
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                            left: _height * 0.07,bottom: _listB, 
-                            top: _height * 0.0005,right: _height * 0.07,
+                            left: _height * 0.07,
+                            bottom: _listB,
+                            top: _height * 0.0005,
+                            right: _height * 0.07,
                           ),
                           child: TextField(
                             controller: confirmpw,
@@ -170,13 +178,12 @@ class _Changepw extends StatelessWidget {
                               filled: true,
                               isCollapsed: true,
                               contentPadding: EdgeInsets.symmetric(
-                                  horizontal: _height * 0.015, vertical: _height * 0.015),
+                                  horizontal: _height * 0.015,
+                                  vertical: _height * 0.015),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(_borderRadius)), //设置边框四个角的弧度
-                                borderSide: BorderSide(
-                                  color:  _bule 
-                                ),
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    _borderRadius)), //设置边框四个角的弧度
+                                borderSide: BorderSide(color: _bule),
                               ),
                             ),
                           ),
@@ -193,8 +200,8 @@ class _Changepw extends StatelessWidget {
                           style: TextButton.styleFrom(
                               primary: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0)),
-                              backgroundColor: primaryColorLight),
+                                  borderRadius: BorderRadius.circular(0)),
+                              backgroundColor: _light),
                           child: Image.asset(
                             'assets/images/cancel.png',
                             width: _iconWidth,
@@ -212,8 +219,8 @@ class _Changepw extends StatelessWidget {
                         style: TextButton.styleFrom(
                           primary: Colors.white,
                           shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: primaryColor,
+                              borderRadius: BorderRadius.circular(0)),
+                          backgroundColor: _color,
                         ),
                         child: Image.asset(
                           'assets/images/confirm.png',
@@ -229,15 +236,15 @@ class _Changepw extends StatelessWidget {
                                     MaterialPageRoute(
                                         builder: (context) => LoginPage()));
                               } else {
-                                bool action = await changefailDialog(
+                                await changefailDialog(
                                     context, _alertTitle, _alertTxt);
                               }
                             } else {
-                              bool action = await changefailDialog(
+                              await changefailDialog(
                                   context, _alertTitle, _alertTxt);
                             }
                           } else {
-                            bool action = await changefailDialog(
+                            await changefailDialog(
                                 context, _alertTitle, _alertTxt);
                           }
                         }),
