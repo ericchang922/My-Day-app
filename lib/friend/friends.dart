@@ -213,7 +213,7 @@ class _friendWidget extends State<FriendPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              HomeUpdate(child: FriendHome())));
+                              HomeUpdate(child: FriendHome(friends.friendId))));
                 }),
             trailing: TextButton(
                 style: TextButton.styleFrom(primary: Color(0xffF86D67)),
@@ -450,7 +450,7 @@ class _friendWidget extends State<FriendPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomeUpdate(child: FriendHome())));
+                        builder: (context) => HomeUpdate(child: FriendHome(friends.friendId))));
               }),
           trailing: TextButton(
               style: TextButton.styleFrom(primary: Color(0xffF86D67)),
