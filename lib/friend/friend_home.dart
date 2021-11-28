@@ -13,23 +13,23 @@ import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
 
 class FriendHome extends StatefulWidget {
-  // String friendId;
-  // FriendHome(this.friendId);
+  String friendId;
+  FriendHome(this.friendId);
   @override
-  State<FriendHome> createState() => _FriendHome();
+  State<FriendHome> createState() => _FriendHome(friendId);
 }
 
 class _FriendHome extends State<FriendHome> {
-  // String friendId;
-  // _FriendHome(this.friendId);
+  String friendId;
+  _FriendHome(this.friendId);
   int _index = 0;
 
-  final _pages = <Widget>[
-    FriendHomePage(),
-    // GroupListPage(),
-    // TemporaryGroupListPage(),
-    // StudyPage()
-  ];
+  // final _pages = <Widget>[
+  //   FriendHomePage(friendId),
+  //   GroupListPage(),
+  //   TemporaryGroupListPage(),
+  //   StudyPage()
+  // ];
 
   void _onTapped(int index) {
     setState(() {
@@ -68,7 +68,8 @@ class _FriendHome extends State<FriendHome> {
                   transitionType: SharedAxisTransitionType.vertical,
                 );
               }, // 動畫 Widget function
-              child: _pages[_index], // 頁面
+              // child: _pages[_index], // 頁面
+              child: FriendHomePage(friendId),
             ),
             // bottomNavigationBar: SizedBox(
             //   height: height * 0.09,
