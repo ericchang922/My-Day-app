@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:My_Day_app/account/register_fail.dart';
 import 'package:My_Day_app/public/account_request/register.dart';
-
-var primaryColor = Color(0xffF86D67);
-var primaryColorLight = Color(0xffFFAAA6);
+import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
   // This widget is the root of your application.
@@ -28,24 +24,30 @@ class RegisterWidget extends State<RegisterPage> {
     double _appBarSize = _width * 0.052;
     double _leadingL = _height * 0.02;
 
-    return SafeArea(
-        child: Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text('註冊', style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
-        backgroundColor: primaryColor,
-        leading: Container(
-                margin: EdgeInsets.only(left: _leadingL),
-                child: GestureDetector(
-                  child: Icon(Icons.chevron_left),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-      ),
-      body: _Register(),
-    ));
+    Color _color = Color(0xffF86D67);
+
+    return Container(
+      color: _color,
+      child: SafeArea(
+          child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text('註冊',
+              style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
+          backgroundColor: _color,
+          leading: Container(
+            margin: EdgeInsets.only(left: _leadingL),
+            child: GestureDetector(
+              child: Icon(Icons.chevron_left),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ),
+        body: _Register(),
+      )),
+    );
   }
 }
 
@@ -66,6 +68,7 @@ class _Register extends StatelessWidget {
   String _alertTitlepw = '註冊失敗';
   String _alertTxtpw = '請確認密碼是否相同';
   BuildContext get context => null;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -87,10 +90,10 @@ class _Register extends StatelessWidget {
     double _subtitleSize = _height * 0.02;
     double _appBarSize = _width * 0.052;
 
-    Color _color = Theme.of(context).primaryColor;
-    Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
     Color _textFiedBorder = Color(0xff707070);
+    Color _color = Color(0xffF86D67);
+    Color _light = Color(0xffFFAAA6);
 
     _submit() async {
       String uid = registeruid.text;
@@ -109,208 +112,223 @@ class _Register extends StatelessWidget {
         return false;
     }
 
-    return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: GestureDetector(
-                // 點擊空白處釋放焦點
-                behavior: HitTestBehavior.translucent,
-                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-                child: ListView(
-                  children: <Widget>[
-                     Container(
-                          margin: EdgeInsets.only(
-                            left: _listLR,bottom: _listB, 
-                            top: _height * 0.05,right: _listLR,
-                          ),
-                      child: ListTile(
-                        title: Text('帳號：', style: TextStyle(fontSize: _titleSize)),
+    return Container(
+      color: _color,
+      child: SafeArea(
+          child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: GestureDetector(
+                  // 點擊空白處釋放焦點
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _listLR,
+                          bottom: _listB,
+                          top: _height * 0.05,
+                          right: _listLR,
+                        ),
+                        child: ListTile(
+                          title: Text('帳號：',
+                              style: TextStyle(fontSize: _titleSize)),
+                        ),
                       ),
-                    ),
-                    Container(
-                          margin: EdgeInsets.only(
-                            left: _height * 0.07,bottom: _listB, 
-                            top: _height * 0.0001,right: _height * 0.07,
-                          ),
-                      child: TextField(
-                        controller: registeruid,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          hintText: ('請輸入電子信箱'),
-                          fillColor: Color(0xfff3f3f4),
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: _height * 0.015, vertical: _height * 0.015),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(_borderRadius)), //设置边框四个角的弧度
-                            borderSide: BorderSide(
-                              color:  _bule 
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _height * 0.07,
+                          bottom: _listB,
+                          top: _height * 0.0001,
+                          right: _height * 0.07,
+                        ),
+                        child: TextField(
+                          controller: registeruid,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            hintText: ('請輸入電子信箱'),
+                            fillColor: Color(0xfff3f3f4),
+                            filled: true,
+                            isCollapsed: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: _height * 0.015,
+                                vertical: _height * 0.015),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                              borderSide: BorderSide(color: _bule),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                     Container(
-                          margin: EdgeInsets.only(
-                            left: _listLR,bottom: _listB, 
-                            right: _listLR,
-                          ),
-                      child: ListTile(
-                        title: Text('姓名：', style: TextStyle(fontSize: _titleSize)),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _listLR,
+                          bottom: _listB,
+                          right: _listLR,
+                        ),
+                        child: ListTile(
+                          title: Text('姓名：',
+                              style: TextStyle(fontSize: _titleSize)),
+                        ),
                       ),
-                    ),
-                    Container(
-                          margin: EdgeInsets.only(
-                            left: _height * 0.07,bottom: _listB, 
-                            top: _height * 0.0001,right: _height * 0.07,
-                          ),
-                      child: TextField(
-                        controller: registeruserName,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          fillColor: Color(0xfff3f3f4),
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: _height * 0.015, vertical: _height * 0.015),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(_borderRadius)), //设置边框四个角的弧度
-                            borderSide: BorderSide(
-                              color:  _bule 
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _height * 0.07,
+                          bottom: _listB,
+                          top: _height * 0.0001,
+                          right: _height * 0.07,
+                        ),
+                        child: TextField(
+                          controller: registeruserName,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            fillColor: Color(0xfff3f3f4),
+                            filled: true,
+                            isCollapsed: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: _height * 0.015,
+                                vertical: _height * 0.015),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                              borderSide: BorderSide(color: _bule),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                     Container(
-                          margin: EdgeInsets.only(
-                            left: _listLR,bottom: _listB, 
-                            right: _listLR,
-                          ),
-                      child: ListTile(
-                        title: Text('密碼：', style: TextStyle(fontSize: _titleSize)),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _listLR,
+                          bottom: _listB,
+                          right: _listLR,
+                        ),
+                        child: ListTile(
+                          title: Text('密碼：',
+                              style: TextStyle(fontSize: _titleSize)),
+                        ),
                       ),
-                    ),
-                    Container(
-                          margin: EdgeInsets.only(
-                            left: _height * 0.07,bottom: _listB, 
-                            top: _height * 0.0001,right: _height * 0.07,
-                          ),
-                      child: TextField(
-                        controller: registerpw,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          fillColor: Color(0xfff3f3f4),
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: _height * 0.015, vertical: _height * 0.015),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(_borderRadius)), //设置边框四个角的弧度
-                            borderSide: BorderSide(
-                              color:  _bule 
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _height * 0.07,
+                          bottom: _listB,
+                          top: _height * 0.0001,
+                          right: _height * 0.07,
+                        ),
+                        child: TextField(
+                          controller: registerpw,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            fillColor: Color(0xfff3f3f4),
+                            filled: true,
+                            isCollapsed: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: _height * 0.015,
+                                vertical: _height * 0.015),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                              borderSide: BorderSide(color: _bule),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                     Container(
-                          margin: EdgeInsets.only(
-                            left: _listLR,bottom: _listB, 
-                            right: _listLR,
-                          ),
-                      child: ListTile(
-                        title: Text('再次輸入密碼：', style: TextStyle(fontSize: _titleSize)),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _listLR,
+                          bottom: _listB,
+                          right: _listLR,
+                        ),
+                        child: ListTile(
+                          title: Text('再次輸入密碼：',
+                              style: TextStyle(fontSize: _titleSize)),
+                        ),
                       ),
-                    ),
-                    Container(
-                          margin: EdgeInsets.only(
-                            left: _height * 0.07,bottom: _listB, 
-                            top: _height * 0.0001,right: _height * 0.07,
-                          ),
-                      child: TextField(
-                        controller: confirmpw,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          fillColor: Color(0xfff3f3f4),
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: _height * 0.015, vertical: _height * 0.015),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(_borderRadius)), //设置边框四个角的弧度
-                            borderSide: BorderSide(
-                              color:  _bule 
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _height * 0.07,
+                          bottom: _listB,
+                          top: _height * 0.0001,
+                          right: _height * 0.07,
+                        ),
+                        child: TextField(
+                          controller: confirmpw,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            fillColor: Color(0xfff3f3f4),
+                            filled: true,
+                            isCollapsed: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: _height * 0.015,
+                                vertical: _height * 0.015),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                              borderSide: BorderSide(color: _bule),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                )),
-            bottomNavigationBar: Container(
-                child: Row(children: <Widget>[
-              Expanded(
-                // ignore: deprecated_member_use
-                child: SizedBox(
-                    height: _bottomHeight,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        backgroundColor: primaryColorLight,
-                      ),
-                      child: Image.asset(
-                        'assets/images/cancel.png',
-                        width: _iconWidth,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )),
-              ),
-              Expanded(
-                // ignore: deprecated_member_use
-                child: SizedBox(
-                    height: _bottomHeight,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        backgroundColor: primaryColor,
-                      ),
-                      child: Image.asset(
-                        'assets/images/confirm.png',
-                        width: _iconWidth,
-                      ),
-                      onPressed: () async {
-                        if (registeruid.text.isNotEmpty &&
-                            registeruserName.text.isNotEmpty &&
-                            registerpw.text.isNotEmpty &&
-                            confirmpw.text.isNotEmpty) {
-                          if (registerpw.text == confirmpw.text) {
-                            if (await _submit() != true) {
-                              Navigator.of(context).pop();
+                    ],
+                  )),
+              bottomNavigationBar: Container(
+                  child: Row(children: <Widget>[
+                Expanded(
+                  // ignore: deprecated_member_use
+                  child: SizedBox(
+                      height: _bottomHeight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0)),
+                          backgroundColor: _light,
+                        ),
+                        child: Image.asset(
+                          'assets/images/cancel.png',
+                          width: _iconWidth,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )),
+                ),
+                Expanded(
+                  // ignore: deprecated_member_use
+                  child: SizedBox(
+                      height: _bottomHeight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0)),
+                          backgroundColor: _color,
+                        ),
+                        child: Image.asset(
+                          'assets/images/confirm.png',
+                          width: _iconWidth,
+                        ),
+                        onPressed: () async {
+                          if (registeruid.text.isNotEmpty &&
+                              registeruserName.text.isNotEmpty &&
+                              registerpw.text.isNotEmpty &&
+                              confirmpw.text.isNotEmpty) {
+                            if (registerpw.text == confirmpw.text) {
+                              if (await _submit() != true) {
+                                Navigator.of(context).pop();
+                              }
+                            } else {
+                              await registerfailDialog(
+                                  context, _alertTitlepw, _alertTxtpw);
                             }
                           } else {
-                            bool action = await registerfailDialog(
-                                context, _alertTitlepw, _alertTxtpw);
+                            await registerfailDialog(
+                                context, _alertTitle, _alertTxt);
                           }
-                        } else {
-                          bool action = await registerfailDialog(
-                              context, _alertTitle, _alertTxt);
-                        }
-                        
-                      },
-                    )),
-              ),
-            ]))));
+                        },
+                      )),
+                ),
+              ])))),
+    );
   }
 }
