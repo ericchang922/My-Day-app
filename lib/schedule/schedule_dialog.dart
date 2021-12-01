@@ -1,6 +1,9 @@
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
+import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/toast.dart';
 import 'package:My_Day_app/public/type_color.dart';
+import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/schedule/edit_schedule.dart';
 import 'package:animations/animations.dart';
@@ -149,47 +152,56 @@ List<Widget> listItems(BuildContext context, DateTime date,
       itemList.add(Container(
         width: width * 0.06,
         child: TextButton(
-          child: Row(
-            children: [
-              Container(
-                height: height * 0.025,
-                child: CircleAvatar(
-                  radius: height * 0.025,
-                  backgroundColor: typeColor(s.typeId),
-                ),
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Row(
+              children: [
                 Container(
-                  width: width * 0.4,
-                  child: Text(
-                    s.title,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: height * 0.025,
-                        fontWeight: FontWeight.normal,
-                        fontStyle: FontStyle.normal),
-                    textAlign: TextAlign.left,
+                  height: height * 0.025,
+                  child: CircleAvatar(
+                    radius: height * 0.025,
+                    backgroundColor: typeColor(s.typeId),
                   ),
                 ),
-                Text(
-                  '$showStart-$showEnd',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.normal,
-                    fontStyle: FontStyle.normal,
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Container(
+                    width: width * 0.4,
+                    child: Text(
+                      s.title,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: height * 0.025,
+                          fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.normal),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
-                )
-              ])
-            ],
-          ),
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => EditSchedule(
-                        uid: 'amy123',
-                        scheduleNum: s.scheduleNum,
-                      ))),
-        ),
+                  Text(
+                    '$showStart-$showEnd',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.normal,
+                      fontStyle: FontStyle.normal,
+                    ),
+                  )
+                ])
+              ],
+            ),
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EditSchedule(
+                          uid: 'amy123',
+                          scheduleNum: s.scheduleNum,
+                        ))),
+            onLongPress: () => msgBox(context, '警告', '確定要刪除行程嗎？', () async {
+                  Delete delete = Delete(
+                      context: context,
+                      uid: 'amy123',
+                      scheduleNum: s.scheduleNum);
+                  bool isError = await delete.getIsError();
+                  if (isError) {
+                    toast(context, '刪除行程錯誤');
+                  }
+                })),
       ));
     }
   }
