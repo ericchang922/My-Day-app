@@ -1,16 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/friend/bestfriend_add.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/public/friend_request/delete_best.dart';
-
-import 'package:flutter/material.dart';
-
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
-
-import 'package:My_Day_app/public/alert.dart';
-
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
@@ -35,11 +32,11 @@ class _BestfriendWidget extends State<BestfriendPage> {
   List _filteredFriend = [];
   List _filteredBestFriend = [];
 
-  bool _isNotCreate = false;
   bool viewVisible = true;
   @override
   void initState() {
     super.initState();
+    _uid();
 
     _friendListRequest();
     _bestFriendListRequest();
@@ -67,9 +64,6 @@ class _BestfriendWidget extends State<BestfriendPage> {
   }
 
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
     BestFriendListModel _request = await BestFriendList(uid: uid).getData();
 
     setState(() {
@@ -82,9 +76,6 @@ class _BestfriendWidget extends State<BestfriendPage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     FriendListModel _request = await FriendList(uid: uid).getData();
 
     setState(() {
@@ -131,17 +122,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
     double _height = size.height;
     double _titleSize = _height * 0.025;
     double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
 
     double _pSize = _height * 0.023;
-
-    double _appBarSize = _width * 0.052;
-
-    Color _color = Theme.of(context).primaryColor;
-
-    Color _bule = Color(0xff7AAAD8);
 
     Widget friendListWidget;
 
@@ -167,11 +149,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
         itemBuilder: (BuildContext context, int index) {
           var friends = _bestFriendListModel.friend[index];
           return AnimatedOpacity(
-            // If the widget is visible, animate to 0.0 (invisible).
-            // If the widget is hidden, animate to 1.0 (fully visible).
             opacity: hideWidget != null ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 500),
-            // The green box must be a child of the AnimatedOpacity widget.
             child: ListTile(
               contentPadding: EdgeInsets.symmetric(
                   horizontal: _listPaddingH, vertical: 0.0),
@@ -209,11 +188,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
         itemBuilder: (BuildContext context, int index) {
           var friends = _friendListModel.friend[index];
           return AnimatedOpacity(
-            // If the widget is visible, animate to 0.0 (invisible).
-            // If the widget is hidden, animate to 1.0 (fully visible).
             opacity: hideWidget != null ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 500),
-            // The green box must be a child of the AnimatedOpacity widget.
             child: ListTile(
               contentPadding: EdgeInsets.symmetric(
                   horizontal: _listPaddingH, vertical: 0.0),
@@ -244,43 +220,23 @@ class _BestfriendWidget extends State<BestfriendPage> {
             _friendListModel.friend.length != 0) {
           friendListWidget = ListView(
             children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
               bestFriendList,
-
-              // friendList
             ],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              bestFriendList
-            ],
+            children: [bestFriendList],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // friendList
-            ],
+            children: [],
           );
         } else {
           friendListWidget = Center(child: Text('目前沒有任何摯友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName
@@ -302,7 +258,6 @@ class _BestfriendWidget extends State<BestfriendPage> {
             children: [
               _buildSearchBestFriendList(context),
               Divider(),
-              // _buildSearchFriendList(context)
             ],
           );
         } else {
@@ -310,14 +265,12 @@ class _BestfriendWidget extends State<BestfriendPage> {
             children: [
               if (_filteredBestFriend.length > 0)
                 _buildSearchBestFriendList(context),
-              // if (_filteredFriend.length > 0) _buildSearchFriendList(context)
             ],
           );
         }
       }
 
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -332,25 +285,26 @@ class _BestfriendWidget extends State<BestfriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                bool action = await bestfriendsAddDialog(context);
+                await bestfriendsAddDialog(context);
               },
             ),
           ],
         ),
-        body: GestureDetector(
-            child: Container(
-          margin: EdgeInsets.only(top: _height * 0.02),
-          child: Column(
-            children: [
-              SizedBox(height: _height * 0.01),
-              Expanded(child: friendListWidget),
-            ],
-          ),
-        )),
-      ));
+        body: SafeArea(
+          child: GestureDetector(
+              child: Container(
+            margin: EdgeInsets.only(top: _height * 0.02),
+            child: Column(
+              children: [
+                SizedBox(height: _height * 0.01),
+                Expanded(child: friendListWidget),
+              ],
+            ),
+          )),
+        ),
+      );
     } else {
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text('摯友', style: TextStyle(fontSize: _titleSize)),
@@ -364,7 +318,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                bool action = await friendsAddDialog(context);
+                await friendsAddDialog(context);
               },
             ),
           ],
@@ -373,7 +327,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      ));
+      );
     }
   }
 
@@ -406,11 +360,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredBestFriend[index];
         return AnimatedOpacity(
-          // If the widget is visible, animate to 0.0 (invisible).
-          // If the widget is hidden, animate to 1.0 (fully visible).
           opacity: hideWidget != null ? 1.0 : 0.0,
           duration: const Duration(milliseconds: 500),
-          // The green box must be a child of the AnimatedOpacity widget.
           child: ListTile(
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
@@ -457,11 +408,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredFriend[index];
         return AnimatedOpacity(
-          // If the widget is visible, animate to 0.0 (invisible).
-          // If the widget is hidden, animate to 1.0 (fully visible).
           opacity: hideWidget != null ? 1.0 : 0.0,
           duration: const Duration(milliseconds: 500),
-          // The green box must be a child of the AnimatedOpacity widget.
           child: ListTile(
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),

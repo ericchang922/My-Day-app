@@ -216,7 +216,6 @@ class _Login extends State {
                       bottomNavigationBar: Container(
                           child: Row(children: <Widget>[
                         Expanded(
-                          // ignore: deprecated_member_use
                           child: Container(
                             margin: EdgeInsets.only(
                               left: _listLR,
@@ -247,7 +246,6 @@ class _Login extends State {
                           ),
                         ),
                         Expanded(
-                          // ignore: deprecated_member_use
                           child: Container(
                             margin: EdgeInsets.only(
                               right: _listLR,

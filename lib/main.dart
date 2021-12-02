@@ -10,7 +10,7 @@ SharedPreferences prefs;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
-  var id = prefs.getString('TestString_Key');
+  var id = prefs.getString('uid');
   print(id);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

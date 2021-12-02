@@ -1,3 +1,4 @@
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/alert.dart';
@@ -32,11 +33,6 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
   }
 
   _shareStudyPlanRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/personal_share_studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = ShareStudyplanListModel.fromJson(responseBody);
-
     PersonalShareStudyplanListModel _request =
         await PersonalShareList(uid: uid, shareStatus: 0).getData();
 
@@ -55,7 +51,6 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
     double _width = size.width;
 
     double _heightSize = _height * 0.01;
-    double _widthSize = _width * 0.01;
     double _leadingL = _height * 0.02;
     double _textL = _height * 0.02;
     double _subtitleT = _height * 0.008;

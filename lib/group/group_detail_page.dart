@@ -1,24 +1,25 @@
 import 'dart:async';
 
-import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:My_Day_app/public/group_request/quit_group.dart';
-import 'package:My_Day_app/models/group/group_member_list_model.dart';
-import 'package:My_Day_app/public/group_request/member_list.dart';
+import 'package:date_format/date_format.dart';
+
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/common_note/common_note_list_page.dart';
 import 'package:My_Day_app/common_studyplan/common_studyplan_list_page.dart';
 import 'package:My_Day_app/group/group_invite_page.dart';
 import 'package:My_Day_app/group/group_member_page.dart';
 import 'package:My_Day_app/group/group_setting_page.dart';
-import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/models/group/get_group_model.dart';
-import 'package:My_Day_app/models/group/group_log_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/group_request/quit_group.dart';
+import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/group_request/get.dart';
 import 'package:My_Day_app/public/group_request/get_log.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
+import 'package:My_Day_app/models/group/get_group_model.dart';
+import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/vote/vote_list_page.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
-import 'package:date_format/date_format.dart';
 
 class GroupDetailPage extends StatefulWidget {
   var arguments;
@@ -97,10 +98,8 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
 
     setState(() {
       _groupLogModel = _request;
-      // ignore: deprecated_member_use
-      _groupLogDate = new List();
-      // ignore: deprecated_member_use
-      _groupLogDateIsShow = new List();
+      _groupLogDate = [];
+      _groupLogDateIsShow = [];
 
       for (int i = 0; i < _groupLogModel.groupContent.length; i++) {
         DateTime doTime = _groupLogModel.groupContent[i].doTime;

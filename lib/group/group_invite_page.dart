@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/public/group_request/invite_friend.dart';
-import 'package:My_Day_app/models/group/group_invite_friend_list_model.dart';
-import 'package:My_Day_app/public/group_request/invite_friend_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/public/group_request/invite_friend.dart';
+import 'package:My_Day_app/public/group_request/invite_friend_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/models/group/group_invite_friend_list_model.dart';
 
 class GroupInvitePage extends StatefulWidget {
   int groupNum;
@@ -16,9 +17,10 @@ class GroupInvitePage extends StatefulWidget {
 }
 
 class _GroupInviteWidget extends State<GroupInvitePage> {
-  int groupNum;
-  _GroupInviteWidget(this.groupNum);
 
+  int groupNum;
+
+  _GroupInviteWidget(this.groupNum);
   GroupInviteFriendListModel _friendListModel;
   GroupInviteFriendListModel _bestFriendListModel;
 
@@ -382,10 +384,8 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName

@@ -1,15 +1,15 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
-import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
 import 'package:My_Day_app/public/setting_request/get_friend_privacy.dart';
-import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:convert';
-
-//
+import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
 
 class FriendsPrivacySettingsPage extends StatefulWidget {
   @override
@@ -24,7 +24,7 @@ class FriendsPrivacySettings extends State {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(body: friendPage()));
+    return friendPage();
   }
 }
 
@@ -41,9 +41,8 @@ class _friendWidget extends State<friendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String _dropdownValue = '讀書';
-  String id = 'lili123';
-  String friendId ;
+  String id;
+  String friendId;
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -65,17 +64,13 @@ class _friendWidget extends State<friendPage> {
   }
 
   _getFriendPrivacyRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
-
     GetFriendPrivacyModel _request =
-        await GetFriendPrivacy(uid: id, friendId:friendId).getData();
+        await GetFriendPrivacy(context:context, uid: id, friendId: friendId).getData();
 
     setState(() {
       _friendprivacy = _request;
       print(_friendprivacy);
     });
-    
   }
 
   void _friendNameControlloer() {
@@ -93,9 +88,6 @@ class _friendWidget extends State<friendPage> {
   }
 
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
     BestFriendListModel _request = await BestFriendList(uid: id).getData();
 
     setState(() {
@@ -108,9 +100,6 @@ class _friendWidget extends State<friendPage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     FriendListModel _request = await FriendList(uid: id).getData();
 
     setState(() {
@@ -157,17 +146,8 @@ class _friendWidget extends State<friendPage> {
     double _height = size.height;
     double _titleSize = _height * 0.025;
     double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
 
     double _pSize = _height * 0.023;
-
-    double _appBarSize = _width * 0.052;
-
-    Color _color = Theme.of(context).primaryColor;
-
-    Color _bule = Color(0xff7AAAD8);
 
     Widget friendListWidget;
 
@@ -405,10 +385,8 @@ class _friendWidget extends State<friendPage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName
@@ -456,19 +434,20 @@ class _friendWidget extends State<friendPage> {
             },
           ),
         ),
-        body: GestureDetector(
-            child: Container(
-          margin: EdgeInsets.only(top: _height * 0.02),
-          child: Column(
-            children: [
-              Expanded(child: friendListWidget),
-            ],
-          ),
-        )),
+        body: SafeArea(
+          child: GestureDetector(
+              child: Container(
+            margin: EdgeInsets.only(top: _height * 0.02),
+            child: Column(
+              children: [
+                Expanded(child: friendListWidget),
+              ],
+            ),
+          )),
+        ),
       );
     } else {
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text('好友隱私設定', style: TextStyle(fontSize: _titleSize)),
@@ -483,7 +462,7 @@ class _friendWidget extends State<friendPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      ));
+      );
     }
   }
 
@@ -715,150 +694,6 @@ class _friendWidget extends State<friendPage> {
         });
   }
 }
-
-//   bool switchValue = false;
-//   bool openValue = false;
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamBuilder(
-//       stream: block.darkThemeEnabled,
-//       initialData: false,
-//       builder: (context, snapshot) {
-//         switchValue = snapshot.data;
-//         return SafeArea(
-//         child: Scaffold(
-//           appBar: AppBar(
-//             backgroundColor: Theme.of(context).primaryColor,
-//             title: Text('好友隱私設定', style: TextStyle(fontSize: 20)),
-//             leading: IconButton(
-//               icon: Icon(Icons.chevron_left),
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//           ),
-//           body: ListView(
-//             children: <Widget>[
-//               Container(
-//                 margin: EdgeInsets.only(right: 15, left: 35),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Text.rich(TextSpan(
-//                       children: <InlineSpan>[
-//                         WidgetSpan(
-//                           child: new Image.asset(
-//                             "assets/images/search.png",
-//                             width: 20,
-//                           ),
-//                         ),
-//                         TextSpan(
-//                           text: 'xxxxxx',
-//                           style: TextStyle(
-//                             fontSize: 20,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                   PopupMenuButton<int>(
-//                     offset: Offset(0, 50),
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(10)),
-//                     icon: Icon(Icons.more_vert),
-//                     itemBuilder: (context) => [
-//                       PopupMenuItem<int>(
-//                         value: 1,
-//                         child: ListTile(
-//                           title: Text(
-//                                   '玩聚邀請',
-//                                   style: TextStyle(
-//                                     fontSize: 18,
-//                                   ),
-//                           ),
-//                           trailing: StatefulBuilder(builder:
-//                             (BuildContext context, StateSetter setState) {
-//                               return Switch(
-//                                 value: openValue,
-//                                onChanged: (value) {
-//                                   setState(() {
-//                                     openValue = value;
-//                                   });
-//                                 },
-//                                 activeColor: Colors.white,
-//                                 activeTrackColor: Color(0xffF86D67),
-//                                 // inactiveThumbColor: Color(0xffF86D67),
-//                                 // inactiveTrackColor: Color(0xffF86D67),
-//                             );}
-//                           ),
-//                         ),
-//                       ),
-//                       PopupMenuDivider(
-//                         height: 1,
-//                       ),
-//                       PopupMenuItem<int>(
-//                         value: 1,
-//                         child: ListTile(
-//                           title: Text(
-//                                   '公開課表',
-//                                   style: TextStyle(
-//                                     fontSize: 18,
-//                                   ),
-//                           ),
-//                           trailing: StatefulBuilder(builder:
-//                             (BuildContext context, StateSetter setState) {
-//                               return Switch(
-//                                 value: switchValue,
-//                                  onChanged: (value) {
-//                                   setState(() {
-//                                     switchValue = value;
-//                                   });
-//                                 },
-//                                 activeColor: Colors.white,
-//                                 activeTrackColor: Color(0xffF86D67),
-//                                 // inactiveThumbColor: Color(0xffF86D67),
-//                                 // inactiveTrackColor: Color(0xffF86D67),
-//                             );}
-//                           ),
-//                         ),
-//                       ),
-//                     ]),
-//                   ]),
-//           ),
-
-//           Container(
-//             margin: EdgeInsets.only(top: 10),
-//             color: Color(0xffE3E3E3),
-//             constraints: BoxConstraints.expand(height: 1.0),
-//           ),
-//               // actions: <Widget>[
-//               //   PopupMenuButton(itemBuilder: (context) {
-//               //     return [
-//               //       PopupMenuItem(
-//               //           child: ListTile(
-//               //         title: Text("Dark Theme"),
-//               //         trailing: StatefulBuilder(builder:
-//               //             (BuildContext context, StateSetter setState) {
-//               //           return Switch(
-//               //             value: switchValue,
-//               //             onChanged: (newValue) {
-//               //               block.changeTheme1(newValue);
-//               //               print(switchValue);
-//               //               setState(() {});
-//               //             },
-//               //           );
-//               //         }),
-//               //       )), //Problem
-//               //     ];
-//               //   })
-//               // ],
-//             ]),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
 
 class Block {
   final _themeContol = StreamController<bool>();

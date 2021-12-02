@@ -1,13 +1,14 @@
-import 'package:My_Day_app/common_schedule/edit_common_schedule_page.dart';
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
-import 'package:My_Day_app/public/schedule_request/delete.dart';
+import 'package:animations/animations.dart';
+
 import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
+import 'package:My_Day_app/common_schedule/edit_common_schedule_page.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/public/schedule_request/common_list.dart';
-
-import 'package:animations/animations.dart';
+import 'package:My_Day_app/public/schedule_request/delete.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 
 class CommonScheduleListPage extends StatefulWidget {
   int groupNum;
@@ -142,8 +143,8 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
             return InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        EditCommonSchedulePage(scheduleNum: schedule.scheduleNum)));
+                    builder: (context) => EditCommonSchedulePage(
+                        scheduleNum: schedule.scheduleNum)));
               },
               child: Container(
                 margin: EdgeInsets.only(
@@ -201,7 +202,8 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                           ];
                         },
                         onSelected: (int value) async {
-                          if (await _submitDelete(schedule.scheduleNum) != true) {
+                          if (await _submitDelete(schedule.scheduleNum) !=
+                              true) {
                             _groupScheduleListRequest();
                           }
                         },
@@ -234,8 +236,8 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
             return InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        EditCommonSchedulePage(scheduleNum: schedule.scheduleNum)));
+                    builder: (context) => EditCommonSchedulePage(
+                        scheduleNum: schedule.scheduleNum)));
               },
               child: Container(
                 margin: EdgeInsets.only(
@@ -275,7 +277,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                           ),
                         ],
                       ),
-                    ), 
+                    ),
                     Expanded(
                       child: PopupMenuButton<int>(
                         offset: Offset(-40, 0),
@@ -293,7 +295,8 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                           ];
                         },
                         onSelected: (int value) async {
-                          if (await _submitDelete(schedule.scheduleNum) != true) {
+                          if (await _submitDelete(schedule.scheduleNum) !=
+                              true) {
                             _groupScheduleListRequest();
                           }
                         },

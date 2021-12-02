@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/note_request/share.dart';
-import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/public/note_request/get_group_list.dart';
 import 'package:My_Day_app/public/note_request/get_list.dart';
-import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
 
 class ShareNotePage extends StatefulWidget {

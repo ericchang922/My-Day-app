@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/models/group/group_member_list_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
 
 class GroupMemberPage extends StatelessWidget {
   int groupNum;
@@ -70,13 +71,11 @@ class _GroupMemberWidget extends State<GroupMemberWidget> {
   @override
   void initState() {
     super.initState();
+
     _groupMemberListRequest();
   }
 
   _groupMemberListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
-    // var responseBody = json.decode(response);
-
     GroupMemberListModel _request =
         await MemberList(uid: uid, groupNum: groupNum).getData();
 

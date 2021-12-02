@@ -389,10 +389,8 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                             String _alertTitle = '新增投票失敗';
                             String _title;
                             int _optionTypeId = _tabController.index;
-                            // ignore: deprecated_member_use
-                            _voteItems = new List();
-                            // ignore: deprecated_member_use
-                            _voteItemsName = new List();
+                            _voteItems = [];
+                            _voteItemsName = [];
                             if (_optionTypeId == 0) {
                               for (int i = 0; i < _voteValues.length; i++) {
                                 if (_voteValues[i] != "") {

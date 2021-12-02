@@ -1,3 +1,4 @@
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/study/studyplan_detail_page.dart';

@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
-import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/group_request/create_group.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
@@ -519,10 +520,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName

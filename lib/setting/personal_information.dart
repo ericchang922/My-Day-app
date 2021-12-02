@@ -297,157 +297,7 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
       );
     }
 
-    // Future settingsUpdateEmailDialog(BuildContext context) async {
-    //   return showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return AlertDialog(
-    //         backgroundColor: Colors.white,
-    //         shape: RoundedRectangleBorder(
-    //             borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
-    //         contentPadding: EdgeInsets.only(top: _height * 0.02),
-    //         content: Container(
-    //           width: _width * 0.2,
-    //           height: _height * 0.24,
-    //           child: GestureDetector(
-    //             // 點擊空白處釋放焦點
-    //             behavior: HitTestBehavior.translucent,
-    //             onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-    //             child: Column(
-    //               children: <Widget>[
-    //                 Expanded(
-    //                   child: ListView(
-    //                     shrinkWrap: true,
-    //                     physics: NeverScrollableScrollPhysics(),
-    //                     children: [
-    //                       Row(
-    //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                         mainAxisSize: MainAxisSize.min,
-    //                         children: <Widget>[
-    //                           Text(
-    //                             "電子郵件",
-    //                             style: TextStyle(fontSize: _pSize),
-    //                             textAlign: TextAlign.center,
-    //                           ),
-    //                         ],
-    //                       ),
-    //                       Container(
-    //                         margin: EdgeInsets.only(
-    //                             left: _textLBR,
-    //                             right: _textLBR,
-    //                             bottom: _textLBR,
-    //                             top: _height * 0.015),
-    //                         child: Text('電子郵件名稱：',
-    //                             style: TextStyle(fontSize: _pSize)),
-    //                       ),
-    //                       Container(
-    //                           height: _textFied,
-    //                           margin: EdgeInsets.only(
-    //                             left: _textLBR,
-    //                             right: _textLBR,
-    //                           ),
-    //                           child: new TextField(
-    //                             style: TextStyle(fontSize: _pSize),
-    //                             decoration: InputDecoration(
-    //                                 contentPadding: EdgeInsets.symmetric(
-    //                                     horizontal: _height * 0.01,
-    //                                     vertical: _height * 0.01),
-    //                                 border: OutlineInputBorder(
-    //                                   borderRadius: BorderRadius.all(
-    //                                       Radius.circular(_height * 0.01)),
-    //                                   borderSide: BorderSide(
-    //                                     color: _textFiedBorder,
-    //                                   ),
-    //                                 ),
-    //                                 focusedBorder: OutlineInputBorder(
-    //                                   borderRadius: BorderRadius.all(
-    //                                       Radius.circular(_height * 0.01)),
-    //                                   borderSide: BorderSide(color: _bule),
-    //                                 )),
-    //                             controller: _EmailController,
-    //                             onChanged: (text) {
-    //                               email = text;
-    //                             },
-    //                           )),
-    //                     ],
-    //                   ),
-    //                 ),
-    //                 Row(
-    //                   children: [
-    //                     Expanded(
-    //                       child: InkWell(
-    //                         child: Container(
-    //                           height: _inkwellH,
-    //                           padding: EdgeInsets.only(
-    //                               top: _height * 0.015,
-    //                               bottom: _height * 0.015),
-    //                           decoration: BoxDecoration(
-    //                             color: _light,
-    //                             borderRadius: BorderRadius.only(
-    //                               bottomLeft: Radius.circular(_borderRadius),
-    //                             ),
-    //                           ),
-    //                           child: Text(
-    //                             "取消",
-    //                             style: TextStyle(
-    //                                 fontSize: _subtitleSize,
-    //                                 color: Colors.white),
-    //                             textAlign: TextAlign.center,
-    //                           ),
-    //                         ),
-    //                         onTap: () {
-    //                           Navigator.of(context).pop();
-    //                         },
-    //                       ),
-    //                     ),
-    //                     Expanded(
-    //                       child: InkWell(
-    //                           child: Container(
-    //                             height: _inkwellH,
-    //                             padding: EdgeInsets.only(
-    //                                 top: _height * 0.015,
-    //                                 bottom: _height * 0.015),
-    //                             decoration: BoxDecoration(
-    //                               color: _color,
-    //                               borderRadius: BorderRadius.only(
-    //                                   bottomRight:
-    //                                       Radius.circular(_borderRadius)),
-    //                             ),
-    //                             child: Text(
-    //                               "確認",
-    //                               style: TextStyle(
-    //                                   fontSize: _subtitleSize,
-    //                                   color: Colors.white),
-    //                               textAlign: TextAlign.center,
-    //                             ),
-    //                           ),
-    //                           onTap: () async {
-    //                             if (_EmailController.text.isEmpty) {
-    //                               setState(() {
-    //                                 email = email;
-    //                                 Navigator.of(context).pop();
-    //                               });
-    //                             } else {
-    //                               setState(() {
-    //                                 _EmailController.text = email;
-    //                                 Navigator.of(context).pop();
-    //                               });
-    //                             }
-    //                           }),
-    //                     )
-    //                   ],
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    //       );
-    //     },
-    //   );
-    // }
-
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
           title: Text('個人資料', style: TextStyle(fontSize: _appBarSize)),
@@ -460,99 +310,106 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
               }
             },
           )),
-      body: ListView(
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.only(top: _height * 0.02, right: _height * 0.2),
-              child: InkWell(
-                onTap: () async {
-                  _incrementCounter();
-                },
-                child: CircleAvatar(
-                  radius: 70,
-                  backgroundColor: Colors.white,
-                  child: ClipOval(
-                      child: (_photo != null)
-                          ? Image.file(
-                              _photo,
-                              fit: BoxFit.cover,
-                              width: 150,
-                              height: 150,
-                            )
-                          : Image.asset('assets/images/search.png')
-                      // :  getImage(_getProfileList.photo),
-                      ),
-                ),
-              )),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.01),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-          Container(
-              margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.05),
-              child: ListTile(
-                title: Text('姓名', style: TextStyle(fontSize: _titleSize)),
-                subtitle: Container(
-                    margin: EdgeInsets.only(top: _subtitleT),
-                    child:
-                        Text(_name, style: TextStyle(fontSize: _subtitleSize))),
-                onTap: () async {
-                  await settingsUpdateNameDialog(context);
-                },
-              )),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.01),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-          Container(
-              margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.05),
-              child: ListTile(
-                title: Text('電子郵件', style: TextStyle(fontSize: _titleSize)),
-                subtitle: Container(
-                    margin: EdgeInsets.only(top: _subtitleT),
-                    child: Text(id, style: TextStyle(fontSize: _subtitleSize))),
-                onTap: () async {
-                  return null;
-                },
-              )),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.01),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.01, right: _height * 0.2),
-            child: SizedBox(
-                height: _bottomHeight,
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChangepwPersonalPage()));
+      body: SafeArea(
+        child: ListView(
+          children: <Widget>[
+            Container(
+                margin:
+                    EdgeInsets.only(top: _height * 0.02, right: _height * 0.2),
+                child: InkWell(
+                  onTap: () async {
+                    _incrementCounter();
                   },
-                  child: Text(
-                    '更改密碼',
-                    style: TextStyle(
-                      fontSize: _appBarSize,
-                    ),
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundColor: Colors.white,
+                    child: ClipOval(
+                        child: (_photo != null)
+                            ? Image.file(
+                                _photo,
+                                fit: BoxFit.cover,
+                                width: 150,
+                                height: 150,
+                              )
+                            : Image.asset('assets/images/search.png')
+                        // :  getImage(_getProfileList.photo),
+                        ),
                   ),
                 )),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.005),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-        ],
+            Container(
+              margin: EdgeInsets.only(top: _height * 0.01),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+                margin:
+                    EdgeInsets.only(top: _height * 0.01, left: _height * 0.05),
+                child: ListTile(
+                  title: Text('姓名', style: TextStyle(fontSize: _titleSize)),
+                  subtitle: Container(
+                      margin: EdgeInsets.only(top: _subtitleT),
+                      child: Text(_name,
+                          style: TextStyle(fontSize: _subtitleSize))),
+                  onTap: () async {
+                    await settingsUpdateNameDialog(context);
+                  },
+                )),
+            Container(
+              margin: EdgeInsets.only(top: _height * 0.01),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+                margin:
+                    EdgeInsets.only(top: _height * 0.01, left: _height * 0.05),
+                child: ListTile(
+                  title: Text('電子郵件', style: TextStyle(fontSize: _titleSize)),
+                  subtitle: Container(
+                      margin: EdgeInsets.only(top: _subtitleT),
+                      child:
+                          Text(id, style: TextStyle(fontSize: _subtitleSize))),
+                  onTap: () async {
+                    return null;
+                  },
+                )),
+            Container(
+              margin: EdgeInsets.only(top: _height * 0.01),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+              margin:
+                  EdgeInsets.only(top: _height * 0.01, right: _height * 0.2),
+              child: SizedBox(
+                  height: _bottomHeight,
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangepwPersonalPage()));
+                    },
+                    child: Text(
+                      '更改密碼',
+                      style: TextStyle(
+                        fontSize: _appBarSize,
+                      ),
+                    ),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: _height * 0.005),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
 

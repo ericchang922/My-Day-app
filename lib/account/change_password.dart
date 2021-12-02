@@ -3,6 +3,8 @@ import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/public/account_request/change_pw.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/loadUid.dart';
+
 class ChangepwPage extends StatefulWidget {
   // This widget is the root of your application.
   @override
@@ -24,7 +26,6 @@ class ChangepwWidget extends State<ChangepwPage> {
     double _leadingL = _height * 0.02;
 
     Color _color = Color(0xffF86D67);
-    Color _light = Color(0xffFFAAA6);
 
     return SafeArea(
         child: Scaffold(
@@ -69,24 +70,16 @@ class _Changepw extends StatelessWidget {
 
     double _listLR = _height * 0.05;
     double _listB = _height * 0.01;
-    double _textFied = _height * 0.045;
     double _borderRadius = _height * 0.01;
     double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
     double _bottomHeight = _height * 0.07;
     double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
-    Color _textFiedBorder = Color(0xff707070);
     String id = 'lili123';
+
     _submit() async {
       String uid = id;
       String password = newpw.text;
@@ -193,7 +186,6 @@ class _Changepw extends StatelessWidget {
                 bottomNavigationBar: Container(
                     child: Row(children: <Widget>[
                   Expanded(
-                    // ignore: deprecated_member_use
                     child: SizedBox(
                         height: _bottomHeight,
                         child: TextButton(
@@ -212,7 +204,6 @@ class _Changepw extends StatelessWidget {
                         )),
                   ),
                   Expanded(
-                      // ignore: deprecated_member_use
                       child: SizedBox(
                     height: _bottomHeight,
                     child: TextButton(

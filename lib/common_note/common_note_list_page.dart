@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/common_note/common_note_detail_page.dart';
-import 'package:My_Day_app/public/note_request/cancel_share.dart';
-import 'package:My_Day_app/common_note/share_note_page.dart';
 import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/common_note/common_note_detail_page.dart';
+import 'package:My_Day_app/common_note/share_note_page.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
+import 'package:My_Day_app/public/note_request/cancel_share.dart';
 import 'package:My_Day_app/public/note_request/get_group_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 
 class CommonNoteListPage extends StatefulWidget {
   int groupNum;

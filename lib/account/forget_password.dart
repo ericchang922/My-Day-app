@@ -239,7 +239,6 @@ class Forgetpw extends StatelessWidget {
           bottomNavigationBar: Container(
               child: Row(children: <Widget>[
             Expanded(
-              // ignore: deprecated_member_use
               child: SizedBox(
                   height: _bottomHeight,
                   child: TextButton(
@@ -259,7 +258,6 @@ class Forgetpw extends StatelessWidget {
                   )),
             ),
             Expanded(
-              // ignore: deprecated_member_use
               child: SizedBox(
                   height: _bottomHeight,
                   child: TextButton(

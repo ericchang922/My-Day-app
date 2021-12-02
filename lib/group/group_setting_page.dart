@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/group/group_information_page.dart';
 import 'package:My_Day_app/group/group_manager_page.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 
 class GroupSettingPage extends StatefulWidget {
   int groupNum;
@@ -48,7 +48,7 @@ class _GroupSettingWidget extends State<GroupSettingPage> {
                 child: Text('通知', style: TextStyle(fontSize: _titleSize))),
             trailing: Switch(
               value: _settingCheck,
-              activeColor:_color,
+              activeColor: _color,
               onChanged: (value) {
                 setState(() {
                   _settingCheck = value;

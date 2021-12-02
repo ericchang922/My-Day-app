@@ -1,3 +1,4 @@
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/models/note/share_note_list_model.dart';

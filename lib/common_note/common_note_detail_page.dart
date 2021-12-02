@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 
 class CommonNoteDetailPage extends StatefulWidget {
   int noteNum;
@@ -114,7 +116,9 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
             ),
             body: Container(
                 color: Colors.white,
-                child: SafeArea(top: false, child: Center(child: getImage(_getNote.content)))),
+                child: SafeArea(
+                    top: false,
+                    child: Center(child: getImage(_getNote.content)))),
           ),
         ),
       );

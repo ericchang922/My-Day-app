@@ -50,13 +50,10 @@ class Theme extends State {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          // ignore: deprecated_member_use
                           Text(
                             '國文 1~3 課',
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
-
-                          // ignore: deprecated_member_use
                           SizedBox(
                             height: 40,
                             width: 20,
@@ -88,17 +85,15 @@ class Theme extends State {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          // ignore: deprecated_member_use
                           Text(
                             '數學 1~3 課',
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
-
-                          // ignore: deprecated_member_use
                           SizedBox(
                             height: 40,
                             width: 20,
                             child: TextButton(
+                                child: Container(),
                                 style: TextButton.styleFrom(
                                   backgroundColor: hasBeenPressed
                                       ? Color(0xffF86D67)
@@ -126,15 +121,15 @@ class Theme extends State {
             bottomNavigationBar: Container(
                 child: Row(children: <Widget>[
               Expanded(
-                // ignore: deprecated_member_use
                 child: SizedBox(
                     height: 50,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: Theme.of(context).primaryColorLight,),
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0)),
+                        backgroundColor: Theme.of(context).primaryColorLight,
+                      ),
                       child: Image.asset(
                         'assets/images/cancel.png',
                         width: _iconWidth,
@@ -145,15 +140,15 @@ class Theme extends State {
                     )),
               ),
               Expanded(
-                // ignore: deprecated_member_use
                 child: SizedBox(
                   height: 50,
                   child: TextButton(
                     style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        backgroundColor: Theme.of(context).primaryColor,),
+                      primary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0)),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
                     child: Image.asset(
                       'assets/images/confirm.png',
                       width: _iconWidth,

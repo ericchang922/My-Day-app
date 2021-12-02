@@ -24,7 +24,7 @@ class _OpenClassSchedulePage extends State {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(body: friendPage()));
+    return friendPage();
   }
 }
 
@@ -60,21 +60,17 @@ class _friendWidget extends State<friendPage> {
     _bestFriendListRequest();
     _getTimetableRequest();
     if (_timetable == null) {
-       _isCheck = false;
-
-      // ignore: unrelated_type_equality_checks
+      _isCheck = false;
     } else if (_timetable == 1) {
       _isCheck = true;
     } else {
       _isCheck = false;
     }
   }
-  _getTimetableRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
 
+  _getTimetableRequest() async {
     GetTimetableModel _request = await GetTimetable(uid: id).getData();
-    
+
     setState(() {
       _timetable = _request;
       print(_timetable);
@@ -82,12 +78,7 @@ class _friendWidget extends State<friendPage> {
     });
   }
 
-
-
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
     BestFriendListModel _request = await BestFriendList(uid: id).getData();
 
     setState(() {
@@ -100,9 +91,6 @@ class _friendWidget extends State<friendPage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     FriendListModel _request = await FriendList(uid: id).getData();
 
     setState(() {
@@ -175,13 +163,14 @@ class _friendWidget extends State<friendPage> {
       else
         return false;
     }
+
     _submitfriend(String friendId) async {
       String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return FriendPrivacy(uid: uid,friendId: friendId, isPublic: isPublic);
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -212,14 +201,13 @@ class _friendWidget extends State<friendPage> {
               value: _bestFriendCheck[friends.friendId],
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
-                setState(() {
-                  _friendCheck[friends.friendId] = value;
-                });
-              }},
+                  setState(() {
+                    _friendCheck[friends.friendId] = value;
+                  });
+                }
+              },
               activeColor: Colors.white,
               activeTrackColor: Color(0xffF86D67),
-              // inactiveThumbColor: Color(0xffF86D67),
-              // inactiveTrackColor: Color(0xffF86D67),
             ),
           );
         },
@@ -248,10 +236,11 @@ class _friendWidget extends State<friendPage> {
               value: _friendCheck[friends.friendId],
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
-                setState(() {
-                  _friendCheck[friends.friendId] = value;
-                });
-              }},
+                  setState(() {
+                    _friendCheck[friends.friendId] = value;
+                  });
+                }
+              },
               activeColor: Colors.white,
               activeTrackColor: Color(0xffF86D67),
               // inactiveThumbColor: Color(0xffF86D67),
@@ -268,29 +257,11 @@ class _friendWidget extends State<friendPage> {
         if (_bestFriendListModel.friend.length != 0 &&
             _friendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              bestFriendList,
-
-              friendList
-            ],
+            children: [bestFriendList, friendList],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              bestFriendList
-            ],
+            children: [bestFriendList],
           );
         } else if (_friendListModel.friend.length != 0) {
           friendListWidget = ListView(
@@ -300,10 +271,8 @@ class _friendWidget extends State<friendPage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName
@@ -340,8 +309,10 @@ class _friendWidget extends State<friendPage> {
       }
       Widget playtogetherinvite = Column(children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: _height * 0.00, right: _height * 0.018,left: _height * 0.018),
-          // ignore: deprecated_member_use
+          margin: EdgeInsets.only(
+              top: _height * 0.00,
+              right: _height * 0.018,
+              left: _height * 0.018),
           child: SizedBox(
               height: _bottomHeight,
               width: double.infinity,
@@ -396,21 +367,18 @@ class _friendWidget extends State<friendPage> {
                           });
                         }
                       },
-
                       activeColor: Colors.white,
                       activeTrackColor: Color(0xffF86D67),
-                      // inactiveThumbColor: Color(0xffF86D67),
-                      // inactiveTrackColor: Color(0xffF86D67),
                     ),
                   ],
                 ),
               )),
         ),
         Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
-        color: Color(0xffE3E3E3),
-        constraints: BoxConstraints.expand(height: 1.0),
-      ),
+          margin: EdgeInsets.only(top: _height * 0.001),
+          color: Color(0xffE3E3E3),
+          constraints: BoxConstraints.expand(height: 1.0),
+        ),
       ]);
 
       return Scaffold(
@@ -425,20 +393,21 @@ class _friendWidget extends State<friendPage> {
             },
           ),
         ),
-        body: GestureDetector(
-            child: Container(
-          margin: EdgeInsets.only(top: _height * 0.02),
-          child: Column(
-            children: [
-              playtogetherinvite,
-              Expanded(child: friendListWidget),
-            ],
-          ),
-        )),
+        body: SafeArea(
+          child: GestureDetector(
+              child: Container(
+            margin: EdgeInsets.only(top: _height * 0.02),
+            child: Column(
+              children: [
+                playtogetherinvite,
+                Expanded(child: friendListWidget),
+              ],
+            ),
+          )),
+        ),
       );
     } else {
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text('公開課表', style: TextStyle(fontSize: _appBarSize)),
@@ -453,7 +422,7 @@ class _friendWidget extends State<friendPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      ));
+      );
     }
   }
 
@@ -471,7 +440,7 @@ class _friendWidget extends State<friendPage> {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return FriendPrivacy(uid: uid,friendId: friendId, isPublic: isPublic);
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -500,15 +469,14 @@ class _friendWidget extends State<friendPage> {
           trailing: Switch(
             value: _bestFriendCheck[friends.friendId],
             onChanged: (value) async {
-                if (await _submitfriend(friends.friendId) != true) {
+              if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
                   _friendCheck[friends.friendId] = value;
                 });
-              }},
+              }
+            },
             activeColor: Colors.white,
             activeTrackColor: Color(0xffF86D67),
-            // inactiveThumbColor: Color(0xffF86D67),
-            // inactiveTrackColor: Color(0xffF86D67),
           ),
         );
       },
@@ -532,7 +500,7 @@ class _friendWidget extends State<friendPage> {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return FriendPrivacy(uid: uid,friendId: friendId, isPublic: isPublic);
+        return FriendPrivacy(uid: uid, friendId: friendId, isPublic: isPublic);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -560,16 +528,15 @@ class _friendWidget extends State<friendPage> {
           ),
           trailing: Switch(
             value: _friendCheck[friends.friendId],
-           onChanged: (value) async {
-                if (await _submitfriend(friends.friendId) != true) {
+            onChanged: (value) async {
+              if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
                   _friendCheck[friends.friendId] = value;
                 });
-              }},
+              }
+            },
             activeColor: Colors.white,
             activeTrackColor: Color(0xffF86D67),
-            // inactiveThumbColor: Color(0xffF86D67),
-            // inactiveTrackColor: Color(0xffF86D67),
           ),
         );
       },

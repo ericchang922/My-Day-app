@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/group_request/setting_manager.dart';
-import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
 
 class GroupManagerPage extends StatelessWidget {
   int groupNum;
@@ -71,22 +72,18 @@ class _GroupManagerState extends State<GroupManagerWidget> {
   @override
   void initState() {
     super.initState();
+
     _groupMemberListRequest();
   }
 
   _groupMemberListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
-    // var responseBody = json.decode(response);
-
     GroupMemberListModel _request =
         await MemberList(uid: uid, groupNum: groupNum).getData();
 
     setState(() {
       _groupMemberListModel = _request;
-      // ignore: deprecated_member_use
-      _managerList = new List();
-      // ignore: deprecated_member_use
-      _memberList = new List();
+      _managerList = [];
+      _memberList = [];
 
       for (int i = 0; i < _groupMemberListModel.member.length; i++) {
         if (_groupMemberListModel.member[i].statusId == 4) {

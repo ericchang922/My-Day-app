@@ -4,7 +4,6 @@ import 'package:My_Day_app/friend/bestfriend.dart';
 import 'package:My_Day_app/friend/friend_home.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/friend/friends_invitation.dart';
-import 'package:My_Day_app/home.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/friend_request/delete.dart';
@@ -27,8 +26,7 @@ class _friendWidget extends State<FriendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String uid = prefs.getString('TestString_Key');
-  
+  String uid = prefs.getString('uid');
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -36,7 +34,6 @@ class _friendWidget extends State<FriendPage> {
   List _filteredFriend = [];
   List _filteredBestFriend = [];
 
-  bool _isNotCreate = false;
   bool viewVisible = true;
 
   @override
@@ -68,9 +65,6 @@ class _friendWidget extends State<FriendPage> {
   }
 
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
     BestFriendListModel _request = await BestFriendList(uid: uid).getData();
 
     setState(() {
@@ -83,9 +77,6 @@ class _friendWidget extends State<FriendPage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     FriendListModel _request = await FriendList(uid: uid).getData();
 
     setState(() {
@@ -132,17 +123,8 @@ class _friendWidget extends State<FriendPage> {
     double _height = size.height;
     double _titleSize = _height * 0.025;
     double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
 
     double _pSize = _height * 0.023;
-
-    double _appBarSize = _width * 0.052;
-
-    Color _color = Theme.of(context).primaryColor;
-
-    Color _bule = Color(0xff7AAAD8);
 
     Widget friendListWidget;
     _submitDelete(String friendId) async {
@@ -160,36 +142,6 @@ class _friendWidget extends State<FriendPage> {
     }
 
     if (_friendListModel != null && _bestFriendListModel != null) {
-      Widget bestFriendList = ListView.separated(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: _bestFriendListModel.friend.length,
-        itemBuilder: (BuildContext context, int index) {
-          var friends = _bestFriendListModel.friend[index];
-          return ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-            leading: ClipOval(
-              child: getImage(friends.photo),
-            ),
-            title: Text(
-              friends.friendName,
-              style: TextStyle(fontSize: _pSize),
-            ),
-            trailing: TextButton(
-                style: TextButton.styleFrom(primary: Color(0xffF86D67)),
-                child: Text(
-                  '移除',
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                onPressed: () async {}),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider();
-        },
-      );
-
       Widget friendList = ListView.separated(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -237,29 +189,11 @@ class _friendWidget extends State<FriendPage> {
         if (_bestFriendListModel.friend.length != 0 &&
             _friendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              // bestFriendList,
-
-              friendList
-            ],
+            children: [friendList],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              // bestFriendList
-            ],
+            children: [],
           );
         } else if (_friendListModel.friend.length != 0) {
           friendListWidget = ListView(
@@ -269,10 +203,8 @@ class _friendWidget extends State<FriendPage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName
@@ -291,25 +223,18 @@ class _friendWidget extends State<FriendPage> {
 
         if (_filteredBestFriend.length > 0 && _filteredFriend.length > 0) {
           friendListWidget = ListView(
-            children: [
-              // _buildSearchBestFriendList(context),
-              Divider(),
-              _buildSearchFriendList(context)
-            ],
+            children: [Divider(), _buildSearchFriendList(context)],
           );
         } else {
           friendListWidget = ListView(
             children: [
-              // if (_filteredBestFriend.length > 0)
-              //   _buildSearchBestFriendList(context),
               if (_filteredFriend.length > 0) _buildSearchFriendList(context)
             ],
           );
         }
       }
 
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -324,7 +249,7 @@ class _friendWidget extends State<FriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                bool action = await friendsAddDialog(context);
+                await friendsAddDialog(context);
               },
             ),
           ],
@@ -339,10 +264,9 @@ class _friendWidget extends State<FriendPage> {
             ],
           ),
         )),
-      ));
+      );
     } else {
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text('好友', style: TextStyle(fontSize: _titleSize)),
@@ -356,7 +280,7 @@ class _friendWidget extends State<FriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                bool action = await friendsAddDialog(context);
+                await friendsAddDialog(context);
               },
             ),
           ],
@@ -365,7 +289,7 @@ class _friendWidget extends State<FriendPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      ));
+      );
     }
   }
 
@@ -450,7 +374,8 @@ class _friendWidget extends State<FriendPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomeUpdate(child: FriendHome(friends.friendId))));
+                        builder: (context) =>
+                            HomeUpdate(child: FriendHome(friends.friendId))));
               }),
           trailing: TextButton(
               style: TextButton.styleFrom(primary: Color(0xffF86D67)),
@@ -476,7 +401,6 @@ class FriendsPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double _width = size.width;
     double _height = size.height;
     double _titleSize = _height * 0.025;
     double _bottomHeight = _height * 0.07;
@@ -485,7 +409,6 @@ class FriendsPageWidget extends StatelessWidget {
         child: Column(children: <Widget>[
       Container(
         margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
-        // ignore: deprecated_member_use
         child: SizedBox(
             height: _bottomHeight,
             width: double.infinity,
@@ -521,7 +444,6 @@ class FriendsPageWidget extends StatelessWidget {
       ),
       Container(
         margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
-        // ignore: deprecated_member_use
         child: SizedBox(
             height: _bottomHeight,
             width: double.infinity,

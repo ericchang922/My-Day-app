@@ -14,7 +14,7 @@ class GetLocation {
     _response = await request.getLocationGet();
   }
 
-  GetLocation({this.uid}) {
+  GetLocation({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

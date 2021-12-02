@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/friend/friend_fail.dart';
 import 'package:My_Day_app/public/friend_request/add.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 
 Future<bool> friendsAddDialog(BuildContext context) async {
   final fid = TextEditingController();
@@ -168,15 +170,12 @@ Future<bool> friendsAddDialog(BuildContext context) async {
                         onTap: () async {
                           if (fid.text.isNotEmpty) {
                             if (await _submit() != true) {
-                              
                               Navigator.of(context).pop(true);
                             }
-                          }else{
-                            bool action = await friendfailDialog(
+                          } else {
+                            await friendfailDialog(
                                 context, _alertTitle, _alertTxt);
                           }
-
-                          
                         },
                       ),
                     )

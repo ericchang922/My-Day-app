@@ -85,10 +85,8 @@ class _VoteWidget extends State<VotePage> with RouteAware {
 
     setState(() {
       _getVoteModel = _request;
-      // ignore: deprecated_member_use
-      _voteCheck = new List();
-      // ignore: deprecated_member_use
-      _voteItemCount = new List();
+      _voteCheck = [];
+      _voteItemCount = [];
       if (_getVoteModel.deadline != "None") {
         DateTime dateTime = DateTime.parse(_getVoteModel.deadline);
         _deadLine = formatDate(

@@ -54,7 +54,6 @@ class TimetableActionList extends State<TimetableActionListPage> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-            // ignore: deprecated_member_use
             child: FlatButton(
               height: 60,
               minWidth: double.infinity,
@@ -90,7 +89,6 @@ class TimetableActionList extends State<TimetableActionListPage> {
               )),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-            // ignore: deprecated_member_use
             child: FlatButton(
               height: 60,
               minWidth: double.infinity,

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/schedule_request/edit.dart';
-import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
-import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/schedule_request/create_common.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
 
 class CommonScheduleForm extends StatefulWidget {

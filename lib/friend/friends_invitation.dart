@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
 import 'package:My_Day_app/public/friend_request/add-friend-reply.dart';
 import 'package:My_Day_app/public/friend_request/make-friend-invite-list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
 class FriendInvitationPage extends StatefulWidget {
@@ -21,11 +22,11 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
 
   List _filteredFriend = [];
 
-  bool _isNotCreate = false;
   bool viewVisible = true;
   @override
   void initState() {
     super.initState();
+
     _makefriendinviteListRequest();
     _friendNameControlloer();
   }
@@ -51,11 +52,8 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
   }
 
   _makefriendinviteListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     MakeFriendInviteListModel _request =
-        await MakeFriendInviteList(uid: id).getData();
+        await MakeFriendInviteList(uid: uid).getData();
 
     setState(() {
       _makefriendinviteListModel = _request;
@@ -204,9 +202,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
           friendListWidget = Center(child: Text('目前沒有任何好友邀請!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredFriend = [];
 
         for (int i = 0; i < _makefriendinviteListModel.friend.length; i++) {
           if (_makefriendinviteListModel.friend[i].friendName
@@ -229,8 +225,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         }
       }
 
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -242,20 +237,21 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
             },
           ),
         ),
-        body: GestureDetector(
-            child: Container(
-          margin: EdgeInsets.only(top: _height * 0.02),
-          child: Column(
-            children: [
-              SizedBox(height: _height * 0.01),
-              Expanded(child: friendListWidget),
-            ],
-          ),
-        )),
-      ));
+        body: SafeArea(
+          child: GestureDetector(
+              child: Container(
+            margin: EdgeInsets.only(top: _height * 0.02),
+            child: Column(
+              children: [
+                SizedBox(height: _height * 0.01),
+                Expanded(child: friendListWidget),
+              ],
+            ),
+          )),
+        ),
+      );
     } else {
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text('交友邀請', style: TextStyle(fontSize: _titleSize)),
@@ -270,7 +266,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      ));
+      );
     }
   }
 
@@ -312,6 +308,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
       else
         return false;
     }
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -331,30 +328,31 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
             trailing: Column(children: [
               Expanded(
                   child: InkWell(
-                child: Text(
-                  '確認',
-                  style: TextStyle(fontSize: _pSize, color: _gray),
-                ),
-                onTap: () async {
-                  if (await _submitconfirm(friends.friendId) != true) {
-                    _makefriendinviteListRequest();
-                  }
-                })),
+                      child: Text(
+                        '確認',
+                        style: TextStyle(fontSize: _pSize, color: _gray),
+                      ),
+                      onTap: () async {
+                        if (await _submitconfirm(friends.friendId) != true) {
+                          _makefriendinviteListRequest();
+                        }
+                      })),
               SizedBox(
                 height: _widthSize,
               ),
               Expanded(
                 child: InkWell(
-                  child: Text(
-                    '刪除',
-                    style: TextStyle(fontSize: _pSize, color: _color),
-                  ),
-                  onTap: () async {
-                    if (await _submitcancel(friends.friendId) != true) {
-                      _makefriendinviteListRequest();
-                    }
-                  }),
-        )]));
+                    child: Text(
+                      '刪除',
+                      style: TextStyle(fontSize: _pSize, color: _color),
+                    ),
+                    onTap: () async {
+                      if (await _submitcancel(friends.friendId) != true) {
+                        _makefriendinviteListRequest();
+                      }
+                    }),
+              )
+            ]));
       },
       separatorBuilder: (context, index) {
         return Divider();

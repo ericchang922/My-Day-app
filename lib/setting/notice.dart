@@ -29,8 +29,6 @@ class _Notice extends State {
       _isCheckschedule = false;
       _isCheckCountdown = false;
       _isCheckgroup = false;
-
-      // ignore: unrelated_type_equality_checks
     } else if (_notice == 1) {
       _isCheckschedule = true;
       _isCheckCountdown = true;
@@ -40,7 +38,6 @@ class _Notice extends State {
       _isCheckCountdown = false;
       _isCheckgroup = false;
     }
-    
   }
 
   _getNoticeRequest() async {
@@ -61,7 +58,6 @@ class _Notice extends State {
     double _height = size.height;
     double _width = size.width;
     double _appBarSize = _width * 0.052;
-    double _leadingL = _height * 0.02;
     double _bottomHeight = _height * 0.07;
     _submit() async {
       String uid = id;
@@ -85,8 +81,7 @@ class _Notice extends State {
         return false;
     }
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffF86D67),
         title: Text('通知', style: TextStyle(fontSize: _appBarSize)),
@@ -97,177 +92,179 @@ class _Notice extends State {
           },
         ),
       ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
-            // ignore: deprecated_member_use
-            child: SizedBox(
-                height: _bottomHeight,
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.black,
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        '行程',
-                        style: TextStyle(
-                          fontSize: _appBarSize,
+      body: SafeArea(
+        child: ListView(
+          children: <Widget>[
+            Container(
+              margin:
+                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              child: SizedBox(
+                  height: _bottomHeight,
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                    ),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          '行程',
+                          style: TextStyle(
+                            fontSize: _appBarSize,
+                          ),
                         ),
-                      ),
-                      Switch(
-                        value: _isCheckschedule,
-                        onChanged: (value) async {
-                          if (await _submit() != true) {
-                            setState(() {
-                              _isCheckschedule = value;
-                            });
-                          }
-                        },
-                        activeColor: Colors.white,
-                        activeTrackColor: Color(0xffF86D67),
-                        // inactiveThumbColor: Color(0xffF86D67),
-                        // inactiveTrackColor: Color(0xffF86D67),
-                      ),
-                    ],
-                  ),
-                )),
-          ),
-          Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
-        color: Color(0xffE3E3E3),
-        constraints: BoxConstraints.expand(height: 1.0),
-      ),
-          Container(
-        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
-            // ignore: deprecated_member_use
-            child: SizedBox(
-                height: _bottomHeight,
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.black,
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        '倒數',
-                        style: TextStyle(
-                          fontSize: _appBarSize,
+                        Switch(
+                          value: _isCheckschedule,
+                          onChanged: (value) async {
+                            if (await _submit() != true) {
+                              setState(() {
+                                _isCheckschedule = value;
+                              });
+                            }
+                          },
+                          activeColor: Colors.white,
+                          activeTrackColor: Color(0xffF86D67),
+                          // inactiveThumbColor: Color(0xffF86D67),
+                          // inactiveTrackColor: Color(0xffF86D67),
                         ),
-                      ),
-                      Switch(
-                        value: _isCheckCountdown,
-                        onChanged: (value) async {
-                          if (await _submit() != true) {
-                            setState(() {
-                              _isCheckCountdown = value;
-                            });
-                          }
-                        },
-                        activeColor: Colors.white,
-                        activeTrackColor: Color(0xffF86D67),
-                        // inactiveThumbColor: Color(0xffF86D67),
-                        // inactiveTrackColor: Color(0xffF86D67),
-                      ),
-                    ],
-                  ),
-                )),
-          ),
-          Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
-        color: Color(0xffE3E3E3),
-        constraints: BoxConstraints.expand(height: 1.0),
-      ),
-          Container(
-        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
-            // ignore: deprecated_member_use
-            child: SizedBox(
-                height: _bottomHeight,
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.black,
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        '群組',
-                        style: TextStyle(
-                          fontSize: _appBarSize,
+                      ],
+                    ),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: _height * 0.001),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+              margin:
+                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              child: SizedBox(
+                  height: _bottomHeight,
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                    ),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          '倒數',
+                          style: TextStyle(
+                            fontSize: _appBarSize,
+                          ),
                         ),
-                      ),
-                      Switch(
-                        value: _isCheckgroup,
-                        onChanged: (value) async {
-                          if (await _submit() != true) {
-                            setState(() {
-                              _isCheckgroup = value;
-                            });
-                          }
-                        },
-                        activeColor: Colors.white,
-                        activeTrackColor: Color(0xffF86D67),
-                        // inactiveThumbColor: Color(0xffF86D67),
-                        // inactiveTrackColor: Color(0xffF86D67),
-                      ),
-                    ],
-                  ),
-                )),
-          ),
-          Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
-        color: Color(0xffE3E3E3),
-        constraints: BoxConstraints.expand(height: 1.0),
-      ),
-          Container(
-        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
-            // ignore: deprecated_member_use
-            child: SizedBox(
-                height: _bottomHeight,
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PlayTogetherInvitePage()));
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        '玩聚邀請',
-                        style: TextStyle(
-                          fontSize: _appBarSize,
+                        Switch(
+                          value: _isCheckCountdown,
+                          onChanged: (value) async {
+                            if (await _submit() != true) {
+                              setState(() {
+                                _isCheckCountdown = value;
+                              });
+                            }
+                          },
+                          activeColor: Colors.white,
+                          activeTrackColor: Color(0xffF86D67),
+                          // inactiveThumbColor: Color(0xffF86D67),
+                          // inactiveTrackColor: Color(0xffF86D67),
                         ),
-                      ),
-                      Icon(
-                        Icons.chevron_right,
-                        color: Color(0xffE3E3E3),
-                      )
-                    ],
-                  ),
-                )),
-          ),
-          Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
-        color: Color(0xffE3E3E3),
-        constraints: BoxConstraints.expand(height: 1.0),
+                      ],
+                    ),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: _height * 0.001),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+              margin:
+                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              child: SizedBox(
+                  height: _bottomHeight,
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                    ),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          '群組',
+                          style: TextStyle(
+                            fontSize: _appBarSize,
+                          ),
+                        ),
+                        Switch(
+                          value: _isCheckgroup,
+                          onChanged: (value) async {
+                            if (await _submit() != true) {
+                              setState(() {
+                                _isCheckgroup = value;
+                              });
+                            }
+                          },
+                          activeColor: Colors.white,
+                          activeTrackColor: Color(0xffF86D67),
+                          // inactiveThumbColor: Color(0xffF86D67),
+                          // inactiveTrackColor: Color(0xffF86D67),
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: _height * 0.001),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+              margin:
+                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              child: SizedBox(
+                  height: _bottomHeight,
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PlayTogetherInvitePage()));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          '玩聚邀請',
+                          style: TextStyle(
+                            fontSize: _appBarSize,
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right,
+                          color: Color(0xffE3E3E3),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: _height * 0.001),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+          ],
+        ),
       ),
-        ],
-      ),
-    ));
+    );
   }
 }

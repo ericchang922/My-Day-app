@@ -52,8 +52,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
 
     setState(() {
       _getVoteModel = _request;
-      // ignore: deprecated_member_use
-      _voteItemCount = new List();
+      _voteItemCount = [];
       if (_getVoteModel.deadline != "None") {
         DateTime dateTime = DateTime.parse(_getVoteModel.deadline);
         _deadLine = formatDate(

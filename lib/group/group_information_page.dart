@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/group_request/edit_group.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/group_request/get.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/models/group/get_group_model.dart';
 
 class GroupInformationPage extends StatefulWidget {

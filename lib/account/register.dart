@@ -274,7 +274,6 @@ class _Register extends StatelessWidget {
               bottomNavigationBar: Container(
                   child: Row(children: <Widget>[
                 Expanded(
-                  // ignore: deprecated_member_use
                   child: SizedBox(
                       height: _bottomHeight,
                       child: TextButton(
@@ -294,7 +293,6 @@ class _Register extends StatelessWidget {
                       )),
                 ),
                 Expanded(
-                  // ignore: deprecated_member_use
                   child: SizedBox(
                       height: _bottomHeight,
                       child: TextButton(

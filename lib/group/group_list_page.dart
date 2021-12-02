@@ -1,3 +1,4 @@
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/group/group_create_page.dart';
@@ -68,9 +69,6 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   }
 
   _groupListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
-
     GroupListModel _request = await GroupList(uid: uid).getData();
 
     setState(() {
@@ -79,10 +77,6 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   }
 
   _groupInviteListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/group_invite_list.json');
-    // var responseBody = json.decode(response);
-
     GroupInviteListModel _request = await InviteList(uid: uid).getData();
 
     setState(() {

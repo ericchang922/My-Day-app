@@ -48,10 +48,8 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
     GetTemporaryGroupInviteModel _request =
         await GetInvite(uid: uid, groupNum: groupNum).getData();
     setState(() {
-      // ignore: deprecated_member_use
-      _memberList = new List();
-      // ignore: deprecated_member_use
-      _inviteMemberList = new List();
+      _memberList = [];
+      _inviteMemberList = [];
 
       _getTemporaryGroupInviteModel = _request;
       _startTime = _dateFormat(_getTemporaryGroupInviteModel.startTime);
