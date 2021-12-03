@@ -119,7 +119,6 @@ class _NotesAddPage extends State<NotesAddPage> {
                                 Flexible(
                                     child: TextField(
                                   controller: notetitle,
-                                  // focusNode: focusNode,
                                   keyboardType: TextInputType.multiline,
                                   maxLines: 20,
                                   minLines: 1,
@@ -205,8 +204,7 @@ class _NotesAddPage extends State<NotesAddPage> {
                                 width: _iconWidth,
                               ),
                               fillColor: _light,
-                              onPressed: () async{
-                                print(await imageToBase64(_imgPath));
+                              onPressed: () {
                                 Navigator.pop(context);
                               }),
                         ),
