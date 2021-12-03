@@ -1,6 +1,7 @@
 // flutter
 import 'package:My_Day_app/home/home_page_functions.dart';
 import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/schedule_request/get_list.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,12 @@ class ScheduleForm extends StatefulWidget {
 }
 
 class _ScheduleForm extends State<ScheduleForm> {
+  String _uid;
+  _uidLoad() async {
+    String id = await loadUid();
+    setState(() => _uid = id);
+  }
+
   LocalStorage localStorage = LocalStorage('week');
 
   int scheduleNum;
@@ -92,6 +99,7 @@ class _ScheduleForm extends State<ScheduleForm> {
   @override
   void initState() {
     super.initState();
+    _uidLoad();
     _remarkFocus.addListener(
         () => setState(() => _remarkIsFocus = _remarkFocus.hasFocus));
   }
@@ -187,7 +195,6 @@ class _ScheduleForm extends State<ScheduleForm> {
     // _submit -----------------------------------------------------------------------------------------
     _submit() async {
       String _alertTitle = '新增行程失敗';
-      String uid = 'amy123';
       String title = _titleController.text;
       String startTime;
       String endTime;
@@ -213,7 +220,7 @@ class _ScheduleForm extends State<ScheduleForm> {
       for (int i = 0; i < _remindTimeList.length; i++) {
         remindTime.add(_startDateTime.subtract(_remindTimeList[i]).toString());
       }
-      if (uid == null) {
+      if (_uid == null) {
         await alert(context, _alertTitle, '請先登入');
         _isNotCreate = true;
         Navigator.pop(context);
@@ -253,7 +260,7 @@ class _ScheduleForm extends State<ScheduleForm> {
             case 1:
               return CreateNew(
                   context: context,
-                  uid: uid,
+                  uid: _uid,
                   title: title,
                   startTime: startTime,
                   endTime: endTime,
@@ -265,7 +272,7 @@ class _ScheduleForm extends State<ScheduleForm> {
             case 2:
               return Edit(
                   context: context,
-                  uid: uid,
+                  uid: _uid,
                   title: title,
                   scheduleNum: scheduleNum,
                   startTime: startTime,
@@ -856,9 +863,9 @@ class _ScheduleForm extends State<ScheduleForm> {
                       if (_startDateTime.isBefore(_endDateTime)) {
                         if (await _submit() != true) {
                           Navigator.pop(context,
-                              GetList(context: context, uid: 'amy123'));
+                              GetList(context: context, uid: _uid));
                         }
-                      }else{
+                      } else {
                         alert(context, '時間錯誤', '結束時間必須在開始時間之後');
                       }
                     },

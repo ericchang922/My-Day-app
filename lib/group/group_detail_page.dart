@@ -31,14 +31,22 @@ class GroupDetailPage extends StatefulWidget {
 }
 
 class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getGroupRequest();
+    await _groupLogRequest();
+    await _getGroupMemberRequest();
+  }
+
   Map arguments;
   _GroupDetailWidget({this.arguments});
 
   GetGroupModel _getGroupModel;
   GroupLogModel _groupLogModel;
   GroupMemberListModel _groupMemberListModel;
-
-  String uid = 'lili123';
 
   List<Widget> _votesList = [];
   List _groupLogDate = [];
@@ -52,9 +60,8 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _getGroupRequest();
-    _groupLogRequest();
-    _getGroupMemberRequest();
+    _uid();
+
     print(arguments['groupNum']);
   }
 
@@ -78,11 +85,9 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
   }
 
   _getGroupRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_group.json');
-    // var responseBody = json.decode(response);
-
     GetGroupModel _request =
-        await Get(context: context, uid: uid, groupNum: arguments['groupNum']).getData();
+        await Get(context: context, uid: uid, groupNum: arguments['groupNum'])
+            .getData();
 
     setState(() {
       _getGroupModel = _request;
@@ -90,11 +95,9 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
   }
 
   _groupLogRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_log.json');
-    // var responseBody = json.decode(response);
-
-    GroupLogModel _request =
-        await GetLog(context: context, uid: uid, groupNum: arguments['groupNum']).getData();
+    GroupLogModel _request = await GetLog(
+            context: context, uid: uid, groupNum: arguments['groupNum'])
+        .getData();
 
     setState(() {
       _groupLogModel = _request;
@@ -116,9 +119,6 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
   }
 
   _getGroupMemberRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
-    // var responseBody = json.decode(response);
-
     GroupMemberListModel _request =
         await MemberList(uid: uid, groupNum: arguments['groupNum']).getData();
 

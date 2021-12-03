@@ -1,23 +1,19 @@
 // flutter
-import 'package:My_Day_app/models/timetable/section_time_model.dart';
-import 'package:My_Day_app/public/convert.dart';
-import 'package:My_Day_app/public/time_range.dart';
-import 'package:My_Day_app/public/timetable_request/get_section_time.dart';
-import 'package:My_Day_app/public/timetable_request/get_timetable_list.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
-// import 'package:localstorage/localstorage.dart';
 // my day
-import 'package:My_Day_app/my_day_icon.dart';
 import 'package:My_Day_app/public/schedule_request/get_list.dart';
 import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:My_Day_app/home/home_schedule/schedule_table.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/home/home_Update.dart';
-import 'package:My_Day_app/home/home_popup_menu.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
+import 'package:My_Day_app/models/timetable/section_time_model.dart';
+import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/time_range.dart';
+import 'package:My_Day_app/public/timetable_request/get_section_time.dart';
 
 class FriendHomePage extends StatefulWidget {
   String friendId;
@@ -27,18 +23,14 @@ class FriendHomePage extends StatefulWidget {
 }
 
 class _FriendHomePage extends State<FriendHomePage> {
-  // LocalStorage weekStorage = LocalStorage('week');
   String friendId;
   _FriendHomePage(this.friendId);
-  // String _uid = 'james123';
 
   Future<MainTimetableListGet> getTimetableData() async {
     MainTimetableList request =
         MainTimetableList(context: context, uid: friendId);
     MainTimetableListGet _data = await request.getData();
 
-    // await weekStorage.setItem('start', _data.timetable[0].startDate.toString());
-    // await weekStorage.setItem('end', _data.timetable[0].endDate.toString());
     return _data;
   }
 
@@ -67,13 +59,6 @@ class _FriendHomePage extends State<FriendHomePage> {
 
     return Scaffold(
       body: homePageBody,
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.add),
-      //   onPressed: () => Navigator.pushAndRemoveUntil(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => CreateSchedule()),
-      //       (route) => false),
-      // ),
       floatingActionButton: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (BuildContext context, VoidCallback _) {
@@ -131,26 +116,14 @@ AppBar FriendhomePageAppBar(context, DateTime nowMon, int weekCount) {
 
   return AppBar(
     title: Text('好友課表', style: TextStyle(fontSize: _titleSize)),
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-    // title: Container(
-    //   child: Row(children: [
-    //     Padding(
-    //       padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
-    //       child: Column(
-    //         children: showWeek('${ConvertInt.toChineseWeek(weekCount)}'),
-    //       ),
-    //     ),
-    //     Text('${nowMon.year} 年')
-    //   ]),
-    // ),
+    leading: IconButton(
+      icon: Icon(Icons.chevron_left),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    ),
     centerTitle: false,
     backgroundColor: color,
-    // actions: [homePopupMenu(context)],
   );
 }
 
@@ -245,19 +218,6 @@ class _FriendHomePageBody extends State<FriendHomePageBody> {
       setState(() {
         _floatingActionButton = null;
       });
-    // } else {
-    //   setState(() {
-    //     _floatingActionButton = FloatingActionButton(
-    //         child: Icon(
-    //           MyDayIcon.home,
-    //           color: Colors.white,
-    //         ),
-    //         backgroundColor: Theme.of(context).primaryColor,
-    //         onPressed: () {
-    //           pageController.animateToPage(homeIndex,
-    //               duration: Duration(milliseconds: 900), curve: Curves.ease);
-    //         });
-    //   });
     }
   }
 

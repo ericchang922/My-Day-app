@@ -291,23 +291,27 @@ class Request {
     try {
       responseBody = json.decode(utf8.decode(response.bodyBytes));
     } catch (error) {
+      _isError = true;
       print('error: ${utf8.decode(response.bodyBytes)}');
+      await alert(context, '無法連線', '請檢查連線狀態或聯絡客服確認伺服器狀態');
     }
 
     if (responseBody != null) {
-      if ((response.statusCode / 100).toInt() != 2) {
-        await alert(context, '無法連線', '請檢查連線狀態或聯絡客服確認伺服器狀態');
-      } else {
-        if (responseBody['response'] == false) {
-          await alert(context, '錯誤', responseBody['message']);
-          _responseBody = null;
-          _isError = true;
-        } else if (responseBody['response'] == true) {
-          _isError = false;
+      if ((response.statusCode / 100).toInt() == 2) {
+        _isError = false;
+        if (responseBody['response'] == true) {
           if (toastTxt != null)
             toast(context, toastTxt);
           else
             _responseBody = json.decode(utf8.decode(response.bodyBytes));
+        }
+      } else {
+        _isError = true;
+        if (responseBody['response'] == false) {
+          await alert(context, '錯誤', responseBody['message']);
+          _responseBody = null;
+        } else {
+          await alert(context, '未知錯誤', '請聯絡客服(${response.statusCode})');
         }
       }
     }
@@ -834,7 +838,7 @@ class Request {
   }
 
   // delete ---------------------------------------------------------------------------------
-  noteedelete(BuildContext context, Map<String, dynamic> data) async {
+  notedelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['delete'];
     await httpPost(context, data, _url, '刪除成功');
   }

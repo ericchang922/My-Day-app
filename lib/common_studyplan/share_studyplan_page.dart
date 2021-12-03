@@ -17,19 +17,26 @@ class ShareStudyPlanPage extends StatefulWidget {
 }
 
 class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _shareStudyPlanRequest();
+  }
+
   int groupNum;
   _ShareStudyPlanWidget(this.groupNum);
 
   PersonalShareStudyplanListModel _personalShareStudyPlanModel;
 
-  String uid = 'lili123';
   int studyplanNum;
   List _studyplanCheck = [];
 
   @override
   void initState() {
     super.initState();
-    _shareStudyPlanRequest();
+    _uid();
   }
 
   _shareStudyPlanRequest() async {

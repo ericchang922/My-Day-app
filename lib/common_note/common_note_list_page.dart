@@ -17,17 +17,23 @@ class CommonNoteListPage extends StatefulWidget {
 }
 
 class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupNoteListRequest();
+  }
+
   int groupNum;
   _CommonNoteListWidget(this.groupNum);
 
   ShareNoteListModel _shareNoteListModel;
 
-  String uid = 'lili123';
-
   @override
   void initState() {
     super.initState();
-    _groupNoteListRequest();
+    _uid();
   }
 
   @override
@@ -48,11 +54,6 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
   }
 
   _groupNoteListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/common_note_list.json');
-    // var responseBody = json.decode(response);
-    // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
-
     ShareNoteListModel _request =
         await GetGroupList(context: context, uid: uid, groupNum: groupNum)
             .getData();

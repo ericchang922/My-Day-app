@@ -1,13 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/delete.dart';
-
 import 'package:My_Day_app/public/note_request/get.dart';
 import 'package:My_Day_app/study/notes_edit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class NoteDetailPage extends StatefulWidget {
   int noteNum;
@@ -19,8 +20,15 @@ class NoteDetailPage extends StatefulWidget {
 }
 
 class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getNoteRequest();
+  }
+
   int noteNum;
-  String uid = 'lili123';
   _NoteDetailPage(this.uid, this.noteNum);
 
   GetNoteModel _getNote;
@@ -28,7 +36,7 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _getNoteRequest();
+    _uid();
   }
 
   @override
@@ -49,10 +57,6 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
   }
 
   _getNoteRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_note.json');
-    // var responseBody = json.decode(response);
-    // var _request = GetNoteModel.fromJson(responseBody);
-
     GetNoteModel _request =
         await Get(context: context, uid: uid, noteNum: noteNum).getData();
 
@@ -99,24 +103,15 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
     double _width = size.width;
     double _leadingL = _height * 0.02;
     double _appBarSize = _width * 0.058;
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
     double _subtitleSize = _height * 0.02;
 
     Color _color = Theme.of(context).primaryColor;
 
     _submitDelete() async {
-      var submitWidget;
-
-      _submitWidgetfunc() async {
-        return DeleteNote(uid: uid, noteNum: noteNum);
-      }
-
-      submitWidget = await _submitWidgetfunc();
-      if (await submitWidget.getIsError())
-        return true;
-      else
-        return false;
+      DeleteNote deleteNote =
+          DeleteNote(context: context, uid: uid, noteNum: noteNum);
+      print('note delete $uid, $noteNum');
+      return await deleteNote.getIsError();
     }
 
     _selectedItem(BuildContext context, value) async {
@@ -127,9 +122,9 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
           break;
 
         case 'delete':
-          if (await _submitDelete() != true) {
-            Navigator.pop(context);
-          }
+          await _submitDelete();
+          print('刪除');
+          Navigator.of(context).pop();
           break;
       }
     }

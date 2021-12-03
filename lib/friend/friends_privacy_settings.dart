@@ -216,8 +216,6 @@ class _friendWidget extends State<friendPage> {
                                 },
                                 activeColor: Colors.white,
                                 activeTrackColor: Color(0xffF86D67),
-                                // inactiveThumbColor: Color(0xffF86D67),
-                                // inactiveTrackColor: Color(0xffF86D67),
                               );
                             }),
                           ),
@@ -249,8 +247,6 @@ class _friendWidget extends State<friendPage> {
                                   },
                                   activeColor: Colors.white,
                                   activeTrackColor: Color(0xffF86D67),
-                                  // inactiveThumbColor: Color(0xffF86D67),
-                                  // inactiveTrackColor: Color(0xffF86D67),
                                 );
                               }),
                             ))
@@ -306,8 +302,6 @@ class _friendWidget extends State<friendPage> {
                               },
                               activeColor: Colors.white,
                               activeTrackColor: Color(0xffF86D67),
-                              // inactiveThumbColor: Color(0xffF86D67),
-                              // inactiveTrackColor: Color(0xffF86D67),
                             );
                           }),
                         ),
@@ -338,8 +332,6 @@ class _friendWidget extends State<friendPage> {
                               },
                               activeColor: Colors.white,
                               activeTrackColor: Color(0xffF86D67),
-                              // inactiveThumbColor: Color(0xffF86D67),
-                              // inactiveTrackColor: Color(0xffF86D67),
                             );
                           }),
                         ),
@@ -356,29 +348,11 @@ class _friendWidget extends State<friendPage> {
         if (_bestFriendListModel.friend.length != 0 &&
             _friendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              bestFriendList,
-
-              friendList
-            ],
+            children: [bestFriendList, friendList],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              bestFriendList
-            ],
+            children: [bestFriendList],
           );
         } else if (_friendListModel.friend.length != 0) {
           friendListWidget = ListView(
@@ -538,8 +512,6 @@ class _friendWidget extends State<friendPage> {
                             },
                             activeColor: Colors.white,
                             activeTrackColor: Color(0xffF86D67),
-                            // inactiveThumbColor: Color(0xffF86D67),
-                            // inactiveTrackColor: Color(0xffF86D67),
                           );
                         }),
                       ),
@@ -570,8 +542,6 @@ class _friendWidget extends State<friendPage> {
                             },
                             activeColor: Colors.white,
                             activeTrackColor: Color(0xffF86D67),
-                            // inactiveThumbColor: Color(0xffF86D67),
-                            // inactiveTrackColor: Color(0xffF86D67),
                           );
                         }),
                       ),
@@ -654,8 +624,6 @@ class _friendWidget extends State<friendPage> {
                               },
                               activeColor: Colors.white,
                               activeTrackColor: Color(0xffF86D67),
-                              // inactiveThumbColor: Color(0xffF86D67),
-                              // inactiveTrackColor: Color(0xffF86D67),
                             );
                           }),
                         ),
@@ -686,8 +654,6 @@ class _friendWidget extends State<friendPage> {
                               },
                               activeColor: Colors.white,
                               activeTrackColor: Color(0xffF86D67),
-                              // inactiveThumbColor: Color(0xffF86D67),
-                              // inactiveTrackColor: Color(0xffF86D67),
                             );
                           }),
                         ),

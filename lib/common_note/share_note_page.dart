@@ -18,13 +18,20 @@ class ShareNotePage extends StatefulWidget {
 }
 
 class _ShareNoteWidget extends State<ShareNotePage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _noteListRequest();
+  }
+
   int groupNum;
   _ShareNoteWidget(this.groupNum);
 
   List _noteListModel = [];
   ShareNoteListModel _shareNoteList;
 
-  String uid = 'lili123';
   int noteNum;
 
   List _noteCheck = [];
@@ -32,15 +39,10 @@ class _ShareNoteWidget extends State<ShareNotePage> {
   @override
   void initState() {
     super.initState();
-    _noteListRequest();
+    _uid();
   }
 
   _noteListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/share_note_list.json');
-    // var responseBody = json.decode(response);
-    // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
-
     ShareNoteListModel _shareNoteListRequest =
         await GetGroupList(context: context, uid: uid, groupNum: groupNum)
             .getData();

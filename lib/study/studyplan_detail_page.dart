@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/common_note/common_note_detail_page.dart';
 import 'package:My_Day_app/common_studyplan/customer_check_box_studyplan.dart';
 import 'package:My_Day_app/study/edit_studyplan_page.dart';
@@ -6,9 +8,7 @@ import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
 import 'package:My_Day_app/public/studyplan_request/delete.dart';
 import 'package:My_Day_app/public/studyplan_request/get.dart';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 
 class StudyplanDetailPage extends StatefulWidget {
   int studyplanNum;
@@ -33,7 +33,14 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
 
   StudyplanModel _getStudyplan;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getStudyplanRequest();
+  }
+
   List _check = [];
 
   bool _showTimeString = false;
@@ -45,7 +52,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _getStudyplanRequest();
+    _uid();
   }
 
   @override
@@ -66,11 +73,6 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
   }
 
   _getStudyplanRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_studyplan.json');
-    // var responseBody = json.decode(response);
-    // var _request = StudyplanModel.fromJson(responseBody);
-
     StudyplanModel _request =
         await Get(context: context, uid: uid, studyplanNum: studyplanNum)
             .getData();

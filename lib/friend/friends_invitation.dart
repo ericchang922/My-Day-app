@@ -16,7 +16,14 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String id = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _makefriendinviteListRequest();
+    _friendNameControlloer();
+  }
 
   Map<String, dynamic> _friendCheck = {};
 
@@ -26,9 +33,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
   @override
   void initState() {
     super.initState();
-
-    _makefriendinviteListRequest();
-    _friendNameControlloer();
+    _uid();
   }
 
   void _friendNameControlloer() {
@@ -99,22 +104,15 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     double _height = size.height;
     double _titleSize = _height * 0.025;
     double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
     double _widthSize = _width * 0.01;
     double _pSize = _height * 0.023;
 
-    double _appBarSize = _width * 0.052;
-
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
-    Color _bule = Color(0xff7AAAD8);
 
     Widget friendListWidget;
 
     _submitconfirm(String friendId) async {
-      String uid = id;
       var submitWidget;
       _submitWidgetfunc() async {
         return AddFriendReply(uid: uid, friendId: friendId, relationId: 1);
@@ -128,8 +126,6 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     }
 
     _submitcancel(String friendId) async {
-      String uid = id;
-
       var submitWidget;
       _submitWidgetfunc() async {
         return AddFriendReply(uid: uid, friendId: friendId, relationId: 5);
@@ -282,7 +278,6 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     double _listPaddingH = _width * 0.06;
 
     _submitconfirm(String friendId) async {
-      String uid = id;
       var submitWidget;
       _submitWidgetfunc() async {
         return AddFriendReply(uid: uid, friendId: friendId, relationId: 1);
@@ -294,9 +289,8 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
       else
         return false;
     }
-    _submitcancel(String friendId) async {
-      String uid = id;
 
+    _submitcancel(String friendId) async {
       var submitWidget;
       _submitWidgetfunc() async {
         return AddFriendReply(uid: uid, friendId: friendId, relationId: 5);

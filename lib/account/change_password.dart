@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 
 class ChangepwPage extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(debugShowCheckedModeBanner: false);
@@ -62,8 +61,15 @@ class _Changepw extends StatelessWidget {
   final newpw = TextEditingController();
   final confirmpw = TextEditingController();
 
+  String uid;
+  _uid() async {
+    uid = await loadUid();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _uid();
+
     Size size = MediaQuery.of(context).size;
     double _width = size.width;
     double _height = size.height;
@@ -78,10 +84,8 @@ class _Changepw extends StatelessWidget {
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
-    String id = 'lili123';
 
     _submit() async {
-      String uid = id;
       String password = newpw.text;
 
       var submitWidget;

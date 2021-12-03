@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:date_format/date_format.dart';
+
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/public/vote_request/create_new.dart';
-import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 
 class VoteSettingPage extends StatefulWidget {
   int groupNum;
@@ -18,6 +20,12 @@ class VoteSettingPage extends StatefulWidget {
 }
 
 class _VoteSettingWidget extends State<VoteSettingPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
   int groupNum;
   int optionTypeId;
   String title;
@@ -52,6 +60,8 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
   @override
   void initState() {
     super.initState();
+    _uid();
+
     setState(() {
       _deadLineValue = _dateFormat(_deadLine);
     });
@@ -85,7 +95,6 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
     Color _textFiedBorder = Color(0xff707070);
 
     _submit() async {
-      String uid = 'lili123';
       String deadLine;
       bool isAddItemPermit = _voteSettingCheck[2];
       bool isAnonymous = _voteSettingCheck[3];

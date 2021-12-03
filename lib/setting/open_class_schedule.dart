@@ -3,6 +3,7 @@ import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/models/setting/get_timetable.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
 import 'package:My_Day_app/public/setting_request/get_timetable.dart';
 import 'package:My_Day_app/public/setting_request/privacy_timetable.dart';
@@ -41,8 +42,21 @@ class _friendWidget extends State<friendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String _dropdownValue = '讀書';
-  String id = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _friendListRequest();
+    await _bestFriendListRequest();
+    await _getTimetableRequest();
+
+    if (_timetable == null) {
+      _isCheck = false;
+    } else {
+      _isCheck = _timetable.timetable;
+    }
+  }
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -55,22 +69,12 @@ class _friendWidget extends State<friendPage> {
   @override
   void initState() {
     super.initState();
-
-    _friendListRequest();
-    _bestFriendListRequest();
-    _getTimetableRequest();
-    if (_timetable == null) {
-      _isCheck = false;
-    } else if (_timetable == 1) {
-      _isCheck = true;
-    } else {
-      _isCheck = false;
-    }
+    _uid();
   }
 
   _getTimetableRequest() async {
     GetTimetableModel _request =
-        await GetTimetable(context: context, uid: id).getData();
+        await GetTimetable(context: context, uid: uid).getData();
 
     setState(() {
       _timetable = _request;
@@ -81,7 +85,7 @@ class _friendWidget extends State<friendPage> {
 
   _bestFriendListRequest() async {
     BestFriendListModel _request =
-        await BestFriendList(context: context, uid: id).getData();
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -93,7 +97,7 @@ class _friendWidget extends State<friendPage> {
   }
 
   _friendListRequest() async {
-    FriendListModel _request = await FriendList(uid: id).getData();
+    FriendListModel _request = await FriendList(uid: uid).getData();
 
     setState(() {
       _friendListModel = _request;
@@ -138,20 +142,13 @@ class _friendWidget extends State<friendPage> {
     double _width = size.width;
     double _height = size.height;
     double _appBarSize = _width * 0.052;
-    double _leadingL = _height * 0.02;
     double _bottomHeight = _height * 0.07;
     double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
     double _pSize = _height * 0.023;
-    Color _color = Theme.of(context).primaryColor;
-
-    Color _bule = Color(0xff7AAAD8);
 
     Widget friendListWidget;
 
     _submitTimetable() async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
@@ -167,7 +164,6 @@ class _friendWidget extends State<friendPage> {
     }
 
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
@@ -245,8 +241,6 @@ class _friendWidget extends State<friendPage> {
               },
               activeColor: Colors.white,
               activeTrackColor: Color(0xffF86D67),
-              // inactiveThumbColor: Color(0xffF86D67),
-              // inactiveTrackColor: Color(0xffF86D67),
             ),
           );
         },
@@ -437,7 +431,6 @@ class _friendWidget extends State<friendPage> {
     double _pSize = _height * 0.023;
 
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
@@ -497,7 +490,6 @@ class _friendWidget extends State<friendPage> {
     double _pSize = _height * 0.023;
 
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final shareNoteListModel = shareNoteListModelFromJson(jsonString);
-
 import 'dart:convert';
 
 ShareNoteListModel shareNoteListModelFromJson(String str) => ShareNoteListModel.fromJson(json.decode(str));

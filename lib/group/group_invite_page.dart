@@ -17,6 +17,14 @@ class GroupInvitePage extends StatefulWidget {
 }
 
 class _GroupInviteWidget extends State<GroupInvitePage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _inviteFriendListRequest();
+    _friendNameControlloer();
+  }
 
   int groupNum;
 
@@ -27,7 +35,6 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -38,9 +45,7 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
   @override
   void initState() {
     super.initState();
-
-    _inviteFriendListRequest();
-    _friendNameControlloer();
+    _uid();
   }
 
   void _friendNameControlloer() {

@@ -1,15 +1,17 @@
+import 'package:flutter/material.dart';
+
+import 'package:date_format/date_format.dart';
+
 import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/studyplan_request/group_list.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_list.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_share_list.dart';
 import 'package:My_Day_app/study/studyplan_detail_page.dart';
+import 'package:My_Day_app/study/studyplan_form.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
-import 'package:My_Day_app/study/studyplan_form.dart';
-import 'package:date_format/date_format.dart';
-
-import 'package:flutter/material.dart';
 
 class StudyplanListPage extends StatefulWidget {
   @override
@@ -21,15 +23,22 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
   GroupStudyplanListModel _groupStudyplanListModel;
   PersonalShareStudyplanListModel _shareStudyplanListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _studyplanListRequest();
+    await _groupStudyplanListRequest();
+    await _personalShareStudyplanList();
+  }
+
   List _shareStudyplanNumList = [];
 
   @override
   void initState() {
     super.initState();
-    _studyplanListRequest();
-    _groupStudyplanListRequest();
-    _personalShareStudyplanList();
+    _uid();
   }
 
   @override
@@ -52,11 +61,6 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
   }
 
   _studyplanListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = StudyplanListModel.fromJson(responseBody);
-
     StudyplanListModel _request =
         await PersonalList(context: context, uid: uid).getData();
 
@@ -66,11 +70,6 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
   }
 
   _groupStudyplanListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/group_studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = GroupStudyplanListModel.fromJson(responseBody);
-
     GroupStudyplanListModel _request =
         await GroupList(context: context, uid: uid).getData();
 
@@ -100,8 +99,6 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
     double _height = size.height;
     double _width = size.width;
 
-    double _heightSize = _height * 0.01;
-    double _widthSize = _width * 0.01;
     double _leadingL = _height * 0.02;
     double _textL = _height * 0.03;
     double _textBT = _height * 0.01;
@@ -109,9 +106,7 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
     double _tab = _height * 0.04683;
     double _listLR = _width * 0.06;
 
-    double _tabSize = _width * 0.041;
     double _pSize = _height * 0.023;
-    double _p2Size = _height * 0.02;
     double _titleSize = _height * 0.025;
     double _subtitleSize = _height * 0.02;
     double _appBarSize = _width * 0.052;

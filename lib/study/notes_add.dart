@@ -1,13 +1,15 @@
 import 'dart:convert';
-
-import 'package:My_Day_app/public/note_request/create_new.dart';
-import 'package:My_Day_app/study/note_fail.dart';
-
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/note_request/create_new.dart';
+import 'package:My_Day_app/study/note_fail.dart';
 
 class NotesAddPage extends StatefulWidget {
   @override
@@ -15,7 +17,11 @@ class NotesAddPage extends StatefulWidget {
 }
 
 class _NotesAddPage extends State<NotesAddPage> {
-  String noteid = "lili123";
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
 
   final notetypeName = TextEditingController();
   final notetitle = TextEditingController();
@@ -31,6 +37,7 @@ class _NotesAddPage extends State<NotesAddPage> {
   @override
   void initState() {
     super.initState();
+    _uid();
   }
 
   Widget _imageView(imgPath) {
@@ -70,7 +77,6 @@ class _NotesAddPage extends State<NotesAddPage> {
     Color _light = Theme.of(context).primaryColorLight;
 
     _submit() async {
-      String uid = noteid;
       String typeName = notetypeName.text;
       String title = notetitle.text;
       String content = await imageToBase64(_imgPath);

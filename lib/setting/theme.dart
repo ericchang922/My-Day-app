@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/loadUid.dart';
+
 const PrimaryColor = const Color(0xFFF86D67);
 
 class ThemePage extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +22,18 @@ class _ThemeWidget extends State<ThemeWidget> {
   get child => null;
   get left => null;
   bool _hasBeenPressed = false;
-  String id = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _uid();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

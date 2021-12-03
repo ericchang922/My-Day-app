@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:My_Day_app/public/group_request/member_status.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/group_request/member_status.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/temporary_group_request/get_invite.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
@@ -22,7 +23,14 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
 
   GetTemporaryGroupInviteModel _getTemporaryGroupInviteModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getTemporaryGroupInviteRequest();
+  }
+
   String _startTime = "";
   String _endTime = "";
 
@@ -32,7 +40,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
   @override
   void initState() {
     super.initState();
-    _getTemporaryGroupInviteRequest();
+    _uid();
   }
 
   String _dateFormat(dateTime) {
@@ -42,31 +50,30 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
   }
 
   _getTemporaryGroupInviteRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/get_temporary_group_invite.json');
-    // var responseBody = json.decode(response);
-
     GetTemporaryGroupInviteModel _request =
         await GetInvite(context: context, uid: uid, groupNum: groupNum)
             .getData();
-    setState(() {
-      _memberList = [];
-      _inviteMemberList = [];
+    setState(
+      () {
+        _memberList = [];
+        _inviteMemberList = [];
 
-      _getTemporaryGroupInviteModel = _request;
-      _startTime = _dateFormat(_getTemporaryGroupInviteModel.startTime);
-      _endTime = _dateFormat(_getTemporaryGroupInviteModel.endTime);
+        _getTemporaryGroupInviteModel = _request;
+        _startTime = _dateFormat(_getTemporaryGroupInviteModel.startTime);
+        _endTime = _dateFormat(_getTemporaryGroupInviteModel.endTime);
 
-      for (int i = 0; i < _getTemporaryGroupInviteModel.member.length; i++) {
-        if (_getTemporaryGroupInviteModel.member[i].statusId == 2) {
-          _inviteMemberList.add(_getTemporaryGroupInviteModel.member[i]);
+        for (int i = 0; i < _getTemporaryGroupInviteModel.member.length; i++) {
+          if (_getTemporaryGroupInviteModel.member[i].statusId == 2) {
+            _inviteMemberList.add(_getTemporaryGroupInviteModel.member[i]);
+          }
+          if (_getTemporaryGroupInviteModel.member[i].statusId == 1 &&
+              _getTemporaryGroupInviteModel.member[i].memberName !=
+                  _getTemporaryGroupInviteModel.founderName) {
+            _memberList.add(_getTemporaryGroupInviteModel.member[i]);
+          }
         }
-        if (_getTemporaryGroupInviteModel.member[i].statusId == 1 &&
-            _getTemporaryGroupInviteModel.member[i].memberName !=
-                _getTemporaryGroupInviteModel.founderName) {
-          _memberList.add(_getTemporaryGroupInviteModel.member[i]);
-        }
-      }
-    });
+      },
+    );
   }
 
   Image getImage(String imageString) {

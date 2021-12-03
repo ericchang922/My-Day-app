@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:date_format/date_format.dart';
+
+import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/vote_request/add_items.dart';
 import 'package:My_Day_app/public/vote_request/delete.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/vote_request/vote.dart';
-import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/models/vote/get_vote_model.dart';
-import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/vote_request/get.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/models/vote/get_vote_model.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
+import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/vote/vote_edit_page.dart';
-import 'package:date_format/date_format.dart';
 
 class VotePage extends StatefulWidget {
   int voteNum;
@@ -23,6 +25,15 @@ class VotePage extends StatefulWidget {
 }
 
 class _VoteWidget extends State<VotePage> with RouteAware {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getVoteRequest();
+    await _getGroupMemberRequest();
+  }
+
   int voteNum;
   int groupNum;
   _VoteWidget(this.voteNum, this.groupNum);
@@ -31,7 +42,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
   GroupMemberListModel _groupMemberListModel;
 
   String _voteItemName = '';
-  String uid = 'lili123';
   String _deadLine = '';
   String _title = '';
 
@@ -47,16 +57,12 @@ class _VoteWidget extends State<VotePage> with RouteAware {
 
   DateTime _dateTime = DateTime.now();
 
-  bool _isEnabled = true;
-
   final _voteItemNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
-    _getVoteRequest();
-    _getGroupMemberRequest();
+    _uid();
   }
 
   @override
@@ -78,9 +84,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
   }
 
   _getVoteRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_vote.json');
-    // var responseBody = json.decode(response);
-
     GetVoteModel _request =
         await Get(context: context, uid: uid, voteNum: voteNum).getData();
 
@@ -119,9 +122,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
   }
 
   _getGroupMemberRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
-    // var responseBody = json.decode(response);
-
     GroupMemberListModel _request =
         await MemberList(uid: uid, groupNum: groupNum).getData();
 

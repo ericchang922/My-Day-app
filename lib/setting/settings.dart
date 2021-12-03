@@ -1,16 +1,17 @@
+import 'package:flutter/material.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:My_Day_app/account/login.dart';
 import 'package:My_Day_app/friend/friends.dart';
 import 'package:My_Day_app/models/setting/get_location.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/setting_request/get_location.dart';
 import 'package:My_Day_app/public/setting_request/privacy_location.dart';
-
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'personal_information.dart';
-
-import 'notice.dart';
-import 'privacy.dart';
-import 'theme.dart';
+import 'package:My_Day_app/setting/notice.dart';
+import 'package:My_Day_app/setting/personal_information.dart';
+import 'package:My_Day_app/setting/privacy.dart';
+import 'package:My_Day_app/setting/theme.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -22,28 +23,33 @@ class SettingsPage extends StatefulWidget {
 }
 
 class Settings extends State {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getLocationRequest();
+
+    if (location == null) {
+      _isCheck = false;
+    } else {
+      _isCheck = location;
+    }
+  }
+
   GetLocationModel _location;
-  // get child => null;
-  // get left => null;
   bool _isCheck;
   bool location;
-  String id = "lili123";
 
   @override
   void initState() {
     super.initState();
-
-    _getLocationRequest();
-
-    if (location == true) {
-      _isCheck = true;
-    } else {
-      _isCheck = false;
-    }
+    _uid();
   }
 
   _getLocationRequest() async {
-    GetLocationModel _request = await GetLocation(uid: id).getData();
+    GetLocationModel _request =
+        await GetLocation(context: context, uid: uid).getData();
 
     setState(() {
       _location = _request;
@@ -61,7 +67,6 @@ class Settings extends State {
     double _bottomHeight = _height * 0.07;
 
     _submit() async {
-      String uid = id;
       PrivacyLocation privacyLocation =
           PrivacyLocation(context: context, uid: uid, isLocation: _isCheck);
 
@@ -113,8 +118,6 @@ class Settings extends State {
                           },
                           activeColor: Colors.white,
                           activeTrackColor: Color(0xffF86D67),
-                          // inactiveThumbColor: Color(0xffF86D67),
-                          // inactiveTrackColor: Color(0xffF86D67),
                         ),
                       ],
                     ),

@@ -1,11 +1,11 @@
-import 'package:My_Day_app/common_studyplan/select_note_page.dart';
-import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/public/studyplan_request/create_studyplan.dart';
-import 'package:My_Day_app/public/studyplan_request/edit_studyplan.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:My_Day_app/common_studyplan/select_note_page.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/studyplan_request/create_studyplan.dart';
+import 'package:My_Day_app/public/studyplan_request/edit_studyplan.dart';
 
 class StudyPlanForm extends StatefulWidget {
   int studyplanNum;
@@ -73,10 +73,15 @@ class StudyPlanForm extends StatefulWidget {
 }
 
 class _StudyPlanForm extends State<StudyPlanForm> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
   int studyplanNum;
   int groupNum;
 
-  String uid = 'lili123';
   String _title;
   String _value = '';
   String _submitType;
@@ -126,7 +131,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
   @override
   void initState() {
     super.initState();
-    // _getStudyPlanRequest();
+    _uid();
   }
 
   @override
@@ -139,9 +144,6 @@ class _StudyPlanForm extends State<StudyPlanForm> {
     double _textFied = _height * 0.045;
     double _borderRadius = _height * 0.01;
     double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
     double _leadingL = _height * 0.02;
     double _bottomHeight = _height * 0.07;
 
@@ -152,7 +154,6 @@ class _StudyPlanForm extends State<StudyPlanForm> {
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
-    Color _textFiedBorder = Color(0xff707070);
 
     // values ------------------------------------------------------------------------------------------
     if (_date == null) _date = DateTime.now().add(Duration(days: 1));
@@ -455,7 +456,6 @@ class _StudyPlanForm extends State<StudyPlanForm> {
 
       double _borderRadius = _height * 0.03;
       double _textLBR = _height * 0.02;
-      double _iconWidth = _width * 0.05;
       double _textFied = _height * 0.1;
       double _inkwellH = _height * 0.06;
 
@@ -463,7 +463,6 @@ class _StudyPlanForm extends State<StudyPlanForm> {
       double _subtitleSize = _height * 0.02;
 
       Color _bule = Color(0xff7AAAD8);
-      Color _textFiedBorder = Color(0xff707070);
       Color _color = Theme.of(context).primaryColor;
       Color _light = Theme.of(context).primaryColorLight;
 

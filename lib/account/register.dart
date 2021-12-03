@@ -3,7 +3,6 @@ import 'package:My_Day_app/public/account_request/register.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

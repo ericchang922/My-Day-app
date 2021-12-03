@@ -21,7 +21,14 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
 
   GetGroupModel _getGroupModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getGroupRequest();
+  }
+
   String _groupName = '';
   String _groupTypeName = '';
 
@@ -43,13 +50,10 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
   @override
   void initState() {
     super.initState();
-    _getGroupRequest();
+    _uid();
   }
 
   _getGroupRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/get_group.json');
-    // var responseBody = json.decode(response);
-
     GetGroupModel _request =
         await Get(context: context, uid: uid, groupNum: groupNum).getData();
 

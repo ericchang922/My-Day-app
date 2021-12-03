@@ -21,17 +21,23 @@ class CommonScheduleListPage extends StatefulWidget {
 
 class _CommonScheduleListWidget extends State<CommonScheduleListPage>
     with RouteAware {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupScheduleListRequest();
+  }
+
   int groupNum;
   _CommonScheduleListWidget(this.groupNum);
 
   CommonScheduleListModel _commonScheduleListModel;
 
-  String uid = 'lili123';
-
   @override
   void initState() {
     super.initState();
-    _groupScheduleListRequest();
+    _uid();
   }
 
   @override
@@ -52,12 +58,9 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
   }
 
   _groupScheduleListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/common_schedule_list.json');
-    // var responseBody = json.decode(response);
-
     CommonScheduleListModel _request =
-        await CommonList(uid: uid, groupNum: groupNum).getData();
+        await CommonList(context: context, uid: uid, groupNum: groupNum)
+            .getData();
 
     setState(() {
       _commonScheduleListModel = _request;

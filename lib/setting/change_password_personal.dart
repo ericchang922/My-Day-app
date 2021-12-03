@@ -52,9 +52,14 @@ class _Changepw extends StatelessWidget {
 
   final newpw = TextEditingController();
   final confirmpw = TextEditingController();
+  String id;
+  _uid() async {
+    id = await loadUid();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _uid();
     Size size = MediaQuery.of(context).size;
     double _width = size.width;
     double _height = size.height;
@@ -67,7 +72,6 @@ class _Changepw extends StatelessWidget {
     double _titleSize = _height * 0.025;
 
     Color _bule = Color(0xff7AAAD8);
-    String id = 'lili123';
 
     _submit() async {
       String uid = id;

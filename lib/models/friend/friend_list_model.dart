@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final friendListModel = friendListModelFromJson(jsonString);
-
 import 'dart:convert';
 
 FriendListModel friendListModelFromJson(String str) => FriendListModel.fromJson(json.decode(str));

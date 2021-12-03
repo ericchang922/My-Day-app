@@ -17,14 +17,22 @@ class BestfriendPage extends StatefulWidget {
 }
 
 class _BestfriendWidget extends State<BestfriendPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _friendListRequest();
+    await _bestFriendListRequest();
+    _friendNameControlloer();
+  }
+
   FriendListModel _friendListModel;
   BestFriendListModel _bestFriendListModel;
 
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String _dropdownValue = '讀書';
-  String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -37,10 +45,6 @@ class _BestfriendWidget extends State<BestfriendPage> {
   void initState() {
     super.initState();
     _uid();
-
-    _friendListRequest();
-    _bestFriendListRequest();
-    _friendNameControlloer();
   }
 
   void _friendNameControlloer() {

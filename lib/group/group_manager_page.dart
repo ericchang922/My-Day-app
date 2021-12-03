@@ -62,7 +62,13 @@ class _GroupManagerState extends State<GroupManagerWidget> {
 
   GroupMemberListModel _groupMemberListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupMemberListRequest();
+  }
 
   List _memberList = [];
   List _managerList = [];
@@ -72,8 +78,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
   @override
   void initState() {
     super.initState();
-
-    _groupMemberListRequest();
+    _uid();
   }
 
   _groupMemberListRequest() async {

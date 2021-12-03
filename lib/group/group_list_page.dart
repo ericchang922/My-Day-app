@@ -31,7 +31,14 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   GroupListModel _groupListModel;
   GroupInviteListModel _groupInviteListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupListRequest();
+    await _groupInviteListRequest();
+  }
 
   List typeColor = <int>[
     0xffF78787,
@@ -46,8 +53,7 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _groupListRequest();
-    _groupInviteListRequest();
+    _uid();
   }
 
   @override

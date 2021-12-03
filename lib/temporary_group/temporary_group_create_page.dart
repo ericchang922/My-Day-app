@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,12 @@ class TemporaryGroupCreatePage extends StatefulWidget {
 }
 
 class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
   int _type;
   DateTime _startDateTime = DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
@@ -31,6 +38,12 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
 
   bool _allDay = false;
   bool _isNotCreate = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _uid();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +86,6 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
     // _submit -----------------------------------------------------------------------------------------
     _submit() async {
       String _alertTitle = '新增行程失敗';
-      String uid = 'lili123';
       String title = _titleController.text;
       String startTime;
       String endTime;
@@ -507,6 +519,16 @@ class InviteFriendPage extends StatefulWidget {
 }
 
 class _InviteFriendWidget extends State<InviteFriendPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    _friendNameControlloer();
+    await _friendListRequest();
+    await _bestFriendListRequest();
+  }
+
   String groupName;
   String scheduleStart;
   String scheduleEnd;
@@ -521,7 +543,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -532,9 +553,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   @override
   void initState() {
     super.initState();
-    _friendNameControlloer();
-    _friendListRequest();
-    _bestFriendListRequest();
+    _uid();
   }
 
   void _friendNameControlloer() {
@@ -552,9 +571,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   }
 
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
     BestFriendListModel _request =
         await BestFriendList(context: context, uid: uid).getData();
 
@@ -568,9 +584,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     FriendListModel _request = await FriendList(uid: uid).getData();
 
     setState(() {
@@ -621,7 +634,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     double _listPaddingH = _width * 0.06;
     double _textL = _height * 0.03;
     double _textBT = _height * 0.02;
-    double _checkAllR = _width * 0.03;
     double _bottomHeight = _height * 0.07;
     double _iconWidth = _width * 0.05;
     double _leadingL = _height * 0.02;

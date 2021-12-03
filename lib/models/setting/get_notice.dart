@@ -9,28 +9,28 @@ String getNoticeModelToJson(GetNoticeModel data) => json.encode(data.toJson());
 
 class GetNoticeModel {
   GetNoticeModel({
-    this.schedulenotice,
+    this.scheduleNotice,
     this.temporaryNotice,
     this.countdownNotice,
     this.groupNotice,
   });
 
-  bool schedulenotice;
+  bool scheduleNotice;
   bool temporaryNotice;
   bool countdownNotice;
   bool groupNotice;
 
   factory GetNoticeModel.fromJson(Map<String, dynamic> json) => GetNoticeModel(
-        schedulenotice: ConvertInt.toBool(json["schedulenotice"]),
-        temporaryNotice: ConvertInt.toBool(json["temporaryNotice"]),
-        countdownNotice: ConvertInt.toBool(json["countdownNotice"]),
-        groupNotice: ConvertInt.toBool(json["groupNotice	"]),
+        scheduleNotice: json["scheduleNotice"],
+        temporaryNotice: json["temporaryNotice"],
+        countdownNotice: json["countdownNotice"],
+        groupNotice: json["groupNotice"],
       );
 
   Map<String, dynamic> toJson() => {
-        "schedulenotice	": schedulenotice,
-        "temporaryNotice	": temporaryNotice,
-        "countdownNotice	": countdownNotice,
-        "groupNotice		": groupNotice,
+        "scheduleNotice": scheduleNotice,
+        "temporaryNotice": temporaryNotice,
+        "countdownNotice": countdownNotice,
+        "groupNotice": groupNotice,
       };
 }

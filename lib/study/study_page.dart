@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/study/notes.dart';
 import 'package:My_Day_app/study/studyplan_list_page.dart';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 AppBar studyAppBar(context) {
   Size size = MediaQuery.of(context).size;
@@ -23,7 +23,17 @@ class StudyPage extends StatefulWidget {
 }
 
 class _StudyPage extends State<StudyPage> {
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _uid();
+  }
 
   @override
   Widget build(BuildContext context) {

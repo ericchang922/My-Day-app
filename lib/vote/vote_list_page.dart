@@ -1,14 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/vote/vote_end_detail_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/vote_request/get_list.dart';
 import 'package:My_Day_app/public/vote_request/get_end_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
 import 'package:My_Day_app/models/vote/vote_list_model.dart';
 import 'package:My_Day_app/vote/vote_create_page.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
+import 'package:My_Day_app/vote/vote_end_detail_page.dart';
 
 class VoteListPage extends StatefulWidget {
   int groupNum;
@@ -19,13 +19,20 @@ class VoteListPage extends StatefulWidget {
 }
 
 class _VoteListWidget extends State<VoteListPage> with RouteAware {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _voteListRequest();
+    await _voteEndListRequest();
+  }
+
   int groupNum;
   _VoteListWidget(this.groupNum);
 
   VoteListModel _voteListModel;
   VoteEndListModel _voteEndListModel;
-
-  String uid = 'lili123';
 
   Widget voteList;
   Widget voteEndList;
@@ -34,8 +41,7 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _voteListRequest();
-    _voteEndListRequest();
+    _uid();
   }
 
   @override
@@ -57,9 +63,6 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
   }
 
   _voteListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/vote_list.json');
-    // var responseBody = json.decode(response);
-
     VoteListModel _request =
         await GetList(context: context, uid: uid, groupNum: groupNum).getData();
 
@@ -69,9 +72,6 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
   }
 
   _voteEndListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/vote_end_list.json');
-    // var responseBody = json.decode(response);
-
     VoteEndListModel _request =
         await GetEndList(context: context, uid: uid, groupNum: groupNum)
             .getData();

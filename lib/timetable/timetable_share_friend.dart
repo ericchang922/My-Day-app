@@ -1,11 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
-import 'package:flutter/material.dart';
-
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 
 class TimetableShareFriendPage extends StatefulWidget {
@@ -18,6 +19,15 @@ class TimetableShareFriendPage extends StatefulWidget {
 }
 
 class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _friendListRequest();
+    _friendNameControlloer();
+  }
+
   int timetableNo;
   _TimetableShareFriendWidget(this.timetableNo);
 
@@ -27,7 +37,6 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -38,9 +47,7 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
   @override
   void initState() {
     super.initState();
-
-    _friendListRequest();
-    _friendNameControlloer();
+    _uid();
   }
 
   void _friendNameControlloer() {
@@ -143,33 +150,6 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
     Color _textFiedBorder = Color(0xff707070);
 
     Widget friendListWidget;
-
-    // _submit() async {
-    //   List<Map<String, dynamic>> friend = [];
-    //   for (int i = 0; i < _friendListModel.friend.length; i++) {
-    //     var _friend = _friendListModel.friend[i];
-    //     if (_friendCheck[_friend.friendId] == true)
-    //       friend.add({'friendId': _friend.friendId});
-    //   }
-    //   for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
-    //     var _friend = _bestFriendListModel.friend[i];
-
-    //     if (_bestFriendCheck[_friend.friendId] == true)
-    //       friend.add({'friendId': _friend.friendId});
-    //   }
-
-    //   var submitWidget;
-    //   _submitWidgetfunc() async {
-    //     return InviteFriend(uid: uid, groupNum: groupNum, friend: friend);
-    //   }
-
-    //   submitWidget = await _submitWidgetfunc();
-    //   if (await submitWidget.getIsError())
-    //     return true;
-    //   else
-    //     return false;
-    // }
-
     Widget search = Container(
       margin: EdgeInsets.only(right: _listLR, left: _height * 0.01),
       child: Row(

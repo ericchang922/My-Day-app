@@ -17,9 +17,6 @@ class NoticePage extends StatefulWidget {
 
 class _Notice extends State {
   String uid;
-  bool _isCheckSchedule;
-  bool _isCheckCountdown;
-  bool _isCheckGroup;
   _uid() async {
     String id = await loadUid();
     setState(() => uid = id);
@@ -40,6 +37,10 @@ class _Notice extends State {
     }
   }
   // 載入 uid 之後才可執行 取得資料
+
+  bool _isCheckSchedule;
+  bool _isCheckCountdown;
+  bool _isCheckGroup;
 
   get child => null;
   get left => null;

@@ -78,6 +78,18 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
   bool _allDay = false;
   bool _isNotCreate = false;
 
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _uid();
+  }
+
   @override
   Widget build(BuildContext context) {
     _titleController.text = _title;
@@ -116,7 +128,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
     // _submit -----------------------------------------------------------------------------------------
     _submit() async {
       String _alertTitle = '新增共同行程失敗';
-      String uid = 'lili123';
+
       String title = _titleController.text;
       String startTime;
       String endTime;

@@ -13,12 +13,22 @@ class GroupSettingPage extends StatefulWidget {
 }
 
 class _GroupSettingWidget extends State<GroupSettingPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
   int groupNum;
   _GroupSettingWidget(this.groupNum);
 
-  String uid = 'lili123';
-
   bool _settingCheck = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _uid();
+  }
 
   @override
   Widget build(BuildContext context) {

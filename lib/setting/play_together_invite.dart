@@ -1,13 +1,16 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/models/setting/get_notice.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
 import 'package:My_Day_app/public/setting_request/get_notice.dart';
 import 'package:My_Day_app/public/setting_request/notice_temporary%20.dart';
-import 'package:flutter/material.dart';
-import 'dart:convert';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -33,6 +36,22 @@ class friendPage extends StatefulWidget {
 }
 
 class _friendWidget extends State<friendPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _friendListRequest();
+    await _bestFriendListRequest();
+    _friendNameControlloer();
+    await _getNoticeRequest();
+    if (_notice == null) {
+      _isCheck = false;
+    } else {
+      _isCheck = _notice.temporaryNotice;
+    }
+  }
+
   FriendListModel _friendListModel;
   BestFriendListModel _bestFriendListModel;
   GetNoticeModel _notice;
@@ -40,7 +59,6 @@ class _friendWidget extends State<friendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String id = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -52,21 +70,12 @@ class _friendWidget extends State<friendPage> {
   @override
   void initState() {
     super.initState();
-
-    _friendListRequest();
-    _bestFriendListRequest();
-    _friendNameControlloer();
-    _getNoticeRequest();
-    if (_notice == null) {
-      _isCheck = false;
-    } else {
-      _isCheck = true;
-    }
+    _uid();
   }
 
   _getNoticeRequest() async {
     GetNoticeModel _request =
-        await GetNotice(context: context, uid: id).getData();
+        await GetNotice(context: context, uid: uid).getData();
 
     setState(() {
       _notice = _request;
@@ -90,7 +99,7 @@ class _friendWidget extends State<friendPage> {
 
   _bestFriendListRequest() async {
     BestFriendListModel _request =
-        await BestFriendList(context: context, uid: id).getData();
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -102,7 +111,7 @@ class _friendWidget extends State<friendPage> {
   }
 
   _friendListRequest() async {
-    FriendListModel _request = await FriendList(uid: id).getData();
+    FriendListModel _request = await FriendList(uid: uid).getData();
 
     setState(() {
       _friendListModel = _request;
@@ -154,7 +163,6 @@ class _friendWidget extends State<friendPage> {
     Widget friendListWidget;
 
     _submitTimetable() async {
-      String uid = id;
       bool isTemporary = _isCheck;
 
       NoticeTemporary noticeTemporary =
@@ -164,7 +172,6 @@ class _friendWidget extends State<friendPage> {
     }
 
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
@@ -432,7 +439,6 @@ class _friendWidget extends State<friendPage> {
     double _pSize = _height * 0.023;
 
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
@@ -492,7 +498,6 @@ class _friendWidget extends State<friendPage> {
     double _pSize = _height * 0.023;
 
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;

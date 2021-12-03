@@ -1,5 +1,5 @@
 // flutter
-
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
@@ -26,16 +26,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  String _uid;
+  _uidLoad() async {
+    String id = await loadUid();
+    setState(() => _uid = id);
+
+    homePageBody = new HomePageBody(
+      futureTimetableData: getTimetableData(),
+      futureScheduleList: getScheduleList(),
+      futureSectionTime: getSectionTime(),
+    );
+  }
+  // 在等待 uid 載入之後才能執行 取得資料
+
   LocalStorage weekStorage = LocalStorage('week');
 
-  String _uid = 'amy123';
+  HomePageBody homePageBody;
 
   Future<MainTimetableListGet> getTimetableData() async {
     MainTimetableList request = MainTimetableList(context: context, uid: _uid);
     MainTimetableListGet _data = await request.getData();
 
-    await weekStorage.setItem('start', _data.timetable[0].startDate.toString());
-    await weekStorage.setItem('end', _data.timetable[0].endDate.toString());
+    if (_data.timetable.length > 0) {
+      await weekStorage.setItem(
+          'start', _data.timetable[0].startDate.toString());
+      await weekStorage.setItem('end', _data.timetable[0].endDate.toString());
+    }
     return _data;
   }
 
@@ -54,23 +70,17 @@ class _HomePage extends State<HomePage> {
   double _fabDimension = 56.0;
 
   @override
+  void initState() {
+    super.initState();
+    _uidLoad();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
-    HomePageBody homePageBody = new HomePageBody(
-      futureTimetableData: getTimetableData(),
-      futureScheduleList: getScheduleList(),
-      futureSectionTime: getSectionTime(),
-    );
 
     return Scaffold(
       body: homePageBody,
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.add),
-      //   onPressed: () => Navigator.pushAndRemoveUntil(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => CreateSchedule()),
-      //       (route) => false),
-      // ),
       floatingActionButton: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (BuildContext context, VoidCallback _) {
@@ -92,13 +102,6 @@ class _HomePage extends State<HomePage> {
               ),
             ),
           );
-        },
-        onClosed: (value) {
-          homePageBody = new HomePageBody(
-            futureTimetableData: getTimetableData(),
-            futureScheduleList: getScheduleList(),
-          );
-          print(value);
         },
       ),
     );
@@ -274,6 +277,9 @@ class _HomePageBody extends State<HomePageBody> {
       if (TimeRange(DateTime.now()).inTime(s.startDate, s.endDate)) {
         sectionList = [];
         for (var sub in s.subject) {
+          print('==========================================');
+          print('[${sub.startTime}, ${sub.endTime}]');
+          print('==========================================');
           sectionList.add({
             'start': ConvertDuration.toShortTime(sub.startTime),
             'end': ConvertDuration.toShortTime(sub.endTime)

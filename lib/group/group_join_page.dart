@@ -27,7 +27,7 @@ Future<bool> groupJoinDialog(BuildContext context) async {
 
   _submit() async {
     int statusId = 1;
-    String uid = 'lili123';
+    String uid = await loadUid();
     var submitWidget;
     print(int.parse(_groupNum));
     _submitWidgetfunc() async {

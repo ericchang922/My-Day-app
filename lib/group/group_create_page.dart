@@ -18,6 +18,16 @@ class GroupCreatePage extends StatefulWidget {
 }
 
 class _GroupCreateWidget extends State<GroupCreatePage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _friendListRequest();
+    await _bestFriendListRequest();
+    _friendNameControlloer();
+  }
+
   FriendListModel _friendListModel;
   BestFriendListModel _bestFriendListModel;
 
@@ -37,7 +47,6 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   String _groupName = "";
   String _searchText = "";
   String _dropdownValue = '讀書';
-  String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -50,10 +59,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   @override
   void initState() {
     super.initState();
-
-    _friendListRequest();
-    _bestFriendListRequest();
-    _friendNameControlloer();
+    _uid();
   }
 
   void _friendNameControlloer() {
@@ -71,9 +77,6 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
     BestFriendListModel _request =
         await BestFriendList(context: context, uid: uid).getData();
 
@@ -87,9 +90,6 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     FriendListModel _request =
         await FriendList(context: context, uid: uid).getData();
 

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final commonScheduleListModel = commonScheduleListModelFromJson(jsonString);
-
 import 'dart:convert';
 
 CommonScheduleListModel commonScheduleListModelFromJson(String str) => CommonScheduleListModel.fromJson(json.decode(str));

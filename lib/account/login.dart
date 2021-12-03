@@ -194,7 +194,7 @@ class _Login extends State {
                                                   await SharedPreferences
                                                       .getInstance();
                                               prefs.setString(
-                                                  'TestString_Key', myuid.text);
+                                                  'uid', myuid.text);
 
                                               Navigator.push(
                                                   context,
@@ -235,7 +235,7 @@ class _Login extends State {
                                   onPressed: () async {
                                     SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
-                                    prefs.remove('TestString_Key');
+                                    prefs.remove('uid');
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

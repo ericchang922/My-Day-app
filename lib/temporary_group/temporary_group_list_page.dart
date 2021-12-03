@@ -1,3 +1,4 @@
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/group/group_detail_page.dart';
@@ -47,7 +48,14 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
   TemporaryGroupListModel _temporaryGroupListModel;
   TemporaryGroupListModel _temporaryGroupInviteListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _temporaryGroupListRequest();
+    await _temporaryGroupInviteListRequest();
+  }
 
   List typeColor = <int>[
     0xffF78787,
@@ -62,8 +70,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
   @override
   void initState() {
     super.initState();
-    _temporaryGroupListRequest();
-    _temporaryGroupInviteListRequest();
+    _uid();
   }
 
   @override
@@ -85,10 +92,6 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
   }
 
   _temporaryGroupListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/temporary_group_list.json');
-    // var responseBody = json.decode(response);
-
     TemporaryGroupListModel _request =
         await TemporaryList(context: context, uid: uid).getData();
 
@@ -98,10 +101,6 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
   }
 
   _temporaryGroupInviteListRequest() async {
-    // var response = await rootBundle
-    //     .loadString('assets/json/temporary_group_invite_list.json');
-    // var responseBody = json.decode(response);
-
     TemporaryGroupListModel _request =
         await InviteList(context: context, uid: uid).getData();
 

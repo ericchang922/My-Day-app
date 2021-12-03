@@ -8,7 +8,7 @@ Future<bool> friendsAddDialog(BuildContext context) async {
   final fid = TextEditingController();
   String _alertTitle = '加入失敗';
   String _alertTxt = '請確認是否有填寫欄位';
-  String id = 'lili123';
+  String id = await loadUid();
 
   _submit() async {
     String uid = id;

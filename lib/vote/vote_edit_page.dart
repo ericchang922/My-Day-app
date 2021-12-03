@@ -1,3 +1,4 @@
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,14 @@ class _VoteEditWidget extends State<VoteEditPage> {
 
   GetVoteModel _getVoteModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getVoteRequest();
+  }
+
   String _value = '';
   String _title = '';
   String _deadLineValue = '';
@@ -64,13 +72,10 @@ class _VoteEditWidget extends State<VoteEditPage> {
   @override
   void initState() {
     super.initState();
-    _getVoteRequest();
+    _uid();
   }
 
   _getVoteRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_vote.json');
-    // var responseBody = json.decode(response);
-
     GetVoteModel _request =
         await Get(context: context, uid: uid, voteNum: voteNum).getData();
 
@@ -131,7 +136,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
     double _textFied = _height * 0.045;
     double _leadingL = _height * 0.02;
     double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
     double _listTilePadding = _height * 0.018;
     double _iconWidth = _width * 0.05;
 
@@ -444,7 +448,6 @@ class _VoteEditWidget extends State<VoteEditPage> {
               ),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: _hintGray),
-                //  when the TextFormField in focused
               ),
             ),
             onChanged: (text) {

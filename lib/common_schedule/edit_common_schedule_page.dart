@@ -18,7 +18,14 @@ class EditCommonSchedulePage extends StatefulWidget {
 
 class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
     with RouteAware {
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getCommonScheduleRequest();
+  }
+
   int scheduleNum;
   _EditCommonSchedulePage(this.scheduleNum);
 
@@ -28,7 +35,7 @@ class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
   @override
   void initState() {
     super.initState();
-    _getCommonScheduleRequest();
+    _uid();
   }
 
   @override
@@ -44,10 +51,6 @@ class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
   }
 
   _getCommonScheduleRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_common_schedule.json');
-    // var responseBody = json.decode(response);
-
     GetCommonScheduleModel _request =
         await GetCommon(context: context, uid: uid, scheduleNum: scheduleNum)
             .getData();

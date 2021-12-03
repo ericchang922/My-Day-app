@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/models/note/note_list_model.dart';
-import 'package:My_Day_app/public/note_request/delete.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/get_list.dart';
 import 'package:My_Day_app/study/note_detail_page.dart';
 import 'package:My_Day_app/study/notes_add.dart';
-import 'package:flutter/material.dart';
 import 'package:My_Day_app/main.dart';
 
 AppBar noteListAppBar(context) {
@@ -24,12 +25,19 @@ class NoteListWidget extends StatefulWidget {
 
 class _NoteListState extends State<NoteListWidget> with RouteAware {
   NoteListModel _noteList;
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getNoteListRequest();
+  }
+
   int noteNum;
   @override
   void initState() {
     super.initState();
-    _getNoteListRequest();
+    _uid();
   }
 
   @override
@@ -50,9 +58,7 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
   }
 
   _getNoteListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
-
+    print(uid + 'note.dart======================================');
     NoteListModel _request =
         await GetList(context: context, uid: uid, noteNum: noteNum).getData();
 

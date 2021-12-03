@@ -9,8 +9,7 @@ Future<bool> bestfriendsAddDialog(BuildContext context) async {
   String _alertTitle = '加入失敗';
   String alertTxt = '請確認是否有此好友';
   String _alertTxt = '請確認是否有填寫欄位';
-  String id = 'lili123';
-_submit() async {
+  String id = await loadUid();
 
   _submit() async {
     String uid = id;

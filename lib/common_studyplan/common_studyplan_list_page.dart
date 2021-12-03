@@ -25,12 +25,18 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
 
   ShareStudyplanListModel _groupStudyplanListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupStudyplanListRequest();
+  }
 
   @override
   void initState() {
     super.initState();
-    _groupStudyplanListRequest();
+    _uid();
   }
 
   @override
@@ -51,11 +57,6 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
   }
 
   _groupStudyplanListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/common_studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = ShareStudyplanListModel.fromJson(responseBody);
-
     ShareStudyplanListModel _request =
         await OneGroupList(context: context, uid: uid, groupNum: groupNum)
             .getData();

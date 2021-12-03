@@ -8,6 +8,7 @@ import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/schedule/edit_schedule.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> scheduleDialog(
     BuildContext context, DateTime date, ScheduleGetList scheduleList) {
@@ -111,6 +112,14 @@ Future<void> scheduleDialog(
 
 List<Widget> listItems(BuildContext context, DateTime date,
     ScheduleGetList scheduleList, double height, double width) {
+
+  String _uid;
+  _uidLoad() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _uid = prefs.getString('uid');
+  }
+  
+  _uidLoad();
   List<Widget> itemList = [];
   DateTime dayStart = DateTime.utc(date.year, date.month, date.day, 0, 0, 0);
   DateTime dayEnd = dayStart.add(Duration(hours: 24));
@@ -189,13 +198,13 @@ List<Widget> listItems(BuildContext context, DateTime date,
                 context,
                 MaterialPageRoute(
                     builder: (context) => EditSchedule(
-                          uid: 'amy123',
+                          uid: _uid,
                           scheduleNum: s.scheduleNum,
                         ))),
             onLongPress: () => msgBox(context, '警告', '確定要刪除行程嗎？', () async {
                   Delete delete = Delete(
                       context: context,
-                      uid: 'amy123',
+                      uid: _uid,
                       scheduleNum: s.scheduleNum);
                   bool isError = await delete.getIsError();
                   if (isError) {

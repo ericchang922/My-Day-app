@@ -56,12 +56,17 @@ class GroupMemberWidget extends StatefulWidget {
 }
 
 class _GroupMemberWidget extends State<GroupMemberWidget> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupMemberListRequest();
+  }
+
   int groupNum;
   _GroupMemberWidget(this.groupNum);
-
   GroupMemberListModel _groupMemberListModel;
-
-  String uid = 'lili123';
 
   List _memberList = [];
   List _inviteMemberList = [];
@@ -71,8 +76,7 @@ class _GroupMemberWidget extends State<GroupMemberWidget> {
   @override
   void initState() {
     super.initState();
-
-    _groupMemberListRequest();
+    _uid();
   }
 
   _groupMemberListRequest() async {

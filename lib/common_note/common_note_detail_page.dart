@@ -7,7 +7,6 @@ import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
 
-
 class CommonNoteDetailPage extends StatefulWidget {
   int noteNum;
   CommonNoteDetailPage(this.noteNum);
@@ -23,12 +22,18 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
 
   GetNoteModel _getNote;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getNoteRequest();
+  }
 
   @override
   void initState() {
     super.initState();
-    _getNoteRequest();
+    _uid();
   }
 
   @override
@@ -49,11 +54,8 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
   }
 
   _getNoteRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_note.json');
-    // var responseBody = json.decode(response);
-    // var _request = GetNoteModel.fromJson(responseBody);
-
-    GetNoteModel _request = await Get(context:context, uid: uid, noteNum: noteNum).getData();
+    GetNoteModel _request =
+        await Get(context: context, uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _getNote = _request;

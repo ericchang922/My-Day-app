@@ -1,17 +1,16 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-import 'package:My_Day_app/models/profile/profile_list.dart';
-import 'package:My_Day_app/public/profile/edit_profile.dart';
-import 'package:My_Day_app/public/profile/profile_list.dart';
-import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'change_password_personal.dart';
-
 import 'dart:async';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
+
+import 'package:My_Day_app/models/profile/profile_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/profile/edit_profile.dart';
+import 'package:My_Day_app/public/profile/profile_list.dart';
+import 'package:My_Day_app/setting/change_password_personal.dart';
 
 class PersonalInformationPage extends StatefulWidget {
   @override
@@ -27,7 +26,14 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
       TextEditingController(text: _name);
 
   GetProfileListModel _getProfileList;
-  String id = 'lili123';
+  String uid = '';
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getProfileListRequest();
+  }
+
   String photo;
   File _photo;
   String photoBase64;
@@ -36,15 +42,13 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
   @override
   void initState() {
     super.initState();
-    _getProfileListRequest();
+    _uid();
   }
 
   _getProfileListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
-
+    print(uid+'profile ===================================');
     GetProfileListModel _request =
-        await GetProfileList(context: context, uid: id).getData();
+        await GetProfileList(context: context, uid: uid).getData();
 
     setState(() {
       _getProfileList = _request;
@@ -77,19 +81,6 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     }
   }
 
-  /*图片控件*/
-  Widget _ImageView(_photo) {
-    if (_photo == null) {
-      return Center(
-        child: Text(""),
-      );
-    } else {
-      return Image.file(
-        _photo,
-      );
-    }
-  }
-
   Future _getImage(ImageSource source) async {
     var photo = await ImagePicker.pickImage(source: source);
 
@@ -111,16 +102,11 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     Size size = MediaQuery.of(context).size;
     double _width = size.width;
     double _height = size.height;
-
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _width * 0.08;
     double _subtitleT = _height * 0.005;
-
     double _appBarSize = _width * 0.052;
     double _pSize = _height * 0.023;
     double _titleSize = _height * 0.025;
     double _subtitleSize = _height * 0.02;
-    double _iconWidth = _width * 0.05;
     double _borderRadius = _height * 0.03;
     double _textLBR = _height * 0.02;
     double _textFied = _height * 0.045;
@@ -132,7 +118,6 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     Color _textFiedBorder = Color(0xff707070);
 
     _submit() async {
-      String uid = id;
       var submitWidget;
       _submitWidgetfunc() async {
         return EditProfile(uid: uid, userName: _name, photo: photo);
@@ -333,7 +318,6 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                                 height: 150,
                               )
                             : Image.asset('assets/images/search.png')
-                        // :  getImage(_getProfileList.photo),
                         ),
                   ),
                 )),
@@ -368,7 +352,7 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                   subtitle: Container(
                       margin: EdgeInsets.only(top: _subtitleT),
                       child:
-                          Text(id, style: TextStyle(fontSize: _subtitleSize))),
+                          Text(uid, style: TextStyle(fontSize: _subtitleSize))),
                   onTap: () async {
                     return null;
                   },

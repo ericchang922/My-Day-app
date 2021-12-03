@@ -39,7 +39,8 @@ class Privacy extends StatelessWidget {
         child: ListView(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin:
+                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -76,7 +77,8 @@ class Privacy extends StatelessWidget {
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin:
+                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
