@@ -82,7 +82,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     // var responseBody = json.decode(response);
 
     GetGroupModel _request =
-        await Get(uid: uid, groupNum: arguments['groupNum']).getData();
+        await Get(context: context, uid: uid, groupNum: arguments['groupNum']).getData();
 
     setState(() {
       _getGroupModel = _request;
@@ -94,7 +94,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     // var responseBody = json.decode(response);
 
     GroupLogModel _request =
-        await GetLog(uid: uid, groupNum: arguments['groupNum']).getData();
+        await GetLog(context: context, uid: uid, groupNum: arguments['groupNum']).getData();
 
     setState(() {
       _groupLogModel = _request;

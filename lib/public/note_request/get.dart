@@ -16,7 +16,7 @@ class Get {
     this._response = await request.getNote();
   }
 
-  Get({this.uid,this.noteNum}) {
+  Get({this.context, this.uid,this.noteNum}) {
     _data = {'uid': uid,'noteNum': noteNum.toString()};
   }
 

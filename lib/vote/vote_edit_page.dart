@@ -71,7 +71,8 @@ class _VoteEditWidget extends State<VoteEditPage> {
     // var response = await rootBundle.loadString('assets/json/get_vote.json');
     // var responseBody = json.decode(response);
 
-    GetVoteModel _request = await Get(uid: uid, voteNum: voteNum).getData();
+    GetVoteModel _request =
+        await Get(context: context, uid: uid, voteNum: voteNum).getData();
 
     setState(() {
       _getVoteModel = _request;

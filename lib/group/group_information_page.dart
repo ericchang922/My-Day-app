@@ -50,7 +50,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
     // var reponse = await rootBundle.loadString('assets/json/get_group.json');
     // var responseBody = json.decode(response);
 
-    GetGroupModel _request = await Get(uid: uid, groupNum: groupNum).getData();
+    GetGroupModel _request =
+        await Get(context: context, uid: uid, groupNum: groupNum).getData();
 
     setState(() {
       _getGroupModel = _request;

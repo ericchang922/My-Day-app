@@ -16,7 +16,7 @@ class GetCommon {
     _response = await request.getCommenScheduleGet();
   }
 
-  GetCommon({this.uid, this.scheduleNum}) {
+  GetCommon({this.context, this.uid, this.scheduleNum}) {
     data = {'uid': uid, 'scheduleNum': scheduleNum.toString()};
   }
 

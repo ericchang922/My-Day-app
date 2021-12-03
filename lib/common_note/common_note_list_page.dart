@@ -54,7 +54,8 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
     // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
 
     ShareNoteListModel _request =
-        await GetGroupList(uid: uid, groupNum: groupNum).getData();
+        await GetGroupList(context: context, uid: uid, groupNum: groupNum)
+            .getData();
 
     setState(() {
       _shareNoteListModel = _request;

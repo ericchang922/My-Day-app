@@ -89,7 +89,8 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
     //     await rootBundle.loadString('assets/json/temporary_group_list.json');
     // var responseBody = json.decode(response);
 
-    TemporaryGroupListModel _request = await TemporaryList(uid: uid).getData();
+    TemporaryGroupListModel _request =
+        await TemporaryList(context: context, uid: uid).getData();
 
     setState(() {
       _temporaryGroupListModel = _request;
@@ -101,7 +102,8 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
     //     .loadString('assets/json/temporary_group_invite_list.json');
     // var responseBody = json.decode(response);
 
-    TemporaryGroupListModel _request = await InviteList(uid: uid).getData();
+    TemporaryGroupListModel _request =
+        await InviteList(context: context, uid: uid).getData();
 
     setState(() {
       _temporaryGroupInviteListModel = _request;

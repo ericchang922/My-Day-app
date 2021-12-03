@@ -46,7 +46,8 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
     // var responseBody = json.decode(response);
 
     GetTemporaryGroupInviteModel _request =
-        await GetInvite(uid: uid, groupNum: groupNum).getData();
+        await GetInvite(context: context, uid: uid, groupNum: groupNum)
+            .getData();
     setState(() {
       _memberList = [];
       _inviteMemberList = [];

@@ -43,7 +43,8 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     // var response = await rootBundle.loadString('assets/json/group_list.json');
     // var responseBody = json.decode(response);
 
-    GetProfileListModel _request = await GetProfileList(uid: id).getData();
+    GetProfileListModel _request =
+        await GetProfileList(context: context, uid: id).getData();
 
     setState(() {
       _getProfileList = _request;

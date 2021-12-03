@@ -15,7 +15,7 @@ class GetGroupList {
     this._response = await request.getShareNoteList();
   }
 
-  GetGroupList({this.uid, this.groupNum}) {
+  GetGroupList({this.context, this.uid, this.groupNum}) {
     _data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

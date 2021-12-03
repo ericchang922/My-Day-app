@@ -42,9 +42,11 @@ class _ShareNoteWidget extends State<ShareNotePage> {
     // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
 
     ShareNoteListModel _shareNoteListRequest =
-        await GetGroupList(uid: uid, groupNum: groupNum).getData();
+        await GetGroupList(context: context, uid: uid, groupNum: groupNum)
+            .getData();
 
-    NoteListModel _noteList = await GetList(uid: uid).getData();
+    NoteListModel _noteList =
+        await GetList(context: context, uid: uid).getData();
 
     setState(() {
       _shareNoteList = _shareNoteListRequest;

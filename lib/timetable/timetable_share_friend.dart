@@ -13,7 +13,8 @@ class TimetableShareFriendPage extends StatefulWidget {
   TimetableShareFriendPage(this.timetableNo);
 
   @override
-  _TimetableShareFriendWidget createState() => new _TimetableShareFriendWidget(timetableNo);
+  _TimetableShareFriendWidget createState() =>
+      new _TimetableShareFriendWidget(timetableNo);
 }
 
 class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
@@ -57,10 +58,9 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
   }
 
   _friendListRequest() async {
-    FriendListModel _friendRequest =
-        await FriendList(uid: uid).getData();
+    FriendListModel _friendRequest = await FriendList(uid: uid).getData();
     BestFriendListModel _bestFriendRequest =
-        await BestFriendList(uid: uid).getData();
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _friendListModel = _friendRequest;

@@ -74,7 +74,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
     // var responseBody = json.decode(response);
 
-    BestFriendListModel _request = await BestFriendList(uid: uid).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -89,7 +90,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
     // var responseBody = json.decode(response);
 
-    FriendListModel _request = await FriendList(uid: uid).getData();
+    FriendListModel _request =
+        await FriendList(context: context, uid: uid).getData();
 
     setState(() {
       _friendListModel = _request;

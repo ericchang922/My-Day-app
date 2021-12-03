@@ -72,7 +72,8 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
     // var _request = StudyplanModel.fromJson(responseBody);
 
     StudyplanModel _request =
-        await Get(uid: uid, studyplanNum: studyplanNum).getData();
+        await Get(context: context, uid: uid, studyplanNum: studyplanNum)
+            .getData();
 
     setState(() {
       _getStudyplan = _request;
@@ -156,8 +157,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
         switch (value) {
           case 'edit':
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    EditStudyPlanPage(studyplanNum, null)));
+                builder: (context) => EditStudyPlanPage(studyplanNum, null)));
             break;
           case 'edit_common':
             Navigator.of(context).push(MaterialPageRoute(

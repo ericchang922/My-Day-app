@@ -40,7 +40,6 @@ class _friendWidget extends State<friendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String _dropdownValue = '讀書';
   String id = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
@@ -48,8 +47,6 @@ class _friendWidget extends State<friendPage> {
 
   List _filteredFriend = [];
   List _filteredBestFriend = [];
-
-  bool _isNotCreate = false;
   bool _isCheck;
 
   @override
@@ -68,7 +65,8 @@ class _friendWidget extends State<friendPage> {
   }
 
   _getNoticeRequest() async {
-    GetNoticeModel _request = await GetNotice(uid: id).getData();
+    GetNoticeModel _request =
+        await GetNotice(context: context, uid: id).getData();
 
     setState(() {
       _notice = _request;
@@ -91,7 +89,8 @@ class _friendWidget extends State<friendPage> {
   }
 
   _bestFriendListRequest() async {
-    BestFriendListModel _request = await BestFriendList(uid: id).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: id).getData();
 
     setState(() {
       _bestFriendListModel = _request;

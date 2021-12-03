@@ -555,7 +555,8 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
     // var responseBody = json.decode(response);
 
-    BestFriendListModel _request = await BestFriendList(uid: uid).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;

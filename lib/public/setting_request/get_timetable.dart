@@ -14,7 +14,7 @@ class GetTimetable {
     _response = await request.getTimetableGet();
   }
 
-  GetTimetable({this.uid}) {
+  GetTimetable({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

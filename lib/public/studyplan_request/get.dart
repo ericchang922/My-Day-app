@@ -16,7 +16,7 @@ class Get {
     this._response = await request.getStudyplan();
   }
 
-  Get({this.uid, this.studyplanNum}) {
+  Get({this.context, this.uid, this.studyplanNum}) {
     _data = {'uid': uid, 'studyplanNum': studyplanNum.toString()};
   }
 

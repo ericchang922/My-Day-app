@@ -9,7 +9,8 @@ class TimetableShareGroupPage extends StatefulWidget {
   TimetableShareGroupPage(this.timetableNo);
 
   @override
-  _TimetableShareGroupWidget createState() => new _TimetableShareGroupWidget(timetableNo);
+  _TimetableShareGroupWidget createState() =>
+      new _TimetableShareGroupWidget(timetableNo);
 }
 
 class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
@@ -17,7 +18,6 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
   _TimetableShareGroupWidget(this.timetableNo);
 
   GroupListModel _groupListModel;
-
 
   String uid = 'lili123';
 
@@ -32,7 +32,7 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
   ];
 
   Map<int, dynamic> _groupCheck = {};
- 
+
   @override
   void initState() {
     super.initState();
@@ -40,15 +40,13 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
     _groupListRequest();
   }
 
-  
-
   _groupListRequest() async {
     GroupListModel _request =
-        await GroupList(uid: uid).getData();
+        await GroupList(context: context, uid: uid).getData();
 
     setState(() {
       _groupListModel = _request;
-     
+
       for (int i = 0; i < _groupListModel.groupContent.length; i++) {
         _groupCheck[_groupListModel.groupContent[i].groupId] = false;
       }
@@ -61,7 +59,7 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
       var _group = _groupListModel.groupContent[i];
       if (_groupCheck[_group.groupId] == true) count++;
     }
-    
+
     return count;
   }
 
@@ -90,7 +88,6 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
     Color _gray = Color(0xff959595);
     Color _color = Theme.of(context).primaryColor;
 
-
     // _submit() async {
     //   List<Map<String, dynamic>> friend = [];
     //   for (int i = 0; i < _friendListModel.friend.length; i++) {
@@ -116,8 +113,6 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
     //   else
     //     return false;
     // }
-
-    
 
     if (_groupListModel != null) {
       Widget groupList = ListView.separated(
@@ -183,11 +178,10 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
               ),
             ),
             body: Container(
-                  color: Colors.white,
-                  child: Container(
+                color: Colors.white,
+                child: Container(
                     margin: EdgeInsets.only(top: _height * 0.02),
-                    child: groupList
-                  )),
+                    child: groupList)),
             bottomNavigationBar: Container(
               color: Theme.of(context).bottomAppBarColor,
               child: SafeArea(

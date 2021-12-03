@@ -49,7 +49,8 @@ class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
     // var responseBody = json.decode(response);
 
     GetCommonScheduleModel _request =
-        await GetCommon(uid: uid, scheduleNum: scheduleNum).getData();
+        await GetCommon(context: context, uid: uid, scheduleNum: scheduleNum)
+            .getData();
 
     setState(() {
       data = _request;

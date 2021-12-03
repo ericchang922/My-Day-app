@@ -65,7 +65,8 @@ class _friendWidget extends State<friendPage> {
 
   _getFriendPrivacyRequest() async {
     GetFriendPrivacyModel _request =
-        await GetFriendPrivacy(context:context, uid: id, friendId: friendId).getData();
+        await GetFriendPrivacy(context: context, uid: id, friendId: friendId)
+            .getData();
 
     setState(() {
       _friendprivacy = _request;
@@ -88,7 +89,8 @@ class _friendWidget extends State<friendPage> {
   }
 
   _bestFriendListRequest() async {
-    BestFriendListModel _request = await BestFriendList(uid: id).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: id).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -100,7 +102,8 @@ class _friendWidget extends State<friendPage> {
   }
 
   _friendListRequest() async {
-    FriendListModel _request = await FriendList(uid: id).getData();
+    FriendListModel _request =
+        await FriendList(context: context, uid: id).getData();
 
     setState(() {
       _friendListModel = _request;

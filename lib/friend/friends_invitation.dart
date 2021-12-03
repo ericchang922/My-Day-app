@@ -53,7 +53,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
 
   _makefriendinviteListRequest() async {
     MakeFriendInviteListModel _request =
-        await MakeFriendInviteList(uid: uid).getData();
+        await MakeFriendInviteList(context: context, uid: uid).getData();
 
     setState(() {
       _makefriendinviteListModel = _request;

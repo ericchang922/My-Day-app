@@ -69,7 +69,8 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   }
 
   _groupListRequest() async {
-    GroupListModel _request = await GroupList(uid: uid).getData();
+    GroupListModel _request =
+        await GroupList(context: context, uid: uid).getData();
 
     setState(() {
       _groupListModel = _request;
@@ -77,7 +78,8 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   }
 
   _groupInviteListRequest() async {
-    GroupInviteListModel _request = await InviteList(uid: uid).getData();
+    GroupInviteListModel _request =
+        await InviteList(context: context, uid: uid).getData();
 
     setState(() {
       _groupInviteListModel = _request;

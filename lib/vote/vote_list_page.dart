@@ -61,7 +61,7 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
     // var responseBody = json.decode(response);
 
     VoteListModel _request =
-        await GetList(uid: uid, groupNum: groupNum).getData();
+        await GetList(context: context, uid: uid, groupNum: groupNum).getData();
 
     setState(() {
       _voteListModel = _request;
@@ -73,7 +73,8 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
     // var responseBody = json.decode(response);
 
     VoteEndListModel _request =
-        await GetEndList(uid: uid, groupNum: groupNum).getData();
+        await GetEndList(context: context, uid: uid, groupNum: groupNum)
+            .getData();
 
     setState(() {
       _voteEndListModel = _request;

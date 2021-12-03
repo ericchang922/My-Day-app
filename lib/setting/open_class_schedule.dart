@@ -69,7 +69,8 @@ class _friendWidget extends State<friendPage> {
   }
 
   _getTimetableRequest() async {
-    GetTimetableModel _request = await GetTimetable(uid: id).getData();
+    GetTimetableModel _request =
+        await GetTimetable(context: context, uid: id).getData();
 
     setState(() {
       _timetable = _request;
@@ -79,7 +80,8 @@ class _friendWidget extends State<friendPage> {
   }
 
   _bestFriendListRequest() async {
-    BestFriendListModel _request = await BestFriendList(uid: id).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: id).getData();
 
     setState(() {
       _bestFriendListModel = _request;

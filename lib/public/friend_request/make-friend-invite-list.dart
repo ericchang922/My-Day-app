@@ -14,7 +14,7 @@ class MakeFriendInviteList {
     _response = await request.getMakeFriendInviteListGet();
   }
 
-  MakeFriendInviteList({this.uid}) {
+  MakeFriendInviteList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

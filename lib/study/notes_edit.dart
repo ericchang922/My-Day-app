@@ -44,7 +44,8 @@ class _NotesEditPage extends State<NotesEditPage> {
   }
 
   _getNoteRequest() async {
-    GetNoteModel _request = await Get(uid: uid, noteNum: noteNum).getData();
+    GetNoteModel _request =
+        await Get(context: context, uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _getNote = _request;

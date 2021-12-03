@@ -54,7 +54,7 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
     // var responseBody = json.decode(response);
 
     NoteListModel _request =
-        await GetList(uid: uid, noteNum: noteNum).getData();
+        await GetList(context: context, uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _noteList = _request;

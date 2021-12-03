@@ -37,7 +37,8 @@ class _EditStudyPlanPage extends State<EditStudyPlanPage> {
     // var _request = StudyplanModel.fromJson(responseBody);
 
     StudyplanModel _request =
-        await Get(uid: uid, studyplanNum: studyplanNum).getData();
+        await Get(context: context, uid: uid, studyplanNum: studyplanNum)
+            .getData();
 
     setState(() {
       _data = _request;

@@ -57,7 +57,8 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
     // var _request = ShareStudyplanListModel.fromJson(responseBody);
 
     ShareStudyplanListModel _request =
-        await OneGroupList(uid: uid, groupNum: groupNum).getData();
+        await OneGroupList(context: context, uid: uid, groupNum: groupNum)
+            .getData();
 
     setState(() {
       _groupStudyplanListModel = _request;

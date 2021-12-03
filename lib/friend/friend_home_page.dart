@@ -33,7 +33,8 @@ class _FriendHomePage extends State<FriendHomePage> {
   // String _uid = 'james123';
 
   Future<MainTimetableListGet> getTimetableData() async {
-    MainTimetableList request = MainTimetableList(context: context, uid: friendId);
+    MainTimetableList request =
+        MainTimetableList(context: context, uid: friendId);
     MainTimetableListGet _data = await request.getData();
 
     // await weekStorage.setItem('start', _data.timetable[0].startDate.toString());

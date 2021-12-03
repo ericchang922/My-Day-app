@@ -14,7 +14,7 @@ class GetProfileList {
     _response = await request.getProfileListGet();
   }
 
-  GetProfileList({this.uid}) {
+  GetProfileList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

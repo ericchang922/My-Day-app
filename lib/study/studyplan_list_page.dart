@@ -57,7 +57,8 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
     // var responseBody = json.decode(response);
     // var _request = StudyplanListModel.fromJson(responseBody);
 
-    StudyplanListModel _request = await PersonalList(uid: uid).getData();
+    StudyplanListModel _request =
+        await PersonalList(context: context, uid: uid).getData();
 
     setState(() {
       _studyplanListModel = _request;
@@ -70,7 +71,8 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
     // var responseBody = json.decode(response);
     // var _request = GroupStudyplanListModel.fromJson(responseBody);
 
-    GroupStudyplanListModel _request = await GroupList(uid: uid).getData();
+    GroupStudyplanListModel _request =
+        await GroupList(context: context, uid: uid).getData();
 
     setState(() {
       _groupStudyplanListModel = _request;
@@ -79,7 +81,8 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
 
   _personalShareStudyplanList() async {
     PersonalShareStudyplanListModel _request =
-        await PersonalShareList(uid: uid, shareStatus: 1).getData();
+        await PersonalShareList(context: context, uid: uid, shareStatus: 1)
+            .getData();
     setState(() {
       _shareStudyplanListModel = _request;
       _shareStudyplanNumList = [];

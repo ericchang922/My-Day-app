@@ -53,7 +53,8 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
     // var responseBody = json.decode(response);
     // var _request = GetNoteModel.fromJson(responseBody);
 
-    GetNoteModel _request = await Get(uid: uid, noteNum: noteNum).getData();
+    GetNoteModel _request =
+        await Get(context: context, uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _getNote = _request;
@@ -182,7 +183,9 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
             ),
             body: Container(
                 color: Colors.white,
-                child: SafeArea(top: false, child: Center(child: getImage(_getNote.content)))),
+                child: SafeArea(
+                    top: false,
+                    child: Center(child: getImage(_getNote.content)))),
           ),
         ),
       );

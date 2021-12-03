@@ -64,7 +64,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
   }
 
   _bestFriendListRequest() async {
-    BestFriendListModel _request = await BestFriendList(uid: uid).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -76,7 +77,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
   }
 
   _friendListRequest() async {
-    FriendListModel _request = await FriendList(uid: uid).getData();
+    FriendListModel _request =
+        await FriendList(context: context, uid: uid).getData();
 
     setState(() {
       _friendListModel = _request;

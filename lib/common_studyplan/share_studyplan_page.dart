@@ -34,7 +34,8 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
 
   _shareStudyPlanRequest() async {
     PersonalShareStudyplanListModel _request =
-        await PersonalShareList(uid: uid, shareStatus: 0).getData();
+        await PersonalShareList(context: context, uid: uid, shareStatus: 0)
+            .getData();
 
     setState(() {
       _personalShareStudyPlanModel = _request;
