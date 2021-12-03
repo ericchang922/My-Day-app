@@ -64,18 +64,24 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
 
   getImage(String imageString) {
     bool isGetImage;
+    Image image;
 
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(
-      base64.decode(imageString),
-    );
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
+    try {
+      const Base64Codec base64 = Base64Codec();
+      image = Image.memory(
+        base64.decode(imageString),
+      );
+      var resolve = image.image.resolve(ImageConfiguration.empty);
+      resolve.addListener(ImageStreamListener((_, __) {
+        isGetImage = true;
+      }, onError: (Object exception, StackTrace stackTrace) {
+        isGetImage = false;
+        print('error');
+      }));
+    } catch (error) {
+      print('筆記圖片讀取錯誤：${error}');
       isGetImage = false;
-      print('error');
-    }));
+    }
 
     if (isGetImage == null) {
       return image;
