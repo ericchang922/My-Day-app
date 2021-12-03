@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/models/setting/get_notice.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/setting_request/get_notice.dart';
 import 'package:My_Day_app/public/setting_request/notice.dart';
 import 'package:My_Day_app/setting/play_together_invite.dart';
-import 'package:flutter/material.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -14,41 +16,48 @@ class NoticePage extends StatefulWidget {
 }
 
 class _Notice extends State {
+  String uid;
+  bool _isCheckSchedule;
+  bool _isCheckCountdown;
+  bool _isCheckGroup;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getNoticeRequest();
+    if (_notice == null) {
+      setState(() {
+        _isCheckSchedule = false;
+        _isCheckCountdown = false;
+        _isCheckGroup = false;
+      });
+    } else {
+      setState(() {
+        _isCheckSchedule = _notice.scheduleNotice;
+        _isCheckCountdown = _notice.countdownNotice;
+        _isCheckGroup = _notice.groupNotice;
+      });
+    }
+  }
+  // 載入 uid 之後才可執行 取得資料
+
   get child => null;
   get left => null;
-  bool _isCheckschedule;
-  bool _isCheckCountdown;
-  bool _isCheckgroup;
-  String id = "lili123";
+
   GetNoticeModel _notice;
+
   @override
   void initState() {
     super.initState();
-    _getNoticeRequest();
-    if (_notice == null) {
-      _isCheckschedule = false;
-      _isCheckCountdown = false;
-      _isCheckgroup = false;
-    } else if (_notice == 1) {
-      _isCheckschedule = true;
-      _isCheckCountdown = true;
-      _isCheckgroup = true;
-    } else {
-      _isCheckschedule = false;
-      _isCheckCountdown = false;
-      _isCheckgroup = false;
-    }
+    _uid();
   }
 
   _getNoticeRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
-
-    GetNoticeModel _request = await GetNotice(uid: id).getData();
+    GetNoticeModel _request =
+        await GetNotice(context: context, uid: uid).getData();
 
     setState(() {
       _notice = _request;
-      print(_notice);
     });
   }
 
@@ -59,26 +68,15 @@ class _Notice extends State {
     double _width = size.width;
     double _appBarSize = _width * 0.052;
     double _bottomHeight = _height * 0.07;
+
     _submit() async {
-      String uid = id;
-      bool isSchedule = _isCheckschedule;
-      bool isCountdown = _isCheckCountdown;
-      bool isGroup = _isCheckgroup;
+      Notice notice = Notice(
+          uid: uid,
+          isSchedule: _isCheckSchedule,
+          isCountdown: _isCheckCountdown,
+          isGroup: _isCheckGroup);
 
-      var submitWidget;
-      _submitWidgetfunc() async {
-        return Notice(
-            uid: uid,
-            isSchedule: isSchedule,
-            isCountdown: isCountdown,
-            isGroup: isGroup);
-      }
-
-      submitWidget = await _submitWidgetfunc();
-      if (await submitWidget.getIsError())
-        return true;
-      else
-        return false;
+      return await notice.getIsError();
     }
 
     return Scaffold(
@@ -116,18 +114,17 @@ class _Notice extends State {
                           ),
                         ),
                         Switch(
-                          value: _isCheckschedule,
+                          value: _isCheckSchedule,
                           onChanged: (value) async {
-                            if (await _submit() != true) {
-                              setState(() {
-                                _isCheckschedule = value;
-                              });
+                            setState(() {
+                              _isCheckSchedule = value;
+                            });
+                            if (await _submit()) {
+                              _isCheckSchedule = false;
                             }
                           },
                           activeColor: Colors.white,
                           activeTrackColor: Color(0xffF86D67),
-                          // inactiveThumbColor: Color(0xffF86D67),
-                          // inactiveTrackColor: Color(0xffF86D67),
                         ),
                       ],
                     ),
@@ -161,16 +158,15 @@ class _Notice extends State {
                         Switch(
                           value: _isCheckCountdown,
                           onChanged: (value) async {
-                            if (await _submit() != true) {
-                              setState(() {
-                                _isCheckCountdown = value;
-                              });
+                            setState(() {
+                              _isCheckCountdown = value;
+                            });
+                            if (await _submit()) {
+                              _isCheckCountdown = false;
                             }
                           },
                           activeColor: Colors.white,
                           activeTrackColor: Color(0xffF86D67),
-                          // inactiveThumbColor: Color(0xffF86D67),
-                          // inactiveTrackColor: Color(0xffF86D67),
                         ),
                       ],
                     ),
@@ -202,18 +198,17 @@ class _Notice extends State {
                           ),
                         ),
                         Switch(
-                          value: _isCheckgroup,
+                          value: _isCheckGroup,
                           onChanged: (value) async {
-                            if (await _submit() != true) {
-                              setState(() {
-                                _isCheckgroup = value;
-                              });
+                            setState(() {
+                              _isCheckGroup = value;
+                            });
+                            if (await _submit()) {
+                              _isCheckGroup = false;
                             }
                           },
                           activeColor: Colors.white,
                           activeTrackColor: Color(0xffF86D67),
-                          // inactiveThumbColor: Color(0xffF86D67),
-                          // inactiveTrackColor: Color(0xffF86D67),
                         ),
                       ],
                     ),
