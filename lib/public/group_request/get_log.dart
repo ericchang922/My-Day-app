@@ -16,7 +16,7 @@ class GetLog {
     _response = await request.getGroupLogGet();
   }
 
-  GetLog({this.uid, this.groupNum}) {
+  GetLog({this.context, this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

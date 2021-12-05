@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/timetable/timetable_share.dart';
 import 'package:My_Day_app/models/timetable/sharecode_model.dart';
 import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/timetable_request/get_sharecode.dart';
 import 'package:My_Day_app/public/timetable_request/get_timetable_list.dart';
-import 'package:My_Day_app/timetable/timetable_share.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -19,20 +22,21 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
   TimetableListModel _timetableListModel;
   SharecodeModel _sharecode;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _timetableListRequest();
+  }
 
   @override
   void initState() {
     super.initState();
-    _timetableListRequest();
+    _uid();
   }
 
   _timetableListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_timetable_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = TimetableListModel.fromJson(responseBody);
-
     TimetableListModel _request = await GetTimetableList(uid: uid).getData();
 
     setState(() {
@@ -41,11 +45,6 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
   }
 
   _sharecodeRequest(int timetableNo) async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_timetable_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = TimetableListModel.fromJson(responseBody);
-
     SharecodeModel _request =
         await Sharecode(uid: uid, timetableNo: timetableNo).getData();
 
@@ -56,29 +55,11 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-
-    double _listLR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
-    Color _light = Theme.of(context).primaryColorLight;
-    Color _bule = Color(0xff7AAAD8);
-    Color _textFiedBorder = Color(0xff707070);
 
     Widget timetalbeList;
 
@@ -101,13 +82,15 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
       } else {
         timetalbeList = Container(
           margin: EdgeInsets.only(
-              left: _height * 0.03, top: _height * 0.02, right: _height * 0.03),
+              left: _sizing.height(3),
+              top: _sizing.height(2),
+              right: _sizing.height(3)),
           child: Column(children: [
-            SizedBox(height: _height * 0.025),
+            SizedBox(height: _sizing.height(2.5)),
             Expanded(
               child: GridView.count(
-                crossAxisSpacing: _width * 0.02,
-                mainAxisSpacing: _width * 0.02,
+                crossAxisSpacing: _sizing.width(2),
+                mainAxisSpacing: _sizing.width(2),
                 crossAxisCount: 2,
                 children: List.generate(
                   _timetableListModel.timetable.length,
@@ -124,7 +107,7 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
                                   '${timetable.schoolYear}學年',
                                   style: TextStyle(fontSize: _titleSize),
                                 ),
-                                SizedBox(height: _height * 0.025),
+                                SizedBox(height: _sizing.height(2.5)),
                                 Text(
                                   '第${semester(timetable.semester)}學期',
                                   style: TextStyle(fontSize: _titleSize),

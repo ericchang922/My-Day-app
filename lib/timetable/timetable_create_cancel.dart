@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/sizing.dart';
+
 Future<bool> timetableCreateCancel(BuildContext context) async {
-  Size size = MediaQuery.of(context).size;
-  double _width = size.width;
-  double _height = size.height;
+  Sizing _sizing = Sizing(context);
 
-  double _borderRadius = _height * 0.03;
-  double _inkwellH = _height * 0.06;
+  double _borderRadius = _sizing.height(3);
+  double _inkwellH = _sizing.height(6);
 
-  double _pSize = _height * 0.023;
-  double _subtitleSize = _height * 0.02;
+  double _pSize = _sizing.height(2.3);
+  double _subtitleSize = _sizing.height(2);
 
   Color _color = Theme.of(context).primaryColor;
   Color _light = Theme.of(context).primaryColorLight;
@@ -21,15 +21,15 @@ Future<bool> timetableCreateCancel(BuildContext context) async {
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
-          contentPadding: EdgeInsets.only(top: _height * 0.02),
+          contentPadding: EdgeInsets.only(top: _sizing.height(2)),
           content: Container(
-            width: _width * 0.2,
-            height: _height * 0.15,
+            width: _sizing.width(20),
+            height: _sizing.height(15),
             child: (Column(
               children: <Widget>[
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.only(top: _height * 0.02),
+                    margin: EdgeInsets.only(top: _sizing.height(2)),
                     child: Text(
                       "是否放棄新增此課表",
                       style: TextStyle(fontSize: _pSize),
@@ -44,7 +44,8 @@ Future<bool> timetableCreateCancel(BuildContext context) async {
                         child: Container(
                           height: _inkwellH,
                           padding: EdgeInsets.only(
-                              top: _height * 0.015, bottom: _height * 0.015),
+                              top: _sizing.height(1.5),
+                              bottom: _sizing.height(1.5)),
                           decoration: BoxDecoration(
                             color: _light,
                             borderRadius: BorderRadius.only(
@@ -68,7 +69,8 @@ Future<bool> timetableCreateCancel(BuildContext context) async {
                         child: Container(
                           height: _inkwellH,
                           padding: EdgeInsets.only(
-                              top: _height * 0.015, bottom: _height * 0.015),
+                              top: _sizing.height(1.5),
+                              bottom: _sizing.height(1.5)),
                           decoration: BoxDecoration(
                             color: _color,
                             borderRadius: BorderRadius.only(

@@ -14,7 +14,7 @@ class GetThemes {
     _response = await request.getThemesGet();
   }
 
-  GetThemes({this.uid}) {
+  GetThemes({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

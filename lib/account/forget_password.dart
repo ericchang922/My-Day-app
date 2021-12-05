@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/account/change_password.dart';
 import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/public/account_request/forget_pw.dart';
 import 'package:My_Day_app/public/account_request/send_code.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class ForgetpwPage extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(debugShowCheckedModeBanner: false);
@@ -18,11 +19,9 @@ class ForgetpwPage extends StatefulWidget {
 class ForgetpwWidget extends State<ForgetpwPage> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _appBarSize = _width * 0.052;
-    double _leadingL = _height * 0.02;
+    Sizing _sizing = Sizing(context);
+    double _appBarSize = _sizing.width(5.2);
+    double _leadingL = _sizing.height(2);
 
     Color _color = Color(0xffF86D67);
 
@@ -101,24 +100,22 @@ class Forgetpw extends StatelessWidget {
         return false;
     }
 
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.05;
-    double _listB = _height * 0.01;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _listLR = _sizing.height(5);
+    double _listB = _sizing.height(1);
+    double _textFied = _sizing.height(4.5);
+    double _borderRadius = _sizing.height(1);
+    double _iconWidth = _sizing.width(5);
+    double _listPaddingH = _sizing.width(6);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
+    double _titleSize = _sizing.height(2.5);
+    double _pSize = _sizing.height(2.3);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _bule = Color(0xff7AAAD8);
     Color _textFiedBorder = Color(0xff707070);
@@ -139,7 +136,7 @@ class Forgetpw extends StatelessWidget {
                     margin: EdgeInsets.only(
                       left: _listLR,
                       bottom: _listB,
-                      top: _height * 0.05,
+                      top: _sizing.height(5),
                       right: _listLR,
                     ),
                     child: ListTile(
@@ -149,10 +146,10 @@ class Forgetpw extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      left: _height * 0.07,
+                      left: _sizing.height(7),
                       bottom: _listB,
-                      top: _height * 0.0001,
-                      right: _height * 0.07,
+                      top: _sizing.height(0.01),
+                      right: _sizing.height(7),
                     ),
                     child: TextField(
                       controller: forgetuid,
@@ -161,8 +158,8 @@ class Forgetpw extends StatelessWidget {
                         filled: true,
                         isCollapsed: true,
                         contentPadding: EdgeInsets.symmetric(
-                            horizontal: _height * 0.015,
-                            vertical: _height * 0.015),
+                            horizontal: _sizing.height(1.5),
+                            vertical: _sizing.height(1.5)),
                         border: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(_borderRadius)),
@@ -173,8 +170,8 @@ class Forgetpw extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      left: _height * 0.25,
-                      right: _height * 0.07,
+                      left: _sizing.height(25),
+                      right: _sizing.height(7),
                     ),
                     child: SizedBox(
                         height: _bottomHeight,
@@ -184,7 +181,7 @@ class Forgetpw extends StatelessWidget {
                           ),
                           child: Text(
                             '發送驗證碼',
-                            style: TextStyle(fontSize: _height * 0.02),
+                            style: TextStyle(fontSize: _sizing.height(2)),
                           ),
                           onPressed: () async {
                             if (forgetuid.text.isNotEmpty) {
@@ -200,7 +197,7 @@ class Forgetpw extends StatelessWidget {
                     margin: EdgeInsets.only(
                       left: _listLR,
                       bottom: _listB,
-                      top: _height * 0.01,
+                      top: _sizing.height(1),
                       right: _listLR,
                     ),
                     child: ListTile(
@@ -210,10 +207,10 @@ class Forgetpw extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      left: _height * 0.07,
+                      left: _sizing.height(7),
                       bottom: _listB,
-                      top: _height * 0.0005,
-                      right: _height * 0.07,
+                      top: _sizing.height(0.05),
+                      right: _sizing.height(7),
                     ),
                     child: TextField(
                       controller: forgetcode,
@@ -224,8 +221,8 @@ class Forgetpw extends StatelessWidget {
                         filled: true,
                         isCollapsed: true,
                         contentPadding: EdgeInsets.symmetric(
-                            horizontal: _height * 0.015,
-                            vertical: _height * 0.015),
+                            horizontal: _sizing.height(1.5),
+                            vertical: _sizing.height(1.5)),
                         border: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(_borderRadius)),
@@ -239,7 +236,6 @@ class Forgetpw extends StatelessWidget {
           bottomNavigationBar: Container(
               child: Row(children: <Widget>[
             Expanded(
-              // ignore: deprecated_member_use
               child: SizedBox(
                   height: _bottomHeight,
                   child: TextButton(
@@ -259,7 +255,6 @@ class Forgetpw extends StatelessWidget {
                   )),
             ),
             Expanded(
-              // ignore: deprecated_member_use
               child: SizedBox(
                   height: _bottomHeight,
                   child: TextButton(

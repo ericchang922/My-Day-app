@@ -1,14 +1,17 @@
-import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
+import 'package:flutter/material.dart';
+
+import 'package:date_format/date_format.dart';
+
+import 'package:My_Day_app/study/studyplan_detail_page.dart';
+import 'package:My_Day_app/study/studyplan_form.dart';
 import 'package:My_Day_app/public/studyplan_request/group_list.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_list.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_share_list.dart';
-import 'package:My_Day_app/study/studyplan_detail_page.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
-import 'package:My_Day_app/study/studyplan_form.dart';
-import 'package:date_format/date_format.dart';
-
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 
 class StudyplanListPage extends StatefulWidget {
   @override
@@ -20,24 +23,27 @@ class _StudyplanListPage extends State<StudyplanListPage> {
   GroupStudyplanListModel _groupStudyplanListModel;
   PersonalShareStudyplanListModel _shareStudyplanListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _studyplanListRequest();
+    await _groupStudyplanListRequest();
+    await _personalShareStudyplanList();
+  }
+
   List _shareStudyplanNumList = [];
 
   @override
   void initState() {
     super.initState();
-    _studyplanListRequest();
-    _groupStudyplanListRequest();
-    _personalShareStudyplanList();
+    _uid();
   }
 
   _studyplanListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = StudyplanListModel.fromJson(responseBody);
-
-    StudyplanListModel _request = await PersonalList(uid: uid).getData();
+    StudyplanListModel _request =
+        await PersonalList(context: context, uid: uid).getData();
 
     setState(() {
       _studyplanListModel = _request;
@@ -45,12 +51,8 @@ class _StudyplanListPage extends State<StudyplanListPage> {
   }
 
   _groupStudyplanListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/group_studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = GroupStudyplanListModel.fromJson(responseBody);
-
-    GroupStudyplanListModel _request = await GroupList(uid: uid).getData();
+    GroupStudyplanListModel _request =
+        await GroupList(context: context, uid: uid).getData();
 
     setState(() {
       _groupStudyplanListModel = _request;
@@ -77,7 +79,8 @@ class _StudyplanListPage extends State<StudyplanListPage> {
 
   _personalShareStudyplanList() async {
     PersonalShareStudyplanListModel _request =
-        await PersonalShareList(uid: uid, shareStatus: 1).getData();
+        await PersonalShareList(context: context, uid: uid, shareStatus: 1)
+            .getData();
     setState(() {
       _shareStudyplanListModel = _request;
     });
@@ -85,25 +88,19 @@ class _StudyplanListPage extends State<StudyplanListPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _heightSize = _height * 0.01;
-    double _widthSize = _width * 0.01;
-    double _leadingL = _height * 0.02;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.01;
-    double _subtitleT = _height * 0.008;
-    double _tab = _height * 0.04683;
-    double _listLR = _width * 0.06;
+    double _leadingL = _sizing.height(2);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(1);
+    double _subtitleT = _sizing.height(0.8);
+    double _tab = _sizing.height(4.683);
+    double _listLR = _sizing.width(6);
 
-    double _tabSize = _width * 0.041;
-    double _pSize = _height * 0.023;
-    double _p2Size = _height * 0.02;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
@@ -167,11 +164,11 @@ class _StudyplanListPage extends State<StudyplanListPage> {
                   },
                   child: Container(
                     margin: EdgeInsets.only(
-                        top: _height * 0.01, bottom: _height * 0.01),
+                        top: _sizing.height(1), bottom: _sizing.height(1)),
                     child: Row(
                       children: [
                         SizedBox(
-                          width: _width * 0.18,
+                          width: _sizing.width(18),
                           child: Container(
                             margin: EdgeInsets.only(left: _listLR),
                             child: Column(
@@ -257,11 +254,11 @@ class _StudyplanListPage extends State<StudyplanListPage> {
                 },
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: _height * 0.01, bottom: _height * 0.01),
+                      top: _sizing.height(1), bottom: _sizing.height(1)),
                   child: Row(
                     children: [
                       SizedBox(
-                        width: _width * 0.18,
+                        width: _sizing.width(18),
                         child: Container(
                           margin: EdgeInsets.only(left: _listLR),
                           child: Column(
@@ -301,7 +298,7 @@ class _StudyplanListPage extends State<StudyplanListPage> {
             separatorBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.only(
-                    left: _height * 0.03, right: _height * 0.03),
+                    left: _sizing.height(3), right: _sizing.height(3)),
                 child: Divider(
                   height: 1,
                   color: _lightGray,
@@ -342,7 +339,7 @@ class _StudyplanListPage extends State<StudyplanListPage> {
                   ),
                   child: ExpansionTile(
                       title: Container(
-                        margin: EdgeInsets.only(left: _height * 0.02),
+                        margin: EdgeInsets.only(left: _sizing.height(2)),
                         child: Text(
                             '${studyplan.groupName} (${studyplan.studyplanCount}) ',
                             style:
@@ -420,11 +417,11 @@ class _StudyplanListPage extends State<StudyplanListPage> {
                 },
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: _height * 0.01, bottom: _height * 0.01),
+                      top: _sizing.height(1), bottom: _sizing.height(1)),
                   child: Row(
                     children: [
                       SizedBox(
-                        width: _width * 0.18,
+                        width: _sizing.width(18),
                         child: Container(
                           margin: EdgeInsets.only(left: _listLR),
                           child: Column(
@@ -517,7 +514,7 @@ class _StudyplanListPage extends State<StudyplanListPage> {
                   labelColor: Colors.white,
                   unselectedLabelColor: _lightGray,
                   indicatorPadding: EdgeInsets.all(0.0),
-                  indicatorWeight: _width * 0.01,
+                  indicatorWeight: _sizing.width(1),
                   labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
                   tabs: <Widget>[
                     Container(

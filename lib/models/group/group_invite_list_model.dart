@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final groupInviteListModel = groupInviteListModelFromJson(jsonString);
-
 import 'dart:convert';
 
 GroupInviteListModel groupInviteListModelFromJson(String str) => GroupInviteListModel.fromJson(json.decode(str));

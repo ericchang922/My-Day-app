@@ -16,7 +16,7 @@ class MemberList {
     _response = await request.getGroupMemberListGet();
   }
 
-  MemberList({this.uid, this.groupNum}) {
+  MemberList({this.context, this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

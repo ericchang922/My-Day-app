@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:date_format/date_format.dart';
+
 import 'package:My_Day_app/public/vote_request/add_items.dart';
 import 'package:My_Day_app/public/vote_request/delete.dart';
 import 'package:My_Day_app/public/vote_request/vote.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/vote/vote_edit_page.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/vote_request/get.dart';
-import 'package:My_Day_app/vote/vote_edit_page.dart';
-import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class VotePage extends StatefulWidget {
   int voteNum;
@@ -22,6 +25,15 @@ class VotePage extends StatefulWidget {
 }
 
 class _VoteWidget extends State<VotePage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getVoteRequest();
+    await _getGroupMemberRequest();
+  }
+
   int voteNum;
   int groupNum;
   _VoteWidget(this.voteNum, this.groupNum);
@@ -30,7 +42,6 @@ class _VoteWidget extends State<VotePage> {
   GroupMemberListModel _groupMemberListModel;
 
   String _voteItemName = '';
-  String uid = 'lili123';
   String _deadLine = '';
   String _title = '';
 
@@ -46,22 +57,17 @@ class _VoteWidget extends State<VotePage> {
 
   DateTime _dateTime = DateTime.now();
 
-  bool _isEnabled = true;
-
   final _voteItemNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _getVoteRequest();
-    _getGroupMemberRequest();
+    _uid();
   }
 
   _getVoteRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_vote.json');
-    // var responseBody = json.decode(response);
-
-    GetVoteModel _request = await Get(uid: uid, voteNum: voteNum).getData();
+    GetVoteModel _request =
+        await Get(context: context, uid: uid, voteNum: voteNum).getData();
 
     setState(() {
       _getVoteModel = _request;
@@ -98,9 +104,6 @@ class _VoteWidget extends State<VotePage> {
   }
 
   _getGroupMemberRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
-    // var responseBody = json.decode(response);
-
     GroupMemberListModel _request =
         await MemberList(uid: uid, groupNum: groupNum).getData();
 
@@ -117,25 +120,23 @@ class _VoteWidget extends State<VotePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _height * 0.04;
-    double _listPaddingV = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.03;
-    double _textLBR = _height * 0.02;
-    double _inkwellH = _height * 0.06;
-    double _itemsSize = _height * 0.045;
+    double _leadingL = _sizing.height(2);
+    double _listPaddingH = _sizing.height(4);
+    double _listPaddingV = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
+    double _textFied = _sizing.height(4.5);
+    double _borderRadius = _sizing.height(3);
+    double _textLBR = _sizing.height(2);
+    double _inkwellH = _sizing.height(6);
+    double _itemsSize = _sizing.height(4.5);
 
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _sizing.width(5.2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
 
     Color _gray = Color(0xff959595);
     Color _color = Theme.of(context).primaryColor;
@@ -216,7 +217,7 @@ class _VoteWidget extends State<VotePage> {
         return PopupMenuButton<int>(
           offset: Offset(50, 50),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.01)),
+              borderRadius: BorderRadius.circular(_sizing.height(1))),
           icon: Icon(Icons.more_vert),
           itemBuilder: (context) => [
             PopupMenuItem<int>(
@@ -243,7 +244,7 @@ class _VoteWidget extends State<VotePage> {
         return PopupMenuButton<int>(
           offset: Offset(50, 50),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.01)),
+              borderRadius: BorderRadius.circular(_sizing.height(1))),
           icon: Icon(Icons.more_vert),
           itemBuilder: (context) => [
             PopupMenuItem<int>(
@@ -280,7 +281,7 @@ class _VoteWidget extends State<VotePage> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -300,7 +301,7 @@ class _VoteWidget extends State<VotePage> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.dateAndTime,
                     initialDateTime: DateTime.now(),
@@ -323,10 +324,10 @@ class _VoteWidget extends State<VotePage> {
           return AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
-            contentPadding: EdgeInsets.only(top: _height * 0.02),
+            contentPadding: EdgeInsets.only(top: _sizing.height(2)),
             content: Container(
-              width: _width * 0.2,
-              height: _height * 0.2,
+              width: _sizing.width(20),
+              height: _sizing.height(20),
               child: Column(
                 children: <Widget>[
                   Expanded(
@@ -347,24 +348,24 @@ class _VoteWidget extends State<VotePage> {
                       margin: EdgeInsets.only(
                         left: _textLBR,
                         right: _textLBR,
-                        bottom: _height * 0.03,
+                        bottom: _sizing.height(3),
                       ),
                       child: new TextField(
                         style: TextStyle(fontSize: _pSize),
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
-                                horizontal: _height * 0.01,
-                                vertical: _height * 0.01),
+                                horizontal: _sizing.height(1),
+                                vertical: _sizing.height(1)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_height * 0.01)),
+                                  Radius.circular(_sizing.height(1))),
                               borderSide: BorderSide(
                                 color: _textFiedBorder,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_height * 0.01)),
+                                  Radius.circular(_sizing.height(1))),
                               borderSide: BorderSide(color: _bule),
                             )),
                         controller: _voteItemNameController
@@ -377,7 +378,8 @@ class _VoteWidget extends State<VotePage> {
                           child: Container(
                             height: _inkwellH,
                             padding: EdgeInsets.only(
-                                top: _height * 0.015, bottom: _height * 0.015),
+                                top: _sizing.height(1.5),
+                                bottom: _sizing.height(1.5)),
                             decoration: BoxDecoration(
                               color: _light,
                               borderRadius: BorderRadius.only(
@@ -401,7 +403,8 @@ class _VoteWidget extends State<VotePage> {
                           child: Container(
                             height: _inkwellH,
                             padding: EdgeInsets.only(
-                                top: _height * 0.015, bottom: _height * 0.015),
+                                top: _sizing.height(1.5),
+                                bottom: _sizing.height(1.5)),
                             decoration: BoxDecoration(
                               color: _color,
                               borderRadius: BorderRadius.only(
@@ -443,7 +446,7 @@ class _VoteWidget extends State<VotePage> {
       Widget voteSetting = Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: _height * 0.04),
+            margin: EdgeInsets.only(top: _sizing.height(4)),
             child: Text(_getVoteModel.title,
                 style: TextStyle(fontSize: _appBarSize)),
           ),
@@ -451,7 +454,7 @@ class _VoteWidget extends State<VotePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.only(top: _height * 0.01),
+                margin: EdgeInsets.only(top: _sizing.height(1)),
                 child: Text("建立人：" + _getVoteModel.founderName,
                     style: TextStyle(fontSize: _subtitleSize, color: _gray)),
               ),
@@ -459,7 +462,7 @@ class _VoteWidget extends State<VotePage> {
                 visible: _visibleAnonymous,
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: _height * 0.01, left: _height * 0.05),
+                      top: _sizing.height(1), left: _sizing.height(5)),
                   child: Text("匿名投票",
                       style: TextStyle(fontSize: _subtitleSize, color: _gray)),
                 ),
@@ -469,13 +472,13 @@ class _VoteWidget extends State<VotePage> {
           Visibility(
             visible: _visibleDeadLine,
             child: Container(
-              margin: EdgeInsets.only(top: _height * 0.01),
+              margin: EdgeInsets.only(top: _sizing.height(1)),
               child: Text("截止日期：" + _deadLine,
                   style: TextStyle(fontSize: _subtitleSize, color: _gray)),
             ),
           ),
           Container(
-              margin: EdgeInsets.only(top: _height * 0.04),
+              margin: EdgeInsets.only(top: _sizing.height(4)),
               child: Divider(
                 height: 1,
               ))

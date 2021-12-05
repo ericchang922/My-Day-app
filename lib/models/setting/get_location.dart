@@ -12,7 +12,7 @@ class GetLocationModel {
     bool location		;
 
     factory GetLocationModel.fromJson(Map<String, dynamic> json) => GetLocationModel(
-      location	: json["location	"],
+      location	: json["location"],
     );
 
     Map<String, dynamic> toJson() => {

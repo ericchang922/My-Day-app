@@ -1,18 +1,18 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-import 'package:My_Day_app/models/profile/profile_list.dart';
-import 'package:My_Day_app/public/getImage.dart';
-import 'package:My_Day_app/public/profile/edit_profile.dart';
-import 'package:My_Day_app/public/profile/profile_list.dart';
-import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'change_password_personal.dart';
-
 import 'dart:async';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
+
+import 'package:My_Day_app/public/getImage.dart';
+import 'package:My_Day_app/models/profile/profile_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/profile/edit_profile.dart';
+import 'package:My_Day_app/public/profile/profile_list.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/setting/change_password_personal.dart';
 
 class PersonalInformationPage extends StatefulWidget {
   @override
@@ -28,7 +28,14 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
       TextEditingController(text: _name);
 
   GetProfileListModel _getProfileList;
-  String id = 'lili123';
+  String uid = '';
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getProfileListRequest();
+  }
+
   String photo;
   File _photo;
   String photoBase64;
@@ -37,33 +44,19 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
   @override
   void initState() {
     super.initState();
-    _getProfileListRequest();
+    _uid();
   }
 
   _getProfileListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
-
-    GetProfileListModel _request = await GetProfileList(uid: id).getData();
+    print(uid + 'profile ===================================');
+    GetProfileListModel _request =
+        await GetProfileList(context: context, uid: uid).getData();
 
     setState(() {
       _getProfileList = _request;
       _name = _getProfileList.userName;
       print(_name);
     });
-  }
-
-  /*图片控件*/
-  Widget _ImageView(_photo) {
-    if (_photo == null) {
-      return Center(
-        child: Text(""),
-      );
-    } else {
-      return Image.file(
-        _photo,
-      );
-    }
   }
 
   Future _getImage(ImageSource source) async {
@@ -84,25 +77,17 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _width * 0.08;
-    double _subtitleT = _height * 0.005;
-
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _iconWidth = _width * 0.05;
-    double _borderRadius = _height * 0.03;
-    double _textLBR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _inkwellH = _height * 0.06;
-    double _bottomHeight = _height * 0.07;
-    double _imgSize = _height * 0.2;
+    Sizing _sizing = Sizing(context);
+    double _subtitleT = _sizing.height(0.5);
+    double _appBarSize = _sizing.width(5.2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _borderRadius = _sizing.height(3);
+    double _textLBR = _sizing.height(2);
+    double _textFied = _sizing.height(4.5);
+    double _inkwellH = _sizing.height(6);
+    double _bottomHeight = _sizing.height(7);
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
@@ -111,7 +96,6 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     GetImage _getImage = GetImage(context);
 
     _submit() async {
-      String uid = id;
       var submitWidget;
       _submitWidgetfunc() async {
         return EditProfile(uid: uid, userName: _name, photo: photo);
@@ -132,10 +116,10 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
             backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
-            contentPadding: EdgeInsets.only(top: _height * 0.02),
+            contentPadding: EdgeInsets.only(top: _sizing.height(2)),
             content: Container(
-              width: _width * 0.2,
-              height: _height * 0.24,
+              width: _sizing.width(20),
+              height: _sizing.height(24),
               child: GestureDetector(
                 // 點擊空白處釋放焦點
                 behavior: HitTestBehavior.translucent,
@@ -163,7 +147,7 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                                 left: _textLBR,
                                 right: _textLBR,
                                 bottom: _textLBR,
-                                top: _height * 0.015),
+                                top: _sizing.height(1.5)),
                             child: Text('姓名名稱：',
                                 style: TextStyle(fontSize: _pSize)),
                           ),
@@ -177,18 +161,18 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                                 style: TextStyle(fontSize: _pSize),
                                 decoration: InputDecoration(
                                     contentPadding: EdgeInsets.symmetric(
-                                        horizontal: _height * 0.01,
-                                        vertical: _height * 0.01),
+                                        horizontal: _sizing.height(1),
+                                        vertical: _sizing.height(1)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
-                                          Radius.circular(_height * 0.01)),
+                                          Radius.circular(_sizing.height(1))),
                                       borderSide: BorderSide(
                                         color: _textFiedBorder,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
-                                          Radius.circular(_height * 0.01)),
+                                          Radius.circular(_sizing.height(1))),
                                       borderSide: BorderSide(color: _bule),
                                     )),
                                 controller: _NameController,
@@ -206,8 +190,8 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                             child: Container(
                               height: _inkwellH,
                               padding: EdgeInsets.only(
-                                  top: _height * 0.015,
-                                  bottom: _height * 0.015),
+                                  top: _sizing.height(1.5),
+                                  bottom: _sizing.height(1.5)),
                               decoration: BoxDecoration(
                                 color: _light,
                                 borderRadius: BorderRadius.only(
@@ -232,8 +216,8 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                               child: Container(
                                 height: _inkwellH,
                                 padding: EdgeInsets.only(
-                                    top: _height * 0.015,
-                                    bottom: _height * 0.015),
+                                    top: _sizing.height(1.5),
+                                    bottom: _sizing.height(1.5)),
                                 decoration: BoxDecoration(
                                   color: _color,
                                   borderRadius: BorderRadius.only(
@@ -277,8 +261,7 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
       );
     }
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
           backgroundColor: Color(0xffF86D67),
           title: Text('個人資料', style: TextStyle(fontSize: _appBarSize)),
@@ -291,89 +274,93 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
               }
             },
           )),
-      body: ListView(
-        children: <Widget>[
-          Container(
-              height: _imgSize,
-              width: _imgSize,
-              child: InkWell(
-                onTap: () async {
-                  _incrementCounter();
-                },
-                child:
-                    ClipOval(child: _getImage.personal(_getProfileList.photo)),
-              )),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.01),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-          Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.05),
-              child: ListTile(
-                title: Text('姓名', style: TextStyle(fontSize: _titleSize)),
-                subtitle: Container(
-                    margin: EdgeInsets.only(top: _subtitleT),
-                    child:
-                        Text(_name, style: TextStyle(fontSize: _subtitleSize))),
-                onTap: () async {
-                  await settingsUpdateNameDialog(context);
-                },
-              )),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.01),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-          Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.05),
-              child: ListTile(
-                title: Text('電子郵件', style: TextStyle(fontSize: _titleSize)),
-                subtitle: Container(
-                    margin: EdgeInsets.only(top: _subtitleT),
-                    child: Text(id, style: TextStyle(fontSize: _subtitleSize))),
-                onTap: () async {
-                  return null;
-                },
-              )),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.01),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.01, right: _height * 0.2),
-            child: SizedBox(
-                height: _bottomHeight,
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChangepwPersonalPage()));
+      body: SafeArea(
+        child: ListView(
+          children: <Widget>[
+            Container(
+                margin: EdgeInsets.only(
+                    top: _sizing.height(2), right: _sizing.height(20)),
+                child: InkWell(
+                  onTap: () async {
+                    _incrementCounter();
                   },
-                  child: Text(
-                    '更改密碼',
-                    style: TextStyle(
-                      fontSize: _appBarSize,
-                    ),
-                  ),
+                  child: ClipOval(
+                      child: _getImage.personal(_getProfileList.photo)),
                 )),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: _height * 0.005),
-            color: Color(0xffE3E3E3),
-            constraints: BoxConstraints.expand(height: 1.0),
-          ),
-        ],
+            Container(
+              margin: EdgeInsets.only(top: _sizing.height(1)),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+                margin: EdgeInsets.only(
+                    top: _sizing.height(1), left: _sizing.height(5)),
+                child: ListTile(
+                  title: Text('姓名', style: TextStyle(fontSize: _titleSize)),
+                  subtitle: Container(
+                      margin: EdgeInsets.only(top: _subtitleT),
+                      child: Text(_name,
+                          style: TextStyle(fontSize: _subtitleSize))),
+                  onTap: () async {
+                    await settingsUpdateNameDialog(context);
+                  },
+                )),
+            Container(
+              margin: EdgeInsets.only(top: _sizing.height(1)),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+                margin: EdgeInsets.only(
+                    top: _sizing.height(1), left: _sizing.height(5)),
+                child: ListTile(
+                  title: Text('電子郵件', style: TextStyle(fontSize: _titleSize)),
+                  subtitle: Container(
+                      margin: EdgeInsets.only(top: _subtitleT),
+                      child:
+                          Text(uid, style: TextStyle(fontSize: _subtitleSize))),
+                  onTap: () async {
+                    return null;
+                  },
+                )),
+            Container(
+              margin: EdgeInsets.only(top: _sizing.height(1)),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), right: _sizing.height(20)),
+              child: SizedBox(
+                  height: _bottomHeight,
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangepwPersonalPage()));
+                    },
+                    child: Text(
+                      '更改密碼',
+                      style: TextStyle(
+                        fontSize: _appBarSize,
+                      ),
+                    ),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: _sizing.height(0.5)),
+              color: Color(0xffE3E3E3),
+              constraints: BoxConstraints.expand(height: 1.0),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
 

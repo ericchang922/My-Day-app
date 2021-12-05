@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getVoteModel = getVoteModelFromJson(jsonString);
-
 import 'dart:convert';
 
 GetVoteModel getVoteModelFromJson(String str) => GetVoteModel.fromJson(json.decode(str));

@@ -15,7 +15,7 @@ class InviteList {
     _response = await request.getGroupInviteListGet();
   }
 
-  InviteList({this.uid}) {
+  InviteList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

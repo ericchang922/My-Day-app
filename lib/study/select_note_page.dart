@@ -4,6 +4,8 @@ import 'package:My_Day_app/public/note_request/not_share_list.dart';
 import 'package:My_Day_app/public/note_request/get_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class SelectNotePage extends StatefulWidget {
   int groupNum;
@@ -26,22 +28,23 @@ class _SelectNotePage extends State<SelectNotePage> {
   NoteListModel _notShareNoteListModel;
   NoteListModel _noteListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _noteListRequest();
+  }
 
   List _noteCheck = [];
 
   @override
   void initState() {
     super.initState();
-    _noteListRequest();
+    _uid();
   }
 
   _noteListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/share_note_list.json');
-    // var responseBody = json.decode(response);
-    // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
-
     NoteListModel _noteListRequest = await GetList(uid: uid).getData();
     NoteListModel _notShareNoteListRequest =
         await NotShareList(uid: uid).getData();

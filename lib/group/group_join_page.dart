@@ -1,19 +1,20 @@
-import 'package:My_Day_app/public/group_request/member_status.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/group_request/member_status.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
+
 Future<bool> groupJoinDialog(BuildContext context) async {
-  Size size = MediaQuery.of(context).size;
-  double _width = size.width;
-  double _height = size.height;
+  Sizing _sizing = Sizing(context);
 
-  double _borderRadius = _height * 0.03;
-  double _textLBR = _height * 0.02;
-  double _iconWidth = _width * 0.05;
-  double _textFied = _height * 0.045;
-  double _inkwellH = _height * 0.06;
+  double _borderRadius = _sizing.height(3);
+  double _textLBR = _sizing.height(2);
+  double _iconWidth = _sizing.width(5);
+  double _textFied = _sizing.height(4.5);
+  double _inkwellH = _sizing.height(6);
 
-  double _pSize = _height * 0.023;
-  double _subtitleSize = _height * 0.02;
+  double _pSize = _sizing.height(2.3);
+  double _subtitleSize = _sizing.height(2);
 
   Color _bule = Color(0xff7AAAD8);
   Color _textFiedBorder = Color(0xff707070);
@@ -25,7 +26,7 @@ Future<bool> groupJoinDialog(BuildContext context) async {
 
   _submit() async {
     int statusId = 1;
-    String uid = 'lili123';
+    String uid = await loadUid();
     var submitWidget;
     print(int.parse(_groupNum));
     _submitWidgetfunc() async {
@@ -47,10 +48,10 @@ Future<bool> groupJoinDialog(BuildContext context) async {
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
-          contentPadding: EdgeInsets.only(top: _height * 0.02),
+          contentPadding: EdgeInsets.only(top: _sizing.height(2)),
           content: Container(
-            width: _width * 0.2,
-            height: _height * 0.25,
+            width: _sizing.width(20),
+            height: _sizing.height(25),
             child: GestureDetector(
               // 點擊空白處釋放焦點
               behavior: HitTestBehavior.translucent,
@@ -81,7 +82,7 @@ Future<bool> groupJoinDialog(BuildContext context) async {
                               left: _textLBR,
                               right: _textLBR,
                               bottom: _textLBR,
-                              top: _height * 0.015),
+                              top: _sizing.height(1.5)),
                           child: Row(
                             children: [
                               Image.asset(
@@ -89,7 +90,8 @@ Future<bool> groupJoinDialog(BuildContext context) async {
                                 width: _iconWidth,
                               ),
                               Container(
-                                margin: EdgeInsets.only(left: _height * 0.01),
+                                margin:
+                                    EdgeInsets.only(left: _sizing.height(1)),
                                 child: Text('群組ID：',
                                     style: TextStyle(fontSize: _pSize)),
                               )
@@ -101,24 +103,24 @@ Future<bool> groupJoinDialog(BuildContext context) async {
                             margin: EdgeInsets.only(
                               left: _textLBR,
                               right: _textLBR,
-                              bottom: _height * 0.015,
+                              bottom: _sizing.height(1.5),
                             ),
                             child: new TextField(
                               style: TextStyle(fontSize: _pSize),
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
-                                      horizontal: _height * 0.01,
-                                      vertical: _height * 0.01),
+                                      horizontal: _sizing.height(1),
+                                      vertical: _sizing.height(1)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
-                                        Radius.circular(_height * 0.01)),
+                                        Radius.circular(_sizing.height(1))),
                                     borderSide: BorderSide(
                                       color: _textFiedBorder,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
-                                        Radius.circular(_height * 0.01)),
+                                        Radius.circular(_sizing.height(1))),
                                     borderSide: BorderSide(color: _bule),
                                   )),
                               controller: _groupIDController,
@@ -136,7 +138,8 @@ Future<bool> groupJoinDialog(BuildContext context) async {
                           child: Container(
                             height: _inkwellH,
                             padding: EdgeInsets.only(
-                                top: _height * 0.015, bottom: _height * 0.015),
+                                top: _sizing.height(1.5),
+                                bottom: _sizing.height(1.5)),
                             decoration: BoxDecoration(
                               color: _light,
                               borderRadius: BorderRadius.only(
@@ -160,7 +163,8 @@ Future<bool> groupJoinDialog(BuildContext context) async {
                           child: Container(
                             height: _inkwellH,
                             padding: EdgeInsets.only(
-                                top: _height * 0.015, bottom: _height * 0.015),
+                                top: _sizing.height(1.5),
+                                bottom: _sizing.height(1.5)),
                             decoration: BoxDecoration(
                               color: _color,
                               borderRadius: BorderRadius.only(

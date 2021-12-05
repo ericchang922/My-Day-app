@@ -15,7 +15,7 @@ class PersonalShareList {
     this._response = await request.getPersonalShareStudyplanList();
   }
 
-  PersonalShareList({this.uid, this.shareStatus}) {
+  PersonalShareList({this.context, this.uid, this.shareStatus}) {
     _data = {'uid': uid, 'shareStatus': shareStatus.toString()};
   }
 

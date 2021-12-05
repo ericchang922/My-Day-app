@@ -1,26 +1,22 @@
 // dart
 import 'dart:convert';
 // flutter
-
-import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
-import 'package:My_Day_app/models/profile/profile_list.dart';
-import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
-import 'package:My_Day_app/models/setting/get_location.dart';
-import 'package:My_Day_app/models/setting/get_notice.dart';
-import 'package:My_Day_app/models/setting/get_temporary_notice.dart';
-import 'package:My_Day_app/models/setting/get_timetable.dart';
-import 'package:My_Day_app/models/setting/themes_model.dart';
-import 'package:My_Day_app/models/timetable/section_time_model.dart';
-import 'package:My_Day_app/public/friend_request/make-friend-invite-list.dart';
 import 'package:flutter/material.dart';
+
 // therd
 import 'package:http/http.dart' as http;
 // my day
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/toast.dart';
+//  schedule
 import 'package:My_Day_app/models/schedule/schedule_model.dart';
+import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
+import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
+//  friend
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
+import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
+//  group
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:My_Day_app/models/group/get_group_model.dart';
@@ -29,23 +25,36 @@ import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
-import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
+//  studyplan
+import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:My_Day_app/models/studyplan/common_studyplan_list_model.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
+//  temporary_group
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
+//  timetable
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
+import 'package:My_Day_app/models/timetable/sharecode_model.dart';
+import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
+import 'package:My_Day_app/models/timetable/section_time_model.dart';
+//  vote
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
 import 'package:My_Day_app/models/vote/vote_list_model.dart';
-import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
+//  note
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
-import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
-import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
-import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
-import 'package:My_Day_app/models/timetable/sharecode_model.dart';
-import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
+//  setting
+import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
+import 'package:My_Day_app/models/setting/get_location.dart';
+import 'package:My_Day_app/models/setting/get_notice.dart';
+import 'package:My_Day_app/models/setting/get_temporary_notice.dart';
+import 'package:My_Day_app/models/setting/get_timetable.dart';
+import 'package:My_Day_app/models/setting/themes_model.dart';
+//  profile
+import 'package:My_Day_app/models/profile/profile_list.dart';
 
 class Request {
   static const host = 'http://myday.sytes.net';
@@ -108,11 +117,11 @@ class Request {
     'privacy_location': '$host${path['setting']}/privacy_location/',
     'privacy_timetable': '$host${path['setting']}/privacy_timetable/',
     'themes': '$host${path['setting']}/themes/',
-    'get_themes': '$host${path['setting']}/get_themes/',
-    'get_location': '$host${path['setting']}/get_location/',
-    'get_timetable': '$host${path['setting']}/get_timetable/',
-    'get_notice': '$host${path['setting']}/get_notice/',
-    'get_friend_privacy': '$host${path['setting']}/get_friend_privacy/',
+    'get_themes': '${path['setting']}/get_themes/',
+    'get_location': '${path['setting']}/get_location/',
+    'get_timetable': '${path['setting']}/get_timetable/',
+    'get_notice': '${path['setting']}/get_notice/',
+    'get_friend_privacy': '${path['setting']}/get_friend_privacy/',
   };
   static Map friendUrl = {
     'get': '${path['friend']}/get/',
@@ -167,7 +176,7 @@ class Request {
     'not_share_list': '${path['note']}/not_share_list/',
   };
   static Map profileUrl = {
-    'profile_list': '$host${path['profile']}/profile_list/',
+    'profile_list': '${path['profile']}/profile_list/',
     'edit_profile': '$host${path['profile']}/edit_profile/',
   };
 
@@ -281,23 +290,32 @@ class Request {
 
   httpFunction(BuildContext context, dynamic response, String toastTxt) async {
     Map responseBody;
+
     try {
       responseBody = json.decode(utf8.decode(response.bodyBytes));
     } catch (error) {
+      _isError = true;
       print('error: ${utf8.decode(response.bodyBytes)}');
+      await alert(context, '無法連線', '請檢查連線狀態或聯絡客服確認伺服器狀態');
     }
 
     if (responseBody != null) {
-      if (responseBody['response'] == false) {
-        await alert(context, '錯誤', responseBody['message']);
-        _responseBody = null;
-        _isError = true;
-      } else if (responseBody['response'] == true) {
+      if ((response.statusCode / 100).toInt() == 2) {
         _isError = false;
-        if (toastTxt != null)
-          toast(context, toastTxt);
-        else
-          _responseBody = json.decode(utf8.decode(response.bodyBytes));
+        if (responseBody['response'] == true) {
+          if (toastTxt != null)
+            toast(context, toastTxt);
+          else
+            _responseBody = json.decode(utf8.decode(response.bodyBytes));
+        }
+      } else {
+        _isError = true;
+        if (responseBody['response'] == false) {
+          await alert(context, '錯誤', responseBody['message']);
+          _responseBody = null;
+        } else {
+          await alert(context, '未知錯誤', '請聯絡客服(${response.statusCode})');
+        }
       }
     }
 
@@ -832,7 +850,7 @@ class Request {
   }
 
   // delete ---------------------------------------------------------------------------------
-  noteedelete(BuildContext context, Map<String, dynamic> data) async {
+  notedelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['delete'];
     await httpPost(context, data, _url, '刪除成功');
   }
@@ -900,6 +918,7 @@ class Request {
   // SETTING ============================================================================================
   // privacy-location ----------------------------------------------------------------------------------
   privacylocation(BuildContext context, Map<String, dynamic> data) async {
+    print(data);
     String _url = settingUrl['privacy_location'];
     await httpPost(context, data, _url, '定位設定成功');
   }

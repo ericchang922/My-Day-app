@@ -1,23 +1,26 @@
 import 'dart:async';
 
-import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:My_Day_app/public/group_request/quit_group.dart';
-import 'package:My_Day_app/models/group/group_member_list_model.dart';
-import 'package:My_Day_app/public/group_request/member_list.dart';
+
+import 'package:date_format/date_format.dart';
+
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/common_note/common_note_list_page.dart';
 import 'package:My_Day_app/common_studyplan/common_studyplan_list_page.dart';
 import 'package:My_Day_app/group/group_invite_page.dart';
 import 'package:My_Day_app/group/group_member_page.dart';
 import 'package:My_Day_app/group/group_setting_page.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/group_request/quit_group.dart';
+import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/models/group/get_group_model.dart';
 import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/public/group_request/get.dart';
 import 'package:My_Day_app/public/group_request/get_log.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/vote/vote_list_page.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
-import 'package:date_format/date_format.dart';
 
 class GroupDetailPage extends StatefulWidget {
   var arguments;
@@ -28,15 +31,23 @@ class GroupDetailPage extends StatefulWidget {
       new _GroupDetailWidget(arguments: this.arguments);
 }
 
-class _GroupDetailWidget extends State<GroupDetailPage> {
+class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getGroupRequest();
+    await _groupLogRequest();
+    await _getGroupMemberRequest();
+  }
+
   Map arguments;
   _GroupDetailWidget({this.arguments});
 
   GetGroupModel _getGroupModel;
   GroupLogModel _groupLogModel;
   GroupMemberListModel _groupMemberListModel;
-
-  String uid = 'lili123';
 
   List<Widget> _votesList = [];
   List _groupLogDate = [];
@@ -50,18 +61,15 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
   @override
   void initState() {
     super.initState();
-    _getGroupRequest();
-    _groupLogRequest();
-    _getGroupMemberRequest();
+    _uid();
+
     print(arguments['groupNum']);
   }
 
   _getGroupRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_group.json');
-    // var responseBody = json.decode(response);
-
     GetGroupModel _request =
-        await Get(uid: uid, groupNum: arguments['groupNum']).getData();
+        await Get(context: context, uid: uid, groupNum: arguments['groupNum'])
+            .getData();
 
     setState(() {
       _getGroupModel = _request;
@@ -69,18 +77,14 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
   }
 
   _groupLogRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_log.json');
-    // var responseBody = json.decode(response);
-
-    GroupLogModel _request =
-        await GetLog(uid: uid, groupNum: arguments['groupNum']).getData();
+    GroupLogModel _request = await GetLog(
+            context: context, uid: uid, groupNum: arguments['groupNum'])
+        .getData();
 
     setState(() {
       _groupLogModel = _request;
-      // ignore: deprecated_member_use
-      _groupLogDate = new List();
-      // ignore: deprecated_member_use
-      _groupLogDateIsShow = new List();
+      _groupLogDate = [];
+      _groupLogDateIsShow = [];
 
       for (int i = 0; i < _groupLogModel.groupContent.length; i++) {
         DateTime doTime = _groupLogModel.groupContent[i].doTime;
@@ -97,9 +101,6 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
   }
 
   _getGroupMemberRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
-    // var responseBody = json.decode(response);
-
     GroupMemberListModel _request =
         await MemberList(uid: uid, groupNum: arguments['groupNum']).getData();
 
@@ -121,19 +122,17 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _width * 0.08;
-    double _itemsSize = _height * 0.045;
+    double _leadingL = _sizing.height(2);
+    double _listPaddingH = _sizing.width(8);
+    double _itemsSize = _sizing.height(4.5);
 
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _iconSize = _width * 0.08;
+    double _appBarSize = _sizing.width(5.2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _iconSize = _sizing.width(8);
 
     Color _yellow = Color(0xffEFB208);
     Color _gray = Color(0xff959595);
@@ -206,7 +205,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
         return PopupMenuButton<int>(
           offset: Offset(50, 50),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.01)),
+              borderRadius: BorderRadius.circular(_sizing.height(1))),
           icon: Icon(Icons.more_vert),
           itemBuilder: (context) => [
             PopupMenuItem<int>(
@@ -253,7 +252,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
         return PopupMenuButton<int>(
           offset: Offset(50, 50),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.01)),
+              borderRadius: BorderRadius.circular(_sizing.height(1))),
           icon: Icon(Icons.more_vert),
           itemBuilder: (context) => [
             PopupMenuItem<int>(
@@ -292,7 +291,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
     _voteState(bool isVoteType, int voteNum) {
       if (isVoteType == false) {
         return Container(
-          margin: EdgeInsets.only(right: _height * 0.01),
+          margin: EdgeInsets.only(right: _sizing.height(1)),
           child: InkWell(
             child:
                 Text('投票', style: TextStyle(fontSize: _pSize, color: _color)),
@@ -326,13 +325,13 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
         _votesList.add(
           ListTile(
               contentPadding: EdgeInsets.symmetric(
-                  horizontal: _width * 0.06, vertical: 0.0),
+                  horizontal: _sizing.width(6), vertical: 0.0),
               title: Text(votes.title, style: TextStyle(fontSize: _pSize)),
               leading: Container(
-                margin: EdgeInsets.only(left: _height * 0.01),
+                margin: EdgeInsets.only(left: _sizing.height(1)),
                 child: Image.asset(
                   'assets/images/vote.png',
-                  width: _width * 0.06,
+                  width: _sizing.width(6),
                 ),
               ),
               trailing: _voteState(votes.isVoteType, votes.voteNum)),
@@ -358,12 +357,12 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
                           TextStyle(fontSize: _titleSize, color: Colors.black)),
                   leading: Container(
                     alignment: Alignment.center,
-                    height: _height * 0.039,
-                    width: _width * 0.16,
+                    height: _sizing.height(3.9),
+                    width: _sizing.width(16),
                     decoration: new BoxDecoration(
                       color: _yellow,
                       borderRadius:
-                          BorderRadius.all(Radius.circular(size.height * 0.01)),
+                          BorderRadius.all(Radius.circular(_sizing.height(1))),
                     ),
                     child: Text(
                       '進行中',
@@ -401,7 +400,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
                 [HH, ':', nn]);
 
             return Container(
-              margin: EdgeInsets.only(top: _height * 0.01),
+              margin: EdgeInsets.only(top: _sizing.height(1)),
               child: Column(
                 children: [
                   Visibility(
@@ -414,9 +413,9 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
                       )),
                   Container(
                     margin: EdgeInsets.only(
-                        top: _height * 0.01,
-                        bottom: _height * 0.005,
-                        left: _height * 0.01),
+                        top: _sizing.height(1),
+                        bottom: _sizing.height(0.5),
+                        left: _sizing.height(1)),
                     child: Row(
                       children: [
                         Text(
@@ -427,7 +426,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
                         ),
                         Expanded(
                           child: Container(
-                              margin: EdgeInsets.only(left: _height * 0.02),
+                              margin: EdgeInsets.only(left: _sizing.height(2)),
                               child: Text(
                                 groupContent.name +
                                     " " +
@@ -461,7 +460,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
             Divider(height: 1),
             ListTile(
               contentPadding: EdgeInsets.symmetric(
-                  horizontal: _listPaddingH, vertical: _height * 0.01),
+                  horizontal: _listPaddingH, vertical: _sizing.height(1)),
               title: Text('投票', style: TextStyle(fontSize: _appBarSize)),
               leading: Image.asset(
                 'assets/images/vote.png',
@@ -485,7 +484,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
             Divider(height: 1),
             ListTile(
               contentPadding: EdgeInsets.symmetric(
-                  horizontal: _listPaddingH, vertical: size.height * 0.01),
+                  horizontal: _listPaddingH, vertical: _sizing.height(1)),
               title: Text('共同行程', style: TextStyle(fontSize: _appBarSize)),
               leading: Image.asset(
                 'assets/images/share_schedule.png',
@@ -511,7 +510,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
               visible: _isNotTemporary,
               child: ListTile(
                 contentPadding: EdgeInsets.symmetric(
-                    horizontal: _listPaddingH, vertical: size.height * 0.01),
+                    horizontal: _listPaddingH, vertical: _sizing.height(1)),
                 title: Text('共同讀書計畫', style: TextStyle(fontSize: _appBarSize)),
                 leading: Image.asset(
                   'assets/images/share_studyplan.png',
@@ -539,7 +538,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
               visible: _isNotTemporary,
               child: ListTile(
                 contentPadding: EdgeInsets.symmetric(
-                    horizontal: _listPaddingH, vertical: _height * 0.01),
+                    horizontal: _listPaddingH, vertical: _sizing.height(1)),
                 leading: Image.asset(
                   'assets/images/note.png',
                   width: _iconSize,
@@ -572,7 +571,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> {
               children: [
                 Expanded(
                     child: Container(
-                        margin: EdgeInsets.only(top: _height * 0.067),
+                        margin: EdgeInsets.only(top: _sizing.height(6.7)),
                         child: groupLog)),
                 groupList
               ],

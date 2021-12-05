@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getGroupModel = getGroupModelFromJson(jsonString);
-
 import 'dart:convert';
 
 GetGroupModel getGroupModelFromJson(String str) => GetGroupModel.fromJson(json.decode(str));

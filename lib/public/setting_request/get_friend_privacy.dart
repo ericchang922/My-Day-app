@@ -15,7 +15,7 @@ class GetFriendPrivacy {
     _response = await request.getFriendPrivacyGet();
   }
 
-  GetFriendPrivacy({this.uid,this.friendId}) {
+  GetFriendPrivacy({this.context,this.uid,this.friendId}) {
     data = {'uid': uid,'friendId': friendId};
   }
 

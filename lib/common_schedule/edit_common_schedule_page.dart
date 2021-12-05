@@ -1,4 +1,5 @@
 // flutter
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 // my day
 import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
@@ -15,7 +16,14 @@ class EditCommonSchedulePage extends StatefulWidget {
 }
 
 class _EditCommonSchedulePage extends State<EditCommonSchedulePage>{
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getCommonScheduleRequest();
+  }
+
   int scheduleNum;
   _EditCommonSchedulePage(this.scheduleNum);
 
@@ -25,16 +33,13 @@ class _EditCommonSchedulePage extends State<EditCommonSchedulePage>{
   @override
   void initState() {
     super.initState();
-    _getCommonScheduleRequest();
+    _uid();
   }
 
   _getCommonScheduleRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_common_schedule.json');
-    // var responseBody = json.decode(response);
-
     GetCommonScheduleModel _request =
-        await GetCommon(uid: uid, scheduleNum: scheduleNum).getData();
+        await GetCommon(context: context, uid: uid, scheduleNum: scheduleNum)
+            .getData();
 
     setState(() {
       data = _request;

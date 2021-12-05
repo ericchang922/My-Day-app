@@ -16,7 +16,7 @@ class GetList {
     _response = await request.getVoteList();
   }
 
-  GetList({this.uid, this.groupNum}) {
+  GetList({this.context, this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

@@ -1,10 +1,12 @@
-import 'package:My_Day_app/public/note_request/not_share_list.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/note_request/not_share_list.dart';
+import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/note_request/share.dart';
-import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class ShareNotePage extends StatefulWidget {
   int groupNum;
@@ -15,12 +17,19 @@ class ShareNotePage extends StatefulWidget {
 }
 
 class _ShareNoteWidget extends State<ShareNotePage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _noteListRequest();
+  }
+
   int groupNum;
   _ShareNoteWidget(this.groupNum);
 
   NoteListModel _noteListModel;
 
-  String uid = 'lili123';
   int noteNum;
 
   List _noteCheck = [];
@@ -28,15 +37,10 @@ class _ShareNoteWidget extends State<ShareNotePage> {
   @override
   void initState() {
     super.initState();
-    _noteListRequest();
+    _uid();
   }
 
   _noteListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/share_note_list.json');
-    // var responseBody = json.decode(response);
-    // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
-
     NoteListModel _request = await NotShareList(uid: uid).getData();
 
     setState(() {
@@ -49,16 +53,14 @@ class _ShareNoteWidget extends State<ShareNotePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
-    double _titleSize = _height * 0.025;
-    double _appBarSize = _width * 0.052;
+    double _titleSize = _sizing.height(2.5);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -105,9 +107,10 @@ class _ShareNoteWidget extends State<ShareNotePage> {
               var note = _noteListModel.note[index];
               return ListTile(
                 contentPadding: EdgeInsets.symmetric(
-                    horizontal: _height * 0.03, vertical: _height * 0.008),
+                    horizontal: _sizing.height(3),
+                    vertical: _sizing.height(0.8)),
                 title: Container(
-                  margin: EdgeInsets.only(left: _height * 0.01),
+                  margin: EdgeInsets.only(left: _sizing.height(1)),
                   child:
                       Text(note.title, style: TextStyle(fontSize: _titleSize)),
                 ),

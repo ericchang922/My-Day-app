@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/schedule/schedule_form.dart';
+import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
+import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/public/temporary_group_request/create_group.dart';
-import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
-import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/schedule/schedule_form.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class TemporaryGroupCreatePage extends StatefulWidget {
   @override
@@ -18,6 +20,12 @@ class TemporaryGroupCreatePage extends StatefulWidget {
 }
 
 class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
   int _type;
   DateTime _startDateTime = DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
@@ -32,30 +40,34 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
   bool _isNotCreate = false;
 
   @override
+  void initState() {
+    super.initState();
+    _uid();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _titleController.text = _title;
     _locationController.text = _location;
     // values ------------------------------------------------------------------------------------------
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    Sizing _sizing = Sizing(context);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
 
-    double _paddingLR = _width * 0.06;
-    double _listPaddingLR = _width * 0.1;
-    double _listItemHeight = _height * 0.08;
-    double _leadingL = _height * 0.02;
+    double _paddingLR = _sizing.width(6);
+    double _listPaddingLR = _sizing.width(10);
+    double _listItemHeight = _sizing.height(8);
+    double _leadingL = _sizing.height(2);
 
-    double _iconSize = _height * 0.05;
-    double _h1Size = _height * 0.035;
-    double _h2Size = _height * 0.03;
-    double _pSize = _height * 0.025;
-    double _timeSize = _width * 0.045;
-    double _appBarSize = _width * 0.052;
+    double _iconSize = _sizing.height(5);
+    double _h1Size = _sizing.height(3.5);
+    double _h2Size = _sizing.height(3);
+    double _pSize = _sizing.height(2.5);
+    double _timeSize = _sizing.width(4.5);
+    double _appBarSize = _sizing.width(5.2);
 
     String _startView = _allDay
         ? '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]}'
@@ -72,7 +84,6 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
     // _submit -----------------------------------------------------------------------------------------
     _submit() async {
       String _alertTitle = '新增行程失敗';
-      String uid = 'lili123';
       String title = _titleController.text;
       String startTime;
       String endTime;
@@ -155,7 +166,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -169,7 +180,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                   mode: _mode(),
                   minimumDate: (DateTime(
@@ -200,7 +211,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
         // text field ----------------------------------------------------------------------------- title
         Padding(
           padding: EdgeInsets.fromLTRB(
-              _paddingLR, _height * 0.03, _paddingLR, _height * 0.02),
+              _paddingLR, _sizing.height(3), _paddingLR, _sizing.height(2)),
           child: TextField(
             style: TextStyle(fontSize: _h1Size),
             decoration: InputDecoration(
@@ -293,7 +304,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
 
         // 分隔線
         Divider(
-          height: _height * 0.02,
+          height: _sizing.height(2),
           indent: _paddingLR,
           endIndent: _paddingLR,
           color: Colors.grey,
@@ -303,7 +314,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
         // dropdown buttn ------------------------------------------------------------------------- type
         Padding(
           padding: EdgeInsets.fromLTRB(
-              _listPaddingLR, _height * 0.01, _listPaddingLR, 0),
+              _listPaddingLR, _sizing.height(1), _listPaddingLR, 0),
           child: Container(
             height: _listItemHeight,
             child: Row(
@@ -312,7 +323,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
                   flex: 1,
                   child: Image.asset(
                     'assets/images/type.png',
-                    height: _height * 0.05,
+                    height: _sizing.height(5),
                   ),
                 ),
                 Expanded(
@@ -322,7 +333,7 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
                 Expanded(
                   flex: 7,
                   child: DropdownButton(
-                    itemHeight: _height * 0.1,
+                    itemHeight: _sizing.height(10),
                     hint: Text('類別',
                         style:
                             TextStyle(fontSize: _h2Size, color: Colors.grey)),
@@ -372,9 +383,9 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
                 Expanded(
                   flex: 1,
                   child: Container(
-                      height: _height * 0.025,
+                      height: _sizing.height(2.5),
                       child: CircleAvatar(
-                        radius: _height * 0.025,
+                        radius: _sizing.height(2.5),
                         backgroundColor: getTypeColor(_type),
                       )),
                 )
@@ -510,6 +521,16 @@ class InviteFriendPage extends StatefulWidget {
 }
 
 class _InviteFriendWidget extends State<InviteFriendPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    _friendNameControlloer();
+    await _friendListRequest();
+    await _bestFriendListRequest();
+  }
+
   String groupName;
   String scheduleStart;
   String scheduleEnd;
@@ -524,7 +545,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -535,9 +555,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   @override
   void initState() {
     super.initState();
-    _friendNameControlloer();
-    _friendListRequest();
-    _bestFriendListRequest();
+    _uid();
   }
 
   void _friendNameControlloer() {
@@ -555,10 +573,8 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   }
 
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
-    BestFriendListModel _request = await BestFriendList(uid: uid).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -570,9 +586,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     FriendListModel _request = await FriendList(uid: uid).getData();
 
     setState(() {
@@ -586,26 +599,23 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listTop = _height * 0.03;
-    double _listLR = _height * 0.01;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _checkAllR = _width * 0.03;
-    double _bottomHeight = _height * 0.07;
-    double _iconWidth = _width * 0.05;
-    double _leadingL = _height * 0.02;
-    double _textFied = _height * 0.045;
+    double _listTop = _sizing.height(3);
+    double _listLR = _sizing.height(1);
+    double _listPaddingH = _sizing.width(6);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
+    double _iconWidth = _sizing.width(5);
+    double _leadingL = _sizing.height(2);
+    double _textFied = _sizing.height(4.5);
 
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _borderRadius = _height * 0.01;
+    double _appBarSize = _sizing.width(5.2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _borderRadius = _sizing.height(1);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -696,7 +706,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     );
 
     Widget checkAll = Container(
-      margin: EdgeInsets.only(right: _width * 0.05),
+      margin: EdgeInsets.only(right: _sizing.width(5)),
       alignment: Alignment.centerRight,
       child: InkWell(
         child: Text('全選', style: TextStyle(fontSize: _subtitleSize)),
@@ -861,10 +871,8 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName
@@ -1014,13 +1022,11 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
+    double _listPaddingH = _sizing.width(6);
 
-    double _pSize = _height * 0.023;
+    double _pSize = _sizing.height(2.3);
 
     GetImage _getImage = GetImage(context);
 
@@ -1069,13 +1075,11 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
+    double _listPaddingH = _sizing.width(6);
 
-    double _pSize = _height * 0.023;
+    double _pSize = _sizing.height(2.3);
 
     GetImage _getImage = GetImage(context);
 

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final shareStudyplanListModel = shareStudyplanListModelFromJson(jsonString);
-
 import 'dart:convert';
 
 ShareStudyplanListModel shareStudyplanListModelFromJson(String str) => ShareStudyplanListModel.fromJson(json.decode(str));

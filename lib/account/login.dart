@@ -1,11 +1,14 @@
+import 'package:flutter/material.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/home.dart';
 import 'package:My_Day_app/account/forget_password.dart';
 import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/account/register.dart';
-import 'package:My_Day_app/home.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/account_request/login.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -41,16 +44,14 @@ class _Login extends State {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.05;
-    double _listB = _height * 0.18;
-    double _borderRadius = _height * 0.01;
-    double _bottomHeight = _height * 0.06;
-    double _titleSize = _height * 0.025;
-    double _appBarSize = _width * 0.052;
+    double _listLR = _sizing.height(5);
+    double _listB = _sizing.height(18);
+    double _borderRadius = _sizing.height(1);
+    double _bottomHeight = _sizing.height(6);
+    double _titleSize = _sizing.height(2.5);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _bule = Color(0xff7AAAD8);
     Color _color = Color(0xffF86D67);
@@ -97,7 +98,7 @@ class _Login extends State {
                               Container(
                                 margin: EdgeInsets.only(
                                   left: _listLR,
-                                  top: _height * 0.1,
+                                  top: _sizing.height(10),
                                   right: _listLR,
                                 ),
                                 child: ListTile(
@@ -107,9 +108,9 @@ class _Login extends State {
                               ),
                               Container(
                                 margin: EdgeInsets.only(
-                                  left: _height * 0.07,
-                                  top: _height * 0.0001,
-                                  right: _height * 0.07,
+                                  left: _sizing.height(7),
+                                  top: _sizing.height(0.01),
+                                  right: _sizing.height(7),
                                 ),
                                 child: TextField(
                                   controller: myuid,
@@ -118,8 +119,8 @@ class _Login extends State {
                                     filled: true,
                                     isCollapsed: true,
                                     contentPadding: EdgeInsets.symmetric(
-                                        horizontal: _height * 0.015,
-                                        vertical: _height * 0.015),
+                                        horizontal: _sizing.height(1.5),
+                                        vertical: _sizing.height(1.5)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(
@@ -132,7 +133,7 @@ class _Login extends State {
                               Container(
                                 margin: EdgeInsets.only(
                                   left: _listLR,
-                                  top: _height * 0.02,
+                                  top: _sizing.height(2),
                                   right: _listLR,
                                 ),
                                 child: ListTile(
@@ -142,9 +143,9 @@ class _Login extends State {
                               ),
                               Container(
                                 margin: EdgeInsets.only(
-                                  left: _height * 0.07,
-                                  top: _height * 0.0001,
-                                  right: _height * 0.07,
+                                  left: _sizing.height(7),
+                                  top: _sizing.height(0.01),
+                                  right: _sizing.height(7),
                                 ),
                                 child: TextField(
                                   controller: mypw,
@@ -154,8 +155,8 @@ class _Login extends State {
                                     filled: true,
                                     isCollapsed: true,
                                     contentPadding: EdgeInsets.symmetric(
-                                        horizontal: _height * 0.015,
-                                        vertical: _height * 0.015),
+                                        horizontal: _sizing.height(1.5),
+                                        vertical: _sizing.height(1.5)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(
@@ -167,9 +168,9 @@ class _Login extends State {
                               ),
                               Container(
                                 margin: EdgeInsets.only(
-                                  left: _height * 0.07,
-                                  top: _height * 0.05,
-                                  right: _height * 0.07,
+                                  left: _sizing.height(7),
+                                  top: _sizing.height(5),
+                                  right: _sizing.height(7),
                                 ),
                                 child: SizedBox(
                                     height: _bottomHeight,
@@ -194,7 +195,7 @@ class _Login extends State {
                                                   await SharedPreferences
                                                       .getInstance();
                                               prefs.setString(
-                                                  'TestString_Key', myuid.text);
+                                                  'uid', myuid.text);
 
                                               Navigator.push(
                                                   context,
@@ -216,7 +217,6 @@ class _Login extends State {
                       bottomNavigationBar: Container(
                           child: Row(children: <Widget>[
                         Expanded(
-                          // ignore: deprecated_member_use
                           child: Container(
                             margin: EdgeInsets.only(
                               left: _listLR,
@@ -226,8 +226,8 @@ class _Login extends State {
                                 height: _bottomHeight,
                                 child: TextButton(
                                   child: Text('忘記密碼',
-                                      style:
-                                          TextStyle(fontSize: _height * 0.02)),
+                                      style: TextStyle(
+                                          fontSize: _sizing.height(2))),
                                   style: TextButton.styleFrom(
                                     primary: _color,
                                     shape: RoundedRectangleBorder(
@@ -236,7 +236,7 @@ class _Login extends State {
                                   onPressed: () async {
                                     SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
-                                    prefs.remove('TestString_Key');
+                                    prefs.remove('uid');
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -247,7 +247,6 @@ class _Login extends State {
                           ),
                         ),
                         Expanded(
-                          // ignore: deprecated_member_use
                           child: Container(
                             margin: EdgeInsets.only(
                               right: _listLR,
@@ -263,7 +262,8 @@ class _Login extends State {
                                   ),
                                   child: Text(
                                     '我要註冊',
-                                    style: TextStyle(fontSize: _height * 0.02),
+                                    style:
+                                        TextStyle(fontSize: _sizing.height(2)),
                                   ),
                                   onPressed: () {
                                     Navigator.push(

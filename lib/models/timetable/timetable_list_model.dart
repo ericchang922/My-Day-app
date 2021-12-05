@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final timetableListModel = timetableListModelFromJson(jsonString);
-
 import 'dart:convert';
 
 TimetableListModel timetableListModelFromJson(String str) => TimetableListModel.fromJson(json.decode(str));

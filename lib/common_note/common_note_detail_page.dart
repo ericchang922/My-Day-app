@@ -1,7 +1,10 @@
-import 'package:My_Day_app/models/note/get_note_model.dart';
-import 'package:My_Day_app/public/getImage.dart';
-import 'package:My_Day_app/public/note_request/get.dart';
 import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/public/getImage.dart';
+import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/note_request/get.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class CommonNoteDetailPage extends StatefulWidget {
   int noteNum;
@@ -17,20 +20,23 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage> {
 
   GetNoteModel _getNote;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getNoteRequest();
+  }
 
   @override
   void initState() {
     super.initState();
-    _getNoteRequest();
+    _uid();
   }
 
   _getNoteRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_note.json');
-    // var responseBody = json.decode(response);
-    // var _request = GetNoteModel.fromJson(responseBody);
-
-    GetNoteModel _request = await Get(uid: uid, noteNum: noteNum).getData();
+    GetNoteModel _request =
+        await Get(context: context, uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _getNote = _request;
@@ -39,12 +45,10 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _leadingL = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
 

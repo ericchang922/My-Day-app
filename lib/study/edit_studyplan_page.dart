@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/studyplan_request/get.dart';
 import 'package:My_Day_app/study/studyplan_form.dart';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class EditStudyPlanPage extends StatefulWidget {
   int studyplanNum;
@@ -22,22 +22,24 @@ class _EditStudyPlanPage extends State<EditStudyPlanPage> {
 
   StudyplanModel _data;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getStudyPlanRequest();
+  }
 
   @override
   void initState() {
     super.initState();
-    _getStudyPlanRequest();
+    _uid();
   }
 
   _getStudyPlanRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_studyplan.json');
-    // var responseBody = json.decode(response);
-    // var _request = StudyplanModel.fromJson(responseBody);
-
     StudyplanModel _request =
-        await Get(uid: uid, studyplanNum: studyplanNum).getData();
+        await Get(context: context, uid: uid, studyplanNum: studyplanNum)
+            .getData();
 
     setState(() {
       _data = _request;

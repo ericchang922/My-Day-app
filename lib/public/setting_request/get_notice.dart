@@ -14,7 +14,7 @@ class GetNotice {
     _response = await request.getNoticeGet();
   }
 
-  GetNotice({this.uid}) {
+  GetNotice({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

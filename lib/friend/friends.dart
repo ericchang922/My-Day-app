@@ -1,16 +1,18 @@
+import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/friend/bestfriend.dart';
 import 'package:My_Day_app/friend/friend_home.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/friend/friends_invitation.dart';
-import 'package:My_Day_app/home/home_Update.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/friend_request/delete.dart';
 import 'package:My_Day_app/public/getImage.dart';
-import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class FriendPage extends StatefulWidget {
   @override
@@ -24,7 +26,7 @@ class _friendWidget extends State<FriendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String uid = prefs.getString('TestString_Key');
+  String uid = prefs.getString('uid');
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -32,7 +34,6 @@ class _friendWidget extends State<FriendPage> {
   List _filteredFriend = [];
   List _filteredBestFriend = [];
 
-  bool _isNotCreate = false;
   bool viewVisible = true;
 
   @override
@@ -64,10 +65,8 @@ class _friendWidget extends State<FriendPage> {
   }
 
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
-    BestFriendListModel _request = await BestFriendList(uid: uid).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -79,10 +78,8 @@ class _friendWidget extends State<FriendPage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
-    FriendListModel _request = await FriendList(uid: uid).getData();
+    FriendListModel _request =
+        await FriendList(context: context, uid: uid).getData();
 
     setState(() {
       _friendListModel = _request;
@@ -95,22 +92,11 @@ class _friendWidget extends State<FriendPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _titleSize = _height * 0.025;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _listPaddingH = _sizing.width(6);
 
-    double _pSize = _height * 0.023;
-
-    double _appBarSize = _width * 0.052;
-
-    Color _color = Theme.of(context).primaryColor;
-
-    Color _bule = Color(0xff7AAAD8);
+    double _pSize = _sizing.height(2.3);
 
     Widget friendListWidget;
 
@@ -131,36 +117,6 @@ class _friendWidget extends State<FriendPage> {
     }
 
     if (_friendListModel != null && _bestFriendListModel != null) {
-      Widget bestFriendList = ListView.separated(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: _bestFriendListModel.friend.length,
-        itemBuilder: (BuildContext context, int index) {
-          var friends = _bestFriendListModel.friend[index];
-          return ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-            leading: ClipOval(
-              child: _getImage.friend(friends.photo),
-            ),
-            title: Text(
-              friends.friendName,
-              style: TextStyle(fontSize: _pSize),
-            ),
-            trailing: TextButton(
-                style: TextButton.styleFrom(primary: Color(0xffF86D67)),
-                child: Text(
-                  '移除',
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                onPressed: () async {}),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider();
-        },
-      );
-
       Widget friendList = ListView.separated(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -208,29 +164,11 @@ class _friendWidget extends State<FriendPage> {
         if (_bestFriendListModel.friend.length != 0 &&
             _friendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              // bestFriendList,
-
-              friendList
-            ],
+            children: [friendList],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       left: _textL, bottom: _textBT, top: _textBT),
-              //   child: Text('摯友',
-              //       style: TextStyle(fontSize: _pSize, color: _bule)),
-              // ),
-              // bestFriendList
-            ],
+            children: [],
           );
         } else if (_friendListModel.friend.length != 0) {
           friendListWidget = ListView(
@@ -240,10 +178,8 @@ class _friendWidget extends State<FriendPage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName
@@ -262,25 +198,18 @@ class _friendWidget extends State<FriendPage> {
 
         if (_filteredBestFriend.length > 0 && _filteredFriend.length > 0) {
           friendListWidget = ListView(
-            children: [
-              // _buildSearchBestFriendList(context),
-              Divider(),
-              _buildSearchFriendList(context)
-            ],
+            children: [Divider(), _buildSearchFriendList(context)],
           );
         } else {
           friendListWidget = ListView(
             children: [
-              // if (_filteredBestFriend.length > 0)
-              //   _buildSearchBestFriendList(context),
               if (_filteredFriend.length > 0) _buildSearchFriendList(context)
             ],
           );
         }
       }
 
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -295,7 +224,7 @@ class _friendWidget extends State<FriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                bool action = await friendsAddDialog(context);
+                await friendsAddDialog(context);
               },
             ),
           ],
@@ -305,15 +234,14 @@ class _friendWidget extends State<FriendPage> {
           child: Column(
             children: [
               FriendsPageWidget(),
-              SizedBox(height: _height * 0.01),
+              SizedBox(height: _sizing.height(1)),
               Expanded(child: friendListWidget),
             ],
           ),
         )),
-      ));
+      );
     } else {
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text('好友', style: TextStyle(fontSize: _titleSize)),
@@ -327,7 +255,7 @@ class _friendWidget extends State<FriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                bool action = await friendsAddDialog(context);
+                await friendsAddDialog(context);
               },
             ),
           ],
@@ -336,17 +264,15 @@ class _friendWidget extends State<FriendPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      ));
+      );
     }
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     GetImage _getImage = GetImage(context);
 
@@ -382,12 +308,10 @@ class _friendWidget extends State<FriendPage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     GetImage _getImage = GetImage(context);
 
@@ -452,17 +376,15 @@ class _friendWidget extends State<FriendPage> {
 class FriendsPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _titleSize = _height * 0.025;
-    double _bottomHeight = _height * 0.07;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _bottomHeight = _sizing.height(7);
 
     return Container(
         child: Column(children: <Widget>[
       Container(
-        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
-        // ignore: deprecated_member_use
+        margin:
+            EdgeInsets.only(top: _sizing.height(1), left: _sizing.height(1.8)),
         child: SizedBox(
             height: _bottomHeight,
             width: double.infinity,
@@ -492,13 +414,13 @@ class FriendsPageWidget extends StatelessWidget {
             )),
       ),
       Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
+        margin: EdgeInsets.only(top: _sizing.height(0.1)),
         color: Color(0xffE3E3E3),
         constraints: BoxConstraints.expand(height: 1.0),
       ),
       Container(
-        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
-        // ignore: deprecated_member_use
+        margin:
+            EdgeInsets.only(top: _sizing.height(1), left: _sizing.height(1.8)),
         child: SizedBox(
             height: _bottomHeight,
             width: double.infinity,
@@ -530,7 +452,7 @@ class FriendsPageWidget extends StatelessWidget {
             )),
       ),
       Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
+        margin: EdgeInsets.only(top: _sizing.height(0.1)),
         color: Color(0xffE3E3E3),
         constraints: BoxConstraints.expand(height: 1.0),
       ),

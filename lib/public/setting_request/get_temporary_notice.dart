@@ -14,7 +14,7 @@ class GetTimetableNotice {
     _response = await request.getTimetableNoticeGet();
   }
 
-  GetTimetableNotice({this.uid}) {
+  GetTimetableNotice({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

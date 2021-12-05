@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final studyplanModel = studyplanModelFromJson(jsonString);
-
 import 'dart:convert';
 
 StudyplanModel studyplanModelFromJson(String str) => StudyplanModel.fromJson(json.decode(str));

@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/group/group_information_page.dart';
 import 'package:My_Day_app/group/group_manager_page.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class GroupSettingPage extends StatefulWidget {
   int groupNum;
@@ -13,42 +14,50 @@ class GroupSettingPage extends StatefulWidget {
 }
 
 class _GroupSettingWidget extends State<GroupSettingPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
   int groupNum;
   _GroupSettingWidget(this.groupNum);
-
-  String uid = 'lili123';
 
   bool _settingCheck = false;
 
   @override
+  void initState() {
+    super.initState();
+    _uid();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _width * 0.08;
+    double _leadingL = _sizing.height(2);
+    double _listPaddingH = _sizing.width(8);
 
-    double _appBarSize = _width * 0.052;
-    double _titleSize = _height * 0.025;
+    double _appBarSize = _sizing.width(5.2);
+    double _titleSize = _sizing.height(2.5);
 
     Color _lightGray = Color(0xffE3E3E3);
     Color _color = Theme.of(context).primaryColor;
 
     Widget settingItem = Container(
-      margin: EdgeInsets.only(top: _height * 0.01),
+      margin: EdgeInsets.only(top: _sizing.height(1)),
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         children: [
           ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: _width * 0.04, vertical: 0.0),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: _sizing.width(4), vertical: 0.0),
             title: Container(
-                margin: EdgeInsets.only(left: _width * 0.035),
+                margin: EdgeInsets.only(left: _sizing.width(3.5)),
                 child: Text('通知', style: TextStyle(fontSize: _titleSize))),
             trailing: Switch(
               value: _settingCheck,
-              activeColor:_color,
+              activeColor: _color,
               onChanged: (value) {
                 setState(() {
                   _settingCheck = value;

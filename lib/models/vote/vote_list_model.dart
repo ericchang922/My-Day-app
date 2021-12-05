@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final voteListModel = voteListModelFromJson(jsonString);
-
 import 'dart:convert';
 
 VoteListModel voteListModelFromJson(String str) => VoteListModel.fromJson(json.decode(str));

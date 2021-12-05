@@ -6,6 +6,8 @@ import 'package:My_Day_app/public/studyplan_request/personal_share_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class ShareStudyPlanPage extends StatefulWidget {
   int groupNum;
@@ -16,29 +18,32 @@ class ShareStudyPlanPage extends StatefulWidget {
 }
 
 class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _shareStudyPlanRequest();
+  }
+
   int groupNum;
   _ShareStudyPlanWidget(this.groupNum);
 
   PersonalShareStudyplanListModel _personalShareStudyPlanModel;
 
-  String uid = 'lili123';
   int studyplanNum;
   List _studyplanCheck = [];
 
   @override
   void initState() {
     super.initState();
-    _shareStudyPlanRequest();
+    _uid();
   }
 
   _shareStudyPlanRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/personal_share_studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = ShareStudyplanListModel.fromJson(responseBody);
-
     PersonalShareStudyplanListModel _request =
-        await PersonalShareList(uid: uid, shareStatus: 0).getData();
+        await PersonalShareList(context: context, uid: uid, shareStatus: 0)
+            .getData();
 
     setState(() {
       _personalShareStudyPlanModel = _request;
@@ -50,21 +55,18 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _heightSize = _height * 0.01;
-    double _widthSize = _width * 0.01;
-    double _leadingL = _height * 0.02;
-    double _textL = _height * 0.02;
-    double _subtitleT = _height * 0.008;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    double _heightSize = _sizing.height(1);
+    double _leadingL = _sizing.height(2);
+    double _textL = _sizing.height(2);
+    double _subtitleT = _sizing.height(0.8);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -150,11 +152,11 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                 },
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: _height * 0.01, bottom: _height * 0.01),
+                      top: _sizing.height(1), bottom: _sizing.height(1)),
                   child: Row(
                     children: [
                       SizedBox(
-                        width: _width * 0.18,
+                        width: _sizing.width(18),
                         child: Container(
                           margin: EdgeInsets.only(left: _leadingL),
                           child: Column(
@@ -168,7 +170,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                         ),
                       ),
                       SizedBox(
-                        width: _width * 0.7,
+                        width: _sizing.width(70),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

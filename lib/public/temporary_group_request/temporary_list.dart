@@ -15,7 +15,7 @@ class TemporaryList {
     _response = await request.getTemporaryGroupListGet();
   }
 
-  TemporaryList({this.uid}) {
+  TemporaryList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

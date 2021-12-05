@@ -15,7 +15,7 @@ class FriendList {
     _response = await request.getFriendListGet();
   }
 
-  FriendList({this.uid}) {
+  FriendList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

@@ -5,6 +5,8 @@ import 'package:My_Day_app/public/group_request/member_status.dart';
 import 'package:My_Day_app/public/temporary_group_request/get_invite.dart';
 import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class TemporaryGroupInvitePage extends StatefulWidget {
   int groupNum;
@@ -21,7 +23,14 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
 
   GetTemporaryGroupInviteModel _getTemporaryGroupInviteModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getTemporaryGroupInviteRequest();
+  }
+
   String _startTime = "";
   String _endTime = "";
 
@@ -31,7 +40,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
   @override
   void initState() {
     super.initState();
-    _getTemporaryGroupInviteRequest();
+    _uid();
   }
 
   String _dateFormat(dateTime) {
@@ -41,50 +50,46 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
   }
 
   _getTemporaryGroupInviteRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/get_temporary_group_invite.json');
-    // var responseBody = json.decode(response);
-
     GetTemporaryGroupInviteModel _request =
-        await GetInvite(uid: uid, groupNum: groupNum).getData();
-    setState(() {
-      // ignore: deprecated_member_use
-      _memberList = new List();
-      // ignore: deprecated_member_use
-      _inviteMemberList = new List();
+        await GetInvite(context: context, uid: uid, groupNum: groupNum)
+            .getData();
+    setState(
+      () {
+        _memberList = [];
+        _inviteMemberList = [];
 
-      _getTemporaryGroupInviteModel = _request;
-      _startTime = _dateFormat(_getTemporaryGroupInviteModel.startTime);
-      _endTime = _dateFormat(_getTemporaryGroupInviteModel.endTime);
+        _getTemporaryGroupInviteModel = _request;
+        _startTime = _dateFormat(_getTemporaryGroupInviteModel.startTime);
+        _endTime = _dateFormat(_getTemporaryGroupInviteModel.endTime);
 
-      for (int i = 0; i < _getTemporaryGroupInviteModel.member.length; i++) {
-        if (_getTemporaryGroupInviteModel.member[i].statusId == 2) {
-          _inviteMemberList.add(_getTemporaryGroupInviteModel.member[i]);
+        for (int i = 0; i < _getTemporaryGroupInviteModel.member.length; i++) {
+          if (_getTemporaryGroupInviteModel.member[i].statusId == 2) {
+            _inviteMemberList.add(_getTemporaryGroupInviteModel.member[i]);
+          }
+          if (_getTemporaryGroupInviteModel.member[i].statusId == 1 &&
+              _getTemporaryGroupInviteModel.member[i].memberName !=
+                  _getTemporaryGroupInviteModel.founderName) {
+            _memberList.add(_getTemporaryGroupInviteModel.member[i]);
+          }
         }
-        if (_getTemporaryGroupInviteModel.member[i].statusId == 1 &&
-            _getTemporaryGroupInviteModel.member[i].memberName !=
-                _getTemporaryGroupInviteModel.founderName) {
-          _memberList.add(_getTemporaryGroupInviteModel.member[i]);
-        }
-      }
-    });
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
+    double _listPaddingH = _sizing.width(6);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _leadingL = _sizing.height(2);
 
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
+    double _appBarSize = _sizing.width(5.2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -200,7 +205,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
       Widget groupInviteWidget = ListView(
         children: [
           SizedBox(
-            height: _height * 0.02,
+            height: _sizing.height(2),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -210,7 +215,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
             ],
           ),
           SizedBox(
-            height: _height * 0.015,
+            height: _sizing.height(1.5),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -220,7 +225,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
             ],
           ),
           SizedBox(
-            height: _height * 0.02,
+            height: _sizing.height(2),
           ),
           Divider(),
           memberlistWidget

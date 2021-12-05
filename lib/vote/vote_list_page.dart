@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/vote/vote_end_detail_page.dart';
@@ -8,6 +7,8 @@ import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
 import 'package:My_Day_app/models/vote/vote_list_model.dart';
 import 'package:My_Day_app/vote/vote_create_page.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class VoteListPage extends StatefulWidget {
   int groupNum;
@@ -18,13 +19,20 @@ class VoteListPage extends StatefulWidget {
 }
 
 class _VoteListWidget extends State<VoteListPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _voteListRequest();
+    await _voteEndListRequest();
+  }
+
   int groupNum;
   _VoteListWidget(this.groupNum);
 
   VoteListModel _voteListModel;
   VoteEndListModel _voteEndListModel;
-
-  String uid = 'lili123';
 
   Widget voteList;
   Widget voteEndList;
@@ -33,16 +41,12 @@ class _VoteListWidget extends State<VoteListPage> {
   @override
   void initState() {
     super.initState();
-    _voteListRequest();
-    _voteEndListRequest();
+    _uid();
   }
 
   _voteListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/vote_list.json');
-    // var responseBody = json.decode(response);
-
     VoteListModel _request =
-        await GetList(uid: uid, groupNum: groupNum).getData();
+        await GetList(context: context, uid: uid, groupNum: groupNum).getData();
 
     setState(() {
       _voteListModel = _request;
@@ -50,11 +54,9 @@ class _VoteListWidget extends State<VoteListPage> {
   }
 
   _voteEndListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/vote_end_list.json');
-    // var responseBody = json.decode(response);
-
     VoteEndListModel _request =
-        await GetEndList(uid: uid, groupNum: groupNum).getData();
+        await GetEndList(context: context, uid: uid, groupNum: groupNum)
+            .getData();
 
     setState(() {
       _voteEndListModel = _request;
@@ -63,17 +65,15 @@ class _VoteListWidget extends State<VoteListPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _tab = _height * 0.04683;
+    double _leadingL = _sizing.height(2);
+    double _tab = _sizing.height(4.683);
 
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _sizing.width(5.2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
 
     Color _yellow = Color(0xffEFB208);
     Color _color = Theme.of(context).primaryColor;
@@ -83,7 +83,7 @@ class _VoteListWidget extends State<VoteListPage> {
     _voteState(bool isVoteType, int voteNum) {
       if (isVoteType == false) {
         return Container(
-          margin: EdgeInsets.only(right: _height * 0.01),
+          margin: EdgeInsets.only(right: _sizing.height(1)),
           child: InkWell(
             child:
                 Text('投票', style: TextStyle(fontSize: _pSize, color: _color)),
@@ -106,7 +106,7 @@ class _VoteListWidget extends State<VoteListPage> {
             style: TextStyle(fontSize: _subtitleSize, color: _gray)));
       }
       return Container(
-        margin: EdgeInsets.only(top: _height * 0.005),
+        margin: EdgeInsets.only(top: _sizing.height(0.5)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -128,18 +128,19 @@ class _VoteListWidget extends State<VoteListPage> {
         voteList = noVote;
       } else {
         voteList = Container(
-          margin: EdgeInsets.only(top: _height * 0.01),
+          margin: EdgeInsets.only(top: _sizing.height(1)),
           child: ListView.separated(
               itemCount: _voteListModel.vote.length,
               itemBuilder: (BuildContext context, int index) {
                 var vote = _voteListModel.vote[index];
                 return ListTile(
                   contentPadding: EdgeInsets.symmetric(
-                      horizontal: _height * 0.04, vertical: _height * 0.008),
+                      horizontal: _sizing.height(4),
+                      vertical: _sizing.height(0.8)),
                   title:
                       Text(vote.title, style: TextStyle(fontSize: _titleSize)),
                   subtitle: Container(
-                      margin: EdgeInsets.only(top: _height * 0.005),
+                      margin: EdgeInsets.only(top: _sizing.height(0.5)),
                       child: Text("已有${vote.votersNum}人投票",
                           style: TextStyle(
                               fontSize: _subtitleSize, color: _gray))),
@@ -172,14 +173,15 @@ class _VoteListWidget extends State<VoteListPage> {
         voteEndList = noVote;
       } else {
         voteEndList = Container(
-          margin: EdgeInsets.only(top: _height * 0.01),
+          margin: EdgeInsets.only(top: _sizing.height(1)),
           child: ListView.separated(
               itemCount: _voteEndListModel.vote.length,
               itemBuilder: (BuildContext context, int index) {
                 var vote = _voteEndListModel.vote[index];
                 return ListTile(
                   contentPadding: EdgeInsets.symmetric(
-                      horizontal: _height * 0.04, vertical: _height * 0.008),
+                      horizontal: _sizing.height(4),
+                      vertical: _sizing.height(0.8)),
                   title:
                       Text(vote.title, style: TextStyle(fontSize: _titleSize)),
                   subtitle: _voteResult(index),
@@ -250,7 +252,7 @@ class _VoteListWidget extends State<VoteListPage> {
                 labelColor: Colors.white,
                 unselectedLabelColor: _lightGray,
                 indicatorPadding: EdgeInsets.all(0.0),
-                indicatorWeight: _width * 0.01,
+                indicatorWeight: _sizing.width(1),
                 labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
                 tabs: <Widget>[
                   Container(

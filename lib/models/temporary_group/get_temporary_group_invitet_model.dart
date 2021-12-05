@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getTemporaryGroupInvitetModel = getTemporaryGroupInvitetModelFromJson(jsonString);
-
 import 'dart:convert';
 
 GetTemporaryGroupInviteModel getTemporaryGroupInvitetModelFromJson(String str) => GetTemporaryGroupInviteModel.fromJson(json.decode(str));

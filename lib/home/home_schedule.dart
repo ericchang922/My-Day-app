@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 // my day
 import 'package:My_Day_app/public/type_color.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 Positioned homeSchedule(BuildContext context,
     {double top,
@@ -12,10 +13,9 @@ Positioned homeSchedule(BuildContext context,
     int scheduleNum,
     int typeId = 1,
     int count = 0}) {
-  Size _size = MediaQuery.of(context).size;
-  double _width = _size.width;
-  double _btnWidth = (_width / 8) * 0.26;
-  double btnRightPadding = (_width / 8) * 0.05;
+  Sizing _sizing = Sizing(context);
+  double _btnWidth = _sizing.width(12.5) * 0.26;
+  double btnRightPadding = _sizing.width(12.5) * 0.05;
   if (count >= 4) {
     _btnWidth -= btnRightPadding;
     btnRightPadding = 0;

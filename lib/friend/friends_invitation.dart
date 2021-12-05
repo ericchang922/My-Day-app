@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
 import 'package:My_Day_app/public/friend_request/add-friend-reply.dart';
 import 'package:My_Day_app/public/friend_request/make-friend-invite-list.dart';
-import 'package:My_Day_app/public/getImage.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class FriendInvitationPage extends StatefulWidget {
   @override
@@ -15,19 +18,24 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String id = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _makefriendinviteListRequest();
+    _friendNameControlloer();
+  }
 
   Map<String, dynamic> _friendCheck = {};
 
   List _filteredFriend = [];
 
-  bool _isNotCreate = false;
   bool viewVisible = true;
   @override
   void initState() {
     super.initState();
-    _makefriendinviteListRequest();
-    _friendNameControlloer();
+    _uid();
   }
 
   void _friendNameControlloer() {
@@ -51,11 +59,8 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
   }
 
   _makefriendinviteListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
     MakeFriendInviteListModel _request =
-        await MakeFriendInviteList(uid: id).getData();
+        await MakeFriendInviteList(context: context, uid: uid).getData();
 
     setState(() {
       _makefriendinviteListModel = _request;
@@ -68,29 +73,20 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _titleSize = _height * 0.025;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _widthSize = _width * 0.01;
-    double _pSize = _height * 0.023;
-
-    double _appBarSize = _width * 0.052;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _listPaddingH = _sizing.width(6);
+    double _widthSize = _sizing.width(1);
+    double _pSize = _sizing.height(2.3);
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
-    Color _bule = Color(0xff7AAAD8);
 
     Widget friendListWidget;
 
     GetImage _getImage = GetImage(context);
 
     _submitconfirm(String friendId) async {
-      String uid = id;
       var submitWidget;
       _submitWidgetfunc() async {
         return AddFriendReply(uid: uid, friendId: friendId, relationId: 1);
@@ -104,8 +100,6 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     }
 
     _submitcancel(String friendId) async {
-      String uid = id;
-
       var submitWidget;
       _submitWidgetfunc() async {
         return AddFriendReply(uid: uid, friendId: friendId, relationId: 5);
@@ -178,9 +172,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
           friendListWidget = Center(child: Text('目前沒有任何好友邀請!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredFriend = [];
 
         for (int i = 0; i < _makefriendinviteListModel.friend.length; i++) {
           if (_makefriendinviteListModel.friend[i].friendName
@@ -203,8 +195,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         }
       }
 
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -216,20 +207,21 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
             },
           ),
         ),
-        body: GestureDetector(
-            child: Container(
-          margin: EdgeInsets.only(top: _height * 0.02),
-          child: Column(
-            children: [
-              SizedBox(height: _height * 0.01),
-              Expanded(child: friendListWidget),
-            ],
-          ),
-        )),
-      ));
+        body: SafeArea(
+          child: GestureDetector(
+              child: Container(
+            margin: EdgeInsets.only(top: _sizing.height(2)),
+            child: Column(
+              children: [
+                SizedBox(height: _sizing.height(1)),
+                Expanded(child: friendListWidget),
+              ],
+            ),
+          )),
+        ),
+      );
     } else {
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text('交友邀請', style: TextStyle(fontSize: _titleSize)),
@@ -244,25 +236,22 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
           bottom: false,
           child: Center(child: CircularProgressIndicator()),
         ),
-      ));
+      );
     }
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _widthSize = _width * 0.01;
-    double _pSize = _height * 0.023;
+    Sizing _sizing = Sizing(context);
+    double _widthSize = _sizing.width(1);
+    double _pSize = _sizing.height(2.3);
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
-    double _listPaddingH = _width * 0.06;
+    double _listPaddingH = _sizing.width(6);
 
     GetImage _getImage = GetImage(context);
 
     _submitconfirm(String friendId) async {
-      String uid = id;
       var submitWidget;
       _submitWidgetfunc() async {
         return AddFriendReply(uid: uid, friendId: friendId, relationId: 1);
@@ -276,8 +265,6 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     }
 
     _submitcancel(String friendId) async {
-      String uid = id;
-
       var submitWidget;
       _submitWidgetfunc() async {
         return AddFriendReply(uid: uid, friendId: friendId, relationId: 5);

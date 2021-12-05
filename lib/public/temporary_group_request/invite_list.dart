@@ -15,7 +15,7 @@ class InviteList {
     _response = await request.getTemporaryGroupInviteListGet();
   }
 
-  InviteList({this.uid}) {
+  InviteList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 
