@@ -72,8 +72,10 @@ class _ScheduleForm extends State<ScheduleForm> {
   Map _submitMap = {'create_new': 1, 'edit': 2};
   int _type;
 
-  DateTime _startDateTime = DateTime.now();
-  DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
+  DateTime _startDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
+  DateTime _endDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 9, 0);
   Duration _remindTime;
   String _title;
   String _location;
@@ -116,7 +118,9 @@ class _ScheduleForm extends State<ScheduleForm> {
     _titleController.text = _title;
     _locationController.text = _location;
     _remarkController.text = _remark;
-    if (_startDateTime == null) _startDateTime = DateTime.now();
+    if (_startDateTime == null)
+      _startDateTime = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day + 1, 8, 0);
     if (_endDateTime == null)
       _endDateTime = DateTime.now().add(Duration(hours: 1));
     if (_remindTimeList == null) _remindTimeList = [];
@@ -300,6 +304,11 @@ class _ScheduleForm extends State<ScheduleForm> {
     }
 
     void _datePicker(contex, isStart) {
+      DateTime _date;
+      if (isStart)
+        _date = _startDateTime;
+      else
+        _date = _endDateTime;
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
@@ -320,12 +329,13 @@ class _ScheduleForm extends State<ScheduleForm> {
                 height: _height * 0.28,
                 child: CupertinoDatePicker(
                   mode: _mode(),
-                  initialDateTime: DateTime.now(),
+                  initialDateTime: _date,
                   onDateTimeChanged: (value) => setState(() {
-                    if (isStart)
+                    if (isStart) {
                       _startDateTime = value;
-                    else
+                    } else {
                       _endDateTime = value;
+                    }
                   }),
                 ),
               ),
@@ -419,14 +429,26 @@ class _ScheduleForm extends State<ScheduleForm> {
                         children: _totalWeekList,
                         onSelectedItemChanged: (int value) {
                           setState(() {
+                            DateTime _semesterStartDate = getMon(_semesterStart)
+                                .add(Duration(days: value * 7));
+                            _startDateTime = DateTime(
+                                _semesterStartDate.year,
+                                _semesterStartDate.month,
+                                _semesterStartDate.day,
+                                _startDateTime.hour,
+                                _startDateTime.minute,
+                                _startDateTime.second);
+                            _endDateTime = DateTime(
+                                _semesterStartDate.year,
+                                _semesterStartDate.month,
+                                _semesterStartDate.day,
+                                _endDateTime.hour,
+                                _endDateTime.minute,
+                                _endDateTime.second);
                             if (isStart) {
                               _startWeek = ConvertInt.toChineseWeek(value);
-                              _startDateTime = getMon(_semesterStart)
-                                  .add(Duration(days: value * 7));
                             } else {
                               _endWeek = ConvertInt.toChineseWeek(value);
-                              _endDateTime = getMon(_semesterStart)
-                                  .add(Duration(days: value * 7));
                             }
                           });
                         },
@@ -454,9 +476,18 @@ class _ScheduleForm extends State<ScheduleForm> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: _color))),
             cursorColor: _color,
-            controller: _titleController,
+            controller: TextEditingController.fromValue(TextEditingValue(
+                text: _titleController.text,
+                selection: TextSelection.fromPosition(TextPosition(
+                    affinity: TextAffinity.downstream,
+                    offset: _titleController.text.length)))),
             onSubmitted: (_) => FocusScope.of(context)
                 .requestFocus(FocusNode()), //按enter傳回空的focus
+            onChanged: (text) {
+              setState(() {
+                _title = text;
+              });
+            },
           ),
         ),
 
@@ -689,7 +720,12 @@ class _ScheduleForm extends State<ScheduleForm> {
                 Expanded(
                   flex: 8,
                   child: TextField(
-                    controller: _locationController,
+                    controller: TextEditingController.fromValue(
+                        TextEditingValue(
+                            text: _locationController.text,
+                            selection: TextSelection.fromPosition(TextPosition(
+                                affinity: TextAffinity.downstream,
+                                offset: _locationController.text.length)))),
                     style: TextStyle(fontSize: _h2Size),
                     decoration: InputDecoration(
                       hintText: '地點',
@@ -701,6 +737,11 @@ class _ScheduleForm extends State<ScheduleForm> {
                     cursorColor: _color,
                     onSubmitted: (_) =>
                         FocusScope.of(context).requestFocus(FocusNode()),
+                    onChanged: (text) {
+                      setState(() {
+                        _location = text;
+                      });
+                    },
                   ),
                 )
               ],
@@ -858,7 +899,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                           Navigator.pop(context,
                               GetList(context: context, uid: 'amy123'));
                         }
-                      }else{
+                      } else {
                         alert(context, '時間錯誤', '結束時間必須在開始時間之後');
                       }
                     },
