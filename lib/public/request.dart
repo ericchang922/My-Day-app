@@ -833,7 +833,7 @@ class Request {
   // not_share_list -------------------------------------------------------------------------------------
   notShareNoteList(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['not_share_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'notShareNoteList');
     if (_responseBody != null) {
       _notShareNoteList = NoteListModel.fromJson(_responseBody);
     }
