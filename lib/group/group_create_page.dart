@@ -9,6 +9,7 @@ import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/public/group_request/create_group.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
@@ -103,9 +104,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
+    Sizing _sizing = Sizing(context);
+    double _imgSize = _sizing.height(4.5);
     bool isGetImage;
 
     Image friendImage = Image.asset(
@@ -132,23 +132,21 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
+    double _listLR = _sizing.height(2);
+    double _textFied = _sizing.height(4.5);
+    double _borderRadius = _sizing.height(1);
+    double _iconWidth = _sizing.width(5);
+    double _listPaddingH = _sizing.width(6);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
 
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _pSize = _sizing.height(2.3);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -212,7 +210,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
         margin: EdgeInsets.only(
           left: _listLR,
           bottom: _listLR,
-          top: _height * 0.01,
+          top: _sizing.height(1),
           right: _listLR,
         ),
         child: Row(
@@ -225,7 +223,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
                   style: TextStyle(fontSize: _pSize),
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
-                          horizontal: _height * 0.01, vertical: _height * 0.01),
+                          horizontal: _sizing.height(1),
+                          vertical: _sizing.height(1)),
                       border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.all(Radius.circular(_borderRadius)),
@@ -251,20 +250,20 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
 
     Widget groupType = Container(
       margin:
-          EdgeInsets.only(left: size.height * 0.02, right: size.height * 0.02),
+          EdgeInsets.only(left: _sizing.height(2), right: _sizing.height(2)),
       child: Row(
         children: [
           Text('類別：', style: TextStyle(fontSize: _pSize)),
           Container(
             height: _textFied,
             padding:
-                EdgeInsets.symmetric(horizontal: _width * 0.02, vertical: 0),
+                EdgeInsets.symmetric(horizontal: _sizing.width(2), vertical: 0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(_borderRadius),
               border: Border.all(
                   color: _textFiedBorder,
                   style: BorderStyle.solid,
-                  width: _width * 0.0015),
+                  width: _sizing.width(0.15)),
             ),
             child: DropdownButton<String>(
               icon: Icon(
@@ -286,7 +285,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: _height * 0.01),
+                          margin: EdgeInsets.only(right: _sizing.height(1)),
                           child: CircleAvatar(
                               radius: _borderRadius,
                               backgroundColor: getTypeColor(
@@ -311,11 +310,11 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
           child: Text('選擇好友', style: TextStyle(fontSize: _pSize)),
         ),
         Container(
-          margin: EdgeInsets.only(right: _listLR, left: _height * 0.01),
+          margin: EdgeInsets.only(right: _listLR, left: _sizing.height(1)),
           child: Row(
             children: [
               Container(
-                margin: EdgeInsets.only(right: _height * 0.01),
+                margin: EdgeInsets.only(right: _sizing.height(1)),
                 child: IconButton(
                   icon: Image.asset(
                     'assets/images/search.png',
@@ -332,8 +331,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
                     decoration: InputDecoration(
                         hintText: '輸入好友名稱搜尋',
                         contentPadding: EdgeInsets.symmetric(
-                            horizontal: _height * 0.01,
-                            vertical: _height * 0.01),
+                            horizontal: _sizing.height(1),
+                            vertical: _sizing.height(1)),
                         border: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(_borderRadius)),
@@ -357,7 +356,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     );
 
     Widget checkAll = Container(
-      margin: EdgeInsets.only(right: _width * 0.05),
+      margin: EdgeInsets.only(right: _sizing.width(5)),
       alignment: Alignment.centerRight,
       child: InkWell(
         child: Text('全選', style: TextStyle(fontSize: _subtitleSize)),
@@ -584,14 +583,14 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
               child: Container(
                   color: Colors.white,
                   child: Container(
-                    margin: EdgeInsets.only(top: _height * 0.02),
+                    margin: EdgeInsets.only(top: _sizing.height(2)),
                     child: Column(
                       children: [
                         groupName,
                         groupType,
-                        SizedBox(height: _height * 0.01),
+                        SizedBox(height: _sizing.height(1)),
                         Divider(),
-                        SizedBox(height: _height * 0.01),
+                        SizedBox(height: _sizing.height(1)),
                         search,
                         checkAll,
                         Expanded(child: friendListWidget),
@@ -675,12 +674,10 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -726,12 +723,10 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     return ListView.separated(
       shrinkWrap: true,

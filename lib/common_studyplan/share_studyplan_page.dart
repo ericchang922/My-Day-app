@@ -1,4 +1,3 @@
-import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/alert.dart';
@@ -7,6 +6,8 @@ import 'package:My_Day_app/public/studyplan_request/personal_share_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class ShareStudyPlanPage extends StatefulWidget {
   int groupNum;
@@ -54,20 +55,18 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _heightSize = _height * 0.01;
-    double _leadingL = _height * 0.02;
-    double _textL = _height * 0.02;
-    double _subtitleT = _height * 0.008;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    double _heightSize = _sizing.height(1);
+    double _leadingL = _sizing.height(2);
+    double _textL = _sizing.height(2);
+    double _subtitleT = _sizing.height(0.8);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -142,7 +141,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                 contentPadding: EdgeInsets.symmetric(
                     horizontal: _heightSize, vertical: _heightSize),
                 leading: SizedBox(
-                  width: _width * 0.17,
+                  width: _sizing.width(17),
                   child: Container(
                       margin: EdgeInsets.only(left: _leadingL),
                       child: Column(
@@ -165,7 +164,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                       style: TextStyle(fontSize: _subtitleSize, color: _gray)),
                 ),
                 trailing: Container(
-                  margin: EdgeInsets.only(right: _height * 0.02),
+                  margin: EdgeInsets.only(right: _sizing.height(2)),
                   child: CustomerCheckBox(
                     value: _studyplanCheck[index],
                     onTap: (value) {

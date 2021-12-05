@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/friend/friends_privacy_settings.dart';
 import 'package:My_Day_app/setting/open_class_schedule.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -19,11 +20,9 @@ class Privacy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _appBarSize = _width * 0.052;
-    double _bottomHeight = _height * 0.07;
+    Sizing _sizing = Sizing(context);
+    double _appBarSize = _sizing.width(5.2);
+    double _bottomHeight = _sizing.height(7);
 
     return Scaffold(
       appBar: AppBar(
@@ -39,8 +38,8 @@ class Privacy extends StatelessWidget {
         child: ListView(
           children: <Widget>[
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -72,13 +71,13 @@ class Privacy extends StatelessWidget {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -111,7 +110,7 @@ class Privacy extends StatelessWidget {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),

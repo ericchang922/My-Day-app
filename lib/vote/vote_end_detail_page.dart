@@ -8,6 +8,7 @@ import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/vote_request/get.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class VoteEndDetailPage extends StatefulWidget {
   int voteNum;
@@ -100,18 +101,16 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _height * 0.04;
-    double _listPaddingV = _height * 0.02;
-    double _itemsSize = _height * 0.045;
+    double _leadingL = _sizing.height(2);
+    double _listPaddingH = _sizing.height(4);
+    double _listPaddingV = _sizing.height(2);
+    double _itemsSize = _sizing.height(4.5);
 
-    double _appBarSize = _width * 0.052;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _sizing.width(5.2);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
 
     Color _gray = Color(0xff959595);
     Color _color = Theme.of(context).primaryColor;
@@ -134,7 +133,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
         return PopupMenuButton<String>(
             offset: Offset(50, 50),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(_height * 0.01)),
+                borderRadius: BorderRadius.circular(_sizing.height(1))),
             icon: Icon(Icons.more_vert),
             itemBuilder: (context) => [
                   PopupMenuItem<String>(
@@ -163,7 +162,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
       Widget voteSetting = Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: _height * 0.04),
+            margin: EdgeInsets.only(top: _sizing.height(4)),
             child: Text(_getVoteModel.title,
                 style: TextStyle(fontSize: _appBarSize)),
           ),
@@ -171,7 +170,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.only(top: _height * 0.01),
+                margin: EdgeInsets.only(top: _sizing.height(1)),
                 child: Text("建立人：" + _getVoteModel.founderName,
                     style: TextStyle(fontSize: _subtitleSize, color: _gray)),
               ),
@@ -179,7 +178,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
                 visible: _visibleAnonymous,
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: _height * 0.01, left: _height * 0.05),
+                      top: _sizing.height(1), left: _sizing.height(5)),
                   child: Text("匿名投票",
                       style: TextStyle(fontSize: _subtitleSize, color: _gray)),
                 ),
@@ -189,13 +188,13 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
           Visibility(
             visible: _visibleDeadLine,
             child: Container(
-              margin: EdgeInsets.only(top: _height * 0.01),
+              margin: EdgeInsets.only(top: _sizing.height(1)),
               child: Text("截止日期：" + _deadLine,
                   style: TextStyle(fontSize: _subtitleSize, color: _gray)),
             ),
           ),
           Container(
-              margin: EdgeInsets.only(top: _height * 0.04),
+              margin: EdgeInsets.only(top: _sizing.height(4)),
               child: Divider(
                 height: 1,
               ))

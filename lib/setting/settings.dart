@@ -8,6 +8,7 @@ import 'package:My_Day_app/models/setting/get_location.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/setting_request/get_location.dart';
 import 'package:My_Day_app/public/setting_request/privacy_location.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/setting/notice.dart';
 import 'package:My_Day_app/setting/personal_information.dart';
 import 'package:My_Day_app/setting/privacy.dart';
@@ -60,11 +61,9 @@ class Settings extends State {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _appBarSize = _width * 0.052;
-    double _bottomHeight = _height * 0.07;
+    Sizing _sizing = Sizing(context);
+    double _appBarSize = _sizing.width(5.2);
+    double _bottomHeight = _sizing.height(7);
 
     _submit() async {
       PrivacyLocation privacyLocation =
@@ -88,8 +87,8 @@ class Settings extends State {
         child: ListView(
           children: <Widget>[
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -124,13 +123,13 @@ class Settings extends State {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -162,13 +161,13 @@ class Settings extends State {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -200,13 +199,13 @@ class Settings extends State {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -238,13 +237,13 @@ class Settings extends State {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -274,13 +273,13 @@ class Settings extends State {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -307,13 +306,13 @@ class Settings extends State {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -345,13 +344,13 @@ class Settings extends State {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+              margin: EdgeInsets.only(
+                  top: _sizing.height(1), left: _sizing.height(1.8)),
               child: SizedBox(
                   height: _bottomHeight,
                   width: double.infinity,
@@ -380,7 +379,7 @@ class Settings extends State {
                   )),
             ),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),

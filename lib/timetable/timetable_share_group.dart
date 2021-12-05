@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 import 'package:My_Day_app/public/group_request/group_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
-import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class TimetableShareGroupPage extends StatefulWidget {
   int timetableNo;
@@ -71,16 +72,14 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _listPaddingH = _width * 0.06;
-    double _iconWidth = _width * 0.05;
-    double _appBarSize = _width * 0.052;
-    double _titleSize = _height * 0.025;
-    double _typeSize = _width * 0.045;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
+    Sizing _sizing = Sizing(context);
+    double _listPaddingH = _sizing.width(6);
+    double _iconWidth = _sizing.width(5);
+    double _appBarSize = _sizing.width(5.2);
+    double _titleSize = _sizing.height(2.5);
+    double _typeSize = _sizing.width(4.5);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
 
     Color _light = Theme.of(context).primaryColorLight;
     Color _color = Theme.of(context).primaryColor;
@@ -151,7 +150,7 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
             body: Container(
                 color: Colors.white,
                 child: Container(
-                    margin: EdgeInsets.only(top: _height * 0.02),
+                    margin: EdgeInsets.only(top: _sizing.height(2)),
                     child: groupList)),
             bottomNavigationBar: Container(
               color: Theme.of(context).bottomAppBarColor,

@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/account/register_fail.dart';
 import 'package:My_Day_app/public/account_request/register.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -17,11 +19,9 @@ class RegisterPage extends StatefulWidget {
 class RegisterWidget extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _appBarSize = _width * 0.052;
-    double _leadingL = _height * 0.02;
+    Sizing _sizing = Sizing(context);
+    double _appBarSize = _sizing.width(5.2);
+    double _leadingL = _sizing.height(2);
 
     Color _color = Color(0xffF86D67);
 
@@ -70,24 +70,22 @@ class _Register extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.05;
-    double _listB = _height * 0.01;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _listLR = _sizing.height(5);
+    double _listB = _sizing.height(1);
+    double _textFied = _sizing.height(4.5);
+    double _borderRadius = _sizing.height(1);
+    double _iconWidth = _sizing.width(5);
+    double _listPaddingH = _sizing.width(6);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
+    double _titleSize = _sizing.height(2.5);
+    double _pSize = _sizing.height(2.3);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _bule = Color(0xff7AAAD8);
     Color _textFiedBorder = Color(0xff707070);
@@ -126,7 +124,7 @@ class _Register extends StatelessWidget {
                         margin: EdgeInsets.only(
                           left: _listLR,
                           bottom: _listB,
-                          top: _height * 0.05,
+                          top: _sizing.height(5),
                           right: _listLR,
                         ),
                         child: ListTile(
@@ -136,10 +134,10 @@ class _Register extends StatelessWidget {
                       ),
                       Container(
                         margin: EdgeInsets.only(
-                          left: _height * 0.07,
+                          left: _sizing.height(7),
                           bottom: _listB,
-                          top: _height * 0.0001,
-                          right: _height * 0.07,
+                          top: _sizing.height(0.01),
+                          right: _sizing.height(7),
                         ),
                         child: TextField(
                           controller: registeruid,
@@ -150,8 +148,8 @@ class _Register extends StatelessWidget {
                             filled: true,
                             isCollapsed: true,
                             contentPadding: EdgeInsets.symmetric(
-                                horizontal: _height * 0.015,
-                                vertical: _height * 0.015),
+                                horizontal: _sizing.height(1.5),
+                                vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
                                   Radius.circular(_borderRadius)), //设置边框四个角的弧度
@@ -173,10 +171,10 @@ class _Register extends StatelessWidget {
                       ),
                       Container(
                         margin: EdgeInsets.only(
-                          left: _height * 0.07,
+                          left: _sizing.height(7),
                           bottom: _listB,
-                          top: _height * 0.0001,
-                          right: _height * 0.07,
+                          top: _sizing.height(0.01),
+                          right: _sizing.height(7),
                         ),
                         child: TextField(
                           controller: registeruserName,
@@ -186,8 +184,8 @@ class _Register extends StatelessWidget {
                             filled: true,
                             isCollapsed: true,
                             contentPadding: EdgeInsets.symmetric(
-                                horizontal: _height * 0.015,
-                                vertical: _height * 0.015),
+                                horizontal: _sizing.height(1.5),
+                                vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
                                   Radius.circular(_borderRadius)), //设置边框四个角的弧度
@@ -209,10 +207,10 @@ class _Register extends StatelessWidget {
                       ),
                       Container(
                         margin: EdgeInsets.only(
-                          left: _height * 0.07,
+                          left: _sizing.height(7),
                           bottom: _listB,
-                          top: _height * 0.0001,
-                          right: _height * 0.07,
+                          top: _sizing.height(0.01),
+                          right: _sizing.height(7),
                         ),
                         child: TextField(
                           controller: registerpw,
@@ -222,8 +220,8 @@ class _Register extends StatelessWidget {
                             filled: true,
                             isCollapsed: true,
                             contentPadding: EdgeInsets.symmetric(
-                                horizontal: _height * 0.015,
-                                vertical: _height * 0.015),
+                                horizontal: _sizing.height(1.5),
+                                vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
                                   Radius.circular(_borderRadius)), //设置边框四个角的弧度
@@ -245,10 +243,10 @@ class _Register extends StatelessWidget {
                       ),
                       Container(
                         margin: EdgeInsets.only(
-                          left: _height * 0.07,
+                          left: _sizing.height(7),
                           bottom: _listB,
-                          top: _height * 0.0001,
-                          right: _height * 0.07,
+                          top: _sizing.height(0.01),
+                          right: _sizing.height(7),
                         ),
                         child: TextField(
                           controller: confirmpw,
@@ -258,8 +256,8 @@ class _Register extends StatelessWidget {
                             filled: true,
                             isCollapsed: true,
                             contentPadding: EdgeInsets.symmetric(
-                                horizontal: _height * 0.015,
-                                vertical: _height * 0.015),
+                                horizontal: _sizing.height(1.5),
+                                vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
                                   Radius.circular(_borderRadius)), //设置边框四个角的弧度

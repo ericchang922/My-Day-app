@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:My_Day_app/account/login.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/home.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences prefs;
 Future<void> main() async {

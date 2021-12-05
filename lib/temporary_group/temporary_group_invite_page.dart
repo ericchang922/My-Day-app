@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/public/group_request/member_status.dart';
-import 'package:My_Day_app/public/loadUid.dart';
-import 'package:My_Day_app/public/temporary_group_request/get_invite.dart';
-import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
+import 'package:My_Day_app/models/temporary_group/get_temporary_group_invitet_model.dart';
+import 'package:My_Day_app/public/group_request/member_status.dart';
+import 'package:My_Day_app/public/temporary_group_request/get_invite.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class TemporaryGroupInvitePage extends StatefulWidget {
   int groupNum;
@@ -77,9 +78,8 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
   }
 
   Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
+    Sizing _sizing = Sizing(context);
+    double _imgSize = _sizing.height(4.5);
     bool isGetImage;
 
     Image friendImage = Image.asset(
@@ -106,20 +106,18 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
+    double _listPaddingH = _sizing.width(6);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _leadingL = _sizing.height(2);
 
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
+    double _appBarSize = _sizing.width(5.2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -232,7 +230,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
       Widget groupInviteWidget = ListView(
         children: [
           SizedBox(
-            height: _height * 0.02,
+            height: _sizing.height(2),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -242,7 +240,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
             ],
           ),
           SizedBox(
-            height: _height * 0.015,
+            height: _sizing.height(1.5),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -252,7 +250,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
             ],
           ),
           SizedBox(
-            height: _height * 0.02,
+            height: _sizing.height(2),
           ),
           Divider(),
           memberlistWidget

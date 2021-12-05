@@ -1,9 +1,12 @@
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
 import 'package:My_Day_app/public/friend_request/add-friend-reply.dart';
 import 'package:My_Day_app/public/friend_request/make-friend-invite-list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class FriendInvitationPage extends StatefulWidget {
   @override
@@ -70,9 +73,8 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
   }
 
   Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
+    Sizing _sizing = Sizing(context);
+    double _imgSize = _sizing.height(4.5);
     bool isGetImage;
 
     Image friendImage = Image.asset(
@@ -99,13 +101,11 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _titleSize = _height * 0.025;
-    double _listPaddingH = _width * 0.06;
-    double _widthSize = _width * 0.01;
-    double _pSize = _height * 0.023;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _listPaddingH = _sizing.width(6);
+    double _widthSize = _sizing.width(1);
+    double _pSize = _sizing.height(2.3);
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
@@ -236,10 +236,10 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         body: SafeArea(
           child: GestureDetector(
               child: Container(
-            margin: EdgeInsets.only(top: _height * 0.02),
+            margin: EdgeInsets.only(top: _sizing.height(2)),
             child: Column(
               children: [
-                SizedBox(height: _height * 0.01),
+                SizedBox(height: _sizing.height(1)),
                 Expanded(child: friendListWidget),
               ],
             ),
@@ -267,15 +267,13 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _widthSize = _width * 0.01;
-    double _pSize = _height * 0.023;
+    Sizing _sizing = Sizing(context);
+    double _widthSize = _sizing.width(1);
+    double _pSize = _sizing.height(2.3);
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
-    double _listPaddingH = _width * 0.06;
+    double _listPaddingH = _sizing.width(6);
 
     _submitconfirm(String friendId) async {
       var submitWidget;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/public/account_request/change_pw.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 var primaryColor = Color(0xffF86D67);
 var primaryColorLight = Color(0xffFFAAA6);
@@ -14,11 +15,9 @@ class ChangepwPersonalPage extends StatefulWidget {
 class ChangepwPersonalWidget extends State<ChangepwPersonalPage> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _appBarSize = _width * 0.052;
-    double _leadingL = _height * 0.02;
+    Sizing _sizing = Sizing(context);
+    double _appBarSize = _sizing.width(5.2);
+    double _leadingL = _sizing.height(2);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -60,16 +59,14 @@ class _Changepw extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _uid();
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.05;
-    double _listB = _height * 0.01;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _bottomHeight = _height * 0.07;
-    double _titleSize = _height * 0.025;
+    double _listLR = _sizing.height(5);
+    double _listB = _sizing.height(1);
+    double _borderRadius = _sizing.height(1);
+    double _iconWidth = _sizing.width(5);
+    double _bottomHeight = _sizing.height(7);
+    double _titleSize = _sizing.height(2.5);
 
     Color _bule = Color(0xff7AAAD8);
 
@@ -104,7 +101,7 @@ class _Changepw extends StatelessWidget {
                     margin: EdgeInsets.only(
                       left: _listLR,
                       bottom: _listB,
-                      top: _height * 0.05,
+                      top: _sizing.height(5),
                       right: _listLR,
                     ),
                     child: ListTile(
@@ -114,10 +111,10 @@ class _Changepw extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      left: _height * 0.07,
+                      left: _sizing.height(7),
                       bottom: _listB,
-                      top: _height * 0.0001,
-                      right: _height * 0.07,
+                      top: _sizing.height(0.01),
+                      right: _sizing.height(7),
                     ),
                     child: TextField(
                       controller: newpw,
@@ -126,8 +123,8 @@ class _Changepw extends StatelessWidget {
                         filled: true,
                         isCollapsed: true,
                         contentPadding: EdgeInsets.symmetric(
-                            horizontal: _height * 0.015,
-                            vertical: _height * 0.015),
+                            horizontal: _sizing.height(1.5),
+                            vertical: _sizing.height(1.5)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                               Radius.circular(_borderRadius)), //设置边框四个角的弧度
@@ -140,7 +137,7 @@ class _Changepw extends StatelessWidget {
                     margin: EdgeInsets.only(
                       left: _listLR,
                       bottom: _listB,
-                      top: _height * 0.01,
+                      top: _sizing.height(1),
                       right: _listLR,
                     ),
                     child: ListTile(
@@ -150,10 +147,10 @@ class _Changepw extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      left: _height * 0.07,
+                      left: _sizing.height(7),
                       bottom: _listB,
-                      top: _height * 0.0005,
-                      right: _height * 0.07,
+                      top: _sizing.height(0.05),
+                      right: _sizing.height(7),
                     ),
                     child: TextField(
                       controller: confirmpw,
@@ -163,8 +160,8 @@ class _Changepw extends StatelessWidget {
                         filled: true,
                         isCollapsed: true,
                         contentPadding: EdgeInsets.symmetric(
-                            horizontal: _height * 0.015,
-                            vertical: _height * 0.015),
+                            horizontal: _sizing.height(1.5),
+                            vertical: _sizing.height(1.5)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                               Radius.circular(_borderRadius)), //设置边框四个角的弧度

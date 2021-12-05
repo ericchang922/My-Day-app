@@ -1,13 +1,15 @@
-import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/public/vote_request/edit.dart';
+import 'package:date_format/date_format.dart';
+
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
+import 'package:My_Day_app/public/vote_request/edit.dart';
 import 'package:My_Day_app/public/vote_request/get.dart';
-import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class VoteEditPage extends StatefulWidget {
   int voteNum;
@@ -129,18 +131,16 @@ class _VoteEditWidget extends State<VoteEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
+    
+    double _listTilePadding = _sizing.height(1.8);
+    double _textFied = _sizing.height(4.5);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
+    double _iconWidth = _sizing.width(5);
 
-    double _textFied = _height * 0.045;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-    double _listTilePadding = _height * 0.018;
-    double _iconWidth = _width * 0.05;
-
-    double _titleSize = _width * 0.06;
-    double _appBarSize = _width * 0.052;
+    double _titleSize = _sizing.width(6);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -230,7 +230,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -248,7 +248,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.dateAndTime,
                     initialDateTime: _deadLine,
@@ -273,7 +273,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -303,7 +303,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.dateAndTime,
                     initialDateTime: _dateTime,
@@ -321,7 +321,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
 
     if (_getVoteModel != null) {
       Widget editVoteItem = ListView.builder(
-        padding: EdgeInsets.only(bottom: _height * 0.03),
+        padding: EdgeInsets.only(bottom: _sizing.height(3)),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemCount: _voteValues.length,
@@ -332,19 +332,19 @@ class _VoteEditWidget extends State<VoteEditPage> {
               Row(
                 children: [
                   Container(
-                      padding: EdgeInsets.all(_height * 0.01),
-                      margin: EdgeInsets.only(top: _height * 0.03),
+                      padding: EdgeInsets.all(_sizing.height(1)),
+                      margin: EdgeInsets.only(top: _sizing.height(3)),
                       child: Text('${index + 1}.',
                           style: TextStyle(fontSize: _appBarSize))),
                   Flexible(
                     child: Container(
-                      margin: EdgeInsets.only(top: _height * 0.03),
+                      margin: EdgeInsets.only(top: _sizing.height(3)),
                       child: TextField(
                         controller: _voteItemController,
                         cursorColor: Colors.black,
                         style: TextStyle(fontSize: _appBarSize),
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(_width * 0.02),
+                          contentPadding: EdgeInsets.all(_sizing.width(2)),
                           hintText: '輸入選項',
                           hintStyle: TextStyle(
                               color: _hintGray, fontSize: _appBarSize),
@@ -378,7 +378,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
       );
 
       Widget editDateVoteItem = ListView.builder(
-        padding: EdgeInsets.only(bottom: _height * 0.03),
+        padding: EdgeInsets.only(bottom: _sizing.height(3)),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemCount: _voteValues.length,
@@ -389,20 +389,20 @@ class _VoteEditWidget extends State<VoteEditPage> {
               Row(
                 children: [
                   Container(
-                      padding: EdgeInsets.all(_height * 0.01),
-                      margin: EdgeInsets.only(top: _height * 0.03),
+                      padding: EdgeInsets.all(_sizing.height(1)),
+                      margin: EdgeInsets.only(top: _sizing.height(3)),
                       child: Text('${index + 1}.',
                           style: TextStyle(fontSize: _appBarSize))),
                   Flexible(
                     child: Container(
-                      margin: EdgeInsets.only(top: _height * 0.03),
+                      margin: EdgeInsets.only(top: _sizing.height(3)),
                       child: TextField(
                         focusNode: _contentFocusNode,
                         controller: _voteItemController,
                         cursorColor: Colors.black,
                         style: TextStyle(fontSize: _appBarSize),
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(_width * 0.02),
+                          contentPadding: EdgeInsets.all(_sizing.width(2)),
                           hintText: '選擇日期',
                           hintStyle: TextStyle(
                               color: _hintGray, fontSize: _appBarSize),
@@ -433,14 +433,16 @@ class _VoteEditWidget extends State<VoteEditPage> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(
-            top: _height * 0.03, right: _height * 0.05, left: _height * 0.05),
+            top: _sizing.height(3),
+            right: _sizing.height(5),
+            left: _sizing.height(5)),
         children: [
           TextField(
             controller: _voteTitleController,
             cursorColor: Colors.black,
             style: TextStyle(fontSize: _titleSize),
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(_width * 0.02),
+              contentPadding: EdgeInsets.all(_sizing.width(2)),
               hintText: '輸入投票問題',
               hintStyle: TextStyle(color: _hintGray, fontSize: _titleSize),
               enabledBorder: UnderlineInputBorder(
@@ -464,7 +466,9 @@ class _VoteEditWidget extends State<VoteEditPage> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(
-            top: _height * 0.02, right: _height * 0.06, left: _height * 0.06),
+            top: _sizing.height(2),
+            right: _sizing.height(6),
+            left: _sizing.height(6)),
         children: [
           ListTile(
             leading: CustomerCheckBox(
@@ -496,7 +500,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
           Visibility(
             visible: _visibleDeadLine,
             child: ListTile(
-              contentPadding: EdgeInsets.only(left: _height * 0.08),
+              contentPadding: EdgeInsets.only(left: _sizing.height(8)),
               title:
                   Text(_deadLineValue, style: TextStyle(fontSize: _appBarSize)),
               onTap: () {
@@ -578,22 +582,22 @@ class _VoteEditWidget extends State<VoteEditPage> {
             visible: _visibleChooseVoteQuantity,
             child: Container(
               margin: EdgeInsets.only(
-                  left: _height * 0.08, bottom: _height * 0.025),
+                  left: _sizing.height(8), bottom: _sizing.height(2.5)),
               child: Row(
                 children: [
                   Text("一人最多", style: TextStyle(fontSize: _appBarSize)),
                   Container(
                     margin: EdgeInsets.only(
-                        left: _height * 0.01, right: _height * 0.01),
+                        left: _sizing.height(1), right: _sizing.height(1)),
                     height: _textFied,
                     padding: EdgeInsets.symmetric(
-                        horizontal: _height * 0.007, vertical: 0),
+                        horizontal: _sizing.height(0.7), vertical: 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(
                           color: _textFiedBorder,
                           style: BorderStyle.solid,
-                          width: _width * 0.001),
+                          width: _sizing.width(0.1)),
                     ),
                     child: DropdownButton<String>(
                       icon: Icon(
@@ -614,7 +618,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                         return DropdownMenuItem<String>(
                             value: value,
                             child: Container(
-                                margin: EdgeInsets.only(left: _width * 0.02),
+                                margin: EdgeInsets.only(left: _sizing.width(2)),
                                 child: Text(value,
                                     style: TextStyle(fontSize: _appBarSize))));
                       }).toList(),

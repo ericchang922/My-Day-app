@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -36,10 +37,8 @@ class _ThemeWidget extends State<ThemeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _appBarSize = _width * 0.052;
+    Sizing _sizing = Sizing(context);
+    double _appBarSize = _sizing.width(5.2);
 
     return Scaffold(
       appBar: AppBar(
@@ -57,15 +56,15 @@ class _ThemeWidget extends State<ThemeWidget> {
           children: <Widget>[
             Container(
                 margin: EdgeInsets.only(
-                    top: _height * 0.01,
-                    right: _height * 0.028,
-                    left: _height * 0.018),
+                    top: _sizing.height(1),
+                    right: _sizing.height(2.8),
+                    left: _sizing.height(1.8)),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       TextButton.icon(
                         icon: Icon(Icons.circle_sharp,
-                            color: Color(0xffF86D67), size: _width * 0.1),
+                            color: Color(0xffF86D67), size: _sizing.width(10)),
                         label: Text(
                           '  活力紅',
                           style: TextStyle(
@@ -73,8 +72,8 @@ class _ThemeWidget extends State<ThemeWidget> {
                         ),
                       ),
                       SizedBox(
-                        height: _width * 0.1,
-                        width: _width * 0.05,
+                        height: _sizing.width(10),
+                        width: _sizing.width(5),
                         child: TextButton(
                             style: TextButton.styleFrom(
                               backgroundColor: _hasBeenPressed
@@ -98,21 +97,21 @@ class _ThemeWidget extends State<ThemeWidget> {
                       )
                     ])),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),
             Container(
                 margin: EdgeInsets.only(
-                    top: _height * 0.01,
-                    right: _height * 0.028,
-                    left: _height * 0.018),
+                    top: _sizing.height(1),
+                    right: _sizing.height(2.8),
+                    left: _sizing.height(1.8)),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       TextButton.icon(
                         icon: Icon(Icons.circle_sharp,
-                            color: Color(0xff29527A), size: _width * 0.1),
+                            color: Color(0xff29527A), size: _sizing.width(10)),
                         label: Text(
                           '  深夜藍',
                           style: TextStyle(
@@ -121,8 +120,8 @@ class _ThemeWidget extends State<ThemeWidget> {
                         onPressed: null,
                       ),
                       SizedBox(
-                          height: _width * 0.1,
-                          width: _width * 0.05,
+                          height: _sizing.width(10),
+                          width: _sizing.width(5),
                           child: TextButton(
                               child: Container(),
                               style: TextButton.styleFrom(
@@ -146,7 +145,7 @@ class _ThemeWidget extends State<ThemeWidget> {
                               }))
                     ])),
             Container(
-              margin: EdgeInsets.only(top: _height * 0.001),
+              margin: EdgeInsets.only(top: _sizing.height(0.1)),
               color: Color(0xffE3E3E3),
               constraints: BoxConstraints.expand(height: 1.0),
             ),

@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/timetable/timetable_import_share.dart';
 import 'package:My_Day_app/timetable/timetable_improt_choose.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -17,29 +19,18 @@ class TimetableReceive extends State<TimetableReceivePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
+    double _textFied = _sizing.height(4.5);
+    double _borderRadius = _sizing.height(1);
 
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _titleSize = _sizing.height(2.5);
+    double _pSize = _sizing.height(2.3);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
-    Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
-    Color _textFiedBorder = Color(0xff707070);
 
     return Scaffold(
         appBar: AppBar(
@@ -52,9 +43,9 @@ class TimetableReceive extends State<TimetableReceivePage> {
           onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
           child: Container(
             margin: EdgeInsets.only(
-                left: _height * 0.03,
-                top: _height * 0.02,
-                right: _height * 0.03),
+                left: _sizing.height(3),
+                top: _sizing.height(2),
+                right: _sizing.height(3)),
             child: Column(children: [
               Row(
                 children: [
@@ -65,13 +56,13 @@ class TimetableReceive extends State<TimetableReceivePage> {
                   Flexible(
                     child: Container(
                       height: _textFied,
-                      width: _width * 0.6,
+                      width: _sizing.width(60),
                       child: TextField(
                         style: TextStyle(fontSize: _pSize),
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
-                                horizontal: _height * 0.01,
-                                vertical: _height * 0.01),
+                                horizontal: _sizing.height(1),
+                                vertical: _sizing.height(1)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
                                   Radius.circular(_borderRadius)),
@@ -90,7 +81,7 @@ class TimetableReceive extends State<TimetableReceivePage> {
                       ),
                     ),
                   ),
-                  SizedBox(width: _width * 0.05),
+                  SizedBox(width: _sizing.width(5)),
                   InkWell(
                     child: Text("送出", style: TextStyle(fontSize: _pSize)),
                     onTap: () {
@@ -103,11 +94,11 @@ class TimetableReceive extends State<TimetableReceivePage> {
                   )
                 ],
               ),
-              SizedBox(height: _height * 0.025),
+              SizedBox(height: _sizing.height(2.5)),
               Expanded(
                 child: GridView.count(
-                  crossAxisSpacing: _width * 0.02,
-                  mainAxisSpacing: _width * 0.02,
+                  crossAxisSpacing: _sizing.width(2),
+                  mainAxisSpacing: _sizing.width(2),
                   crossAxisCount: 2,
                   children: List.generate(
                     10,
@@ -123,7 +114,7 @@ class TimetableReceive extends State<TimetableReceivePage> {
                                   '109學年',
                                   style: TextStyle(fontSize: _titleSize),
                                 ),
-                                SizedBox(height: _height * 0.025),
+                                SizedBox(height: _sizing.height(2.5)),
                                 Text(
                                   '第一學期',
                                   style: TextStyle(fontSize: _titleSize),

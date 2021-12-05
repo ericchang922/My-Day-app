@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/study/notes.dart';
 import 'package:My_Day_app/study/studyplan_list_page.dart';
 
 AppBar studyAppBar(context) {
-  Size size = MediaQuery.of(context).size;
-  double _width = size.width;
-  double _titleSize = _width * 0.052;
+  Sizing _sizing = Sizing(context);
+  double _titleSize = _sizing.width(5.2);
 
   Color _color = Theme.of(context).primaryColor;
 
@@ -37,18 +37,16 @@ class _StudyPage extends State<StudyPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.08;
+    double _listPaddingH = _sizing.width(8);
 
-    double _titleSize = _height * 0.025;
+    double _titleSize = _sizing.height(2.5);
 
     Color _lightGray = Color(0xffE3E3E3);
 
     Widget studyItem = Container(
-      margin: EdgeInsets.only(top: _height * 0.01),
+      margin: EdgeInsets.only(top: _sizing.height(1)),
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         children: [

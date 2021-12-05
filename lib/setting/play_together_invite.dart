@@ -8,6 +8,7 @@ import 'package:My_Day_app/models/setting/get_notice.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
 import 'package:My_Day_app/public/setting_request/get_notice.dart';
 import 'package:My_Day_app/public/setting_request/notice_temporary%20.dart';
@@ -123,9 +124,8 @@ class _friendWidget extends State<friendPage> {
   }
 
   Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
+    Sizing _sizing = Sizing(context);
+    double _imgSize = _sizing.height(4.5);
     bool isGetImage;
 
     Image friendImage = Image.asset(
@@ -152,13 +152,11 @@ class _friendWidget extends State<friendPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _appBarSize = _width * 0.052;
-    double _bottomHeight = _height * 0.07;
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    Sizing _sizing = Sizing(context);
+    double _appBarSize = _sizing.width(5.2);
+    double _bottomHeight = _sizing.height(7);
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     Widget friendListWidget;
 
@@ -314,9 +312,7 @@ class _friendWidget extends State<friendPage> {
       Widget playtogetherinvite = Column(children: <Widget>[
         Container(
           margin: EdgeInsets.only(
-              top: _height * 0.00,
-              right: _height * 0.018,
-              left: _height * 0.018),
+              top: 0, right: _sizing.height(1.8), left: _sizing.height(1.8)),
           child: SizedBox(
               height: _bottomHeight,
               width: double.infinity,
@@ -379,7 +375,7 @@ class _friendWidget extends State<friendPage> {
               )),
         ),
         Container(
-          margin: EdgeInsets.only(top: _height * 0.001),
+          margin: EdgeInsets.only(top: _sizing.height(0.1)),
           color: Color(0xffE3E3E3),
           constraints: BoxConstraints.expand(height: 1.0),
         ),
@@ -400,7 +396,7 @@ class _friendWidget extends State<friendPage> {
         body: SafeArea(
           child: GestureDetector(
               child: Container(
-            margin: EdgeInsets.only(top: _height * 0.02),
+            margin: EdgeInsets.only(top: _sizing.height(2)),
             child: Column(
               children: [
                 playtogetherinvite,
@@ -431,12 +427,10 @@ class _friendWidget extends State<friendPage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     _submitfriend(String friendId) async {
       bool isPublic = _isCheck;
@@ -490,12 +484,10 @@ class _friendWidget extends State<friendPage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     _submitfriend(String friendId) async {
       bool isPublic = _isCheck;

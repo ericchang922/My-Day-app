@@ -1,4 +1,3 @@
-import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/study/studyplan_detail_page.dart';
@@ -8,6 +7,8 @@ import 'package:My_Day_app/common_studyplan/share_studyplan_page.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/studyplan/common_studyplan_list_model.dart';
 import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class CommonStudyPlanListPage extends StatefulWidget {
   int groupNum;
@@ -68,23 +69,21 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _heightSize = _height * 0.01;
-    double _widthSize = _width * 0.01;
-    double _leadingL = _height * 0.02;
-    double _textL = _height * 0.03;
-    double _subtitleT = _height * 0.008;
-    double _tabH = _height * 0.04683;
-    double _listLR = _width * 0.06;
+    double _heightSize = _sizing.height(1);
+    double _widthSize = _sizing.width(1);
+    double _leadingL = _sizing.height(2);
+    double _textL = _sizing.height(3);
+    double _subtitleT = _sizing.height(0.8);
+    double _tabH = _sizing.height(4.683);
+    double _listLR = _sizing.width(6);
 
-    double _tabSize = _width * 0.041;
-    double _p2Size = _height * 0.02;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _tabSize = _sizing.width(4.1);
+    double _p2Size = _sizing.height(2);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
@@ -139,7 +138,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
         return PopupMenuButton(
           offset: Offset(-40, 0),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.01)),
+              borderRadius: BorderRadius.circular(_sizing.height(1))),
           itemBuilder: (context) {
             return [
               PopupMenuItem(
@@ -188,11 +187,11 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
                   },
                   child: Container(
                     margin: EdgeInsets.only(
-                        top: _height * 0.01, bottom: _height * 0.01),
+                        top: _sizing.height(1), bottom: _sizing.height(1)),
                     child: Row(
                       children: [
                         SizedBox(
-                          width: _width * 0.18,
+                          width: _sizing.width(18),
                           child: Container(
                             margin: EdgeInsets.only(left: _listLR),
                             child: Column(
@@ -206,7 +205,7 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
                           ),
                         ),
                         SizedBox(
-                          width: _width * 0.7,
+                          width: _sizing.width(70),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

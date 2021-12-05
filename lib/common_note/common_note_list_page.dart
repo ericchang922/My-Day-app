@@ -7,6 +7,7 @@ import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/public/note_request/cancel_share.dart';
 import 'package:My_Day_app/public/note_request/get_group_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class CommonNoteListPage extends StatefulWidget {
   int groupNum;
@@ -65,15 +66,13 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
+    double _leadingL = _sizing.height(2);
 
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
 
@@ -98,7 +97,7 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
         return PopupMenuButton(
           offset: Offset(-40, 0),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.01)),
+              borderRadius: BorderRadius.circular(_sizing.height(1))),
           itemBuilder: (context) {
             return [
               PopupMenuItem(
@@ -129,9 +128,10 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
               var note = _shareNoteListModel.note[index];
               return ListTile(
                 contentPadding: EdgeInsets.symmetric(
-                    horizontal: _height * 0.01, vertical: _height * 0.008),
+                    horizontal: _sizing.height(1),
+                    vertical: _sizing.height(0.8)),
                 title: Container(
-                  margin: EdgeInsets.only(left: _height * 0.03),
+                  margin: EdgeInsets.only(left: _sizing.height(3)),
                   child:
                       Text(note.title, style: TextStyle(fontSize: _titleSize)),
                 ),

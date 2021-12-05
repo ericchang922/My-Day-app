@@ -9,6 +9,7 @@ import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/create_new.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/study/note_fail.dart';
 
 class NotesEditPage extends StatefulWidget {
@@ -109,10 +110,9 @@ class _NotesEditPage extends State<NotesEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _iconWidth = _width * 0.05;
-    double _appBarSize = _width * 0.058;
+    Sizing _sizing = Sizing(context);
+    double _iconWidth = _sizing.width(5);
+    double _appBarSize = _sizing.width(5.8);
 
     _submit() async {
       String typeName = notetypeName.text;

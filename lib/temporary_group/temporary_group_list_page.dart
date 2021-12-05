@@ -1,19 +1,19 @@
-import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/group/group_detail_page.dart';
-import 'package:My_Day_app/public/temporary_group_request/invite_list.dart';
-import 'package:My_Day_app/public/temporary_group_request/temporary_list.dart';
 import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
-import 'package:My_Day_app/public/group_request/member_status.dart';
+import 'package:My_Day_app/group/group_detail_page.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_create_page.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_invite_page.dart';
+import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
+import 'package:My_Day_app/public/temporary_group_request/invite_list.dart';
+import 'package:My_Day_app/public/temporary_group_request/temporary_list.dart';
+import 'package:My_Day_app/public/group_request/member_status.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 AppBar temporaryGroupListAppBar(context) {
-  Size size = MediaQuery.of(context).size;
-  double _width = size.width;
-  double _titleSize = _width * 0.052;
+  Sizing _sizing = Sizing(context);
+  double _titleSize = _sizing.width(5.2);
 
   Color _color = Theme.of(context).primaryColor;
 
@@ -111,19 +111,17 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _listLR = _width * 0.06;
-    double _widthSize = _width * 0.01;
-    double _textL = _height * 0.02;
-    double _textBT = _height * 0.02;
-    double _subtitleT = _height * 0.005;
+    Sizing _sizing = Sizing(context);
+    double _listLR = _sizing.width(6);
+    double _widthSize = _sizing.width(1);
+    double _textL = _sizing.height(2);
+    double _textBT = _sizing.height(2);
+    double _subtitleT = _sizing.height(0.5);
 
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _typeSize = _width * 0.045;
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _typeSize = _sizing.width(4.5);
 
     Color _bule = Color(0xff7AAAD8);
     Color _gray = Color(0xff959595);
@@ -201,7 +199,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
                         Color(typeColor[temporaryContent.typeId - 1]),
                   ),
                   SizedBox(
-                    width: _width * 0.17,
+                    width: _sizing.width(17),
                     child: Container(
                       margin: EdgeInsets.only(left: _listLR),
                       child: Column(
@@ -313,7 +311,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
                   ),
                 ),
                 SizedBox(
-                  width: _width * 0.18,
+                  width: _sizing.width(18),
                   child: Container(
                     margin: EdgeInsets.only(left: _listLR),
                     child: Column(
@@ -375,7 +373,7 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
         );
       } else if (_temporaryGroupListModel.temporaryContent.length != 0) {
         groupListWiget = ListView(
-          padding: EdgeInsets.only(top: _width * 0.03),
+          padding: EdgeInsets.only(top: _sizing.width(3)),
           children: [groupList],
         );
       } else

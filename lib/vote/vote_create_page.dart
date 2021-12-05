@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:date_format/date_format.dart';
+
 import 'package:My_Day_app/vote/vote_setting_page.dart';
 import 'package:My_Day_app/public/alert.dart';
-
-import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class VoteCreatePage extends StatefulWidget {
   int groupNum;
@@ -78,18 +79,16 @@ class _VoteCreateWidget extends State<VoteCreatePage>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _textFied = _height * 0.045;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    double _textFied = _sizing.height(4.5);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
-    double _pSize = _height * 0.023;
-    double _titleSize = _width * 0.06;
-    double _appBarSize = _width * 0.052;
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.width(6);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -105,7 +104,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -129,7 +128,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.dateAndTime,
                     initialDateTime: _dateTime,
@@ -146,7 +145,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
     }
 
     Widget createVoteItem = ListView.builder(
-      padding: EdgeInsets.only(bottom: _height * 0.03),
+      padding: EdgeInsets.only(bottom: _sizing.height(3)),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: _voteValues.length,
@@ -157,26 +156,25 @@ class _VoteCreateWidget extends State<VoteCreatePage>
             Row(
               children: [
                 Container(
-                    padding: EdgeInsets.all(_height * 0.01),
-                    margin: EdgeInsets.only(top: _height * 0.03),
+                    padding: EdgeInsets.all(_sizing.height(1)),
+                    margin: EdgeInsets.only(top: _sizing.height(3)),
                     child: Text('${index + 1}.',
                         style: TextStyle(fontSize: _appBarSize))),
                 Flexible(
                   child: Container(
-                    margin: EdgeInsets.only(top: _height * 0.03),
+                    margin: EdgeInsets.only(top: _sizing.height(3)),
                     child: TextField(
-                      controller: TextEditingController.fromValue(TextEditingValue(
-                        text: _voteValues[index],
-                        selection: TextSelection.fromPosition(TextPosition(
-                          affinity: TextAffinity.downstream,
-                          offset: _voteValues[index].length
-                        ))
-                      )
-                      ),
+                      controller: TextEditingController.fromValue(
+                          TextEditingValue(
+                              text: _voteValues[index],
+                              selection: TextSelection.fromPosition(
+                                  TextPosition(
+                                      affinity: TextAffinity.downstream,
+                                      offset: _voteValues[index].length)))),
                       cursorColor: Colors.black,
                       style: TextStyle(fontSize: _appBarSize),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(_width * 0.02),
+                        contentPadding: EdgeInsets.all(_sizing.width(2)),
                         hintText: '輸入選項',
                         hintStyle:
                             TextStyle(color: _hintGray, fontSize: _appBarSize),
@@ -203,14 +201,16 @@ class _VoteCreateWidget extends State<VoteCreatePage>
 
     Widget createVote = ListView(
       padding: EdgeInsets.only(
-          top: _height * 0.03, right: _height * 0.05, left: _height * 0.05),
+          top: _sizing.height(3),
+          right: _sizing.height(5),
+          left: _sizing.height(5)),
       children: [
         TextField(
           controller: _voteTitleController,
           cursorColor: Colors.black,
           style: TextStyle(fontSize: _titleSize),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.all(_width * 0.02),
+            contentPadding: EdgeInsets.all(_sizing.width(2)),
             hintText: '輸入投票問題',
             hintStyle: TextStyle(color: _hintGray, fontSize: _titleSize),
             enabledBorder: UnderlineInputBorder(
@@ -226,7 +226,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
     );
 
     Widget createDateVoteItme = ListView.builder(
-      padding: EdgeInsets.only(bottom: _height * 0.03),
+      padding: EdgeInsets.only(bottom: _sizing.height(3)),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: _voteDateValues.length,
@@ -237,20 +237,20 @@ class _VoteCreateWidget extends State<VoteCreatePage>
             Row(
               children: [
                 Container(
-                    padding: EdgeInsets.all(_height * 0.01),
-                    margin: EdgeInsets.only(top: _height * 0.03),
+                    padding: EdgeInsets.all(_sizing.height(1)),
+                    margin: EdgeInsets.only(top: _sizing.height(3)),
                     child: Text('${index + 1}.',
                         style: TextStyle(fontSize: _appBarSize))),
                 Flexible(
                   child: Container(
-                    margin: EdgeInsets.only(top: _height * 0.03),
+                    margin: EdgeInsets.only(top: _sizing.height(3)),
                     child: TextField(
                       focusNode: _contentFocusNode,
                       controller: _voteDateItemController,
                       cursorColor: Colors.black,
                       style: TextStyle(fontSize: _appBarSize),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(_width * 0.02),
+                        contentPadding: EdgeInsets.all(_sizing.width(2)),
                         hintText: '選擇日期',
                         hintStyle:
                             TextStyle(color: _hintGray, fontSize: _appBarSize),
@@ -274,14 +274,16 @@ class _VoteCreateWidget extends State<VoteCreatePage>
 
     Widget createDateVote = ListView(
       padding: EdgeInsets.only(
-          top: _height * 0.03, right: _height * 0.05, left: _height * 0.05),
+          top: _sizing.height(3),
+          right: _sizing.height(5),
+          left: _sizing.height(5)),
       children: [
         TextField(
           controller: _voteDateTitleController,
           cursorColor: Colors.black,
           style: TextStyle(fontSize: _titleSize),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.all(_width * 0.02),
+            contentPadding: EdgeInsets.all(_sizing.width(2)),
             hintText: '輸入投票問題',
             hintStyle: TextStyle(color: _hintGray, fontSize: _titleSize),
             enabledBorder: UnderlineInputBorder(
@@ -325,7 +327,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                 labelColor: Colors.white,
                 unselectedLabelColor: _hintGray,
                 indicatorPadding: EdgeInsets.all(0.0),
-                indicatorWeight: _width * 0.01,
+                indicatorWeight: _sizing.width(1),
                 labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
                 tabs: <Widget>[
                   Container(

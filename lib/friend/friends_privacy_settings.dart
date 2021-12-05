@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
+import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
 import 'package:My_Day_app/public/setting_request/get_friend_privacy.dart';
-import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class FriendsPrivacySettingsPage extends StatefulWidget {
   @override
@@ -70,7 +71,6 @@ class _friendWidget extends State<friendPage> {
 
     setState(() {
       _friendprivacy = _request;
-      print(_friendprivacy);
     });
   }
 
@@ -115,9 +115,8 @@ class _friendWidget extends State<friendPage> {
   }
 
   Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
+    Sizing _sizing = Sizing(context);
+    double _imgSize = _sizing.height(4.5);
     bool isGetImage;
 
     Image friendImage = Image.asset(
@@ -144,13 +143,11 @@ class _friendWidget extends State<friendPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _titleSize = _height * 0.025;
-    double _listPaddingH = _width * 0.06;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _listPaddingH = _sizing.width(6);
 
-    double _pSize = _height * 0.023;
+    double _pSize = _sizing.height(2.3);
 
     Widget friendListWidget;
 
@@ -190,7 +187,7 @@ class _friendWidget extends State<friendPage> {
               trailing: PopupMenuButton<int>(
                   offset: Offset(0, 50),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(_height * 0.01)),
+                      borderRadius: BorderRadius.circular(_sizing.height(1))),
                   icon: Icon(Icons.more_vert),
                   itemBuilder: (context) => [
                         PopupMenuItem<int>(
@@ -276,7 +273,7 @@ class _friendWidget extends State<friendPage> {
             trailing: PopupMenuButton<int>(
                 offset: Offset(0, 50),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(_height * 0.01)),
+                    borderRadius: BorderRadius.circular(_sizing.height(1))),
                 icon: Icon(Icons.more_vert),
                 itemBuilder: (context) => [
                       PopupMenuItem<int>(
@@ -414,7 +411,7 @@ class _friendWidget extends State<friendPage> {
         body: SafeArea(
           child: GestureDetector(
               child: Container(
-            margin: EdgeInsets.only(top: _height * 0.02),
+            margin: EdgeInsets.only(top: _sizing.height(2)),
             child: Column(
               children: [
                 Expanded(child: friendListWidget),
@@ -444,12 +441,10 @@ class _friendWidget extends State<friendPage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     _submitfriend(String friendId) async {
       String uid = id;
@@ -486,7 +481,7 @@ class _friendWidget extends State<friendPage> {
           trailing: PopupMenuButton<int>(
               offset: Offset(0, 50),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(_height * 0.01)),
+                  borderRadius: BorderRadius.circular(_sizing.height(1))),
               icon: Icon(Icons.more_vert),
               itemBuilder: (context) => [
                     PopupMenuItem<int>(
@@ -556,12 +551,10 @@ class _friendWidget extends State<friendPage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     _submitfriend(String friendId) async {
       String uid = id;
@@ -598,7 +591,7 @@ class _friendWidget extends State<friendPage> {
             trailing: PopupMenuButton<int>(
                 offset: Offset(0, 50),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(_height * 0.01)),
+                    borderRadius: BorderRadius.circular(_sizing.height(1))),
                 icon: Icon(Icons.more_vert),
                 itemBuilder: (context) => [
                       PopupMenuItem<int>(

@@ -9,6 +9,7 @@ import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/public/schedule_request/common_list.dart';
 import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class CommonScheduleListPage extends StatefulWidget {
   int groupNum;
@@ -71,23 +72,21 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
   Widget build(BuildContext context) {
     double _fabDimension = 56.0;
 
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _heightSize = _height * 0.01;
-    double _widthSize = _width * 0.01;
-    double _leadingL = _height * 0.02;
-    double _textL = _height * 0.02;
-    double _subtitleT = _height * 0.008;
-    double _tabH = _height * 0.04683;
-    double _listLR = _width * 0.06;
+    double _heightSize = _sizing.height(1);
+    double _widthSize = _sizing.width(1);
+    double _leadingL = _sizing.height(2);
+    double _textL = _sizing.height(2);
+    double _subtitleT = _sizing.height(0.8);
+    double _tabH = _sizing.height(4.683);
+    double _listLR = _sizing.width(6);
 
-    double _tabSize = _width * 0.041;
-    double _p2Size = _height * 0.02;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _tabSize = _sizing.width(4.1);
+    double _p2Size = _sizing.height(2);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
@@ -151,11 +150,11 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
               },
               child: Container(
                 margin: EdgeInsets.only(
-                    top: _height * 0.01, bottom: _height * 0.01),
+                    top: _sizing.height(1), bottom: _sizing.height(1)),
                 child: Row(
                   children: [
                     SizedBox(
-                      width: _width * 0.18,
+                      width: _sizing.width(18),
                       child: Container(
                         margin: EdgeInsets.only(left: _listLR),
                         child: Column(
@@ -169,7 +168,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                       ),
                     ),
                     SizedBox(
-                      width: _width * 0.7,
+                      width: _sizing.width(70),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -244,11 +243,11 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
               },
               child: Container(
                 margin: EdgeInsets.only(
-                    top: _height * 0.01, bottom: _height * 0.01),
+                    top: _sizing.height(1), bottom: _sizing.height(1)),
                 child: Row(
                   children: [
                     SizedBox(
-                      width: _width * 0.18,
+                      width: _sizing.width(18),
                       child: Container(
                         margin: EdgeInsets.only(left: _listLR),
                         child: Column(
@@ -262,7 +261,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
                       ),
                     ),
                     SizedBox(
-                      width: _width * 0.7,
+                      width: _sizing.width(70),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

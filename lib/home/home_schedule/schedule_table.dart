@@ -1,11 +1,13 @@
 // flutter
-import 'package:My_Day_app/public/convert.dart';
-import 'package:My_Day_app/timetable/template/timetable_template.dart';
+
 import 'package:flutter/material.dart';
 // my day
 import 'package:My_Day_app/home/home_page_functions.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
+import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/timetable/template/timetable_template.dart';
 
 Map<String, int> weekDay = {
   '星期一': 1,
@@ -115,9 +117,7 @@ class _ScheduleTable extends State<ScheduleTable> {
     List<List<String>> sectionDataList = [];
     String semester;
 
-    Size _size = MediaQuery.of(context).size;
-    double _width = _size.width;
-    double _height = _size.height;
+    Sizing _sizing = Sizing(context);
 
     _addSectionInList(s) {
       if (sectionNumList.contains(s.section) != true) {

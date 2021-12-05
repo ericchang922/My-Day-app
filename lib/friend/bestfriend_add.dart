@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:My_Day_app/friend/friend_fail.dart';
 import 'package:My_Day_app/public/friend_request/add_best.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 Future<bool> bestfriendsAddDialog(BuildContext context) async {
   final fid = TextEditingController();
@@ -30,16 +31,16 @@ Future<bool> bestfriendsAddDialog(BuildContext context) async {
   return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        var screenSize = MediaQuery.of(context).size;
+        Sizing _sizing = Sizing(context);
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius:
-                  BorderRadius.all(Radius.circular(screenSize.height * 0.03))),
-          contentPadding: EdgeInsets.only(top: screenSize.height * 0.02),
+                  BorderRadius.all(Radius.circular(_sizing.height(3)))),
+          contentPadding: EdgeInsets.only(top: _sizing.height(2)),
           content: Container(
-            width: screenSize.width * 0.2,
-            height: screenSize.height * 0.2459,
+            width: _sizing.width(2),
+            height: _sizing.height(24.59),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,60 +57,56 @@ Future<bool> bestfriendsAddDialog(BuildContext context) async {
                         children: <Widget>[
                           Text(
                             "加摯友",
-                            style:
-                                TextStyle(fontSize: screenSize.width * 0.041),
+                            style: TextStyle(fontSize: _sizing.width(4.1)),
                             textAlign: TextAlign.center,
                           ),
                         ],
                       ),
                       Container(
                         margin: EdgeInsets.only(
-                            left: screenSize.height * 0.02,
-                            right: screenSize.height * 0.02,
-                            bottom: screenSize.height * 0.02,
-                            top: screenSize.height * 0.015),
+                            left: _sizing.height(2),
+                            right: _sizing.height(2),
+                            bottom: _sizing.height(2),
+                            top: _sizing.height(1.5)),
                         child: Row(
                           children: [
                             Image.asset(
                               'assets/images/search.png',
-                              width: screenSize.width * 0.05,
+                              width: _sizing.width(5),
                             ),
                             Container(
-                              margin: EdgeInsets.only(
-                                  left: screenSize.height * 0.01),
+                              margin:
+                                  EdgeInsets.only(left: _sizing.height(1)),
                               child: Text('摯友ID：',
                                   style: TextStyle(
-                                      fontSize: screenSize.width * 0.041)),
+                                      fontSize: _sizing.width(4.1))),
                             )
                           ],
                         ),
                       ),
                       Container(
-                          height: screenSize.height * 0.04683,
+                          height: _sizing.height(4.683),
                           margin: EdgeInsets.only(
-                            left: screenSize.height * 0.02,
-                            right: screenSize.height * 0.02,
-                            bottom: screenSize.height * 0.0384,
+                            left: _sizing.height(2),
+                            right: _sizing.height(2),
+                            bottom: _sizing.height(3.84),
                           ),
                           child: new TextField(
-                            style:
-                                TextStyle(fontSize: screenSize.width * 0.041),
+                            style: TextStyle(fontSize: _sizing.width(4.1)),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
-                                    horizontal: screenSize.height * 0.01,
-                                    vertical: screenSize.height * 0.01),
+                                    horizontal: _sizing.height(1),
+                                    vertical: _sizing.height(1)),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          screenSize.height * 0.01)),
+                                      Radius.circular(_sizing.height(1))),
                                   borderSide: BorderSide(
                                     color: Color(0xff070707),
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          screenSize.height * 0.01)),
+                                      Radius.circular(_sizing.height(1))),
                                   borderSide:
                                       BorderSide(color: Color(0xff7AAAD8)),
                                 )),
@@ -123,21 +120,21 @@ Future<bool> bestfriendsAddDialog(BuildContext context) async {
                     Expanded(
                       child: InkWell(
                         child: Container(
-                          height: screenSize.height * 0.06,
+                          height: _sizing.height(6),
                           padding: EdgeInsets.only(
-                              top: screenSize.height * 0.015,
-                              bottom: screenSize.height * 0.015),
+                              top: _sizing.height(1.5),
+                              bottom: _sizing.height(1.5)),
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColorLight,
                             borderRadius: BorderRadius.only(
                               bottomLeft:
-                                  Radius.circular(screenSize.height * 0.03),
+                                  Radius.circular(_sizing.height(3)),
                             ),
                           ),
                           child: Text(
                             "取消",
                             style: TextStyle(
-                                fontSize: screenSize.width * 0.035,
+                                fontSize: _sizing.width(3.5),
                                 color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
@@ -150,20 +147,20 @@ Future<bool> bestfriendsAddDialog(BuildContext context) async {
                     Expanded(
                       child: InkWell(
                         child: Container(
-                          height: screenSize.height * 0.06,
+                          height: _sizing.height(6),
                           padding: EdgeInsets.only(
-                              top: screenSize.height * 0.015,
-                              bottom: screenSize.height * 0.015),
+                              top: _sizing.height(1.5),
+                              bottom: _sizing.height(1.5)),
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.only(
                                 bottomRight:
-                                    Radius.circular(screenSize.height * 0.03)),
+                                    Radius.circular(_sizing.height(3))),
                           ),
                           child: Text(
                             "確認",
                             style: TextStyle(
-                                fontSize: screenSize.width * 0.035,
+                                fontSize: _sizing.width(3.5),
                                 color: Colors.white),
                             textAlign: TextAlign.center,
                           ),

@@ -8,6 +8,7 @@ import 'package:My_Day_app/public/note_request/get_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class ShareNotePage extends StatefulWidget {
   int groupNum;
@@ -71,16 +72,14 @@ class _ShareNoteWidget extends State<ShareNotePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
-    double _titleSize = _height * 0.025;
-    double _appBarSize = _width * 0.052;
+    double _titleSize = _sizing.height(2.5);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -128,9 +127,10 @@ class _ShareNoteWidget extends State<ShareNotePage> {
               var note = _noteListModel[index];
               return ListTile(
                 contentPadding: EdgeInsets.symmetric(
-                    horizontal: _height * 0.03, vertical: _height * 0.008),
+                    horizontal: _sizing.height(3),
+                    vertical: _sizing.height(0.8)),
                 title: Container(
-                  margin: EdgeInsets.only(left: _height * 0.01),
+                  margin: EdgeInsets.only(left: _sizing.height(1)),
                   child:
                       Text(note.title, style: TextStyle(fontSize: _titleSize)),
                 ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/sizing.dart';
+
 const PrimaryColor = const Color(0xFFF86D67);
 
 class ReadPlanChoose extends StatelessWidget {
@@ -25,9 +27,8 @@ class Theme extends State {
   bool hasBeenPressed = false;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _iconWidth = _width * 0.05;
+    Sizing _sizing = Sizing(context);
+    double _iconWidth = _sizing.width(5);
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(

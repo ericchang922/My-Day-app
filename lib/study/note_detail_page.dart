@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/delete.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/study/notes_edit.dart';
 
 class NoteDetailPage extends StatefulWidget {
@@ -98,12 +98,10 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _leadingL = _height * 0.02;
-    double _appBarSize = _width * 0.058;
-    double _subtitleSize = _height * 0.02;
+    Sizing _sizing = Sizing(context);
+    double _leadingL = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.8);
+    double _subtitleSize = _sizing.height(2);
 
     Color _color = Theme.of(context).primaryColor;
 
@@ -133,7 +131,7 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
       return PopupMenuButton<String>(
         offset: Offset(50, 50),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(_height * 0.01)),
+            borderRadius: BorderRadius.circular(_sizing.height(1))),
         icon: Icon(Icons.more_vert),
         itemBuilder: (context) => [
           PopupMenuItem<String>(
@@ -178,7 +176,7 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
               actions: [
                 Container(
                     alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: _height * 0.01),
+                    margin: EdgeInsets.only(top: _sizing.height(1)),
                     child: _studyplanAction())
               ],
             ),

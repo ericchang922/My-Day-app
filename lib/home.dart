@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
-import 'package:My_Day_app/study/study_page.dart';
 import 'package:My_Day_app/my_day_icon.dart';
+import 'package:My_Day_app/study/study_page.dart';
 import 'package:My_Day_app/group/group_list_page.dart';
 import 'package:My_Day_app/home/home_page.dart';
 import 'package:My_Day_app/home/home_Update.dart';
-
 import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -43,10 +43,9 @@ class _Home extends State<Home> {
       studyAppBar(context)
     ];
     Color color = Theme.of(context).primaryColor;
-    var size = MediaQuery.of(context).size;
-    double width = size.width;
-    double height = size.height;
-    double iconSize = height * 0.04;
+    Sizing _sizing = Sizing(context);
+
+    double iconSize = _sizing.height(4);
 
     return Container(
       color: color,
@@ -66,7 +65,7 @@ class _Home extends State<Home> {
               child: _pages[_index], // 頁面
             ),
             bottomNavigationBar: SizedBox(
-              height: height * 0.09,
+              height: _sizing.height(9),
               child: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
                 fixedColor: Colors.white,

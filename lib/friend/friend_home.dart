@@ -1,10 +1,11 @@
 // flutter
-import 'package:My_Day_app/friend/friend_home_page.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
 import 'package:My_Day_app/home/home_Update.dart';
+import 'package:My_Day_app/friend/friend_home_page.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class FriendHome extends StatefulWidget {
   String friendId;
@@ -32,10 +33,8 @@ class _FriendHome extends State<FriendHome> {
       FriendhomePageAppBar(context, nowMon, weekCount),
     ];
     Color color = Theme.of(context).primaryColor;
-    var size = MediaQuery.of(context).size;
-    double width = size.width;
-    double height = size.height;
-    double iconSize = height * 0.04;
+    Sizing _sizing = Sizing(context);
+    double iconSize = _sizing.height(4);
 
     return Container(
       color: color,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/group_request/setting_manager.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 
 class GroupManagerPage extends StatelessWidget {
@@ -13,11 +14,9 @@ class GroupManagerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _leadingL = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    Sizing _sizing = Sizing(context);
+    double _leadingL = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
 
@@ -107,9 +106,8 @@ class _GroupManagerState extends State<GroupManagerWidget> {
   }
 
   Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
+    Sizing _sizing = Sizing(context);
+    double _imgSize = _sizing.height(4.5);
     bool isGetImage;
 
     Image friendImage = Image.asset(
@@ -136,15 +134,13 @@ class _GroupManagerState extends State<GroupManagerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _listPaddingH = _width * 0.06;
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _listPaddingH = _sizing.width(6);
 
-    double _pSize = _height * 0.023;
+    double _pSize = _sizing.height(2.3);
 
     Color _bule = Color(0xff7AAAD8);
     Color _gray = Color(0xff959595);
@@ -280,7 +276,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
         managerWidget = ListView(
           children: [
             Container(
-                margin: EdgeInsets.only(top: _height * 0.02),
+                margin: EdgeInsets.only(top: _sizing.height(2)),
                 child: managerList)
           ],
         );
@@ -292,7 +288,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
         return ListView(
           children: [
             Container(
-                margin: EdgeInsets.only(top: _height * 0.02),
+                margin: EdgeInsets.only(top: _sizing.height(2)),
                 child: managerList)
           ],
         );

@@ -9,6 +9,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/create_new.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/study/note_fail.dart';
 
 class NotesAddPage extends StatefulWidget {
@@ -66,12 +67,10 @@ class _NotesAddPage extends State<NotesAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _iconWidth = _width * 0.05;
-    double _bottomHeight = _height * 0.07;
+    double _iconWidth = _sizing.width(5);
+    double _bottomHeight = _sizing.height(7);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;

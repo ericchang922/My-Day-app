@@ -1,18 +1,19 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/friend/bestfriend.dart';
 import 'package:My_Day_app/friend/friend_home.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/friend/friends_invitation.dart';
-import 'package:My_Day_app/home/home_Update.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/friend_request/delete.dart';
-
-import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class FriendPage extends StatefulWidget {
   @override
@@ -91,9 +92,8 @@ class _friendWidget extends State<FriendPage> {
   }
 
   Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
+    Sizing _sizing = Sizing(context);
+    double _imgSize = _sizing.height(4.5);
     bool isGetImage;
 
     Image friendImage = Image.asset(
@@ -120,13 +120,11 @@ class _friendWidget extends State<FriendPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _titleSize = _height * 0.025;
-    double _listPaddingH = _width * 0.06;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _listPaddingH = _sizing.width(6);
 
-    double _pSize = _height * 0.023;
+    double _pSize = _sizing.height(2.3);
 
     Widget friendListWidget;
     _submitDelete(String friendId) async {
@@ -261,7 +259,7 @@ class _friendWidget extends State<FriendPage> {
           child: Column(
             children: [
               FriendsPageWidget(),
-              SizedBox(height: _height * 0.01),
+              SizedBox(height: _sizing.height(1)),
               Expanded(child: friendListWidget),
             ],
           ),
@@ -296,12 +294,10 @@ class _friendWidget extends State<FriendPage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -335,12 +331,10 @@ class _friendWidget extends State<FriendPage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
     _submitDelete(String friendId) async {
       var submitWidget;
 
@@ -402,15 +396,15 @@ class _friendWidget extends State<FriendPage> {
 class FriendsPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _titleSize = _height * 0.025;
-    double _bottomHeight = _height * 0.07;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _bottomHeight = _sizing.height(7);
 
     return Container(
         child: Column(children: <Widget>[
       Container(
-        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+        margin:
+            EdgeInsets.only(top: _sizing.height(1), left: _sizing.height(1.8)),
         child: SizedBox(
             height: _bottomHeight,
             width: double.infinity,
@@ -440,12 +434,13 @@ class FriendsPageWidget extends StatelessWidget {
             )),
       ),
       Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
+        margin: EdgeInsets.only(top: _sizing.height(0.1)),
         color: Color(0xffE3E3E3),
         constraints: BoxConstraints.expand(height: 1.0),
       ),
       Container(
-        margin: EdgeInsets.only(top: _height * 0.01, left: _height * 0.018),
+        margin:
+            EdgeInsets.only(top: _sizing.height(1), left: _sizing.height(1.8)),
         child: SizedBox(
             height: _bottomHeight,
             width: double.infinity,
@@ -477,7 +472,7 @@ class FriendsPageWidget extends StatelessWidget {
             )),
       ),
       Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
+        margin: EdgeInsets.only(top: _sizing.height(0.1)),
         color: Color(0xffE3E3E3),
         constraints: BoxConstraints.expand(height: 1.0),
       ),

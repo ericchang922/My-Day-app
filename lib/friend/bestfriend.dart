@@ -8,6 +8,7 @@ import 'package:My_Day_app/public/friend_request/delete_best.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
@@ -94,9 +95,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
   }
 
   Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
+    Sizing _sizing = Sizing(context);
+    double _imgSize = _sizing.height(4.5);
     bool isGetImage;
 
     Image friendImage = Image.asset(
@@ -123,13 +123,11 @@ class _BestfriendWidget extends State<BestfriendPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
-    double _titleSize = _height * 0.025;
-    double _listPaddingH = _width * 0.06;
+    Sizing _sizing = Sizing(context);
+    double _titleSize = _sizing.height(2.5);
+    double _listPaddingH = _sizing.width(6);
 
-    double _pSize = _height * 0.023;
+    double _pSize = _sizing.height(2.3);
 
     Widget friendListWidget;
 
@@ -299,10 +297,10 @@ class _BestfriendWidget extends State<BestfriendPage> {
         body: SafeArea(
           child: GestureDetector(
               child: Container(
-            margin: EdgeInsets.only(top: _height * 0.02),
+            margin: EdgeInsets.only(top: _sizing.height(2)),
             child: Column(
               children: [
-                SizedBox(height: _height * 0.01),
+                SizedBox(height: _sizing.height(1)),
                 Expanded(child: friendListWidget),
               ],
             ),
@@ -338,12 +336,10 @@ class _BestfriendWidget extends State<BestfriendPage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     _submitDelete(String friendId) async {
       var submitWidget;
@@ -400,12 +396,10 @@ class _BestfriendWidget extends State<BestfriendPage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
 
     return ListView.separated(
       shrinkWrap: true,

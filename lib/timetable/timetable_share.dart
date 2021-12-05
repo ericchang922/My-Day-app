@@ -1,20 +1,20 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/timetable/timetable_share_friend.dart';
 import 'package:My_Day_app/timetable/timetable_share_group.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 Future<bool> timetableShare(
     BuildContext context, String sharecode, int timetableNo) async {
-  Size size = MediaQuery.of(context).size;
-  double _width = size.width;
-  double _height = size.height;
+  Sizing _sizing = Sizing(context);
 
-  double _borderRadius = _height * 0.03;
-  double _inkwellH = _height * 0.06;
+  double _borderRadius = _sizing.height(3);
+  double _inkwellH = _sizing.height(6);
 
-  double _pSize = _height * 0.023;
-  double _subtitleSize = _height * 0.02;
+  double _pSize = _sizing.height(2.3);
+  double _subtitleSize = _sizing.height(2);
 
-  double _iconSize = _height * 0.075;
+  double _iconSize = _sizing.height(7.5);
 
   Color _color = Theme.of(context).primaryColor;
   Color _light = Theme.of(context).primaryColorLight;
@@ -26,24 +26,24 @@ Future<bool> timetableShare(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
-          contentPadding: EdgeInsets.only(top: _height * 0.02),
+          contentPadding: EdgeInsets.only(top: _sizing.height(2)),
           content: Container(
-            width: _width * 0.2,
-            height: _height * 0.28,
+            width: _sizing.width(20),
+            height: _sizing.height(28),
             child: (ListView(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: _height * 0.01),
+                  margin: EdgeInsets.only(top: _sizing.height(1)),
                   child: Text(
                     "分享課表",
                     style: TextStyle(fontSize: _pSize),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(height: _height * 0.02),
+                SizedBox(height: _sizing.height(2)),
                 Container(
-                  margin:
-                      EdgeInsets.only(left: _width * 0.1, right: _width * 0.1),
+                  margin: EdgeInsets.only(
+                      left: _sizing.width(10), right: _sizing.width(10)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -73,13 +73,13 @@ Future<bool> timetableShare(
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: _width * 0.05),
+                  margin: EdgeInsets.only(left: _sizing.width(5)),
                   child: Text(
                     '分享碼',
-                    style: TextStyle(fontSize: _height * 0.02),
+                    style: TextStyle(fontSize: _sizing.height(2)),
                   ),
                 ),
-                SizedBox(height: _height * 0.005),
+                SizedBox(height: _sizing.height(0.5)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -87,22 +87,22 @@ Future<bool> timetableShare(
                       child: Container(
                         decoration: new BoxDecoration(
                           color: Color(0xffF8F8F8),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(_height * 0.01)),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(_sizing.height(1))),
                         ),
-                        margin: EdgeInsets.only(left: _width * 0.05),
+                        margin: EdgeInsets.only(left: _sizing.width(5)),
                         child: Padding(
-                          padding: EdgeInsets.all(_height * 0.01),
+                          padding: EdgeInsets.all(_sizing.height(1)),
                           child: Text(
                             'NoMz2onE',
-                            style: TextStyle(fontSize: _height * 0.02),
+                            style: TextStyle(fontSize: _sizing.height(2)),
                           ),
                         ),
                       ),
                     ),
                     IconButton(
                       icon: Image.asset('assets/images/copy.png'),
-                      iconSize: _height * 0.03,
+                      iconSize: _sizing.height(3),
                       onPressed: () {},
                     )
                   ],

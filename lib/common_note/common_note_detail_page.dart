@@ -6,6 +6,7 @@ import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class CommonNoteDetailPage extends StatefulWidget {
   int noteNum;
@@ -87,12 +88,10 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _leadingL = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
 

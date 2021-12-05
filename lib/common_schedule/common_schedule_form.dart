@@ -8,6 +8,7 @@ import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class CommonScheduleForm extends StatefulWidget {
   int groupNum;
@@ -99,24 +100,22 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
       _endDateTime = DateTime.now().add(Duration(hours: 1));
 
     // values ------------------------------------------------------------------------------------------
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    Sizing _sizing = Sizing(context);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
 
-    double _paddingLR = _width * 0.06;
-    double _listPaddingLR = _width * 0.1;
-    double _listItemHeight = _height * 0.08;
+    double _paddingLR = _sizing.width(6);
+    double _listPaddingLR = _sizing.width(10);
+    double _listItemHeight = _sizing.height(8);
 
-    double _iconSize = _height * 0.05;
-    double _h1Size = _height * 0.035;
-    double _h2Size = _height * 0.03;
-    double _pSize = _height * 0.025;
-    double _timeSize = _width * 0.045;
+    double _iconSize = _sizing.height(5);
+    double _h1Size = _sizing.height(3.5);
+    double _h2Size = _sizing.height(3);
+    double _pSize = _sizing.height(2.5);
+    double _timeSize = _sizing.width(4.5);
 
     String _startView = _allDay
         ? '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]}'
@@ -236,7 +235,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -250,7 +249,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                   mode: _mode(),
                   initialDateTime: _dateTime,
@@ -275,7 +274,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
         // text field ----------------------------------------------------------------------------- title
         Padding(
           padding: EdgeInsets.fromLTRB(
-              _paddingLR, _height * 0.03, _paddingLR, _height * 0.02),
+              _paddingLR, _sizing.height(3), _paddingLR, _sizing.height(2)),
           child: TextField(
             style: TextStyle(fontSize: _h1Size),
             decoration: InputDecoration(
@@ -369,7 +368,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
 
         // 分隔線
         Divider(
-          height: _height * 0.02,
+          height: _sizing.height(2),
           indent: _paddingLR,
           endIndent: _paddingLR,
           color: Colors.grey,
@@ -379,7 +378,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
         // dropdown buttn ------------------------------------------------------------------------- type
         Padding(
           padding: EdgeInsets.fromLTRB(
-              _listPaddingLR, size.height * 0.01, _listPaddingLR, 0),
+              _listPaddingLR, _sizing.height(1), _listPaddingLR, 0),
           child: Container(
             height: _listItemHeight,
             child: Row(
@@ -388,7 +387,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                   flex: 1,
                   child: Image.asset(
                     'assets/images/type.png',
-                    height: _height * 0.05,
+                    height: _sizing.height(5),
                   ),
                 ),
                 Expanded(
@@ -398,7 +397,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 Expanded(
                   flex: 7,
                   child: DropdownButton(
-                    itemHeight: _height * 0.1,
+                    itemHeight: _sizing.height(10),
                     hint: Text('類別',
                         style:
                             TextStyle(fontSize: _h2Size, color: Colors.grey)),
@@ -448,9 +447,9 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 Expanded(
                   flex: 1,
                   child: Container(
-                      height: _height * 0.025,
+                      height: _sizing.height(2.5),
                       child: CircleAvatar(
-                        radius: _height * 0.025,
+                        radius: _sizing.height(2.5),
                         backgroundColor: getTypeColor(_type),
                       )),
                 )

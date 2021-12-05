@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
-import 'package:My_Day_app/public/schedule_request/get_list.dart';
-import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:My_Day_app/home/home_schedule/schedule_table.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
 import 'package:My_Day_app/models/timetable/section_time_model.dart';
+import 'package:My_Day_app/public/schedule_request/get_list.dart';
+import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:My_Day_app/public/convert.dart';
 import 'package:My_Day_app/public/time_range.dart';
 import 'package:My_Day_app/public/timetable_request/get_section_time.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class FriendHomePage extends StatefulWidget {
   String friendId;
@@ -80,7 +81,6 @@ class _FriendHomePage extends State<FriendHomePage> {
             futureTimetableData: getTimetableData(),
             futureScheduleList: getScheduleList(),
           );
-          print(value);
         },
       ),
     );
@@ -89,13 +89,11 @@ class _FriendHomePage extends State<FriendHomePage> {
 
 AppBar FriendhomePageAppBar(context, DateTime nowMon, int weekCount) {
   Color color = Theme.of(context).primaryColor;
-  Size _size = MediaQuery.of(context).size;
-  double _height = _size.height;
-  double _width = _size.width;
-  double paddingWidth = _width * 0.05;
-  double _monthSize = _height * 0.023;
-  double _weekSize = _height * 0.015;
-  double _titleSize = _height * 0.025;
+  Sizing _sizing = Sizing(context);
+  double paddingWidth = _sizing.width(5);
+  double _monthSize = _sizing.height(2.3);
+  double _weekSize = _sizing.height(1.5);
+  double _titleSize = _sizing.height(2.5);
 
   List<Widget> showWeek(String s) {
     List<Widget> showWidget = [
@@ -236,7 +234,6 @@ class _FriendHomePageBody extends State<FriendHomePageBody> {
           });
         }
       }
-      print(sectionList);
     }
 
     pageList.insert(0, ScheduleTable());

@@ -1,17 +1,19 @@
 // flutter
-import 'package:My_Day_app/home/home_page_functions.dart';
-import 'package:My_Day_app/public/convert.dart';
-import 'package:My_Day_app/public/loadUid.dart';
-import 'package:My_Day_app/public/schedule_request/get_list.dart';
-import 'package:My_Day_app/public/type_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+// therd
+import 'package:localstorage/localstorage.dart';
 // my day
+import 'package:My_Day_app/schedule/remind_item.dart';
+import 'package:My_Day_app/home/home_page_functions.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/schedule_request/create_new.dart';
 import 'package:My_Day_app/public/schedule_request/edit.dart';
-import 'package:My_Day_app/schedule/remind_item.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:My_Day_app/public/schedule_request/get_list.dart';
+import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/type_color.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 List<String> weekdayName = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
 
@@ -129,28 +131,26 @@ class _ScheduleForm extends State<ScheduleForm> {
       _endDateTime = DateTime.now().add(Duration(hours: 1));
     if (_remindTimeList == null) _remindTimeList = [];
     // values ------------------------------------------------------------------------------------------
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    Sizing _sizing = Sizing(context);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
 
-    double _paddingLR = _width * 0.06;
-    double _paddingTB = _width * 0.03;
-    double _timePaddingLR = _width * 0.02; //時間選擇區域padding
-    double _listPaddingLR = _width * 0.1;
-    double _listItemHeight = _height * 0.08;
+    double _paddingLR = _sizing.width(6);
+    double _paddingTB = _sizing.width(3);
+    double _timePaddingLR = _sizing.width(2); //時間選擇區域padding
+    double _listPaddingLR = _sizing.width(10);
+    double _listItemHeight = _sizing.height(8);
 
-    double _iconSize = _height * 0.05;
-    double _h1Size = _height * 0.035;
-    double _h2Size = _height * 0.03;
-    double _pSize = _height * 0.025;
-    double _pickerTextSize = _height * 0.02;
-    double _weekSize = _width * 0.04; // 第幾週字體大小
-    double _timeSize = _width * 0.04;
+    double _iconSize = _sizing.height(5);
+    double _h1Size = _sizing.height(3.5);
+    double _h2Size = _sizing.height(3);
+    double _pSize = _sizing.height(2.5);
+    double _pickerTextSize = _sizing.height(2);
+    double _weekSize = _sizing.width(4); // 第幾週字體大小
+    double _timeSize = _sizing.width(4);
 
     String _startWeek = ConvertInt.toChineseWeek(
         getMon(_startDateTime).difference(getMon(_semesterStart)).inDays ~/ 7 +
@@ -310,7 +310,7 @@ class _ScheduleForm extends State<ScheduleForm> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -324,7 +324,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                   mode: _mode(),
                   initialDateTime: DateTime.now(),
@@ -347,7 +347,7 @@ class _ScheduleForm extends State<ScheduleForm> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -355,7 +355,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(_width * 0.03),
+                    padding: EdgeInsets.all(_sizing.width(3)),
                     child: Container(
                       child: Text('距離開始時間',
                           style: TextStyle(
@@ -403,7 +403,7 @@ class _ScheduleForm extends State<ScheduleForm> {
       showCupertinoModalPopup(
           context: context,
           builder: (_) => Container(
-                height: _height * 0.4,
+                height: _sizing.height(40),
                 color: Colors.white,
                 child: Column(
                   children: [
@@ -417,7 +417,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                       ),
                     ),
                     Container(
-                      height: _height * 0.28,
+                      height: _sizing.height(28),
                       child: CupertinoPicker(
                         backgroundColor: Colors.white,
                         itemExtent: 30,
@@ -450,7 +450,7 @@ class _ScheduleForm extends State<ScheduleForm> {
         // text field ----------------------------------------------------------------------------- title
         Padding(
           padding: EdgeInsets.fromLTRB(
-              _paddingLR, _height * 0.03, _paddingLR, _height * 0.02),
+              _paddingLR, _sizing.height(3), _paddingLR, _sizing.height(2)),
           child: TextField(
             style: TextStyle(fontSize: _h1Size),
             decoration: InputDecoration(
@@ -565,7 +565,7 @@ class _ScheduleForm extends State<ScheduleForm> {
 
         // 分隔線
         Divider(
-          height: _height * 0.02,
+          height: _sizing.height(2),
           indent: _paddingLR,
           endIndent: _paddingLR,
           color: Colors.grey,
@@ -575,9 +575,9 @@ class _ScheduleForm extends State<ScheduleForm> {
         // 個人
         Padding(
           padding: EdgeInsets.fromLTRB(
-              _paddingLR, _height * 0.02, _paddingLR * 13, 0),
+              _paddingLR, _sizing.height(2), _paddingLR * 13, 0),
           child: Container(
-            padding: EdgeInsets.all(_width * 0.013),
+            padding: EdgeInsets.all(_sizing.width(1.3)),
             child: Text(
               '個人',
               textAlign: TextAlign.center,
@@ -589,7 +589,7 @@ class _ScheduleForm extends State<ScheduleForm> {
             ),
             decoration: BoxDecoration(
                 border: Border.all(color: _color),
-                borderRadius: BorderRadius.circular(_width * 0.035)),
+                borderRadius: BorderRadius.circular(_sizing.width(3.5))),
           ),
         ),
 
@@ -604,7 +604,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                   flex: 1,
                   child: Image.asset(
                     'assets/images/type.png',
-                    height: _height * 0.05,
+                    height: _sizing.height(5),
                   ),
                 ),
                 Expanded(
@@ -614,7 +614,7 @@ class _ScheduleForm extends State<ScheduleForm> {
                 Expanded(
                   flex: 7,
                   child: DropdownButton(
-                    itemHeight: _height * 0.1,
+                    itemHeight: _sizing.height(10),
                     hint: Text('類別',
                         style:
                             TextStyle(fontSize: _h2Size, color: Colors.grey)),
@@ -664,9 +664,9 @@ class _ScheduleForm extends State<ScheduleForm> {
                 Expanded(
                   flex: 1,
                   child: Container(
-                      height: _height * 0.025,
+                      height: _sizing.height(2.5),
                       child: CircleAvatar(
-                        radius: _height * 0.025,
+                        radius: _sizing.height(2.5),
                         backgroundColor: getTypeColor(_type),
                       )),
                 )
@@ -862,8 +862,8 @@ class _ScheduleForm extends State<ScheduleForm> {
                     onPressed: () async {
                       if (_startDateTime.isBefore(_endDateTime)) {
                         if (await _submit() != true) {
-                          Navigator.pop(context,
-                              GetList(context: context, uid: _uid));
+                          Navigator.pop(
+                              context, GetList(context: context, uid: _uid));
                         }
                       } else {
                         alert(context, '時間錯誤', '結束時間必須在開始時間之後');
