@@ -131,7 +131,7 @@ class _friendWidget extends State<friendPage> {
       isGetImage = true;
     }, onError: (Object exception, StackTrace stackTrace) {
       isGetImage = false;
-      print('error');
+      print('friend_privacy_setting -- getImage error');
     }));
 
     if (isGetImage == null) {

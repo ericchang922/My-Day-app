@@ -10,7 +10,7 @@ class GetLocation {
 
   _request() async {
     Request request = Request();
-    await request.getlocation(context, data);
+    await request.getLocation(context, data);
     _response = await request.getLocationGet();
   }
 

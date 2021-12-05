@@ -74,7 +74,7 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
       isGetImage = true;
     }, onError: (Object exception, StackTrace stackTrace) {
       isGetImage = false;
-      print('error');
+      print('common_note_detail_page -- getImage error');
     }));
 
     if (isGetImage == null) {

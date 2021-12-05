@@ -116,7 +116,7 @@ class _GroupMemberWidget extends State<GroupMemberWidget> {
       isGetImage = true;
     }, onError: (Object exception, StackTrace stackTrace) {
       isGetImage = false;
-      print('error');
+      print('group_member_page --  error');
     }));
 
     if (isGetImage == null) {

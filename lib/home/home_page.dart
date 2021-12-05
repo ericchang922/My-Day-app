@@ -277,16 +277,12 @@ class _HomePageBody extends State<HomePageBody> {
       if (TimeRange(DateTime.now()).inTime(s.startDate, s.endDate)) {
         sectionList = [];
         for (var sub in s.subject) {
-          print('==========================================');
-          print('[${sub.startTime}, ${sub.endTime}]');
-          print('==========================================');
           sectionList.add({
             'start': ConvertDuration.toShortTime(sub.startTime),
             'end': ConvertDuration.toShortTime(sub.endTime)
           });
         }
       }
-      print(sectionList);
     }
 
     pageList.insert(0, ScheduleTable());

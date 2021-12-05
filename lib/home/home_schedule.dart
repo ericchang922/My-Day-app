@@ -37,7 +37,7 @@ Positioned homeSchedule(BuildContext context,
               backgroundColor:
                   MaterialStateProperty.all<Color>(typeColor(typeId))),
           onPressed: () {
-            print(scheduleNum);
+            print('home_schedule -- $scheduleNum');
           },
         ),
       ),

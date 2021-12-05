@@ -13,7 +13,7 @@ class ChangePw {
 
   _request() async {
     Request request = Request();
-    await request.changepw(context, data);
+    await request.changePw(context, data);
     this._isError = await request.getIsError();
   }
 

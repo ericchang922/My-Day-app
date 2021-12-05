@@ -10,7 +10,7 @@ class GetTimetable {
 
   _request() async {
     Request request = Request();
-    await request.gettimetable(context, data);
+    await request.getTimetable(context, data);
     _response = await request.getTimetableGet();
   }
 

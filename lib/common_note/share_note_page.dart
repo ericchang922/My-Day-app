@@ -94,13 +94,9 @@ class _ShareNoteWidget extends State<ShareNotePage> {
         await alert(context, _alertTitle, '請選擇一個要分享的筆記');
         return true;
       } else {
-        var submitWidget;
-        _submitWidgetfunc() async {
-          return Share(uid: uid, noteNum: noteNum, groupNum: groupNum);
-        }
+        Share share = Share(context: context , uid: uid, noteNum: noteNum, groupNum: groupNum);
 
-        submitWidget = await _submitWidgetfunc();
-        if (await submitWidget.getIsError())
+        if (await share.getIsError())
           return true;
         else
           return false;

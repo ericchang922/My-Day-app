@@ -122,7 +122,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
       isGetImage = true;
     }, onError: (Object exception, StackTrace stackTrace) {
       isGetImage = false;
-      print('error');
+      print('group_manager_page -- getImage: error');
     }));
 
     if (isGetImage == null) {

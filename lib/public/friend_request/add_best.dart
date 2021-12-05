@@ -14,7 +14,7 @@ class AddBestFriend {
 
   _request() async {
     Request request = Request();
-    await request.addBest(context, data);
+    await request.addBestFriend(context, data);
     this._isError = await request.getIsError();
   }
 

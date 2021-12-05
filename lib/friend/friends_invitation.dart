@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
 import 'package:My_Day_app/public/friend_request/add-friend-reply.dart';
-import 'package:My_Day_app/public/friend_request/make-friend-invite-list.dart';
+import 'package:My_Day_app/public/friend_request/make_friend_invite_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/sizing.dart';
 
@@ -89,7 +89,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
       isGetImage = true;
     }, onError: (Object exception, StackTrace stackTrace) {
       isGetImage = false;
-      print('error');
+      print('friends_invitation -- getImage error');
     }));
 
     if (isGetImage == null) {

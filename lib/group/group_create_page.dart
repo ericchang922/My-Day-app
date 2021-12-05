@@ -120,7 +120,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
       isGetImage = true;
     }, onError: (Object exception, StackTrace stackTrace) {
       isGetImage = false;
-      print('error');
+      print('group_create_page -- getImage error');
     }));
 
     if (isGetImage == null) {

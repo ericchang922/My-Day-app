@@ -64,7 +64,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     super.initState();
     _uid();
 
-    print(arguments['groupNum']);
+    print('group_detail_page -- groupNum: ${arguments['groupNum']}');
   }
 
   @override

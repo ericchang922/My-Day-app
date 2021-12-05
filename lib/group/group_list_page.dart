@@ -90,7 +90,7 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
 
     setState(() {
       _groupInviteListModel = _request;
-      print('邀約群組個數：${_groupInviteListModel.groupContent.length}');
+      print('group_list_page -- 邀約群組個數：${_groupInviteListModel.groupContent.length}');
     });
   }
 

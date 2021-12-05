@@ -14,7 +14,7 @@ class DeleteBestFriend {
 
   _request() async {
     Request request = Request();
-    await request.bestfrienddelete(context, data);
+    await request.bestFriendDelete(context, data);
     this._isError = await request.getIsError();
   }
 

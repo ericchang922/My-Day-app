@@ -2,7 +2,6 @@
 import 'dart:convert';
 // flutter
 import 'package:flutter/material.dart';
-
 // therd
 import 'package:http/http.dart' as http;
 // my day
@@ -285,6 +284,14 @@ class Request {
 
   getIsError() => _isError;
 
+  printRequest(String type, String str, var data) {
+    print(
+        '$type:  $str\n-------------------------------------------------------------------------');
+    print(data);
+    print(
+        '-------------------------------------------------------------------------');
+  }
+
   httpFunction(BuildContext context, dynamic response, String toastTxt) async {
     Map responseBody;
 
@@ -292,7 +299,11 @@ class Request {
       responseBody = json.decode(utf8.decode(response.bodyBytes));
     } catch (error) {
       _isError = true;
+      print(
+          'http error \n-------------------------------------------------------------------------');
       print('error: ${utf8.decode(response.bodyBytes)}');
+      print(
+          '-------------------------------------------------------------------------');
       await alert(context, '無法連線', '請檢查連線狀態或聯絡客服確認伺服器狀態');
     }
 
@@ -316,18 +327,25 @@ class Request {
       }
     }
 
+    print(
+        'http respons \n-------------------------------------------------------------------------');
     print('statusCode: ${response.statusCode}');
     print('body: ${utf8.decode(response.bodyBytes)}');
+    print(
+        '-------------------------------------------------------------------------');
   }
 
-  httpGet(BuildContext context, Map<String, String> data, String _url) async {
+  httpGet(BuildContext context, Map<String, String> data, String _url,
+      String requestName) async {
+    printRequest('Get', requestName, data);
     Uri _uri = Uri.http('myday.sytes.net', _url, data);
     dynamic response = await http.get(_uri, headers: headers);
     await httpFunction(context, response, null);
   }
 
   httpPost(BuildContext context, Map<String, dynamic> data, String _url,
-      String toastTxt) async {
+      String toastTxt, String requestName) async {
+    printRequest('Post', requestName, data);
     Uri _uri = Uri.parse(_url);
     dynamic response =
         await http.post(_uri, headers: headers, body: json.encode(data));
@@ -335,7 +353,8 @@ class Request {
   }
 
   httpPut(BuildContext context, Map<String, dynamic> data, String _url,
-      String toastTxt) async {
+      String toastTxt, String requestName) async {
+    printRequest('Put', requestName, data);
     Uri _uri = Uri.parse(_url);
     dynamic response =
         await http.put(_uri, headers: headers, body: json.encode(data));
@@ -343,7 +362,8 @@ class Request {
   }
 
   httpPatch(BuildContext context, Map<String, dynamic> data, String _url,
-      String toastTxt) async {
+      String toastTxt, String requestName) async {
+    printRequest('Patch', requestName, data);
     Uri _uri = Uri.parse(_url);
     dynamic response =
         await http.patch(_uri, headers: headers, body: json.encode(data));
@@ -351,7 +371,8 @@ class Request {
   }
 
   httpDelete(BuildContext context, Map<String, dynamic> data, String _url,
-      String toastTxt) async {
+      String toastTxt, String requestName) async {
+    printRequest('Delete', requestName, data);
     Uri _uri = Uri.parse(_url);
     dynamic response =
         await http.delete(_uri, headers: headers, body: json.encode(data));
@@ -361,34 +382,32 @@ class Request {
 // SCHEDULE ============================================================================================
 // create_new -------------------------------------------------------------------------------------
   scheduleCreateNew(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = scheduleUrl['create_new'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'scheduleCreateNew');
   }
 
 // edit -------------------------------------------------------------------------------------------
   scheduleEdit(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = scheduleUrl['edit'];
-    await httpPost(context, data, _url, '編輯成功');
+    await httpPost(context, data, _url, '編輯成功', 'scheduleEdit');
   }
 
 // delete -----------------------------------------------------------------------------------------
   scheduleDelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['delete'];
-    await httpPost(context, data, _url, '刪除成功');
+    await httpPost(context, data, _url, '刪除成功', 'scheduleDelete');
   }
 
 // create_common ----------------------------------------------------------------------------------
   scheduleCreateCommon(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['create_common'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'scheduleCreateCommon');
   }
 
 // get --------------------------------------------------------------------------------------------
   scheduleGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['get'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'scheduleGet');
     if (_responseBody != null) {
       _scheduleGet = ScheduleGet.fromJson(_responseBody);
     }
@@ -397,7 +416,7 @@ class Request {
 // get_list ---------------------------------------------------------------------------------------
   scheduleGetList(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['get_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'scheduleGetList');
     if (_responseBody != null) {
       _scheduleGetList = ScheduleGetList.fromJson(_responseBody);
     }
@@ -406,7 +425,7 @@ class Request {
 // get_common -------------------------------------------------------------------------------------
   scheduleGetCommon(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['get_common'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'scheduleGetCommon');
     if (_responseBody != null) {
       _commenSchedule = GetCommonScheduleModel.fromJson(_responseBody);
     }
@@ -415,7 +434,7 @@ class Request {
 // common_list ------------------------------------------------------------------------------------
   scheduleCommonList(BuildContext context, Map<String, dynamic> data) async {
     String _url = scheduleUrl['common_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'scheduleCommonList');
     if (_responseBody != null) {
       _commonScheduleList = CommonScheduleListModel.fromJson(_responseBody);
     }
@@ -425,7 +444,7 @@ class Request {
 // goup_list --------------------------------------------------------------------------------------
   groupList(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['group_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'groupList');
     if (_responseBody != null) {
       _groupList = GroupListModel.fromJson(_responseBody);
     }
@@ -434,7 +453,7 @@ class Request {
   // goup_invite_list -----------------------------------------------------------------------------
   groupInviteList(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['invite_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'groupInviteList');
     if (_responseBody != null) {
       _groupInviteList = GroupInviteListModel.fromJson(_responseBody);
     }
@@ -443,13 +462,13 @@ class Request {
   // group_create ---------------------------------------------------------------------------------
   groupCreate(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['create_group'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'groupCreate');
   }
 
   // group_invite_friend --------------------------------------------------------------------------
   groupInviteFriend(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['invite_friend'];
-    await httpPost(context, data, _url, '邀請成功');
+    await httpPost(context, data, _url, '邀請成功', 'groupInviteFriend');
   }
 
   // group_member_status --------------------------------------------------------------------------
@@ -459,13 +478,13 @@ class Request {
     if (data['statusId'] == 1)
       toastText = '加入成功';
     else if (data['statusId'] == 3) toastText = '拒絕成功';
-    await httpPatch(context, data, _url, toastText);
+    await httpPatch(context, data, _url, toastText, 'groupMemberStatus');
   }
 
   // group_get_log --------------------------------------------------------------------------------
   groupGetLog(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['get_log'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'groupGetLog');
     if (_responseBody != null) {
       _groupLog = GroupLogModel.fromJson(_responseBody);
     }
@@ -474,17 +493,17 @@ class Request {
   // group_invite_friend_list ---------------------------------------------------------------------
   groupInviteFriendList(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['invite_friend_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'groupInviteFriendList');
     if (_responseBody != null) {
       _groupInviteFriendList =
           GroupInviteFriendListModel.fromJson(_responseBody);
     }
   }
 
-  // group_get ----------------------------------------------------------------------------------------
+  // group_get ------------------------------------------------------------------------------------
   groupGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['get'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'groupGet');
     if (_responseBody != null) {
       _group = GetGroupModel.fromJson(_responseBody);
     }
@@ -493,7 +512,7 @@ class Request {
   // group_member_list ----------------------------------------------------------------------------
   groupMemberList(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['member_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'groupMemberList');
     if (_responseBody != null) {
       _groupMemberList = GroupMemberListModel.fromJson(_responseBody);
     }
@@ -506,32 +525,32 @@ class Request {
     if (data['statusId'] == 1)
       toastText = '刪除成功';
     else if (data['statusId'] == 4) toastText = '加入成功';
-    await httpPatch(context, data, _url, toastText);
+    await httpPatch(context, data, _url, toastText, 'groupSettingManager');
   }
 
-  // group_edit ------------------------------------------------------------------------------------
+  // group_edit -----------------------------------------------------------------------------------
   groupEdit(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['edit_group'];
-    await httpPatch(context, data, _url, '編輯成功');
+    await httpPatch(context, data, _url, '編輯成功', 'groupEdit');
   }
 
   // group_quit -----------------------------------------------------------------------------------
   groupQuit(BuildContext context, Map<String, dynamic> data) async {
     String _url = groupUrl['quit_group'];
-    await httpDelete(context, data, _url, '已退出');
+    await httpDelete(context, data, _url, '已退出', 'groupQuit');
   }
 
   // TEMPORARYGROUP ====================================================================================
   // temporary_create_group -----------------------------------------------------------------------
   temporaryCreateGroup(BuildContext context, Map<String, dynamic> data) async {
     String _url = temporaryGroupUrl['create_group'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'temporaryCreateGroup');
   }
 
   // temporary_list -------------------------------------------------------------------------------
   temporaryList(BuildContext context, Map<String, dynamic> data) async {
     String _url = temporaryGroupUrl['temporary_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'temporaryList');
     if (_responseBody != null) {
       _temporaryGroupList = TemporaryGroupListModel.fromJson(_responseBody);
     }
@@ -540,7 +559,7 @@ class Request {
   // temporary_invite_list ------------------------------------------------------------------------
   temporaryInviteList(BuildContext context, Map<String, dynamic> data) async {
     String _url = temporaryGroupUrl['invite_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'temporaryInviteList');
     if (_responseBody != null) {
       _temporaryGroupInviteList =
           TemporaryGroupListModel.fromJson(_responseBody);
@@ -550,7 +569,7 @@ class Request {
   // temporary_get_invite -------------------------------------------------------------------------
   temporaryGetInvite(BuildContext context, Map<String, dynamic> data) async {
     String _url = temporaryGroupUrl['get_invite'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'temporaryGetInvite');
     if (_responseBody != null) {
       _temporaryGroupInvite =
           GetTemporaryGroupInviteModel.fromJson(_responseBody);
@@ -561,7 +580,7 @@ class Request {
   // friend_list ----------------------------------------------------------------------------------
   friendList(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['friend_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'friendList');
     if (_responseBody != null) {
       _friendList = FriendListModel.fromJson(_responseBody);
     }
@@ -570,79 +589,83 @@ class Request {
   // best_friend_list -----------------------------------------------------------------------------
   bestFriendList(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['best_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'bestFriendList');
     if (_responseBody != null) {
       _bestFriendList = BestFriendListModel.fromJson(_responseBody);
     }
   }
 
-  // make-friend-invite-list ----------------------------------------------------------------------------------
-  makefriendinviteList(BuildContext context, Map<String, dynamic> data) async {
+  // make-friend-invite-list ----------------------------------------------------------------------
+  makeFriendInviteList(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['make_invite_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'makefriendinviteList');
     if (_responseBody != null) {
       _makefriendinviteList = MakeFriendInviteListModel.fromJson(_responseBody);
     }
   }
 
-  // add_friend ------------------------------------------------------------------------------
-  add(BuildContext context, Map<String, dynamic> data) async {
+  // add_friend -----------------------------------------------------------------------------------
+  addFriend(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['add'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'addFriend');
   }
 
-  // add_bestfriend ------------------------------------------------------------------------------
-  addBest(BuildContext context, Map<String, dynamic> data) async {
+  // add_bestfriend -------------------------------------------------------------------------------
+  addBestFriend(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['add_best'];
-    await httpPatch(context, data, _url, '新增成功');
+    await httpPatch(context, data, _url, '新增成功', 'addBestFriend');
   }
 
-  // add_reply ------------------------------------------------------------------------------
+  // add_reply ------------------------------------------------------------------------------------
   addReply(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['add_reply'];
-    await httpPatch(context, data, _url, '新增成功');
+    await httpPatch(context, data, _url, '新增成功', 'addReply');
   }
 
-  // friend_delete ----------------------------------------------------------------------------------
-  frienddelete(BuildContext context, Map<String, dynamic> data) async {
+  // friend_delete --------------------------------------------------------------------------------
+  friendDelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['delete'];
-    await httpDelete(context, data, _url, '刪除成功');
+    await httpDelete(context, data, _url, '刪除成功', 'friendDelete');
   }
 
-  // bestfriend_delete ----------------------------------------------------------------------------------
-  bestfrienddelete(BuildContext context, Map<String, dynamic> data) async {
+  // bestfriend_delete ----------------------------------------------------------------------------
+  bestFriendDelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['delete_best'];
-    await httpPatch(context, data, _url, '刪除成功');
+    await httpPatch(context, data, _url, '刪除成功', 'bestFriendDelete');
   }
 
   // TIMETABLE =========================================================================================
+  // mainTimetableGet -----------------------------------------------------------------------------
   mainTimetableListGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = timetableUrl['main_timetable_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'mainTimetableListGet');
     if (_responseBody != null) {
       _mainTimetableListGet = MainTimetableListGet.fromJson(_responseBody);
     }
   }
 
+  // timetableList --------------------------------------------------------------------------------
   timetableList(BuildContext context, Map<String, dynamic> data) async {
     String _url = timetableUrl['get_timetable_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'timetableList');
     if (_responseBody != null) {
       _timetableList = TimetableListModel.fromJson(_responseBody);
     }
   }
 
+  // sharecode ------------------------------------------------------------------------------------
   sharecode(BuildContext context, Map<String, dynamic> data) async {
     String _url = timetableUrl['get_sharecode'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'sharecode');
     if (_responseBody != null) {
       _sharecodeModel = SharecodeModel.fromJson(_responseBody);
     }
   }
 
+  // sectionTime ----------------------------------------------------------------------------------
   sectionTime(BuildContext context, Map<String, dynamic> data) async {
     String _url = timetableUrl['get_section_time'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'sectionTime');
     if (_responseBody != null) {
       _sectionTime = SectionTime.fromJson(_responseBody);
     }
@@ -652,7 +675,7 @@ class Request {
   // vote_list ------------------------------------------------------------------------------------
   voteList(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['get_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'voteList');
     if (_responseBody != null) {
       _voteList = VoteListModel.fromJson(_responseBody);
     }
@@ -661,7 +684,7 @@ class Request {
   // vote_end_list --------------------------------------------------------------------------------
   voteEndList(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['get_end_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'voteEndList');
     if (_responseBody != null) {
       _voteEndList = VoteEndListModel.fromJson(_responseBody);
     }
@@ -670,13 +693,13 @@ class Request {
   // vote_create_new ------------------------------------------------------------------------------
   voteCreateNew(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['create_new'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'voteCreateNew');
   }
 
   // vote_get -------------------------------------------------------------------------------------
   voteGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['get'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'voteGet');
     if (_responseBody != null) {
       _vote = GetVoteModel.fromJson(_responseBody);
     }
@@ -685,32 +708,32 @@ class Request {
   // vote_add_items -------------------------------------------------------------------------------
   voteAddItems(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['add_items'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'voteAddItems');
   }
 
   // vote -----------------------------------------------------------------------------------------
   vote(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['vote'];
-    await httpPost(context, data, _url, '投票成功');
+    await httpPost(context, data, _url, '投票成功', 'vote');
   }
 
   // vote_edit ------------------------------------------------------------------------------------
   voteEdit(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['edit'];
-    await httpPost(context, data, _url, '編輯成功');
+    await httpPost(context, data, _url, '編輯成功', 'voteEdit');
   }
 
   // vote_delete ----------------------------------------------------------------------------------
   voteDelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = voteUrl['delete'];
-    await httpPost(context, data, _url, '刪除成功');
+    await httpPost(context, data, _url, '刪除成功', 'voteDelete');
   }
 
-  // STUDYPLAN ====================================================================================
+  // STUDYPLAN =========================================================================================
   // get ------------------------------------------------------------------------------------------
   studyplanGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['get'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'studyplanGet');
     if (_responseBody != null) {
       _studyplan = StudyplanModel.fromJson(_responseBody);
     }
@@ -719,7 +742,7 @@ class Request {
   // one_group_list -------------------------------------------------------------------------------
   studyplanOneGroupList(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['one_group_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'studyplanOneGroupList');
     if (_responseBody != null) {
       _shareStudyplanList = ShareStudyplanListModel.fromJson(_responseBody);
     }
@@ -729,67 +752,67 @@ class Request {
   studyplanPersonalShareList(
       BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['personal_share_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'studyplanPersonalShareList');
     if (_responseBody != null) {
       _personalShareStudyplanList =
           PersonalShareStudyplanListModel.fromJson(_responseBody);
     }
   }
 
-  // personal_list --------------------------------------------------------------------------
+  // personal_list --------------------------------------------------------------------------------
   studyplanPersonalList(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['personal_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'studyplanPersonalList');
     if (_responseBody != null) {
       _studyplanList = StudyplanListModel.fromJson(_responseBody);
     }
   }
 
-  // group_list --------------------------------------------------------------------------
+  // group_list -----------------------------------------------------------------------------------
   studyplanGroupList(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['group_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'studyplanPersonalList');
     if (_responseBody != null) {
       _groupStudyplanList = GroupStudyplanListModel.fromJson(_responseBody);
     }
   }
 
-  // delete --------------------------------------------------------------------------------------
+  // delete ---------------------------------------------------------------------------------------
   studyplanDelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['delete'];
-    await httpDelete(context, data, _url, '刪除成功');
+    await httpDelete(context, data, _url, '刪除成功', 'studyplanDelete');
   }
 
   // sharing --------------------------------------------------------------------------------------
   studyplanSharing(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['sharing'];
-    await httpPatch(context, data, _url, '分享成功');
+    await httpPatch(context, data, _url, '分享成功', 'studyplanSharing');
   }
 
   // cancel_sharing -------------------------------------------------------------------------------
   studyplanCancelSharing(
       BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['cancel_sharing'];
-    await httpPatch(context, data, _url, '已取消');
+    await httpPatch(context, data, _url, '已取消', 'studyplanCancelSharing');
   }
 
-  // create_studyplan -------------------------------------------------------------------------------
+  // create_studyplan -----------------------------------------------------------------------------
   studyplanCreate(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['create_studyplan'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'studyplanCreate');
   }
 
   // edit_studyplan -------------------------------------------------------------------------------
   studyplanEdit(BuildContext context, Map<String, dynamic> data) async {
     String _url = studyplanUrl['edit_studyplan'];
-    await httpPut(context, data, _url, '編輯成功');
+    await httpPut(context, data, _url, '編輯成功', 'studyplanEdit');
   }
 
   // NOTE ==============================================================================================
   // get_group_list -------------------------------------------------------------------------------
   noteGetGroupList(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['get_group_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'noteGetGroupList');
     if (_responseBody != null) {
       _shareNoteList = ShareNoteListModel.fromJson(_responseBody);
     }
@@ -798,16 +821,16 @@ class Request {
   // get_list -------------------------------------------------------------------------------------
   noteGetList(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['get_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'noteGetList');
     if (_responseBody != null) {
       _noteList = NoteListModel.fromJson(_responseBody);
     }
   }
 
-  // get -------------------------------------------------------------------------------------
+  // get ------------------------------------------------------------------------------------------
   noteGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['get'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'noteGet');
     if (_responseBody != null) {
       _getnote = GetNoteModel.fromJson(_responseBody);
     }
@@ -816,179 +839,173 @@ class Request {
   // share ----------------------------------------------------------------------------------------
   noteShare(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['share'];
-    await httpPost(context, data, _url, '分享成功');
+    await httpPost(context, data, _url, '分享成功', 'noteShare');
   }
 
   // cancel_share ---------------------------------------------------------------------------------
   noteCancelShare(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['cancel_share'];
-    await httpPost(context, data, _url, '已取消');
+    await httpPost(context, data, _url, '已取消', 'noteCancelShare');
   }
 
-  // create_new ---------------------------------------------------------------------------------
-  createnew(BuildContext context, Map<String, dynamic> data) async {
+  // create_new -----------------------------------------------------------------------------------
+  createNew(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['create_new'];
-    await httpPost(context, data, _url, '新增成功');
+    await httpPost(context, data, _url, '新增成功', 'createNew');
   }
 
-  // edit ---------------------------------------------------------------------------------
-  noteedit(BuildContext context, Map<String, dynamic> data) async {
+  // edit -----------------------------------------------------------------------------------------
+  noteEdit(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['edit'];
-    await httpPost(context, data, _url, '編輯成功');
+    await httpPost(context, data, _url, '編輯成功', 'noteEdit');
   }
 
-  // delete ---------------------------------------------------------------------------------
-  notedelete(BuildContext context, Map<String, dynamic> data) async {
+  // delete ---------------------------------------------------------------------------------------
+  noteDelete(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['delete'];
-    await httpPost(context, data, _url, '刪除成功');
+    await httpPost(context, data, _url, '刪除成功', 'noteDelete');
   }
 
-  // ACCOUNT ============================================================================================
-  // login ----------------------------------------------------------------------------------
+  // ACCOUNT ===========================================================================================
+  // login ----------------------------------------------------------------------------------------
   login(BuildContext context, Map<String, String> data) async {
-    print(data);
     String _url = accountUrl['login'];
-    await httpPost(context, data, _url, '登入成功');
+    await httpPost(context, data, _url, '登入成功', 'login');
   }
 
-  // ACCOUNT ============================================================================================
-  // register ----------------------------------------------------------------------------------
+  // ACCOUNT ===========================================================================================
+  // register -------------------------------------------------------------------------------------
   register(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
     String _url = accountUrl['register'];
-    await httpPost(context, data, _url, '註冊成功');
+    await httpPost(context, data, _url, '註冊成功', 'register');
   }
 
-  // ACCOUNT ============================================================================================
-  // change_pw ----------------------------------------------------------------------------------
-  changepw(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
+  // ACCOUNT ===========================================================================================
+  // change_pw ------------------------------------------------------------------------------------
+  changePw(BuildContext context, Map<String, dynamic> data) async {
     String _url = accountUrl['change_pw'];
-    await httpPost(context, data, _url, '更改成功');
+    await httpPost(context, data, _url, '更改成功', 'changePw');
   }
 
-  // ACCOUNT ============================================================================================
-  // forget_pw ----------------------------------------------------------------------------------
-  forgetpw(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
+  // ACCOUNT ===========================================================================================
+  // forget_pw ------------------------------------------------------------------------------------
+  forgetPw(BuildContext context, Map<String, dynamic> data) async {
     String _url = accountUrl['forget_pw'];
-    await httpPost(context, data, _url, '驗證成功');
+    await httpPost(context, data, _url, '驗證成功', 'forgetPw');
   }
 
-  // ACCOUNT ============================================================================================
-  // send_code ----------------------------------------------------------------------------------
-  sendcode(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
+  // ACCOUNT ===========================================================================================
+  // send_code ------------------------------------------------------------------------------------
+  sendCode(BuildContext context, Map<String, dynamic> data) async {
     String _url = accountUrl['send_code'];
-    await httpPost(context, data, _url, '發送成功');
+    await httpPost(context, data, _url, '發送成功', 'sendCode');
   }
 
-  // SETTING ============================================================================================
-  // friend_privacy ----------------------------------------------------------------------------------
-  friendprivacy(BuildContext context, Map<String, dynamic> data) async {
+  // SETTING ===========================================================================================
+  // friend_privacy -------------------------------------------------------------------------------
+  friendPrivacy(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['friend_privacy'];
-    await httpPost(context, data, _url, '好友隱私設定成功');
+    await httpPost(context, data, _url, '好友隱私設定成功', 'friendPrivacy');
   }
 
-  // SETTING ============================================================================================
-  // notice ----------------------------------------------------------------------------------
+  // SETTING ===========================================================================================
+  // notice ---------------------------------------------------------------------------------------
   notice(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['notice'];
-    await httpPost(context, data, _url, '通知設定成功');
+    await httpPost(context, data, _url, '通知設定成功', 'notice');
   }
 
-  // notice ----------------------------------------------------------------------------------
-  noticetemporary(BuildContext context, Map<String, dynamic> data) async {
+  // notice ---------------------------------------------------------------------------------------
+  noticeTemporary(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['notice'];
-    await httpPost(context, data, _url, '通知設定成功');
+    await httpPost(context, data, _url, '通知設定成功', 'noticeTemporary');
   }
 
-  // SETTING ============================================================================================
-  // privacy-location ----------------------------------------------------------------------------------
-  privacylocation(BuildContext context, Map<String, dynamic> data) async {
-    print(data);
+  // SETTING ===========================================================================================
+  // privacy-location -----------------------------------------------------------------------------
+  privacyLocation(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['privacy_location'];
-    await httpPost(context, data, _url, '定位設定成功');
+    await httpPost(context, data, _url, '定位設定成功', 'privacyLocation');
   }
 
-  // privacy-location ----------------------------------------------------------------------------------
-  privacytimetable(BuildContext context, Map<String, dynamic> data) async {
+  // privacy-location -----------------------------------------------------------------------------
+  privacyTimetable(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['privacy_timetable'];
-    await httpPost(context, data, _url, '隱私設定成功');
+    await httpPost(context, data, _url, '隱私設定成功', 'privacyTimetable');
   }
 
-  // SETTING ============================================================================================
-  // theme ----------------------------------------------------------------------------------
+  // SETTING ===========================================================================================
+  // theme ----------------------------------------------------------------------------------------
   themes(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['themes'];
-    await httpPost(context, data, _url, '主題設定成功');
+    await httpPost(context, data, _url, '主題設定成功', 'themes');
   }
 
-  // get_theme -----------------------------------------------------------------------------
-  getthemes(BuildContext context, Map<String, dynamic> data) async {
+  // get_theme ------------------------------------------------------------------------------------
+  getThemes(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_themes'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'getThemes');
     if (_responseBody != null) {
       _getThemes = GetThemesModel.fromJson(_responseBody);
     }
   }
 
-  // get_theme -----------------------------------------------------------------------------
-  getlocation(BuildContext context, Map<String, dynamic> data) async {
+  // get_theme ------------------------------------------------------------------------------------
+  getLocation(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_location'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'getLocation');
     if (_responseBody != null) {
       _getLocation = GetLocationModel.fromJson(_responseBody);
     }
   }
 
-  // get_timetable -----------------------------------------------------------------------------
-  gettimetable(BuildContext context, Map<String, dynamic> data) async {
+  // get_timetable --------------------------------------------------------------------------------
+  getTimetable(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_timetable'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'getTimetable');
     if (_responseBody != null) {
       _getTimetable = GetTimetableModel.fromJson(_responseBody);
     }
   }
 
-  // get_notice -----------------------------------------------------------------------------
-  getnotice(BuildContext context, Map<String, dynamic> data) async {
+  // get_notice -----------------------------------------------------------------------------------
+  getNotice(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_notice'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'getNotice');
     if (_responseBody != null) {
       _getNotice = GetNoticeModel.fromJson(_responseBody);
     }
   }
 
-  // get_timetable_notice -----------------------------------------------------------------------------
-  gettimetablenotice(BuildContext context, Map<String, dynamic> data) async {
+  // get_timetable_notice -------------------------------------------------------------------------
+  getTimetableNotice(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_timetable'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'getTimetableNotice');
     if (_responseBody != null) {
       _getTimetableNotice = GetTimetableNoticeModel.fromJson(_responseBody);
     }
   }
 
-  // get_friend_privacy -----------------------------------------------------------------------------
-  getfriendprivacy(BuildContext context, Map<String, dynamic> data) async {
+  // get_friend_privacy ---------------------------------------------------------------------------
+  getFriendPrivacy(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_friend_privacy'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'getFriendPrivacy');
     if (_responseBody != null) {
       _getFriendPrivacy = GetFriendPrivacyModel.fromJson(_responseBody);
     }
   }
 
-  // profile ============================================================================================
-  // edit-profile ----------------------------------------------------------------------------------
-  editprofile(BuildContext context, Map<String, dynamic> data) async {
+  // profile ===========================================================================================
+  // edit-profile ---------------------------------------------------------------------------------
+  editProfile(BuildContext context, Map<String, dynamic> data) async {
     String _url = profileUrl['edit_profile'];
-    await httpPost(context, data, _url, '個人資料設定成功');
+    await httpPost(context, data, _url, '個人資料設定成功', 'editProfile');
   }
 
-  // profile-list -----------------------------------------------------------------------------
-  getprofilelist(BuildContext context, Map<String, dynamic> data) async {
+  // profile-list ---------------------------------------------------------------------------------
+  getProfileList(BuildContext context, Map<String, dynamic> data) async {
     String _url = profileUrl['profile_list'];
-    await httpGet(context, data, _url);
+    await httpGet(context, data, _url, 'getProfileList');
     if (_responseBody != null) {
       _getProfileList = GetProfileListModel.fromJson(_responseBody);
     }

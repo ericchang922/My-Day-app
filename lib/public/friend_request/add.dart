@@ -14,7 +14,7 @@ class AddFriend {
 
   _request() async {
     Request request = Request();
-    await request.add(context, data);
+    await request.addFriend(context, data);
     this._isError = await request.getIsError();
   }
 

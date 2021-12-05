@@ -111,7 +111,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
       isGetImage = true;
     }, onError: (Object exception, StackTrace stackTrace) {
       isGetImage = false;
-      print('error');
+      print('bestfriend -- getImage error');
     }));
 
     if (isGetImage == null) {

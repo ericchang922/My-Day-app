@@ -12,7 +12,7 @@ class Sendcode {
 
   _request() async {
     Request request = Request();
-    await request.sendcode(context, data);
+    await request.sendCode(context, data);
     this._isError = await request.getIsError();
   }
 

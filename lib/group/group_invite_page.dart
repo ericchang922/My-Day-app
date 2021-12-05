@@ -101,7 +101,7 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
       isGetImage = true;
     }, onError: (Object exception, StackTrace stackTrace) {
       isGetImage = false;
-      print('error');
+      print('group_invite_page -- getImage error');
     }));
 
     if (isGetImage == null) {

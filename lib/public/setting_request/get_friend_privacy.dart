@@ -11,7 +11,7 @@ class GetFriendPrivacy {
 
   _request() async {
     Request request = Request();
-    await request.getfriendprivacy(context, data);
+    await request.getFriendPrivacy(context, data);
     _response = await request.getFriendPrivacyGet();
   }
 
