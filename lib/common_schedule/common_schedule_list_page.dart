@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:animations/animations.dart';
 
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
+import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/common_schedule/edit_common_schedule_page.dart';
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/public/schedule_request/common_list.dart';
-import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/sizing.dart';
 
@@ -20,8 +19,7 @@ class CommonScheduleListPage extends StatefulWidget {
       new _CommonScheduleListWidget(groupNum);
 }
 
-class _CommonScheduleListWidget extends State<CommonScheduleListPage>
-    with RouteAware {
+class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
   String uid;
   _uid() async {
     String id = await loadUid();
@@ -39,23 +37,6 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
   void initState() {
     super.initState();
     _uid();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _groupScheduleListRequest();
   }
 
   _groupScheduleListRequest() async {
@@ -121,7 +102,8 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
       String endTime =
           "${schedule.endTime.hour.toString().padLeft(2, '0')}:${schedule.endTime.minute.toString().padLeft(2, '0')}";
 
-      if (schedule.startTime.day == schedule.endTime.day) {
+      if (schedule.startTime.day == schedule.endTime.day &&
+          schedule.startTime.year == schedule.endTime.year) {
         if (startTime == "00:00" && endTime == "00:00" ||
             startTime == "00:00" && endTime == "23:59") {
           return "整天";
@@ -144,9 +126,11 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
             var schedule = _commonScheduleListModel.futureSchedule[index];
             return InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditCommonSchedulePage(
-                        scheduleNum: schedule.scheduleNum)));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => EditCommonSchedulePage(
+                            scheduleNum: schedule.scheduleNum)))
+                    .then((value) => _groupScheduleListRequest());
               },
               child: Container(
                 margin: EdgeInsets.only(
@@ -237,9 +221,11 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage>
             var schedule = _commonScheduleListModel.pastSchedule[index];
             return InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditCommonSchedulePage(
-                        scheduleNum: schedule.scheduleNum)));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => EditCommonSchedulePage(
+                            scheduleNum: schedule.scheduleNum)))
+                    .then((value) => _groupScheduleListRequest());
               },
               child: Container(
                 margin: EdgeInsets.only(

@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
 import 'package:My_Day_app/public/friend_request/add-friend-reply.dart';
 import 'package:My_Day_app/public/friend_request/make-friend-invite-list.dart';
@@ -72,33 +71,6 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     });
   }
 
-  Image getImage(String imageString) {
-    Sizing _sizing = Sizing(context);
-    double _imgSize = _sizing.height(4.5);
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Sizing _sizing = Sizing(context);
@@ -111,6 +83,8 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     Color _gray = Color(0xff959595);
 
     Widget friendListWidget;
+
+    GetImage _getImage = GetImage(context);
 
     _submitconfirm(String friendId) async {
       var submitWidget;
@@ -149,7 +123,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
               contentPadding: EdgeInsets.symmetric(
                   horizontal: _listPaddingH, vertical: 0.0),
               leading: ClipOval(
-                child: getImage(friends.photo),
+                child: _getImage.friend(friends.photo),
               ),
               title: Text(
                 friends.friendName,
@@ -275,6 +249,8 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
     Color _gray = Color(0xff959595);
     double _listPaddingH = _sizing.width(6);
 
+    GetImage _getImage = GetImage(context);
+
     _submitconfirm(String friendId) async {
       var submitWidget;
       _submitWidgetfunc() async {
@@ -311,7 +287,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,

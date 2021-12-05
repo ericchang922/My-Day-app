@@ -61,7 +61,7 @@ class _EditStudyPlanPage extends State<EditStudyPlanPage> {
       List remarkList = [];
       List noteNumList = [];
       List restList = [];
-      bool isCreate;
+      bool isCreate = _data.creatorId == uid ? true : false;
 
       for (int i = 0; i < _data.subject.length; i++) {
         DateTime startTime = DateTime(

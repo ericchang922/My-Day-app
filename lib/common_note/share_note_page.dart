@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/note_request/not_share_list.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/note_request/share.dart';
-import 'package:My_Day_app/public/note_request/get_group_list.dart';
-import 'package:My_Day_app/public/note_request/get_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
-import 'package:My_Day_app/models/note/share_note_list_model.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
 import 'package:My_Day_app/public/sizing.dart';
 
@@ -30,8 +28,7 @@ class _ShareNoteWidget extends State<ShareNotePage> {
   int groupNum;
   _ShareNoteWidget(this.groupNum);
 
-  List _noteListModel = [];
-  ShareNoteListModel _shareNoteList;
+  NoteListModel _noteListModel;
 
   int noteNum;
 
@@ -44,27 +41,11 @@ class _ShareNoteWidget extends State<ShareNotePage> {
   }
 
   _noteListRequest() async {
-    ShareNoteListModel _shareNoteListRequest =
-        await GetGroupList(context: context, uid: uid, groupNum: groupNum)
-            .getData();
-
-    NoteListModel _noteList =
-        await GetList(context: context, uid: uid).getData();
+    NoteListModel _request = await NotShareList(uid: uid).getData();
 
     setState(() {
-      _shareNoteList = _shareNoteListRequest;
-      for (int i = 0; i < _noteList.note.length; i++) {
-        int count = 0;
-        var note = _noteList.note[i];
-        for (int j = 0; j < _shareNoteList.note.length; j++) {
-          var groupNote = _shareNoteList.note[j];
-          if (note.noteNum == groupNote.noteNum) count++;
-        }
-        if (count == 0) {
-          _noteListModel.add(note);
-        }
-      }
-      for (int i = 0; i < _noteListModel.length; i++) {
+      _noteListModel = _request;
+      for (int i = 0; i < _noteListModel.note.length; i++) {
         _noteCheck.add(false);
       }
     });
@@ -83,7 +64,6 @@ class _ShareNoteWidget extends State<ShareNotePage> {
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
-    Color _hintGray = Color(0xffCCCCCC);
 
     Widget noNote = Center(child: Text('目前沒有任何筆記!'));
     Widget noteList;
@@ -117,14 +97,14 @@ class _ShareNoteWidget extends State<ShareNotePage> {
       return _noteCount;
     }
 
-    if (_noteListModel != null && _shareNoteList != null) {
-      if (_noteListModel.length == 0) {
+    if (_noteListModel != null) {
+      if (_noteListModel.note.length == 0) {
         noteList = noNote;
       } else {
         noteList = ListView.separated(
-            itemCount: _noteListModel.length,
+            itemCount: _noteListModel.note.length,
             itemBuilder: (BuildContext context, int index) {
-              var note = _noteListModel[index];
+              var note = _noteListModel.note[index];
               return ListTile(
                 contentPadding: EdgeInsets.symmetric(
                     horizontal: _sizing.height(3),

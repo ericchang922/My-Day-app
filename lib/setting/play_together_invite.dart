@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
@@ -12,6 +10,7 @@ import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
 import 'package:My_Day_app/public/setting_request/get_notice.dart';
 import 'package:My_Day_app/public/setting_request/notice_temporary%20.dart';
+import 'package:My_Day_app/public/getImage.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -123,33 +122,6 @@ class _friendWidget extends State<friendPage> {
     });
   }
 
-  Image getImage(String imageString) {
-    Sizing _sizing = Sizing(context);
-    double _imgSize = _sizing.height(4.5);
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Sizing _sizing = Sizing(context);
@@ -159,6 +131,8 @@ class _friendWidget extends State<friendPage> {
     double _pSize = _sizing.height(2.3);
 
     Widget friendListWidget;
+
+    GetImage _getImage = GetImage(context);
 
     _submitTimetable() async {
       bool isTemporary = _isCheck;
@@ -195,7 +169,7 @@ class _friendWidget extends State<friendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -230,7 +204,7 @@ class _friendWidget extends State<friendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -432,6 +406,8 @@ class _friendWidget extends State<friendPage> {
     double _listPaddingH = _sizing.width(6);
     double _pSize = _sizing.height(2.3);
 
+    GetImage _getImage = GetImage(context);
+
     _submitfriend(String friendId) async {
       bool isPublic = _isCheck;
 
@@ -457,7 +433,7 @@ class _friendWidget extends State<friendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -489,6 +465,8 @@ class _friendWidget extends State<friendPage> {
     double _listPaddingH = _sizing.width(6);
     double _pSize = _sizing.height(2.3);
 
+    GetImage _getImage = GetImage(context);
+
     _submitfriend(String friendId) async {
       bool isPublic = _isCheck;
 
@@ -514,7 +492,7 @@ class _friendWidget extends State<friendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,

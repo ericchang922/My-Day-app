@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/common_studyplan/select_note_page.dart';
+import 'package:My_Day_app/study/select_note_page.dart';
 import 'package:My_Day_app/public/studyplan_request/create_studyplan.dart';
 import 'package:My_Day_app/public/studyplan_request/edit_studyplan.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/sizing.dart';
+import 'package:flutter/services.dart';
 
 class StudyPlanForm extends StatefulWidget {
   int studyplanNum;
@@ -647,7 +648,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
           Flexible(
             child: Container(
               height: _textFied,
-              width: _sizing.width(38),
+              width: _sizing.width(40),
               child: TextField(
                   style: TextStyle(fontSize: _pSize),
                   decoration: InputDecoration(

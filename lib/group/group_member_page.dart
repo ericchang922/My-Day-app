@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/getImage.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/sizing.dart';
-import 'package:My_Day_app/models/group/group_member_list_model.dart';
 
 class GroupMemberPage extends StatelessWidget {
   int groupNum;
@@ -99,33 +98,6 @@ class _GroupMemberWidget extends State<GroupMemberWidget> {
     });
   }
 
-  Image getImage(String imageString) {
-    Sizing _sizing = Sizing(context);
-    double _imgSize = _sizing.height(4.5);
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Sizing _sizing = Sizing(context);
@@ -138,6 +110,8 @@ class _GroupMemberWidget extends State<GroupMemberWidget> {
 
     Color _bule = Color(0xff7AAAD8);
 
+    GetImage _getImage = GetImage(context);
+
     if (_groupMemberListModel != null) {
       Widget inviteMemberList = ListView.separated(
         shrinkWrap: true,
@@ -149,7 +123,7 @@ class _GroupMemberWidget extends State<GroupMemberWidget> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(members.memberPhoto),
+              child: _getImage.friend(members.memberPhoto),
             ),
             title: Text(
               members.memberName,
@@ -173,7 +147,7 @@ class _GroupMemberWidget extends State<GroupMemberWidget> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(members.memberPhoto),
+              child: _getImage.friend(members.memberPhoto),
             ),
             title: Text(
               members.memberName,

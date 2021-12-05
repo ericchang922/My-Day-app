@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/group/group_create_page.dart';
 import 'package:My_Day_app/group/group_join_page.dart';
 import 'package:My_Day_app/group/group_detail_page.dart';
@@ -28,7 +27,7 @@ class GroupListWidget extends StatefulWidget {
   _GroupListState createState() => new _GroupListState();
 }
 
-class _GroupListState extends State<GroupListWidget> with RouteAware {
+class _GroupListState extends State<GroupListWidget> {
   GroupListModel _groupListModel;
   GroupInviteListModel _groupInviteListModel;
 
@@ -55,24 +54,6 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   void initState() {
     super.initState();
     _uid();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _groupListRequest();
-    _groupInviteListRequest();
   }
 
   _groupListRequest() async {
@@ -119,7 +100,11 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
       switch (item) {
         case 0:
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
+              .push(MaterialPageRoute(builder: (context) => GroupCreatePage()))
+              .then((value) {
+            _groupListRequest();
+            _groupInviteListRequest();
+          });
           break;
         case 1:
           await groupJoinDialog(context).then((value) => _groupListRequest());
@@ -229,14 +214,19 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  settings: RouteSettings(name: '/group_detail'),
-                  builder: (context) => GroupDetailPage(
-                        arguments: {
-                          'groupNum': groupContent.groupId,
-                          'isNotTemporary': true
-                        },
-                      )));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      settings: RouteSettings(name: '/group_detail'),
+                      builder: (context) => GroupDetailPage(
+                            arguments: {
+                              'groupNum': groupContent.groupId,
+                              'isNotTemporary': true
+                            },
+                          )))
+                  .then((value) {
+                _groupListRequest();
+                _groupInviteListRequest();
+              });
             },
             title: Text(
               '${groupContent.title} (${groupContent.peopleCount})',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/timetable/timetable_share.dart';
 import 'package:My_Day_app/models/timetable/sharecode_model.dart';
 import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
@@ -16,8 +15,7 @@ class TimetableChooseSharePage extends StatefulWidget {
   TimetableChooseShare createState() => new TimetableChooseShare();
 }
 
-class TimetableChooseShare extends State<TimetableChooseSharePage>
-    with RouteAware {
+class TimetableChooseShare extends State<TimetableChooseSharePage> {
   get child => null;
   get left => null;
 
@@ -36,23 +34,6 @@ class TimetableChooseShare extends State<TimetableChooseSharePage>
   void initState() {
     super.initState();
     _uid();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _timetableListRequest();
   }
 
   _timetableListRequest() async {

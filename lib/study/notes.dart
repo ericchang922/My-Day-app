@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/study/note_detail_page.dart';
 import 'package:My_Day_app/study/notes_add.dart';
 import 'package:My_Day_app/models/note/note_list_model.dart';
@@ -24,7 +23,7 @@ class NoteListWidget extends StatefulWidget {
   _NoteListState createState() => new _NoteListState();
 }
 
-class _NoteListState extends State<NoteListWidget> with RouteAware {
+class _NoteListState extends State<NoteListWidget> {
   NoteListModel _noteList;
   String uid;
   _uid() async {
@@ -39,23 +38,6 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
   void initState() {
     super.initState();
     _uid();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _getNoteListRequest();
   }
 
   _getNoteListRequest() async {
@@ -130,9 +112,10 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
                   icon: Icon(Icons.add),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotesAddPage()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NotesAddPage()))
+                        .then((value) => _getNoteListRequest());
                   },
                 ),
               ],
@@ -160,9 +143,10 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
                   icon: Icon(Icons.add),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotesAddPage()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NotesAddPage()))
+                        .then((value) => _getNoteListRequest());
                   },
                 ),
               ],

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:date_format/date_format.dart';
 
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/common_note/common_note_list_page.dart';
 import 'package:My_Day_app/common_studyplan/common_studyplan_list_page.dart';
@@ -14,12 +13,12 @@ import 'package:My_Day_app/group/group_setting_page.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/group_request/quit_group.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
+import 'package:My_Day_app/models/group/get_group_model.dart';
+import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/public/group_request/get.dart';
 import 'package:My_Day_app/public/group_request/get_log.dart';
 import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
-import 'package:My_Day_app/models/group/get_group_model.dart';
-import 'package:My_Day_app/models/group/group_log_model.dart';
 import 'package:My_Day_app/vote/vote_list_page.dart';
 import 'package:My_Day_app/vote/vote_page.dart';
 
@@ -65,25 +64,6 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     _uid();
 
     print(arguments['groupNum']);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _getGroupRequest();
-    _groupLogRequest();
-    _getGroupMemberRequest();
   }
 
   _getGroupRequest() async {
@@ -183,16 +163,34 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     _selectedItem(BuildContext context, item) async {
       switch (item) {
         case 0:
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => GroupInvitePage(groupNum)));
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => GroupInvitePage(groupNum)))
+              .then((value) {
+            _getGroupRequest();
+            _groupLogRequest();
+            _getGroupMemberRequest();
+          });
           break;
         case 1:
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => GroupMemberPage(groupNum)));
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => GroupMemberPage(groupNum)))
+              .then((value) {
+            _getGroupRequest();
+            _groupLogRequest();
+            _getGroupMemberRequest();
+          });
           break;
         case 2:
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => GroupSettingPage(groupNum)));
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => GroupSettingPage(groupNum)))
+              .then((value) {
+            _getGroupRequest();
+            _groupLogRequest();
+            _getGroupMemberRequest();
+          });
           break;
         case 3:
           if (await _submit() != true) {
@@ -298,8 +296,14 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
             child:
                 Text('投票', style: TextStyle(fontSize: _pSize, color: _color)),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => VotePage(voteNum, groupNum)));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) => VotePage(voteNum, groupNum)))
+                  .then((value) {
+                _getGroupRequest();
+                _groupLogRequest();
+                _getGroupMemberRequest();
+              });
             },
           ),
         );
@@ -467,8 +471,14 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                 color: _lightGray,
               ),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => VoteListPage(groupNum)));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => VoteListPage(groupNum)))
+                    .then((value) {
+                  _getGroupRequest();
+                  _groupLogRequest();
+                  _getGroupMemberRequest();
+                });
               },
             ),
             Divider(height: 1),
@@ -485,8 +495,14 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                 color: _lightGray,
               ),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CommonScheduleListPage(groupNum)));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => CommonScheduleListPage(groupNum)))
+                    .then((value) {
+                  _getGroupRequest();
+                  _groupLogRequest();
+                  _getGroupMemberRequest();
+                });
               },
             ),
             Visibility(visible: _isNotTemporary, child: Divider(height: 1)),
@@ -505,8 +521,15 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                   color: _lightGray,
                 ),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CommonStudyPlanListPage(groupNum)));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) =>
+                              CommonStudyPlanListPage(groupNum)))
+                      .then((value) {
+                    _getGroupRequest();
+                    _groupLogRequest();
+                    _getGroupMemberRequest();
+                  });
                 },
               ),
             ),
@@ -526,8 +549,14 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
                   color: _lightGray,
                 ),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CommonNoteListPage(groupNum)));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => CommonNoteListPage(groupNum)))
+                      .then((value) {
+                    _getGroupRequest();
+                    _groupLogRequest();
+                    _getGroupMemberRequest();
+                  });
                 },
               ),
             ),
