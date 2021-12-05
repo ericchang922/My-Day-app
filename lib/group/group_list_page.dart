@@ -6,7 +6,6 @@ import 'package:My_Day_app/public/group_request/invite_list.dart';
 import 'package:My_Day_app/public/group_request/group_list.dart';
 import 'package:My_Day_app/public/group_request/member_status.dart';
 import 'package:My_Day_app/group/group_detail_page.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 
@@ -26,7 +25,7 @@ class GroupListWidget extends StatefulWidget {
   _GroupListState createState() => new _GroupListState();
 }
 
-class _GroupListState extends State<GroupListWidget> with RouteAware {
+class _GroupListState extends State<GroupListWidget> {
   GroupListModel _groupListModel;
   GroupInviteListModel _groupInviteListModel;
 
@@ -45,24 +44,6 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _groupListRequest();
-    _groupInviteListRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _groupListRequest();
     _groupInviteListRequest();
   }
@@ -118,7 +99,11 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
       switch (item) {
         case 0:
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
+              .push(MaterialPageRoute(builder: (context) => GroupCreatePage()))
+              .then((value) {
+            _groupListRequest();
+            _groupInviteListRequest();
+          });
           break;
         case 1:
           await groupJoinDialog(context).then((value) => _groupListRequest());
@@ -228,14 +213,19 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  settings: RouteSettings(name: '/group_detail'),
-                  builder: (context) => GroupDetailPage(
-                        arguments: {
-                          'groupNum': groupContent.groupId,
-                          'isNotTemporary': true
-                        },
-                      )));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      settings: RouteSettings(name: '/group_detail'),
+                      builder: (context) => GroupDetailPage(
+                            arguments: {
+                              'groupNum': groupContent.groupId,
+                              'isNotTemporary': true
+                            },
+                          )))
+                  .then((value) {
+                _groupListRequest();
+                _groupInviteListRequest();
+              });
             },
             title: Text(
               '${groupContent.title} (${groupContent.peopleCount})',

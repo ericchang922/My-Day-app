@@ -1,4 +1,3 @@
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
 import 'package:My_Day_app/public/timetable_request/get_timetable_list.dart';
 import 'package:My_Day_app/timetable/timetable_import_past.dart';
@@ -11,7 +10,7 @@ class TimetableChoosePastPage extends StatefulWidget {
   TimetableChoosePast createState() => new TimetableChoosePast();
 }
 
-class TimetableChoosePast extends State<TimetableChoosePastPage> with RouteAware{
+class TimetableChoosePast extends State<TimetableChoosePastPage> {
   get child => null;
   get left => null;
 
@@ -22,23 +21,6 @@ class TimetableChoosePast extends State<TimetableChoosePastPage> with RouteAware
   @override
   void initState() {
     super.initState();
-    _timetableListRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _timetableListRequest();
   }
 
@@ -135,9 +117,11 @@ class TimetableChoosePast extends State<TimetableChoosePastPage> with RouteAware
                         ),
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TimetableImprotPastPage()));
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TimetableImprotPastPage()))
+                              .then((value) => _timetableListRequest());
                         },
                       ),
                       shape: const RoundedRectangleBorder(

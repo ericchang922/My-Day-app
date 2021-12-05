@@ -1,4 +1,3 @@
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/timetable/sharecode_model.dart';
 import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
 import 'package:My_Day_app/public/timetable_request/get_sharecode.dart';
@@ -13,8 +12,7 @@ class TimetableChooseSharePage extends StatefulWidget {
   TimetableChooseShare createState() => new TimetableChooseShare();
 }
 
-class TimetableChooseShare extends State<TimetableChooseSharePage>
-    with RouteAware {
+class TimetableChooseShare extends State<TimetableChooseSharePage> {
   get child => null;
   get left => null;
 
@@ -26,23 +24,6 @@ class TimetableChooseShare extends State<TimetableChooseSharePage>
   @override
   void initState() {
     super.initState();
-    _timetableListRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _timetableListRequest();
   }
 
@@ -153,7 +134,8 @@ class TimetableChooseShare extends State<TimetableChooseSharePage>
                           ),
                           onTap: () async {
                             _sharecodeRequest(timetable.timetableNo);
-                            await timetableShare(context, '_sharecode.sharecode',timetable.timetableNo);
+                            await timetableShare(context,
+                                '_sharecode.sharecode', timetable.timetableNo);
                             // if (_sharecode != null) {
                             //   await timetableShare(context, _sharecode.sharecode,timetable.timetableNo);
                             // }

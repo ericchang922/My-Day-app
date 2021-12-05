@@ -1,7 +1,6 @@
 import 'package:My_Day_app/common_note/common_note_detail_page.dart';
 import 'package:My_Day_app/common_studyplan/customer_check_box_studyplan.dart';
 import 'package:My_Day_app/study/edit_studyplan_page.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
 import 'package:My_Day_app/public/studyplan_request/delete.dart';
@@ -23,7 +22,7 @@ class StudyplanDetailPage extends StatefulWidget {
       new _StudyplanDetailPage(studyplanNum, typeId, groupNum, isCommon);
 }
 
-class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
+class _StudyplanDetailPage extends State<StudyplanDetailPage> {
   int studyplanNum;
   int typeId;
   int groupNum;
@@ -45,23 +44,6 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _getStudyplanRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _getStudyplanRequest();
   }
 
@@ -155,14 +137,18 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
       _selectedItem(BuildContext context, value) async {
         switch (value) {
           case 'edit':
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    EditStudyPlanPage(studyplanNum, null)));
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+                    builder: (context) =>
+                        EditStudyPlanPage(studyplanNum, null)))
+                .then((value) => _getStudyplanRequest());
             break;
           case 'edit_common':
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    EditStudyPlanPage(studyplanNum, groupNum)));
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+                    builder: (context) =>
+                        EditStudyPlanPage(studyplanNum, groupNum)))
+                .then((value) => _getStudyplanRequest());
             break;
           case 'cancel':
             if (await _submitCancelSharing() != true) {
@@ -296,8 +282,10 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                     'assets/images/note.png',
                     height: _width * 1,
                   ),
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CommonNoteDetailPage(noteNum))),
+                  onPressed: () => Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => CommonNoteDetailPage(noteNum)))
+                      .then((value) => _getStudyplanRequest()),
                 ),
               ),
             ),
@@ -315,10 +303,11 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                       'assets/images/note.png',
                       height: _width * 1,
                     ),
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
+                    onPressed: () => Navigator.of(context)
+                        .push(MaterialPageRoute(
                             builder: (context) =>
-                                CommonNoteDetailPage(noteNum))),
+                                CommonNoteDetailPage(noteNum)))
+                        .then((value) => _getStudyplanRequest()),
                   ),
                 )),
           );

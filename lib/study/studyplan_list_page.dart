@@ -3,7 +3,6 @@ import 'package:My_Day_app/public/studyplan_request/group_list.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_list.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_share_list.dart';
 import 'package:My_Day_app/study/studyplan_detail_page.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
 import 'package:My_Day_app/study/studyplan_form.dart';
@@ -16,7 +15,7 @@ class StudyplanListPage extends StatefulWidget {
   _StudyplanListPage createState() => _StudyplanListPage();
 }
 
-class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
+class _StudyplanListPage extends State<StudyplanListPage> {
   StudyplanListModel _studyplanListModel;
   GroupStudyplanListModel _groupStudyplanListModel;
   PersonalShareStudyplanListModel _shareStudyplanListModel;
@@ -27,25 +26,6 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _studyplanListRequest();
-    _groupStudyplanListRequest();
-    _personalShareStudyplanList();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _studyplanListRequest();
     _groupStudyplanListRequest();
     _personalShareStudyplanList();
@@ -159,13 +139,19 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                 return InkWell(
                   onTap: () {
                     print(studyplan.studyplanNum);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => StudyplanDetailPage(
-                            studyplan.studyplanNum,
-                            typeId,
-                            null,
-                            _shareStudyplanNumList
-                                .contains(studyplan.studyplanNum))));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (context) => StudyplanDetailPage(
+                                studyplan.studyplanNum,
+                                typeId,
+                                null,
+                                _shareStudyplanNumList
+                                    .contains(studyplan.studyplanNum))))
+                        .then((value) {
+                      _studyplanListRequest();
+                      _groupStudyplanListRequest();
+                      _personalShareStudyplanList();
+                    });
                   },
                   child: Container(
                     margin: EdgeInsets.only(
@@ -237,13 +223,19 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
               return InkWell(
                 onTap: () {
                   print(studyplan.studyplanNum);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => StudyplanDetailPage(
-                          studyplan.studyplanNum,
-                          typeId,
-                          null,
-                          _shareStudyplanNumList
-                              .contains(studyplan.studyplanNum))));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => StudyplanDetailPage(
+                              studyplan.studyplanNum,
+                              typeId,
+                              null,
+                              _shareStudyplanNumList
+                                  .contains(studyplan.studyplanNum))))
+                      .then((value) {
+                    _studyplanListRequest();
+                    _groupStudyplanListRequest();
+                    _personalShareStudyplanList();
+                  });
                 },
                 child: Container(
                   margin: EdgeInsets.only(
@@ -398,9 +390,15 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
               return InkWell(
                 onTap: () {
                   print(studyplan.studyplanNum);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => StudyplanDetailPage(
-                          studyplan.studyplanNum, typeId, null, true)));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => StudyplanDetailPage(
+                              studyplan.studyplanNum, typeId, null, true)))
+                      .then((value) {
+                    _studyplanListRequest();
+                    _groupStudyplanListRequest();
+                    _personalShareStudyplanList();
+                  });
                 },
                 child: Container(
                   margin: EdgeInsets.only(
@@ -479,9 +477,14 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                     icon: Icon(Icons.add),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => StudyPlanForm()));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => StudyPlanForm()))
+                          .then((value) {
+                        _studyplanListRequest();
+                        _groupStudyplanListRequest();
+                        _personalShareStudyplanList();
+                      });
                     },
                   ),
                 ],

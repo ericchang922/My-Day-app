@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/vote/vote_end_detail_page.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/vote_request/get_list.dart';
 import 'package:My_Day_app/public/vote_request/get_end_list.dart';
 import 'package:My_Day_app/models/vote/vote_end_list_model.dart';
@@ -18,7 +17,7 @@ class VoteListPage extends StatefulWidget {
   _VoteListWidget createState() => new _VoteListWidget(groupNum);
 }
 
-class _VoteListWidget extends State<VoteListPage> with RouteAware {
+class _VoteListWidget extends State<VoteListPage> {
   int groupNum;
   _VoteListWidget(this.groupNum);
 
@@ -34,24 +33,6 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _voteListRequest();
-    _voteEndListRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _voteListRequest();
     _voteEndListRequest();
   }
@@ -164,9 +145,14 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
                               fontSize: _subtitleSize, color: _gray))),
                   trailing: _voteState(vote.isVoteType, vote.voteNum),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            VotePage(vote.voteNum, groupNum)));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (context) =>
+                                VotePage(vote.voteNum, groupNum)))
+                        .then((value) {
+                      _voteListRequest();
+                      _voteEndListRequest();
+                    });
                   },
                 );
               },
@@ -198,8 +184,14 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
                       Text(vote.title, style: TextStyle(fontSize: _titleSize)),
                   subtitle: _voteResult(index),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => VoteEndDetailPage(61, groupNum)));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (context) =>
+                                VoteEndDetailPage(61, groupNum)))
+                        .then((value) {
+                      _voteListRequest();
+                      _voteEndListRequest();
+                    });
                   },
                 );
               },
@@ -237,8 +229,13 @@ class _VoteListWidget extends State<VoteListPage> with RouteAware {
               actions: [
                 IconButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => VoteCreatePage(groupNum)));
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => VoteCreatePage(groupNum)))
+                          .then((value) {
+                        _voteListRequest();
+                        _voteEndListRequest();
+                      });
                     },
                     icon: Icon(Icons.add))
               ],

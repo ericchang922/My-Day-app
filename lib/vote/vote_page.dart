@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/vote_request/add_items.dart';
 import 'package:My_Day_app/public/vote_request/delete.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/vote_request/vote.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
@@ -22,7 +21,7 @@ class VotePage extends StatefulWidget {
   _VoteWidget createState() => new _VoteWidget(voteNum, groupNum);
 }
 
-class _VoteWidget extends State<VotePage> with RouteAware {
+class _VoteWidget extends State<VotePage> {
   int voteNum;
   int groupNum;
   _VoteWidget(this.voteNum, this.groupNum);
@@ -54,25 +53,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
   @override
   void initState() {
     super.initState();
-
-    _getVoteRequest();
-    _getGroupMemberRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _getVoteRequest();
     _getGroupMemberRequest();
   }
@@ -85,10 +65,8 @@ class _VoteWidget extends State<VotePage> with RouteAware {
 
     setState(() {
       _getVoteModel = _request;
-      // ignore: deprecated_member_use
-      _voteCheck = new List();
-      // ignore: deprecated_member_use
-      _voteItemCount = new List();
+      _voteCheck = [];
+      _voteItemCount = [];
       if (_getVoteModel.deadline != "None") {
         DateTime dateTime = DateTime.parse(_getVoteModel.deadline);
         _deadLine = formatDate(
@@ -217,8 +195,13 @@ class _VoteWidget extends State<VotePage> with RouteAware {
     _selectedItem(BuildContext context, item) async {
       switch (item) {
         case 0:
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => VoteEditPage(voteNum)));
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => VoteEditPage(voteNum)))
+              .then((value) {
+            _getVoteRequest();
+            _getGroupMemberRequest();
+          });
           break;
         case 1:
           if (await _submitDelete() != true) {

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:My_Day_app/group/group_detail_page.dart';
 import 'package:My_Day_app/public/temporary_group_request/invite_list.dart';
 import 'package:My_Day_app/public/temporary_group_request/temporary_list.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/temporary_group/temporary_group_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_status.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_create_page.dart';
@@ -42,8 +41,7 @@ class TemporaryGroupListWidget extends StatefulWidget {
   _TemporaryGroupListState createState() => new _TemporaryGroupListState();
 }
 
-class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
-    with RouteAware {
+class _TemporaryGroupListState extends State<TemporaryGroupListWidget> {
   TemporaryGroupListModel _temporaryGroupListModel;
   TemporaryGroupListModel _temporaryGroupInviteListModel;
 
@@ -62,24 +60,6 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
   @override
   void initState() {
     super.initState();
-    _temporaryGroupListRequest();
-    _temporaryGroupInviteListRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _temporaryGroupListRequest();
     _temporaryGroupInviteListRequest();
   }
@@ -188,9 +168,14 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
             margin: EdgeInsets.only(left: _listLR, right: _listLR),
             child: InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        TemporaryGroupInvitePage(temporaryContent.groupId)));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) =>
+                            TemporaryGroupInvitePage(temporaryContent.groupId)))
+                    .then((value) {
+                  _temporaryGroupListRequest();
+                  _temporaryGroupInviteListRequest();
+                });
               },
               child: Row(
                 children: [
@@ -292,14 +277,19 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
               _temporaryGroupListModel.temporaryContent[index];
           return InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  settings: RouteSettings(name: '/group_detail'),
-                  builder: (context) => GroupDetailPage(
-                        arguments: {
-                          'groupNum': temporaryContent.groupId,
-                          'isNotTemporary': false
-                        },
-                      )));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      settings: RouteSettings(name: '/group_detail'),
+                      builder: (context) => GroupDetailPage(
+                            arguments: {
+                              'groupNum': temporaryContent.groupId,
+                              'isNotTemporary': false
+                            },
+                          )))
+                  .then((value) {
+                _temporaryGroupListRequest();
+                _temporaryGroupInviteListRequest();
+              });
             },
             child: Row(
               children: [

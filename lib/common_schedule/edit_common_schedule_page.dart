@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 // my day
 import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/schedule_request/get_common.dart';
 
@@ -15,8 +14,7 @@ class EditCommonSchedulePage extends StatefulWidget {
       _EditCommonSchedulePage(this.scheduleNum);
 }
 
-class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
-    with RouteAware {
+class _EditCommonSchedulePage extends State<EditCommonSchedulePage>{
   String uid = 'lili123';
   int scheduleNum;
   _EditCommonSchedulePage(this.scheduleNum);
@@ -28,18 +26,6 @@ class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
   void initState() {
     super.initState();
     _getCommonScheduleRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
   }
 
   _getCommonScheduleRequest() async {
