@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
@@ -103,33 +102,6 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     });
   }
 
-  Image getImage(String imageString) {
-    Sizing _sizing = Sizing(context);
-    double _imgSize = _sizing.height(4.5);
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('group_create_page -- getImage error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Sizing _sizing = Sizing(context);
@@ -154,6 +126,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     Color _textFiedBorder = Color(0xff707070);
 
     Widget friendListWidget;
+
+    GetImage _getImage = GetImage(context);
 
     Color getTypeColor(value) {
       Color color = value == null ? Color(0xffFFFFFF) : typeColor(value);
@@ -398,7 +372,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -440,7 +414,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -679,6 +653,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     double _listPaddingH = _sizing.width(6);
     double _pSize = _sizing.height(2.3);
 
+    GetImage _getImage = GetImage(context);
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -689,7 +665,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -728,6 +704,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     double _listPaddingH = _sizing.width(6);
     double _pSize = _sizing.height(2.3);
 
+    GetImage _getImage = GetImage(context);
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -738,7 +716,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,

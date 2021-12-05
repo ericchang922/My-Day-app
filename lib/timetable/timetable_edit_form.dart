@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/timetable/timetable_edit.dart';
 import 'package:My_Day_app/models/timetable/timetable_list_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
@@ -15,7 +13,7 @@ class TimetableEditFormPage extends StatefulWidget {
   TimetableEditForm createState() => new TimetableEditForm();
 }
 
-class TimetableEditForm extends State<TimetableEditFormPage> with RouteAware {
+class TimetableEditForm extends State<TimetableEditFormPage> {
   get child => null;
   get left => null;
 
@@ -33,18 +31,6 @@ class TimetableEditForm extends State<TimetableEditFormPage> with RouteAware {
   void initState() {
     super.initState();
     _uid();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
   }
 
   @override
@@ -124,9 +110,11 @@ class TimetableEditForm extends State<TimetableEditFormPage> with RouteAware {
                         ),
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TimetableEditPage()));
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TimetableEditPage()))
+                              .then((value) => _timetableListRequest());
                         },
                       ),
                       shape: const RoundedRectangleBorder(

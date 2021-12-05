@@ -137,50 +137,7 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
             itemCount: _personalShareStudyPlanModel.studyplan.length,
             itemBuilder: (BuildContext context, int index) {
               var studyplan = _personalShareStudyPlanModel.studyplan[index];
-              return ListTile(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: _heightSize, vertical: _heightSize),
-                leading: SizedBox(
-                  width: _sizing.width(17),
-                  child: Container(
-                      margin: EdgeInsets.only(left: _leadingL),
-                      child: Column(
-                        children: [
-                          Text(studyplan.date.month.toString() + "月",
-                              style: TextStyle(fontSize: _subtitleSize)),
-                          Text(studyplan.date.day.toString() + "日",
-                              style: TextStyle(fontSize: _titleSize)),
-                        ],
-                      )),
-                ),
-                title: Container(
-                  margin: EdgeInsets.only(left: _textL),
-                  child: Text(studyplan.title,
-                      style: TextStyle(fontSize: _titleSize)),
-                ),
-                subtitle: Container(
-                  margin: EdgeInsets.only(left: _textL, top: _subtitleT),
-                  child: Text(_studyPlanTime(index),
-                      style: TextStyle(fontSize: _subtitleSize, color: _gray)),
-                ),
-                trailing: Container(
-                  margin: EdgeInsets.only(right: _sizing.height(2)),
-                  child: CustomerCheckBox(
-                    value: _studyplanCheck[index],
-                    onTap: (value) {
-                      setState(() {
-                        if (value == true) {
-                          if (_studyplanCount() < 1) {
-                            _studyplanCheck[index] = value;
-                            studyplanNum = studyplan.studyplanNum;
-                          }
-                        } else {
-                          _studyplanCheck[index] = value;
-                        }
-                      });
-                    },
-                  ),
-                ),
+              return InkWell(
                 onTap: () {
                   setState(() {
                     if (_studyplanCheck[index] == false) {
@@ -193,6 +150,63 @@ class _ShareStudyPlanWidget extends State<ShareStudyPlanPage> {
                     }
                   });
                 },
+                child: Container(
+                  margin: EdgeInsets.only(
+                      top: _sizing.height(1), bottom: _sizing.height(1)),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: _sizing.width(18),
+                        child: Container(
+                          margin: EdgeInsets.only(left: _leadingL),
+                          child: Column(
+                            children: [
+                              Text(studyplan.date.month.toString() + "月",
+                                  style: TextStyle(fontSize: _subtitleSize)),
+                              Text(studyplan.date.day.toString() + "日",
+                                  style: TextStyle(fontSize: _titleSize)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: _sizing.width(70),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: _textL),
+                              child: Text(studyplan.title,
+                                  style: TextStyle(fontSize: _titleSize)),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: _textL, top: _subtitleT),
+                              child: Text(_studyPlanTime(index),
+                                  style: TextStyle(
+                                      fontSize: _subtitleSize, color: _gray)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      CustomerCheckBox(
+                        value: _studyplanCheck[index],
+                        onTap: (value) {
+                          setState(() {
+                            if (value == true) {
+                              if (_studyplanCount() < 1) {
+                                _studyplanCheck[index] = value;
+                                studyplanNum = studyplan.studyplanNum;
+                              }
+                            } else {
+                              _studyplanCheck[index] = value;
+                            }
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
             separatorBuilder: (context, index) {

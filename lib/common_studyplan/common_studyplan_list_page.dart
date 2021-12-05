@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:date_format/date_format.dart';
+
 import 'package:My_Day_app/study/studyplan_detail_page.dart';
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
 import 'package:My_Day_app/public/studyplan_request/one_group_list.dart';
 import 'package:My_Day_app/common_studyplan/share_studyplan_page.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/studyplan/common_studyplan_list_model.dart';
-import 'package:date_format/date_format.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/sizing.dart';
+
 
 class CommonStudyPlanListPage extends StatefulWidget {
   int groupNum;
@@ -19,8 +20,7 @@ class CommonStudyPlanListPage extends StatefulWidget {
       new _CommonStudyPlanListWidget(groupNum);
 }
 
-class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
-    with RouteAware {
+class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
   int groupNum;
   _CommonStudyPlanListWidget(this.groupNum);
 
@@ -38,23 +38,6 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
   void initState() {
     super.initState();
     _uid();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _groupStudyplanListRequest();
   }
 
   _groupStudyplanListRequest() async {
@@ -181,9 +164,14 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
                   studyplan = _groupStudyplanListModel.pastStudyplan[index];
                 return InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => StudyplanDetailPage(
-                            studyplan.studyplanNum, typeId, groupNum, true)));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (context) => StudyplanDetailPage(
+                                studyplan.studyplanNum,
+                                typeId,
+                                groupNum,
+                                true)))
+                        .then((value) => _groupStudyplanListRequest());
                   },
                   child: Container(
                     margin: EdgeInsets.only(
@@ -269,9 +257,11 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage>
                   actions: [
                     IconButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  ShareStudyPlanPage(groupNum)));
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      ShareStudyPlanPage(groupNum)))
+                              .then((value) => _groupStudyplanListRequest());
                         },
                         icon: Icon(Icons.add))
                   ],

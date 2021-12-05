@@ -9,6 +9,7 @@ import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/home.dart';
 
 SharedPreferences prefs;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
@@ -18,8 +19,6 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(id == null ? MyApp() : HomeWidget());
 }
-
-RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class MyApp extends StatelessWidget {
   @override
@@ -33,7 +32,6 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: [const Locale('zh', 'TW')],
       debugShowCheckedModeBanner: false,
-      navigatorObservers: [routeObserver],
       home: LoginPage(),
     );
   }

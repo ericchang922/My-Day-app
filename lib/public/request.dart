@@ -172,6 +172,7 @@ class Request {
     'get_group_list': '${path['note']}/get_group_list/',
     'share': '$host${path['note']}/share/',
     'cancel_share': '$host${path['note']}/cancel_share/',
+    'not_share_list': '${path['note']}/not_share_list/',
   };
   static Map profileUrl = {
     'profile_list': '${path['profile']}/profile_list/',
@@ -221,6 +222,7 @@ class Request {
 
   ShareNoteListModel _shareNoteList;
   NoteListModel _noteList;
+  NoteListModel _notShareNoteList;
   GetNoteModel _getnote;
 
   GetThemesModel _getThemes;
@@ -272,6 +274,7 @@ class Request {
   getShareNoteList() => _shareNoteList;
   getNoteList() => _noteList;
   getNote() => _getnote;
+  getNotShareNoteList() => _notShareNoteList;
 
   getThemesGet() => _getThemes;
   getLocationGet() => _getLocation;
@@ -827,7 +830,16 @@ class Request {
     }
   }
 
-  // get ------------------------------------------------------------------------------------------
+  // not_share_list -------------------------------------------------------------------------------------
+  notShareNoteList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['not_share_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _notShareNoteList = NoteListModel.fromJson(_responseBody);
+    }
+  }
+
+  // get -------------------------------------------------------------------------------------
   noteGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['get'];
     await httpGet(context, data, _url, 'noteGet');

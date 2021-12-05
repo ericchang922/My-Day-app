@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 
 import 'package:date_format/date_format.dart';
 
-import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/public/vote_request/add_items.dart';
+import 'package:My_Day_app/public/vote_request/delete.dart';
+import 'package:My_Day_app/public/vote_request/vote.dart';
 import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/vote/vote_edit_page.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
-import 'package:My_Day_app/public/vote_request/add_items.dart';
-import 'package:My_Day_app/public/vote_request/delete.dart';
-import 'package:My_Day_app/public/vote_request/vote.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/vote_request/get.dart';
 import 'package:My_Day_app/public/loadUid.dart';
@@ -25,7 +24,7 @@ class VotePage extends StatefulWidget {
   _VoteWidget createState() => new _VoteWidget(voteNum, groupNum);
 }
 
-class _VoteWidget extends State<VotePage> with RouteAware {
+class _VoteWidget extends State<VotePage> {
   String uid;
   _uid() async {
     String id = await loadUid();
@@ -64,24 +63,6 @@ class _VoteWidget extends State<VotePage> with RouteAware {
   void initState() {
     super.initState();
     _uid();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _getVoteRequest();
-    _getGroupMemberRequest();
   }
 
   _getVoteRequest() async {
@@ -215,8 +196,13 @@ class _VoteWidget extends State<VotePage> with RouteAware {
     _selectedItem(BuildContext context, item) async {
       switch (item) {
         case 0:
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => VoteEditPage(voteNum)));
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => VoteEditPage(voteNum)))
+              .then((value) {
+            _getVoteRequest();
+            _getGroupMemberRequest();
+          });
           break;
         case 1:
           if (await _submitDelete() != true) {

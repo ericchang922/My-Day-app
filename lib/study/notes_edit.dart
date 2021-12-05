@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/public/note_request/create_new.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
 import 'package:My_Day_app/public/sizing.dart';
@@ -32,6 +34,9 @@ class _NotesEditPage extends State<NotesEditPage> {
 
     await _getNoteRequest();
   }
+
+  String _imgString;
+  String noteid = "lili123";
 
   final notetypeName = TextEditingController();
   final notetitle = TextEditingController();
@@ -61,49 +66,17 @@ class _NotesEditPage extends State<NotesEditPage> {
     });
   }
 
-  /*图片控件*/
-  Widget _ImageView(imgPath) {
-    if (imgPath == null) {
-      return Center(
-        child: Text(""),
-      );
-    } else {
-      return Image.file(
-        imgPath,
-      );
-    }
-  }
-
-  getImage(String imageString) {
-    bool isGetImage;
-
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(
-      base64.decode(imageString),
-    );
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return Center(
-        child: Text('無法讀取'),
-      );
-    }
-  }
-
-  /*相册*/
   _openGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    String imgString = await imageToBase64(image);
     setState(() {
-      _imgPath = image;
+      _imgString = imgString;
     });
+  }
+
+  Future imageToBase64(File file) async {
+    List<int> imageBytes = await file.readAsBytes();
+    return base64Encode(imageBytes);
   }
 
   final FocusNode focusNode = FocusNode();
@@ -114,10 +87,12 @@ class _NotesEditPage extends State<NotesEditPage> {
     double _iconWidth = _sizing.width(5);
     double _appBarSize = _sizing.width(5.8);
 
+    GetImage _getImage = GetImage(context);
+
     _submit() async {
       String typeName = notetypeName.text;
       String title = notetitle.text;
-      String content = _imgPath.toString();
+      String content = _imgString;
 
       var submitWidget;
       _submitWidgetfunc() async {
@@ -234,7 +209,7 @@ class _NotesEditPage extends State<NotesEditPage> {
                                 onPressed: _openGallery,
                               )),
                           Expanded(
-                            child: _ImageView(_imgPath),
+                            child: _getImage.note(_getNote.content),
                           ),
                         ])),
               ),

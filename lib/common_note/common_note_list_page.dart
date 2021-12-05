@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/common_note/common_note_detail_page.dart';
 import 'package:My_Day_app/common_note/share_note_page.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
@@ -17,7 +16,7 @@ class CommonNoteListPage extends StatefulWidget {
   _CommonNoteListWidget createState() => new _CommonNoteListWidget(groupNum);
 }
 
-class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
+class _CommonNoteListWidget extends State<CommonNoteListPage> {
   String uid;
   _uid() async {
     String id = await loadUid();
@@ -35,23 +34,6 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
   void initState() {
     super.initState();
     _uid();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _groupNoteListRequest();
   }
 
   _groupNoteListRequest() async {
@@ -137,9 +119,11 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
                 ),
                 trailing: _popupMenu(note.createId, note.noteNum),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          CommonNoteDetailPage(note.noteNum)));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) =>
+                              CommonNoteDetailPage(note.noteNum)))
+                      .then((value) => _groupNoteListRequest());
                 },
               );
             },
@@ -175,8 +159,10 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
               actions: [
                 IconButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ShareNotePage(groupNum)));
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => ShareNotePage(groupNum)))
+                          .then((value) => _groupNoteListRequest());
                     },
                     icon: Icon(Icons.add))
               ],

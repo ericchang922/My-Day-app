@@ -1,13 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
 import 'package:My_Day_app/public/setting_request/get_friend_privacy.dart';
 import 'package:My_Day_app/public/sizing.dart';
@@ -42,7 +43,17 @@ class _friendWidget extends State<friendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String id;
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _friendListRequest();
+    await _bestFriendListRequest();
+    await _getFriendPrivacyRequest();
+    _isCheck = false;
+  }
+
   String friendId;
 
   Map<String, dynamic> _friendCheck = {};
@@ -56,17 +67,12 @@ class _friendWidget extends State<friendPage> {
   @override
   void initState() {
     super.initState();
-
-    _friendListRequest();
-    _bestFriendListRequest();
-    _friendNameControlloer();
-    _getFriendPrivacyRequest();
-    _isCheck = false;
+    _uid();
   }
 
   _getFriendPrivacyRequest() async {
     GetFriendPrivacyModel _request =
-        await GetFriendPrivacy(context: context, uid: id, friendId: friendId)
+        await GetFriendPrivacy(context: context, uid: uid, friendId: friendId)
             .getData();
 
     setState(() {
@@ -90,7 +96,7 @@ class _friendWidget extends State<friendPage> {
 
   _bestFriendListRequest() async {
     BestFriendListModel _request =
-        await BestFriendList(context: context, uid: id).getData();
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -103,7 +109,7 @@ class _friendWidget extends State<friendPage> {
 
   _friendListRequest() async {
     FriendListModel _request =
-        await FriendList(context: context, uid: id).getData();
+        await FriendList(context: context, uid: uid).getData();
 
     setState(() {
       _friendListModel = _request;
@@ -112,33 +118,6 @@ class _friendWidget extends State<friendPage> {
         _friendCheck[_friendListModel.friend[i].friendId] = false;
       }
     });
-  }
-
-  Image getImage(String imageString) {
-    Sizing _sizing = Sizing(context);
-    double _imgSize = _sizing.height(4.5);
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('friend_privacy_setting -- getImage error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
   }
 
   @override
@@ -151,8 +130,9 @@ class _friendWidget extends State<friendPage> {
 
     Widget friendListWidget;
 
+    GetImage _getImage = GetImage(context);
+
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
@@ -178,7 +158,7 @@ class _friendWidget extends State<friendPage> {
               contentPadding: EdgeInsets.symmetric(
                   horizontal: _listPaddingH, vertical: 0.0),
               leading: ClipOval(
-                child: getImage(friends.photo),
+                child: _getImage.friend(friends.photo),
               ),
               title: Text(
                 friends.friendName,
@@ -264,7 +244,7 @@ class _friendWidget extends State<friendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -446,8 +426,9 @@ class _friendWidget extends State<friendPage> {
     double _listPaddingH = _sizing.width(6);
     double _pSize = _sizing.height(2.3);
 
+    GetImage _getImage = GetImage(context);
+
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
@@ -472,7 +453,7 @@ class _friendWidget extends State<friendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -556,8 +537,9 @@ class _friendWidget extends State<friendPage> {
     double _listPaddingH = _sizing.width(6);
     double _pSize = _sizing.height(2.3);
 
+    GetImage _getImage = GetImage(context);
+
     _submitfriend(String friendId) async {
-      String uid = id;
       bool isPublic = _isCheck;
 
       var submitWidget;
@@ -582,7 +564,7 @@ class _friendWidget extends State<friendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,

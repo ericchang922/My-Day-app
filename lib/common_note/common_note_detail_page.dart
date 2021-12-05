@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
-import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
@@ -16,8 +14,7 @@ class CommonNoteDetailPage extends StatefulWidget {
   _CommonNoteDetailPage createState() => new _CommonNoteDetailPage(noteNum);
 }
 
-class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
-    with RouteAware {
+class _CommonNoteDetailPage extends State<CommonNoteDetailPage> {
   int noteNum;
   _CommonNoteDetailPage(this.noteNum);
 
@@ -37,23 +34,6 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
     _uid();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _getNoteRequest();
-  }
-
   _getNoteRequest() async {
     GetNoteModel _request =
         await Get(context: context, uid: uid, noteNum: noteNum).getData();
@@ -61,29 +41,6 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
     setState(() {
       _getNote = _request;
     });
-  }
-
-  getImage(String imageString) {
-    bool isGetImage;
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(
-      base64.decode(imageString),
-    );
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('common_note_detail_page -- getImage error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return Center(
-        child: Text('無法讀取'),
-      );
-    }
   }
 
   @override
@@ -95,34 +52,36 @@ class _CommonNoteDetailPage extends State<CommonNoteDetailPage>
 
     Color _color = Theme.of(context).primaryColor;
 
+    GetImage _getImage = GetImage(context);
+
     if (_getNote != null) {
       return Container(
-        color: _color,
-        child: SafeArea(
-          bottom: false,
-          child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: _color,
-              title:
-                  Text(_getNote.title, style: TextStyle(fontSize: _appBarSize)),
-              leading: Container(
-                margin: EdgeInsets.only(left: _leadingL),
-                child: GestureDetector(
-                  child: Icon(Icons.chevron_left),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
+          color: _color,
+          child: SafeArea(
+              bottom: false,
+              child: Scaffold(
+                appBar: AppBar(
+                  backgroundColor: _color,
+                  title: Text(_getNote.title,
+                      style: TextStyle(fontSize: _appBarSize)),
+                  leading: Container(
+                    margin: EdgeInsets.only(left: _leadingL),
+                    child: GestureDetector(
+                      child: Icon(Icons.chevron_left),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            body: Container(
-                color: Colors.white,
-                child: SafeArea(
+                body: Container(
+                  color: Colors.white,
+                  child: SafeArea(
                     top: false,
-                    child: Center(child: getImage(_getNote.content)))),
-          ),
-        ),
-      );
+                    child: Center(child: _getImage.note(_getNote.content)),
+                  ),
+                ),
+              )));
     } else {
       return Container(
           color: Colors.white,

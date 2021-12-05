@@ -58,8 +58,11 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
   int _type;
   int scheduleNum;
 
-  DateTime _startDateTime = DateTime.now();
-  DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
+  DateTime _startDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
+  DateTime _endDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 9, 0);
+
   String _title;
   String _location;
 
@@ -95,9 +98,11 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
   Widget build(BuildContext context) {
     _titleController.text = _title;
     _locationController.text = _location;
-    if (_startDateTime == null) _startDateTime = DateTime.now();
+    if (_startDateTime == null)
+      _startDateTime = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day + 1, 8, 0);
     if (_endDateTime == null)
-      _endDateTime = DateTime.now().add(Duration(hours: 1));
+      _endDateTime = _startDateTime.add(Duration(hours: 1));
 
     // values ------------------------------------------------------------------------------------------
     Sizing _sizing = Sizing(context);
@@ -164,6 +169,10 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
 
       if (endTime == null || endTime == '') {
         await alert(context, _alertTitle, '請選擇結束時間');
+        _isNotCreate = true;
+      }
+      if (_startDateTime.isAfter(_endDateTime)) {
+        await alert(context, _alertTitle, '結束時間必須在開始時間之後');
         _isNotCreate = true;
       }
       if (typeId == null || typeId <= 0 || typeId > 8) {
@@ -256,7 +265,6 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                   onDateTimeChanged: (value) => setState(() {
                     if (isStart) {
                       _startDateTime = value;
-                      _endDateTime = value.add(Duration(hours: 1));
                     } else
                       _endDateTime = value;
                   }),
@@ -479,7 +487,13 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 Expanded(
                   flex: 8,
                   child: TextField(
-                    controller: _locationController,
+                    controller: TextEditingController.fromValue(TextEditingValue(
+                        text: _locationController.text,
+                        selection: TextSelection.fromPosition(TextPosition(
+                          affinity: TextAffinity.downstream,
+                          offset: _locationController.text.length
+                        ))
+                      )),
                     style: TextStyle(fontSize: _h2Size),
                     decoration: InputDecoration(
                       hintText: '地點',
@@ -491,6 +505,11 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                     cursorColor: _color,
                     onSubmitted: (_) =>
                         FocusScope.of(context).requestFocus(FocusNode()),
+                    onChanged: (text) {
+                      setState(() {
+                        _location = text;
+                      });
+                    },
                   ),
                 )
               ],

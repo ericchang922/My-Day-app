@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
 
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/models/profile/profile_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/profile/edit_profile.dart';
@@ -58,30 +59,6 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     });
   }
 
-  getImage(String imageString) {
-    bool isGetImage;
-
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(
-      base64.decode(imageString),
-    );
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return Center(
-        child: Text('無法讀取'),
-      );
-    }
-  }
-
   Future _getImage(ImageSource source) async {
     var photo = await ImagePicker.pickImage(source: source);
 
@@ -115,6 +92,8 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
     Color _textFiedBorder = Color(0xff707070);
+
+    GetImage _getImage = GetImage(context);
 
     _submit() async {
       var submitWidget;
@@ -305,19 +284,8 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                   onTap: () async {
                     _incrementCounter();
                   },
-                  child: CircleAvatar(
-                    radius: 70,
-                    backgroundColor: Colors.white,
-                    child: ClipOval(
-                        child: (_photo != null)
-                            ? Image.file(
-                                _photo,
-                                fit: BoxFit.cover,
-                                width: 150,
-                                height: 150,
-                              )
-                            : Image.asset('assets/images/search.png')),
-                  ),
+                  child: ClipOval(
+                      child: _getImage.personal(_getProfileList.photo)),
                 )),
             Container(
               margin: EdgeInsets.only(top: _sizing.height(1)),
