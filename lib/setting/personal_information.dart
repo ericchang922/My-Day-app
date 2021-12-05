@@ -36,10 +36,7 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     await _getProfileListRequest();
   }
 
-  String photo;
-  File _photo;
-  String photoBase64;
-  File imageResized;
+  String _imgString;
 
   @override
   void initState() {
@@ -55,24 +52,22 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     setState(() {
       _getProfileList = _request;
       _name = _getProfileList.userName;
+      _imgString = _getProfileList.photo;
       print(_name);
     });
   }
 
-  Future _getImage(ImageSource source) async {
-    var photo = await ImagePicker.pickImage(source: source);
-
+  _openGallery() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    String content = await imageToBase64(image);
     setState(() {
-      _photo = photo;
-
-      List<int> imageBytes = photo.readAsBytesSync();
-      photoBase64 = base64Encode(imageBytes);
-      print(photoBase64);
+      _imgString = content;
     });
   }
 
-  void _incrementCounter() {
-    _getImage(ImageSource.gallery);
+  Future imageToBase64(File file) async {
+    List<int> imageBytes = await file.readAsBytes();
+    return base64Encode(imageBytes);
   }
 
   @override
@@ -88,6 +83,7 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     double _textFied = _sizing.height(4.5);
     double _inkwellH = _sizing.height(6);
     double _bottomHeight = _sizing.height(7);
+    double _imgSize = _sizing.height(20);
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
@@ -96,9 +92,11 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     GetImage _getImage = GetImage(context);
 
     _submit() async {
+      print(_name);
+      print(_imgString);
       var submitWidget;
       _submitWidgetfunc() async {
-        return EditProfile(uid: uid, userName: _name, photo: photo);
+        return EditProfile(uid: uid, userName: _name, photo: _imgString);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -113,21 +111,21 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
-            contentPadding: EdgeInsets.only(top: _sizing.height(2)),
-            content: Container(
-              width: _sizing.width(20),
-              height: _sizing.height(24),
-              child: GestureDetector(
-                // 點擊空白處釋放焦點
-                behavior: HitTestBehavior.translucent,
-                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: ListView(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(_borderRadius))),
+              contentPadding: EdgeInsets.only(top: _sizing.height(2)),
+              content: Container(
+                width: _sizing.width(20),
+                height: _sizing.height(24),
+                child: GestureDetector(
+                  // 點擊空白處釋放焦點
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                  child: Column(
+                    children: <Widget>[
+                      ListView(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         children: [
@@ -182,195 +180,191 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                               )),
                         ],
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            child: Container(
-                              height: _inkwellH,
-                              padding: EdgeInsets.only(
-                                  top: _sizing.height(1.5),
-                                  bottom: _sizing.height(1.5)),
-                              decoration: BoxDecoration(
-                                color: _light,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(_borderRadius),
-                                ),
-                              ),
-                              child: Text(
-                                "取消",
-                                style: TextStyle(
-                                    fontSize: _subtitleSize,
-                                    color: Colors.white),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
                               child: Container(
                                 height: _inkwellH,
                                 padding: EdgeInsets.only(
                                     top: _sizing.height(1.5),
                                     bottom: _sizing.height(1.5)),
                                 decoration: BoxDecoration(
-                                  color: _color,
+                                  color: _light,
                                   borderRadius: BorderRadius.only(
-                                      bottomRight:
-                                          Radius.circular(_borderRadius)),
+                                    bottomLeft: Radius.circular(_borderRadius),
+                                  ),
                                 ),
                                 child: Text(
-                                  "確認",
+                                  "取消",
                                   style: TextStyle(
                                       fontSize: _subtitleSize,
                                       color: Colors.white),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-                              onTap: () async {
-                                if (_NameController.text.isEmpty) {
-                                  if (await _submit() != true) {
-                                    setState(() {
-                                      _name = _name;
-                                      Navigator.of(context).pop();
-                                    });
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                                child: Container(
+                                  height: _inkwellH,
+                                  padding: EdgeInsets.only(
+                                      top: _sizing.height(1.5),
+                                      bottom: _sizing.height(1.5)),
+                                  decoration: BoxDecoration(
+                                    color: _color,
+                                    borderRadius: BorderRadius.only(
+                                        bottomRight:
+                                            Radius.circular(_borderRadius)),
+                                  ),
+                                  child: Text(
+                                    "確認",
+                                    style: TextStyle(
+                                        fontSize: _subtitleSize,
+                                        color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                onTap: () async {
+                                  if (_NameController.text.isEmpty) {
+                                    if (await _submit() != true) {
+                                      setState(() {
+                                        _name = _name;
+                                        Navigator.of(context).pop();
+                                      });
+                                    }
+                                  } else {
+                                    if (await _submit() != true) {
+                                      setState(() {
+                                        _NameController.text = _name;
+                                        Navigator.of(context).pop();
+                                      });
+                                    }
                                   }
-                                } else {
-                                  if (await _submit() != true) {
-                                    setState(() {
-                                      _NameController.text = _name;
-                                      Navigator.of(context).pop();
-                                    });
-                                  }
-                                }
-                              }),
-                        )
-                      ],
-                    ),
-                  ],
+                                }),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          );
+              ));
         },
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Color(0xffF86D67),
-          title: Text('個人資料', style: TextStyle(fontSize: _appBarSize)),
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left),
-            onPressed: () async {
-              if (await _submit() != true) {
-                photo = photoBase64;
-                Navigator.of(context).pop();
-              }
-            },
-          )),
-      body: SafeArea(
-        child: ListView(
-          children: <Widget>[
-            Container(
-                margin: EdgeInsets.only(
-                    top: _sizing.height(2), right: _sizing.height(20)),
-                child: InkWell(
-                  onTap: () async {
-                    _incrementCounter();
-                  },
-                  child: ClipOval(
-                      child: _getImage.personal(_getProfileList.photo)),
-                )),
-            Container(
-              margin: EdgeInsets.only(top: _sizing.height(1)),
-              color: Color(0xffE3E3E3),
-              constraints: BoxConstraints.expand(height: 1.0),
-            ),
-            Container(
-                margin: EdgeInsets.only(
-                    top: _sizing.height(1), left: _sizing.height(5)),
-                child: ListTile(
-                  title: Text('姓名', style: TextStyle(fontSize: _titleSize)),
-                  subtitle: Container(
-                      margin: EdgeInsets.only(top: _subtitleT),
-                      child: Text(_name,
-                          style: TextStyle(fontSize: _subtitleSize))),
-                  onTap: () async {
-                    await settingsUpdateNameDialog(context);
-                  },
-                )),
-            Container(
-              margin: EdgeInsets.only(top: _sizing.height(1)),
-              color: Color(0xffE3E3E3),
-              constraints: BoxConstraints.expand(height: 1.0),
-            ),
-            Container(
-                margin: EdgeInsets.only(
-                    top: _sizing.height(1), left: _sizing.height(5)),
-                child: ListTile(
-                  title: Text('電子郵件', style: TextStyle(fontSize: _titleSize)),
-                  subtitle: Container(
-                      margin: EdgeInsets.only(top: _subtitleT),
-                      child:
-                          Text(uid, style: TextStyle(fontSize: _subtitleSize))),
-                  onTap: () async {
-                    return null;
-                  },
-                )),
-            Container(
-              margin: EdgeInsets.only(top: _sizing.height(1)),
-              color: Color(0xffE3E3E3),
-              constraints: BoxConstraints.expand(height: 1.0),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  top: _sizing.height(1), right: _sizing.height(20)),
-              child: SizedBox(
-                  height: _bottomHeight,
-                  width: double.infinity,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.black,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChangepwPersonalPage()));
+    if (_getProfileList != null) {
+      return Scaffold(
+        appBar: AppBar(
+            backgroundColor: Color(0xffF86D67),
+            title: Text('個人資料', style: TextStyle(fontSize: _appBarSize)),
+            leading: IconButton(
+              icon: Icon(Icons.chevron_left),
+              onPressed: () async {
+                if (await _submit() != true) {
+                  Navigator.of(context).pop();
+                }
+              },
+            )),
+        body: SafeArea(
+          child: ListView(
+            children: <Widget>[
+              IconButton(
+                iconSize: _imgSize,
+                onPressed: () {
+                  _openGallery();
+                },
+                icon: Container(
+                    height: _imgSize,
+                    width: _imgSize,
+                    child: ClipOval(child: _getImage.personal(_imgString))),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: _sizing.height(1)),
+                color: Color(0xffE3E3E3),
+                constraints: BoxConstraints.expand(height: 1.0),
+              ),
+              Container(
+                  margin: EdgeInsets.only(
+                      top: _sizing.height(1), left: _sizing.height(2)),
+                  child: ListTile(
+                    title: Text('姓名', style: TextStyle(fontSize: _titleSize)),
+                    subtitle: Container(
+                        margin: EdgeInsets.only(top: _subtitleT),
+                        child: Text(_name,
+                            style: TextStyle(fontSize: _subtitleSize))),
+                    onTap: () async {
+                      await settingsUpdateNameDialog(context);
                     },
-                    child: Text(
-                      '更改密碼',
-                      style: TextStyle(
-                        fontSize: _appBarSize,
-                      ),
-                    ),
                   )),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: _sizing.height(0.5)),
-              color: Color(0xffE3E3E3),
-              constraints: BoxConstraints.expand(height: 1.0),
-            ),
-          ],
+              Container(
+                margin: EdgeInsets.only(top: _sizing.height(1)),
+                color: Color(0xffE3E3E3),
+                constraints: BoxConstraints.expand(height: 1.0),
+              ),
+              Container(
+                  margin: EdgeInsets.only(
+                      top: _sizing.height(1), left: _sizing.height(2)),
+                  child: ListTile(
+                    title: Text('電子郵件', style: TextStyle(fontSize: _titleSize)),
+                    subtitle: Container(
+                        margin: EdgeInsets.only(top: _subtitleT),
+                        child: Text(uid,
+                            style: TextStyle(fontSize: _subtitleSize))),
+                    onTap: () async {
+                      return null;
+                    },
+                  )),
+              Container(
+                margin: EdgeInsets.only(top: _sizing.height(1)),
+                color: Color(0xffE3E3E3),
+                constraints: BoxConstraints.expand(height: 1.0),
+              ),
+              ListTile(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: _sizing.height(4)),
+                  title: Text(
+                    '更改密碼',
+                    style: TextStyle(
+                      fontSize: _appBarSize,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChangepwPersonalPage()));
+                  }),
+              Container(
+                margin: EdgeInsets.only(top: _sizing.height(0.5)),
+                color: Color(0xffE3E3E3),
+                constraints: BoxConstraints.expand(height: 1.0),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-class MyClipper extends CustomClipper<Rect> {
-  Rect getClip(Size size) {
-    return Rect.fromCircle(center: Offset(200, 200), radius: 200);
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Rect> oldClipper) {
-    return false;
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+            backgroundColor: Color(0xffF86D67),
+            title: Text('個人資料', style: TextStyle(fontSize: _appBarSize)),
+            leading: IconButton(
+              icon: Icon(Icons.chevron_left),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )),
+        body: Container(
+          color: Colors.white,
+          child: Center(
+              child: SafeArea(top: false, child: CircularProgressIndicator())),
+        ),
+      );
+    }
   }
 }
