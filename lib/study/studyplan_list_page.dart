@@ -54,7 +54,25 @@ class _StudyplanListPage extends State<StudyplanListPage> {
 
     setState(() {
       _groupStudyplanListModel = _request;
+      _shareStudyplanNumList = [];
+      for (int i = 0; i < _groupStudyplanListModel.pastStudyplan.length; i++) {
+        var studyplan = _groupStudyplanListModel.pastStudyplan[i];
+        for (int j = 0; j < studyplan.studyplanContent.length; j++) {
+          _shareStudyplanNumList
+              .add(studyplan.studyplanContent[j].studyplanNum);
+        }
+      }
+      for (int i = 0;
+          i < _groupStudyplanListModel.futureStudyplan.length;
+          i++) {
+        var studyplan = _groupStudyplanListModel.futureStudyplan[i];
+        for (int j = 0; j < studyplan.studyplanContent.length; j++) {
+          _shareStudyplanNumList
+              .add(studyplan.studyplanContent[j].studyplanNum);
+        }
+      }
     });
+    print(_shareStudyplanNumList);
   }
 
   _personalShareStudyplanList() async {
@@ -62,13 +80,7 @@ class _StudyplanListPage extends State<StudyplanListPage> {
         await PersonalShareList(uid: uid, shareStatus: 1).getData();
     setState(() {
       _shareStudyplanListModel = _request;
-      _shareStudyplanNumList = [];
-      for (int i = 0; i < _shareStudyplanListModel.studyplan.length; i++) {
-        var studyplan = _shareStudyplanListModel.studyplan[i];
-        _shareStudyplanNumList.add(studyplan.studyplanNum);
-      }
     });
-    print(_shareStudyplanNumList);
   }
 
   @override
@@ -214,21 +226,27 @@ class _StudyplanListPage extends State<StudyplanListPage> {
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               var studyplan;
-              if (typeId == 0)
+              int groupNum;
+              if (typeId == 0) {
                 studyplan = _groupStudyplanListModel
                     .futureStudyplan[value].studyplanContent[index];
-              else
+                groupNum =
+                    _groupStudyplanListModel.futureStudyplan[value].groupNum;
+              } else {
                 studyplan = _groupStudyplanListModel
                     .pastStudyplan[value].studyplanContent[index];
+                groupNum =
+                    _groupStudyplanListModel.pastStudyplan[value].groupNum;
+              }
+
               return InkWell(
                 onTap: () {
-                  print(studyplan.studyplanNum);
                   Navigator.of(context)
                       .push(MaterialPageRoute(
                           builder: (context) => StudyplanDetailPage(
                               studyplan.studyplanNum,
                               typeId,
-                              null,
+                              groupNum,
                               _shareStudyplanNumList
                                   .contains(studyplan.studyplanNum))))
                       .then((value) {
