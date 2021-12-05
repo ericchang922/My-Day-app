@@ -164,11 +164,11 @@ class Request {
     'get_group_list': '${path['note']}/get_group_list/',
     'share': '$host${path['note']}/share/',
     'cancel_share': '$host${path['note']}/cancel_share/',
+    'not_share_list': '${path['note']}/not_share_list/',
   };
   static Map profileUrl = {
     'profile_list': '$host${path['profile']}/profile_list/',
     'edit_profile': '$host${path['profile']}/edit_profile/',
-    
   };
 
   Map headers = <String, String>{
@@ -214,6 +214,7 @@ class Request {
 
   ShareNoteListModel _shareNoteList;
   NoteListModel _noteList;
+  NoteListModel _notShareNoteList;
   GetNoteModel _getnote;
 
   GetThemesModel _getThemes;
@@ -224,7 +225,6 @@ class Request {
   GetFriendPrivacyModel _getFriendPrivacy;
 
   GetProfileListModel _getProfileList;
-
 
   bool _isError;
 
@@ -266,15 +266,16 @@ class Request {
   getShareNoteList() => _shareNoteList;
   getNoteList() => _noteList;
   getNote() => _getnote;
+  getNotShareNoteList() => _notShareNoteList;
 
-  getThemesGet()=> _getThemes;
-  getLocationGet()=> _getLocation;
-  getTimetableGet()=> _getTimetable;
-  getNoticeGet()=> _getNotice;
-  getTimetableNoticeGet()=> _getTimetableNotice;
-  getFriendPrivacyGet()=> _getFriendPrivacy;
+  getThemesGet() => _getThemes;
+  getLocationGet() => _getLocation;
+  getTimetableGet() => _getTimetable;
+  getNoticeGet() => _getNotice;
+  getTimetableNoticeGet() => _getTimetableNotice;
+  getFriendPrivacyGet() => _getFriendPrivacy;
 
-  getProfileListGet()=> _getProfileList;
+  getProfileListGet() => _getProfileList;
 
   getIsError() => _isError;
 
@@ -788,6 +789,15 @@ class Request {
     }
   }
 
+  // not_share_list -------------------------------------------------------------------------------------
+  notShareNoteList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = noteUrl['not_share_list'];
+    await httpGet(context, data, _url);
+    if (_responseBody != null) {
+      _notShareNoteList = NoteListModel.fromJson(_responseBody);
+    }
+  }
+
   // get -------------------------------------------------------------------------------------
   noteGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = noteUrl['get'];
@@ -906,6 +916,7 @@ class Request {
     String _url = settingUrl['themes'];
     await httpPost(context, data, _url, '主題設定成功');
   }
+
   // get_theme -----------------------------------------------------------------------------
   getthemes(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_themes'];
@@ -914,6 +925,7 @@ class Request {
       _getThemes = GetThemesModel.fromJson(_responseBody);
     }
   }
+
   // get_theme -----------------------------------------------------------------------------
   getlocation(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_location'];
@@ -922,6 +934,7 @@ class Request {
       _getLocation = GetLocationModel.fromJson(_responseBody);
     }
   }
+
   // get_timetable -----------------------------------------------------------------------------
   gettimetable(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_timetable'];
@@ -930,6 +943,7 @@ class Request {
       _getTimetable = GetTimetableModel.fromJson(_responseBody);
     }
   }
+
   // get_notice -----------------------------------------------------------------------------
   getnotice(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_notice'];
@@ -938,6 +952,7 @@ class Request {
       _getNotice = GetNoticeModel.fromJson(_responseBody);
     }
   }
+
   // get_timetable_notice -----------------------------------------------------------------------------
   gettimetablenotice(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_timetable'];
@@ -946,6 +961,7 @@ class Request {
       _getTimetableNotice = GetTimetableNoticeModel.fromJson(_responseBody);
     }
   }
+
   // get_friend_privacy -----------------------------------------------------------------------------
   getfriendprivacy(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['get_friend_privacy'];
@@ -954,12 +970,14 @@ class Request {
       _getFriendPrivacy = GetFriendPrivacyModel.fromJson(_responseBody);
     }
   }
+
   // profile ============================================================================================
   // edit-profile ----------------------------------------------------------------------------------
   editprofile(BuildContext context, Map<String, dynamic> data) async {
     String _url = profileUrl['edit_profile'];
     await httpPost(context, data, _url, '個人資料設定成功');
   }
+
   // profile-list -----------------------------------------------------------------------------
   getprofilelist(BuildContext context, Map<String, dynamic> data) async {
     String _url = profileUrl['profile_list'];
@@ -969,5 +987,3 @@ class Request {
     }
   }
 }
-
-
