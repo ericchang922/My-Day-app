@@ -1,13 +1,10 @@
-import 'dart:convert';
-
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/public/note_request/delete.dart';
 
 import 'package:My_Day_app/public/note_request/get.dart';
 import 'package:My_Day_app/study/notes_edit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class NoteDetailPage extends StatefulWidget {
   int noteNum;
@@ -18,7 +15,7 @@ class NoteDetailPage extends StatefulWidget {
   _NoteDetailPage createState() => new _NoteDetailPage(uid, noteNum);
 }
 
-class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
+class _NoteDetailPage extends State<NoteDetailPage> {
   int noteNum;
   String uid = 'lili123';
   _NoteDetailPage(this.uid, this.noteNum);
@@ -28,23 +25,6 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _getNoteRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
     _getNoteRequest();
   }
 
@@ -61,30 +41,6 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
     print(noteNum);
   }
 
-  getImage(String imageString) {
-    bool isGetImage;
-
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(
-      base64.decode(imageString),
-    );
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return Center(
-        child: Text('無法讀取'),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -97,6 +53,8 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
     double _subtitleSize = _height * 0.02;
 
     Color _color = Theme.of(context).primaryColor;
+
+    GetImage _getImage = GetImage(context);
 
     _submitDelete() async {
       var submitWidget;
@@ -115,8 +73,10 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
     _selectedItem(BuildContext context, value) async {
       switch (value) {
         case 'edit':
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => NotesEditPage(noteNum)));
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => NotesEditPage(noteNum)))
+              .then((value) => _getNoteRequest());
           break;
 
         case 'delete':
@@ -182,7 +142,9 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
             ),
             body: Container(
                 color: Colors.white,
-                child: SafeArea(top: false, child: Center(child: getImage(_getNote.content)))),
+                child: SafeArea(
+                    top: false,
+                    child: Center(child: _getImage.note(_getNote.content)))),
           ),
         ),
       );

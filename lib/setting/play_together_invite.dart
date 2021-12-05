@@ -3,11 +3,11 @@ import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/models/setting/get_notice.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/public/setting_request/friend_privacy.dart';
 import 'package:My_Day_app/public/setting_request/get_notice.dart';
 import 'package:My_Day_app/public/setting_request/notice_temporary%20.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -60,8 +60,8 @@ class _friendWidget extends State<friendPage> {
     _bestFriendListRequest();
     _friendNameControlloer();
     _getNoticeRequest();
-   if (_notice == null) {
-       _isCheck = false;
+    if (_notice == null) {
+      _isCheck = false;
 
       // ignore: unrelated_type_equality_checks
     } else if (_notice == 1) {
@@ -127,34 +127,6 @@ class _friendWidget extends State<friendPage> {
     });
   }
 
-  Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -171,8 +143,9 @@ class _friendWidget extends State<friendPage> {
 
     Color _bule = Color(0xff7AAAD8);
 
-
     Widget friendListWidget;
+
+    GetImage _getImage = GetImage(context);
 
     _submitTimetable() async {
       String uid = id;
@@ -217,7 +190,7 @@ class _friendWidget extends State<friendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -227,10 +200,11 @@ class _friendWidget extends State<friendPage> {
               value: _bestFriendCheck[friends.friendId],
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
-                setState(() {
-                  _friendCheck[friends.friendId] = value;
-                });
-              }},
+                  setState(() {
+                    _friendCheck[friends.friendId] = value;
+                  });
+                }
+              },
               activeColor: Colors.white,
               activeTrackColor: Color(0xffF86D67),
               // inactiveThumbColor: Color(0xffF86D67),
@@ -253,7 +227,7 @@ class _friendWidget extends State<friendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -263,10 +237,11 @@ class _friendWidget extends State<friendPage> {
               value: _friendCheck[friends.friendId],
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
-                setState(() {
-                  _friendCheck[friends.friendId] = value;
-                });
-              }},
+                  setState(() {
+                    _friendCheck[friends.friendId] = value;
+                  });
+                }
+              },
               activeColor: Colors.white,
               activeTrackColor: Color(0xffF86D67),
               // inactiveThumbColor: Color(0xffF86D67),
@@ -355,7 +330,10 @@ class _friendWidget extends State<friendPage> {
       }
       Widget playtogetherinvite = Column(children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: _height * 0.00, right: _height * 0.018,left: _height * 0.018),
+          margin: EdgeInsets.only(
+              top: _height * 0.00,
+              right: _height * 0.018,
+              left: _height * 0.018),
           // ignore: deprecated_member_use
           child: SizedBox(
               height: _bottomHeight,
@@ -421,10 +399,10 @@ class _friendWidget extends State<friendPage> {
               )),
         ),
         Container(
-        margin: EdgeInsets.only(top: _height * 0.001),
-        color: Color(0xffE3E3E3),
-        constraints: BoxConstraints.expand(height: 1.0),
-      ),
+          margin: EdgeInsets.only(top: _height * 0.001),
+          color: Color(0xffE3E3E3),
+          constraints: BoxConstraints.expand(height: 1.0),
+        ),
       ]);
 
       return SafeArea(
@@ -480,6 +458,8 @@ class _friendWidget extends State<friendPage> {
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
 
+    GetImage _getImage = GetImage(context);
+
     _submitfriend(String friendId) async {
       String uid = id;
       bool isPublic = _isCheck;
@@ -506,7 +486,7 @@ class _friendWidget extends State<friendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -515,11 +495,12 @@ class _friendWidget extends State<friendPage> {
           trailing: Switch(
             value: _bestFriendCheck[friends.friendId],
             onChanged: (value) async {
-                if (await _submitfriend(friends.friendId) != true) {
+              if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
                   _friendCheck[friends.friendId] = value;
                 });
-              }},
+              }
+            },
             activeColor: Colors.white,
             activeTrackColor: Color(0xffF86D67),
             // inactiveThumbColor: Color(0xffF86D67),
@@ -540,6 +521,8 @@ class _friendWidget extends State<friendPage> {
 
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
+
+    GetImage _getImage = GetImage(context);
 
     _submitfriend(String friendId) async {
       String uid = id;
@@ -567,7 +550,7 @@ class _friendWidget extends State<friendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -576,11 +559,12 @@ class _friendWidget extends State<friendPage> {
           trailing: Switch(
             value: _friendCheck[friends.friendId],
             onChanged: (value) async {
-                if (await _submitfriend(friends.friendId) != true) {
+              if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
                   _friendCheck[friends.friendId] = value;
                 });
-              }},
+              }
+            },
             activeColor: Colors.white,
             activeTrackColor: Color(0xffF86D67),
             // inactiveThumbColor: Color(0xffF86D67),

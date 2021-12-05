@@ -1,7 +1,8 @@
-// import 'package:My_Day_app/main.dart';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/public/note_request/create_new.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
 import 'package:My_Day_app/study/note_fail.dart';
@@ -22,7 +23,7 @@ class _NotesEditPage extends State<NotesEditPage> {
   int noteNum;
   _NotesEditPage(this.noteNum);
 
-  var _imgPath;
+  String _imgString;
   String noteid = "lili123";
 
   final notetypeName = TextEditingController();
@@ -49,6 +50,7 @@ class _NotesEditPage extends State<NotesEditPage> {
 
     setState(() {
       _getNote = _request;
+      _imgString = _getNote.content;
     });
   }
 
@@ -65,36 +67,17 @@ class _NotesEditPage extends State<NotesEditPage> {
     }
   }
 
-  getImage(String imageString) {
-    bool isGetImage;
-
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(
-      base64.decode(imageString),
-    );
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return Center(
-        child: Text('無法讀取'),
-      );
-    }
-  }
-
-  /*相册*/
   _openGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    String imgString = await imageToBase64(image);
     setState(() {
-      _imgPath = image;
+      _imgString = imgString;
     });
+  }
+
+  Future imageToBase64(File file) async {
+    List<int> imageBytes = await file.readAsBytes();
+    return base64Encode(imageBytes);
   }
 
   final FocusNode focusNode = FocusNode();
@@ -106,11 +89,13 @@ class _NotesEditPage extends State<NotesEditPage> {
     double _iconWidth = _width * 0.05;
     double _appBarSize = _width * 0.058;
 
+    GetImage _getImage = GetImage(context);
+
     _submit() async {
       String uid = noteid;
       String typeName = notetypeName.text;
       String title = notetitle.text;
-      String content = _imgPath.toString();
+      String content = _imgString;
 
       var submitWidget;
       _submitWidgetfunc() async {
@@ -226,7 +211,7 @@ class _NotesEditPage extends State<NotesEditPage> {
                               onPressed: _openGallery,
                             )),
                         Expanded(
-                          child: _ImageView(_imgPath),
+                          child: _getImage.note(_imgString),
                         ),
                       ])),
               bottomNavigationBar: Container(
@@ -302,179 +287,3 @@ class _NotesEditPage extends State<NotesEditPage> {
     }
   }
 }
-
-
-// class NotesAdd extends StatefulWidget {
-//   @override
-//   _NotesAdd createState() => _NotesAdd();
-// }
-
-// class _NotesAdd extends State<NotesAdd> {
-//   get direction => null;
-//   get border => null;
-//   get decoration => null;
-//   get child => null;
-//   get btnCenterClickEvent => null;
-//   get appBar => null;
-//   var value;
-//   int count = 0;
-//    final FocusNode focusNode = FocusNode();
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: SafeArea(
-//         child: Scaffold(
-//           resizeToAvoidBottomInset: false ,
-//         body: GestureDetector(
-//         onTap: () {
-//           focusNode.unfocus();
-//         },
-//         child: ListView(
-//           children: <Widget>[
-//             Container(
-//                 margin: EdgeInsets.only(left: 30, right: 100, bottom: 15,top:15),
-//                 child: Row(
-//                   children: [
-//                     Text('標題: ', style: TextStyle(fontSize: 20)),
-//                     Flexible(
-//                       child: TextField(
-//                         focusNode: focusNode,
-//                         keyboardType: TextInputType.multiline,
-//                         maxLines: 20,
-//                         minLines: 1,
-//                         decoration: InputDecoration(
-//                           isCollapsed: true,
-//                           contentPadding:
-//                               EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-//                           border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.all(
-//                                 Radius.circular(10)), //设置边框四个角的弧度
-//                             borderSide: BorderSide(
-//                               //用来配置边框的样式
-//                               color: Color(0xff707070), //设置边框的颜色
-//                               width: 2.0, //设置边框的粗细
-//                             ),
-//                           ),
-//                         ),
-//                       )),
-//                   ],
-//                 )),
-//             Container(
-//                 margin: EdgeInsets.only(left: 30, right: 150, bottom: 15),
-//                 child: Row(
-//                   children: [
-//                     Text('分類: ', style: TextStyle(fontSize: 20)),
-//                     Flexible(
-//                       child: TextField(
-//                         focusNode: focusNode,
-//                       keyboardType: TextInputType.multiline,
-//                       maxLines: 20,
-//                       minLines: 1,
-//                       decoration: InputDecoration(
-//                         isCollapsed: true,
-//                         contentPadding:
-//                             EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-//                         border: OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(
-//                               Radius.circular(10)), //设置边框四个角的弧度
-//                           borderSide: BorderSide(
-//                             //用来配置边框的样式
-//                             color: Color(0xff707070), //设置边框的颜色
-//                             width: 2.0, //设置边框的粗细
-//                           ),
-//                         ),
-//                       ),
-//                     )),
-//                   ],
-//                 )),
-//             Padding(
-//                 padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-//                 child: Container(
-//                   margin: EdgeInsets.only(top: 4.0),
-//                   color: Color(0xffE3E3E3),
-//                   constraints: BoxConstraints.expand(height: 1.0),
-//                 )),
-//             Padding(
-//               padding: EdgeInsets.fromLTRB(30, 0, 20, 0),
-//               // ignore: deprecated_member_use
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: <Widget>[
-//                   Text(
-//                     '上傳檔案:',
-//                     style: TextStyle(
-//                       fontSize: 20,
-//                     ),
-//                   ),
-//                   TextButton(
-//                     style: TextButton.styleFrom(
-//                   primary: Colors.black,
-//                 ),
-//                       child: Text(
-//                         '瀏覽',
-//                         style: TextStyle(fontSize: 18),
-//                       ),
-//                       onPressed: () {})
-//                 ],
-//               ),
-//             ),
-//             Padding(
-//               padding: EdgeInsets.fromLTRB(30, 0, 20, 0),
-//               child: TextField(
-//                 focusNode: focusNode,
-//                 keyboardType: TextInputType.multiline,
-//                 maxLines: 20,
-//                 minLines: 1,
-//                 decoration: InputDecoration(
-//                   isCollapsed: true,
-//                   contentPadding:
-//                       EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-//                   border: OutlineInputBorder(
-//                     borderRadius:
-//                         BorderRadius.all(Radius.circular(10)), //设置边框四个角的弧度
-//                     borderSide: BorderSide(
-//                       //用来配置边框的样式
-//                       color: Color(0xffE3E3E3), //设置边框的颜色
-//                       width: 2.0, //设置边框的粗细
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             Padding(
-//               padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-//               child: ListTile(
-//                 title: Text('內容：', style: TextStyle(fontSize: 20)),
-//               ),
-//             ),
-//             Container(
-//               margin: EdgeInsets.only(left: 30.0, right: 26.0),
-//               child: TextField(
-//                 focusNode: focusNode,
-//                 keyboardType: TextInputType.multiline,
-//                 maxLines: 20,
-//                 minLines: 1,
-
-//                 decoration: InputDecoration(
-//                   isCollapsed: true,
-//                   contentPadding:
-//                       EdgeInsets.symmetric(horizontal: 8, vertical: 120),
-//                   border: OutlineInputBorder(
-//                     borderRadius:
-//                         BorderRadius.all(Radius.circular(10)), //设置边框四个角的弧度
-//                     borderSide: BorderSide(
-//                       //用来配置边框的样式
-//                       color: Color(0xffE3E3E3), //设置边框的颜色
-//                       width: 2.0, //设置边框的粗细
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     )));
-//   }
-// }

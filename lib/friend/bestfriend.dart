@@ -1,16 +1,11 @@
-import 'dart:convert';
-
-import 'package:My_Day_app/friend/bestfriend_add.dart';
-import 'package:My_Day_app/friend/friends_add.dart';
-import 'package:My_Day_app/public/friend_request/delete_best.dart';
-
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
-
-import 'package:My_Day_app/public/alert.dart';
-
+import 'package:My_Day_app/friend/bestfriend_add.dart';
+import 'package:My_Day_app/friend/friends_add.dart';
+import 'package:My_Day_app/public/friend_request/delete_best.dart';
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
@@ -96,34 +91,6 @@ class _BestfriendWidget extends State<BestfriendPage> {
     });
   }
 
-  Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -131,19 +98,12 @@ class _BestfriendWidget extends State<BestfriendPage> {
     double _height = size.height;
     double _titleSize = _height * 0.025;
     double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
 
     double _pSize = _height * 0.023;
 
-    double _appBarSize = _width * 0.052;
-
-    Color _color = Theme.of(context).primaryColor;
-
-    Color _bule = Color(0xff7AAAD8);
-
     Widget friendListWidget;
+
+    GetImage _getImage = GetImage(context);
 
     _submitDelete(String friendId) async {
       var submitWidget;
@@ -176,7 +136,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
               contentPadding: EdgeInsets.symmetric(
                   horizontal: _listPaddingH, vertical: 0.0),
               leading: ClipOval(
-                child: getImage(friends.photo),
+                child: _getImage.friend(friends.photo),
               ),
               title: Text(
                 friends.friendName,
@@ -218,7 +178,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
               contentPadding: EdgeInsets.symmetric(
                   horizontal: _listPaddingH, vertical: 0.0),
               leading: ClipOval(
-                child: getImage(friends.photo),
+                child: _getImage.friend(friends.photo),
               ),
               title: Text(
                 friends.friendName,
@@ -385,6 +345,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
 
+    GetImage _getImage = GetImage(context);
+
     _submitDelete(String friendId) async {
       var submitWidget;
 
@@ -415,7 +377,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -450,6 +412,8 @@ class _BestfriendWidget extends State<BestfriendPage> {
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
 
+    GetImage _getImage = GetImage(context);
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -466,7 +430,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,

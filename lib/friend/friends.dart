@@ -1,14 +1,11 @@
-import 'dart:convert';
-
 import 'package:My_Day_app/friend/bestfriend.dart';
 import 'package:My_Day_app/friend/friend_home.dart';
 import 'package:My_Day_app/friend/friends_add.dart';
 import 'package:My_Day_app/friend/friends_invitation.dart';
-import 'package:My_Day_app/home.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/public/friend_request/delete.dart';
-
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
@@ -28,7 +25,6 @@ class _friendWidget extends State<FriendPage> {
 
   String _searchText = "";
   String uid = prefs.getString('TestString_Key');
-  
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -97,34 +93,6 @@ class _friendWidget extends State<FriendPage> {
     });
   }
 
-  Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -145,6 +113,9 @@ class _friendWidget extends State<FriendPage> {
     Color _bule = Color(0xff7AAAD8);
 
     Widget friendListWidget;
+
+    GetImage _getImage = GetImage(context);
+
     _submitDelete(String friendId) async {
       var submitWidget;
 
@@ -170,7 +141,7 @@ class _friendWidget extends State<FriendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -200,7 +171,7 @@ class _friendWidget extends State<FriendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: TextButton(
                 style: TextButton.styleFrom(primary: Colors.black),
@@ -377,6 +348,8 @@ class _friendWidget extends State<FriendPage> {
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
 
+    GetImage _getImage = GetImage(context);
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -387,7 +360,7 @@ class _friendWidget extends State<FriendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -415,6 +388,9 @@ class _friendWidget extends State<FriendPage> {
 
     double _listPaddingH = _width * 0.06;
     double _pSize = _height * 0.023;
+
+    GetImage _getImage = GetImage(context);
+
     _submitDelete(String friendId) async {
       var submitWidget;
 
@@ -439,7 +415,7 @@ class _friendWidget extends State<FriendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: TextButton(
               child: Text(
@@ -450,7 +426,8 @@ class _friendWidget extends State<FriendPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomeUpdate(child: FriendHome(friends.friendId))));
+                        builder: (context) =>
+                            HomeUpdate(child: FriendHome(friends.friendId))));
               }),
           trailing: TextButton(
               style: TextButton.styleFrom(primary: Color(0xffF86D67)),

@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
@@ -110,6 +109,10 @@ class _CreateScheduleWidget extends State<TemporaryGroupCreatePage> {
 
       if (endTime == null || endTime == '') {
         await alert(context, _alertTitle, '請選擇結束時間');
+        _isNotCreate = true;
+      }
+      if (_startDateTime.isAfter(_endDateTime)) {
+        await alert(context, _alertTitle, '結束時間必須在開始時間之後');
         _isNotCreate = true;
       }
       if (typeId == null || typeId <= 0 || typeId > 8) {
@@ -581,34 +584,6 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     });
   }
 
-  Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -638,6 +613,8 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
     Color _textFiedBorder = Color(0xff070707);
 
     Widget friendListWidget;
+
+    GetImage _getImage = GetImage(context);
 
     _submit() async {
       List<Map<String, dynamic>> friend = [];
@@ -761,7 +738,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -803,7 +780,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -1045,6 +1022,8 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
 
     double _pSize = _height * 0.023;
 
+    GetImage _getImage = GetImage(context);
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -1055,7 +1034,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -1098,6 +1077,8 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
 
     double _pSize = _height * 0.023;
 
+    GetImage _getImage = GetImage(context);
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -1108,7 +1089,7 @@ class _InviteFriendWidget extends State<InviteFriendPage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
