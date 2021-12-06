@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final temporaryGroupListModel = temporaryGroupListModelFromJson(jsonString);
-
 import 'dart:convert';
 
 TemporaryGroupListModel temporaryGroupListModelFromJson(String str) => TemporaryGroupListModel.fromJson(json.decode(str));

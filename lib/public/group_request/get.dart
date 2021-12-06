@@ -16,7 +16,7 @@ class Get {
     _response = await request.getGroupGet();
   }
 
-  Get({this.uid, this.groupNum}) {
+  Get({this.context, this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

@@ -1,10 +1,11 @@
-import 'package:My_Day_app/models/note/note_list_model.dart';
-import 'package:My_Day_app/public/note_request/delete.dart';
-import 'package:My_Day_app/public/note_request/get_list.dart';
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/study/note_detail_page.dart';
 import 'package:My_Day_app/study/notes_add.dart';
-import 'package:flutter/material.dart';
-import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/models/note/note_list_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/note_request/get_list.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 AppBar noteListAppBar(context) {
   return null;
@@ -22,39 +23,27 @@ class NoteListWidget extends StatefulWidget {
   _NoteListState createState() => new _NoteListState();
 }
 
-class _NoteListState extends State<NoteListWidget> with RouteAware {
+class _NoteListState extends State<NoteListWidget> {
   NoteListModel _noteList;
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getNoteListRequest();
+  }
+
   int noteNum;
   @override
   void initState() {
     super.initState();
-    _getNoteListRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _getNoteListRequest();
+    _uid();
   }
 
   _getNoteListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
-
+    print(uid + 'note.dart======================================');
     NoteListModel _request =
-        await GetList(uid: uid, noteNum: noteNum).getData();
+        await GetList(context: context, uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _noteList = _request;
@@ -62,21 +51,10 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
   }
 
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _listPaddingH = _width * 0.06;
-    double _widthSize = _width * 0.01;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _subtitleT = _height * 0.005;
+    Sizing _sizing = Sizing(context);
 
-    double _appBarSize = _width * 0.052;
-    double _p2Size = _height * 0.02;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _typeSize = _width * 0.045;
+    double _listPaddingH = _sizing.width(6);
+    double _titleSize = _sizing.height(2.5);
 
     Color _color = Theme.of(context).primaryColor;
 
@@ -110,7 +88,7 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
         noteListWiget = Center(child: Text('目前沒有任何筆記！'));
       } else {
         noteListWiget = ListView(
-          padding: EdgeInsets.only(top: _width * 0.03),
+          padding: EdgeInsets.only(top: _sizing.width(3)),
           children: [noteList],
         );
       }
@@ -134,9 +112,10 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
                   icon: Icon(Icons.add),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotesAddPage()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NotesAddPage()))
+                        .then((value) => _getNoteListRequest());
                   },
                 ),
               ],
@@ -164,9 +143,10 @@ class _NoteListState extends State<NoteListWidget> with RouteAware {
                   icon: Icon(Icons.add),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotesAddPage()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NotesAddPage()))
+                        .then((value) => _getNoteListRequest());
                   },
                 ),
               ],

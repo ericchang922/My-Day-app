@@ -15,7 +15,7 @@ class GroupList {
     _response = await request.getGroupListGet();
   }
 
-  GroupList({this.uid}) {
+  GroupList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

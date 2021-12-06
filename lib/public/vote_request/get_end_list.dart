@@ -16,7 +16,7 @@ class GetEndList {
     _response = await request.getVoteEndList();
   }
 
-  GetEndList({this.uid, this.groupNum}) {
+  GetEndList({this.context, this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

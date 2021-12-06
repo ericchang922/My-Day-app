@@ -1,16 +1,19 @@
+// dart
+// flutter
+import 'package:flutter/material.dart';
+// therd
+// my day
 import 'package:My_Day_app/home/home_Update.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/setting/settings.dart';
 import 'package:My_Day_app/timetable/timetable_receive.dart';
 import 'package:My_Day_app/timetable/timetable_action_list.dart';
 import 'package:My_Day_app/timetable/timetable_choose_share.dart';
-import 'package:flutter/material.dart';
 
 Widget homePopupMenu(BuildContext context) {
-  Size _size = MediaQuery.of(context).size;
-  double _height = _size.height;
-  double _width = _size.width;
-  double _greyFontSize = _height * 0.015;
-  double _itemsSize = _height * 0.037;
+  Sizing _sizing = Sizing(context);
+  double _greyFontSize = _sizing.height(1.5);
+  double _itemsSize = _sizing.height(3.7);
   Color _homePageGrey = Color(0xffCCCCCC);
 
   Color _itemsColor(String value) {
@@ -24,8 +27,8 @@ Widget homePopupMenu(BuildContext context) {
 
   return PopupMenuButton(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(_width * 0.05))),
-      padding: EdgeInsets.all(_width * 0.005),
+          borderRadius: BorderRadius.all(Radius.circular(_sizing.width(5)))),
+      padding: EdgeInsets.all(_sizing.width(0.5)),
       icon: Icon(Icons.more_vert),
       onSelected: (value) {
         switch (value) {
@@ -47,9 +50,9 @@ Widget homePopupMenu(BuildContext context) {
       },
       itemBuilder: (context) => [
             PopupMenuItem(
-                padding: EdgeInsets.only(left: _width * 0.18),
+                padding: EdgeInsets.only(left: _sizing.width(18)),
                 child: Container(
-                  width: _width * 0.2,
+                  width: _sizing.width(20),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(

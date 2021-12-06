@@ -1,7 +1,8 @@
-import 'package:My_Day_app/timetable/timetable_create.dart';
-import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/timetable/timetable_create.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -23,30 +24,25 @@ class TimetableForm extends State<TimetableFormPage> {
   Widget build(BuildContext context) {
     final _schoolNameController = TextEditingController();
     String _schoolName;
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _width * 0.08;
-    double _subtitleT = _height * 0.005;
+    double _listPaddingH = _sizing.width(8);
+    double _subtitleT = _sizing.height(0.5);
 
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _iconWidth = _width * 0.05;
-    double _borderRadius = _height * 0.03;
-    double _textLBR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _inkwellH = _height * 0.06;
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _borderRadius = _sizing.height(3);
+    double _textLBR = _sizing.height(2);
+    double _textFied = _sizing.height(4.5);
+    double _inkwellH = _sizing.height(6);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
     Color _textFiedBorder = Color(0xff707070);
 
-    double _timeSize = _width * 0.045;
+    double _timeSize = _sizing.width(4.5);
 
     String _startView =
         '${_startDateTime.year.toString().padLeft(4, '0')} 年 ${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ';
@@ -58,7 +54,7 @@ class TimetableForm extends State<TimetableFormPage> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -72,7 +68,7 @@ class TimetableForm extends State<TimetableFormPage> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.date,
                     initialDateTime: DateTime.now(),
@@ -98,10 +94,10 @@ class TimetableForm extends State<TimetableFormPage> {
               shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.all(Radius.circular(_borderRadius))),
-              contentPadding: EdgeInsets.only(top: _height * 0.02),
+              contentPadding: EdgeInsets.only(top: _sizing.height(2)),
               content: Container(
-                  width: _width * 0.2,
-                  height: _height * 0.25,
+                  width: _sizing.width(20),
+                  height: _sizing.height(25),
                   child: GestureDetector(
                     // 點擊空白處釋放焦點
                     behavior: HitTestBehavior.translucent,
@@ -131,7 +127,7 @@ class TimetableForm extends State<TimetableFormPage> {
                                     left: _textLBR,
                                     right: _textLBR,
                                     bottom: _textLBR,
-                                    top: _height * 0.015),
+                                    top: _sizing.height(1.5)),
                                 child: Text('學校名稱：',
                                     style: TextStyle(fontSize: _pSize)),
                               ),
@@ -145,18 +141,20 @@ class TimetableForm extends State<TimetableFormPage> {
                                     style: TextStyle(fontSize: _pSize),
                                     decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            horizontal: _height * 0.01,
-                                            vertical: _height * 0.01),
+                                            horizontal: _sizing.height(1),
+                                            vertical: _sizing.height(1)),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.all(
-                                              Radius.circular(_height * 0.01)),
+                                              Radius.circular(
+                                                  _sizing.height(1))),
                                           borderSide: BorderSide(
                                             color: _textFiedBorder,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.all(
-                                              Radius.circular(_height * 0.01)),
+                                              Radius.circular(
+                                                  _sizing.height(1))),
                                           borderSide: BorderSide(color: _bule),
                                         )),
                                     controller: _schoolNameController,
@@ -177,8 +175,8 @@ class TimetableForm extends State<TimetableFormPage> {
                                 child: Container(
                                   height: _inkwellH,
                                   padding: EdgeInsets.only(
-                                      top: _height * 0.015,
-                                      bottom: _height * 0.015),
+                                      top: _sizing.height(1.5),
+                                      bottom: _sizing.height(1.5)),
                                   decoration: BoxDecoration(
                                     color: _light,
                                     borderRadius: BorderRadius.only(
@@ -204,8 +202,8 @@ class TimetableForm extends State<TimetableFormPage> {
                                 child: Container(
                                   height: _inkwellH,
                                   padding: EdgeInsets.only(
-                                      top: _height * 0.015,
-                                      bottom: _height * 0.015),
+                                      top: _sizing.height(1.5),
+                                      bottom: _sizing.height(1.5)),
                                   decoration: BoxDecoration(
                                     color: _color,
                                     borderRadius: BorderRadius.only(
@@ -361,7 +359,7 @@ class TimetableForm extends State<TimetableFormPage> {
                     ),
                   ),
                   SizedBox(
-                      width: _width * 0.5,
+                      width: _sizing.width(50),
                       child: TextButton(
                         child: Text(
                           _startView,
@@ -376,7 +374,7 @@ class TimetableForm extends State<TimetableFormPage> {
                                     borderRadius: BorderRadius.circular(8))),
                             side: MaterialStateProperty.all(BorderSide(
                                 color: Color(0xff707070),
-                                width: _width * 0.001))),
+                                width: _sizing.width(0.1)))),
                         onPressed: () => _datePicker(context, true),
                       ))
                 ]),
@@ -396,7 +394,7 @@ class TimetableForm extends State<TimetableFormPage> {
                     ),
                   ),
                   SizedBox(
-                      width: _width * 0.5,
+                      width: _sizing.width(50),
                       child: TextButton(
                         child: Text(
                           _endView,
@@ -411,7 +409,7 @@ class TimetableForm extends State<TimetableFormPage> {
                                     borderRadius: BorderRadius.circular(8))),
                             side: MaterialStateProperty.all(BorderSide(
                                 color: Color(0xff707070),
-                                width: _width * 0.001))),
+                                width: _sizing.width(0.1)))),
                         onPressed: () => _datePicker(context, false),
                       ))
                 ]),
@@ -429,12 +427,12 @@ class TimetableForm extends State<TimetableFormPage> {
             child: Row(children: <Widget>[
               Expanded(
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.07,
+                  height: _sizing.height(7),
                   child: RawMaterialButton(
                     elevation: 0,
                     child: Image.asset(
                       'assets/images/cancel.png',
-                      width: MediaQuery.of(context).size.width * 0.05,
+                      width: _sizing.width(5),
                     ),
                     fillColor: Theme.of(context).primaryColorLight,
                     onPressed: () => Navigator.pop(context),
@@ -443,12 +441,12 @@ class TimetableForm extends State<TimetableFormPage> {
               ), // 取消按鈕
               Expanded(
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.07,
+                  height: _sizing.height(7),
                   child: RawMaterialButton(
                       elevation: 0,
                       child: Image.asset(
                         'assets/images/confirm.png',
-                        width: MediaQuery.of(context).size.width * 0.05,
+                        width: _sizing.width(5),
                       ),
                       fillColor: Theme.of(context).primaryColor,
                       onPressed: () {

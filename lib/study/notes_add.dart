@@ -1,13 +1,16 @@
 import 'dart:convert';
-
-import 'package:My_Day_app/public/note_request/create_new.dart';
-import 'package:My_Day_app/study/note_fail.dart';
-
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/note_request/create_new.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/study/note_fail.dart';
 
 class NotesAddPage extends StatefulWidget {
   @override
@@ -15,7 +18,11 @@ class NotesAddPage extends StatefulWidget {
 }
 
 class _NotesAddPage extends State<NotesAddPage> {
-  String noteid = "lili123";
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
 
   final notetypeName = TextEditingController();
   final notetitle = TextEditingController();
@@ -31,6 +38,7 @@ class _NotesAddPage extends State<NotesAddPage> {
   @override
   void initState() {
     super.initState();
+    _uid();
   }
 
   Widget _imageView(imgPath) {
@@ -59,18 +67,15 @@ class _NotesAddPage extends State<NotesAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _iconWidth = _width * 0.05;
-    double _bottomHeight = _height * 0.07;
+    double _iconWidth = _sizing.width(5);
+    double _bottomHeight = _sizing.height(7);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
 
     _submit() async {
-      String uid = noteid;
       String typeName = notetypeName.text;
       String title = notetitle.text;
       String content = await imageToBase64(_imgPath);
@@ -119,7 +124,6 @@ class _NotesAddPage extends State<NotesAddPage> {
                                 Flexible(
                                     child: TextField(
                                   controller: notetitle,
-                                  // focusNode: focusNode,
                                   keyboardType: TextInputType.multiline,
                                   maxLines: 20,
                                   minLines: 1,
@@ -205,8 +209,7 @@ class _NotesAddPage extends State<NotesAddPage> {
                                 width: _iconWidth,
                               ),
                               fillColor: _light,
-                              onPressed: () async{
-                                print(await imageToBase64(_imgPath));
+                              onPressed: () {
                                 Navigator.pop(context);
                               }),
                         ),

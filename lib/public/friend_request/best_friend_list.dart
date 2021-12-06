@@ -15,7 +15,7 @@ class BestFriendList {
     _response = await request.getBestFriendGet();
   }
 
-  BestFriendList({this.uid}) {
+  BestFriendList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

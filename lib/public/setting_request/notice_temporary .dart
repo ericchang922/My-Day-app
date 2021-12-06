@@ -12,7 +12,7 @@ class NoticeTemporary {
 
   _request() async {
     Request request = Request();
-    await request.noticetemporary(context, data);
+    await request.noticeTemporary(context, data);
     this._isError = await request.getIsError();
   }
 

@@ -16,7 +16,7 @@ class CommonList {
     _response = await request.getCommonScheduleListGet();
   }
 
-  CommonList({this.uid, this.groupNum}) {
+  CommonList({this.context, this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

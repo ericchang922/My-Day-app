@@ -1,16 +1,19 @@
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
+import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/public/toast.dart';
 import 'package:My_Day_app/public/type_color.dart';
+import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/schedule/edit_schedule.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> scheduleDialog(
     BuildContext context, DateTime date, ScheduleGetList scheduleList) {
-  Size _size = MediaQuery.of(context).size;
-  double _height = _size.height;
-  double _width = _size.width;
+  Sizing _sizing = Sizing(context);
   Color _color = Theme.of(context).primaryColor;
 
   double _fabDimension = 56.0;
@@ -19,17 +22,17 @@ Future<void> scheduleDialog(
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.03)),
+              borderRadius: BorderRadius.circular(_sizing.height(3))),
           child: Container(
             alignment: Alignment.centerLeft,
-            height: _height * 0.5,
-            width: _width * 0.7,
+            height: _sizing.height(50),
+            width: _sizing.width(70),
             child: Stack(children: [
               Column(
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                        top: _height * 0.015, left: _width * 0.08),
+                        top: _sizing.height(1.5), left: _sizing.width(8)),
                     child: Container(
                       alignment: Alignment.topLeft,
                       child: Column(
@@ -37,35 +40,35 @@ Future<void> scheduleDialog(
                           Text(
                             '${date.day}日',
                             style: TextStyle(
-                                color: _color, fontSize: _height * 0.04),
+                                color: _color, fontSize: _sizing.height(4)),
                             textAlign: TextAlign.left,
                           ),
                           Text(
                             ConvertInt.toWeekDay(date.weekday),
                             style: TextStyle(
                                 color: _color,
-                                fontSize: _height * 0.02,
-                                height: _height * 0.001),
+                                fontSize: _sizing.height(2),
+                                height: _sizing.height(0.1)),
                           ),
                         ],
                       ),
                     ),
                   ),
                   Divider(
-                    height: _height * 0.02,
-                    indent: _width * 0.05,
-                    endIndent: _width * 0.05,
+                    height: _sizing.height(2),
+                    indent: _sizing.width(5),
+                    endIndent: _sizing.width(5),
                     color: Colors.grey,
                     thickness: 0.5,
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: _width * 0.05, right: _width * 0.05),
+                        left: _sizing.width(5), right: _sizing.width(5)),
                     child: Container(
-                        height: _height * 0.35,
+                        height: _sizing.height(35),
                         child: ListView(
                             children: listItems(
-                                context, date, scheduleList, _height, _width))),
+                                context, date, scheduleList, _sizing.height(100), _sizing.width(100)))),
                   )
                 ],
               ),
@@ -108,6 +111,14 @@ Future<void> scheduleDialog(
 
 List<Widget> listItems(BuildContext context, DateTime date,
     ScheduleGetList scheduleList, double height, double width) {
+
+  String _uid;
+  _uidLoad() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _uid = prefs.getString('uid');
+  }
+  
+  _uidLoad();
   List<Widget> itemList = [];
   DateTime dayStart = DateTime.utc(date.year, date.month, date.day, 0, 0, 0);
   DateTime dayEnd = dayStart.add(Duration(hours: 24));
@@ -149,47 +160,56 @@ List<Widget> listItems(BuildContext context, DateTime date,
       itemList.add(Container(
         width: width * 0.06,
         child: TextButton(
-          child: Row(
-            children: [
-              Container(
-                height: height * 0.025,
-                child: CircleAvatar(
-                  radius: height * 0.025,
-                  backgroundColor: typeColor(s.typeId),
-                ),
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Row(
+              children: [
                 Container(
-                  width: width * 0.4,
-                  child: Text(
-                    s.title,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: height * 0.025,
-                        fontWeight: FontWeight.normal,
-                        fontStyle: FontStyle.normal),
-                    textAlign: TextAlign.left,
+                  height: height * 0.025,
+                  child: CircleAvatar(
+                    radius: height * 0.025,
+                    backgroundColor: typeColor(s.typeId),
                   ),
                 ),
-                Text(
-                  '$showStart-$showEnd',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.normal,
-                    fontStyle: FontStyle.normal,
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Container(
+                    width: width * 0.4,
+                    child: Text(
+                      s.title,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: height * 0.025,
+                          fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.normal),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
-                )
-              ])
-            ],
-          ),
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => EditSchedule(
-                        uid: 'amy123',
-                        scheduleNum: s.scheduleNum,
-                      ))),
-        ),
+                  Text(
+                    '$showStart-$showEnd',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.normal,
+                      fontStyle: FontStyle.normal,
+                    ),
+                  )
+                ])
+              ],
+            ),
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EditSchedule(
+                          uid: _uid,
+                          scheduleNum: s.scheduleNum,
+                        ))),
+            onLongPress: () => msgBox(context, '警告', '確定要刪除行程嗎？', () async {
+                  Delete delete = Delete(
+                      context: context,
+                      uid: _uid,
+                      scheduleNum: s.scheduleNum);
+                  bool isError = await delete.getIsError();
+                  if (isError) {
+                    toast(context, '刪除行程錯誤');
+                  }
+                })),
       ));
     }
   }

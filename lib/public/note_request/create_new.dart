@@ -13,7 +13,7 @@ class CreateNewNote {
 
   _request() async {
     Request request = Request();
-    await request.createnew(context, data);
+    await request.createNew(context, data);
     this._isError = await request.getIsError();
   }
 

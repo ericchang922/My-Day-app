@@ -10,11 +10,11 @@ class GetNotice {
 
   _request() async {
     Request request = Request();
-    await request.getnotice(context, data);
+    await request.getNotice(context, data);
     _response = await request.getNoticeGet();
   }
 
-  GetNotice({this.uid}) {
+  GetNotice({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

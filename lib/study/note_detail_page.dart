@@ -1,13 +1,12 @@
-import 'dart:convert';
-
-import 'package:My_Day_app/main.dart';
-import 'package:My_Day_app/models/note/get_note_model.dart';
-import 'package:My_Day_app/public/note_request/delete.dart';
-
-import 'package:My_Day_app/public/note_request/get.dart';
-import 'package:My_Day_app/study/notes_edit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:My_Day_app/models/note/get_note_model.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/getImage.dart';
+import 'package:My_Day_app/public/note_request/delete.dart';
+import 'package:My_Day_app/public/note_request/get.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/study/notes_edit.dart';
 
 class NoteDetailPage extends StatefulWidget {
   int noteNum;
@@ -18,9 +17,16 @@ class NoteDetailPage extends StatefulWidget {
   _NoteDetailPage createState() => new _NoteDetailPage(uid, noteNum);
 }
 
-class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
+class _NoteDetailPage extends State<NoteDetailPage>{
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getNoteRequest();
+  }
+
   int noteNum;
-  String uid = 'lili123';
   _NoteDetailPage(this.uid, this.noteNum);
 
   GetNoteModel _getNote;
@@ -28,32 +34,12 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _getNoteRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _getNoteRequest();
+    _uid();
   }
 
   _getNoteRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_note.json');
-    // var responseBody = json.decode(response);
-    // var _request = GetNoteModel.fromJson(responseBody);
-
-    GetNoteModel _request = await Get(uid: uid, noteNum: noteNum).getData();
+    GetNoteModel _request =
+        await Get(context: context, uid: uid, noteNum: noteNum).getData();
 
     setState(() {
       _getNote = _request;
@@ -61,68 +47,37 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
     print(noteNum);
   }
 
-  getImage(String imageString) {
-    bool isGetImage;
-
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(
-      base64.decode(imageString),
-    );
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return Center(
-        child: Text('無法讀取'),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _leadingL = _height * 0.02;
-    double _appBarSize = _width * 0.058;
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
+    Sizing _sizing = Sizing(context);
+    double _leadingL = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.8);
+    double _subtitleSize = _sizing.height(2);
 
     Color _color = Theme.of(context).primaryColor;
 
+    GetImage _getImage = GetImage(context);
+
     _submitDelete() async {
-      var submitWidget;
-
-      _submitWidgetfunc() async {
-        return DeleteNote(uid: uid, noteNum: noteNum);
-      }
-
-      submitWidget = await _submitWidgetfunc();
-      if (await submitWidget.getIsError())
-        return true;
-      else
-        return false;
+      DeleteNote deleteNote =
+          DeleteNote(context: context, uid: uid, noteNum: noteNum);
+      print('note delete $uid, $noteNum');
+      return await deleteNote.getIsError();
     }
 
     _selectedItem(BuildContext context, value) async {
       switch (value) {
         case 'edit':
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => NotesEditPage(noteNum)));
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => NotesEditPage(noteNum)))
+              .then((value) => _getNoteRequest());
           break;
 
         case 'delete':
-          if (await _submitDelete() != true) {
-            Navigator.pop(context);
-          }
+          await _submitDelete();
+          print('刪除');
+          Navigator.of(context).pop();
           break;
       }
     }
@@ -131,7 +86,7 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
       return PopupMenuButton<String>(
         offset: Offset(50, 50),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(_height * 0.01)),
+            borderRadius: BorderRadius.circular(_sizing.height(1))),
         icon: Icon(Icons.more_vert),
         itemBuilder: (context) => [
           PopupMenuItem<String>(
@@ -176,13 +131,15 @@ class _NoteDetailPage extends State<NoteDetailPage> with RouteAware {
               actions: [
                 Container(
                     alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: _height * 0.01),
+                    margin: EdgeInsets.only(top: _sizing.height(1)),
                     child: _studyplanAction())
               ],
             ),
             body: Container(
                 color: Colors.white,
-                child: SafeArea(top: false, child: Center(child: getImage(_getNote.content)))),
+                child: SafeArea(
+                    top: false,
+                    child: Center(child: _getImage.note(_getNote.content)))),
           ),
         ),
       );

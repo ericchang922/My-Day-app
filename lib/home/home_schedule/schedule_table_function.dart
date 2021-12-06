@@ -1,6 +1,8 @@
-import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
-import 'package:My_Day_app/schedule/schedule_dialog.dart';
 import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/schedule/schedule_dialog.dart';
 
 double timeHeight(String start, String end, double fullHeight) {
   DateTime startTime = DateTime.parse('2000-01-01 ' + start);
@@ -15,17 +17,14 @@ double timeHeight(String start, String end, double fullHeight) {
 
 class Create {
   BuildContext context;
-  Size _size;
-  double height;
-  double width;
+  Sizing _sizing;
+
   Color _topColor = Color(0xffF6E0A4);
   Color _weekDayColor = Color(0xffF6F6F6);
   Color _sectionColor = Color(0xffFFFAF0);
 
-  Create({this.context}){
-    _size = MediaQuery.of(context).size;
-    height = _size.height;
-    width = _size.width;
+  Create({this.context}) {
+    _sizing = Sizing(context);
   }
 
   static Container _createTableRow(String txt, Color bkcolor, double _height) =>
@@ -40,14 +39,15 @@ class Create {
         ),
       );
 
-  Container top(String date) => _createTableRow(date, _topColor, height * 0.02);
+  Container top(String date) =>
+      _createTableRow(date, _topColor, _sizing.height(2));
 
   Container weekDay(String weekDayTxt) =>
-      _createTableRow(weekDayTxt, _weekDayColor, height * 0.05);
+      _createTableRow(weekDayTxt, _weekDayColor, _sizing.height(5));
 
   Container time(String start, String end) => Container(
         color: _weekDayColor,
-        height: timeHeight(start, end, height),
+        height: timeHeight(start, end, _sizing.height(100)),
         child: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -74,13 +74,14 @@ class Create {
     return created;
   }
 
-  List<Widget> dateBtn(List<DateTime> dateList, double _tableContentHeight, ScheduleGetList scheduleList) {
+  List<Widget> dateBtn(List<DateTime> dateList, double _tableContentHeight,
+      ScheduleGetList scheduleList) {
     List<Widget> dateBtnList = [];
     for (DateTime d in dateList) {
       dateBtnList.add(
         Container(
           height: _tableContentHeight,
-          width: width / 8,
+          width: _sizing.width(12.5),
           child: TextButton(
             style: ButtonStyle(
                 padding:

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/sizing.dart';
+
 class CustomerCheckBox extends StatefulWidget {
   CustomerCheckBox({Key key, @required this.value, @required this.onTap})
       : super(key: key);
@@ -14,17 +16,19 @@ class CustomerCheckBox extends StatefulWidget {
 
 class _CustomerCheckBox extends State<CustomerCheckBox> {
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    Sizing _sizing = Sizing(context);
     return InkWell(
       child: Container(
-        width: screenSize.width*0.05,
-        height: screenSize.width*0.05,
+        width: _sizing.width(5),
+        height: _sizing.width(5),
         decoration: BoxDecoration(
             border: Border.all(
-                width: 1, color: widget.value ? Theme.of(context).primaryColor : Color(0xff999999)),
+                width: 1,
+                color: widget.value
+                    ? Theme.of(context).primaryColor
+                    : Color(0xff999999)),
             color: widget.value ? Theme.of(context).primaryColor : Colors.white,
             borderRadius: BorderRadius.circular(24)),
-        
       ),
       onTap: () {
         widget.onTap(!widget.value);

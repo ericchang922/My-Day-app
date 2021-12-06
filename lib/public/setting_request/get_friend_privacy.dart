@@ -11,11 +11,11 @@ class GetFriendPrivacy {
 
   _request() async {
     Request request = Request();
-    await request.getfriendprivacy(context, data);
+    await request.getFriendPrivacy(context, data);
     _response = await request.getFriendPrivacyGet();
   }
 
-  GetFriendPrivacy({this.uid,this.friendId}) {
+  GetFriendPrivacy({this.context,this.uid,this.friendId}) {
     data = {'uid': uid,'friendId': friendId};
   }
 

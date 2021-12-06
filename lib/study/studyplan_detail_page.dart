@@ -1,14 +1,14 @@
+import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/common_note/common_note_detail_page.dart';
 import 'package:My_Day_app/common_studyplan/customer_check_box_studyplan.dart';
 import 'package:My_Day_app/study/edit_studyplan_page.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_model.dart';
 import 'package:My_Day_app/public/studyplan_request/cancel_sharing.dart';
 import 'package:My_Day_app/public/studyplan_request/delete.dart';
 import 'package:My_Day_app/public/studyplan_request/get.dart';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class StudyplanDetailPage extends StatefulWidget {
   int studyplanNum;
@@ -23,7 +23,7 @@ class StudyplanDetailPage extends StatefulWidget {
       new _StudyplanDetailPage(studyplanNum, typeId, groupNum, isCommon);
 }
 
-class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
+class _StudyplanDetailPage extends State<StudyplanDetailPage> {
   int studyplanNum;
   int typeId;
   int groupNum;
@@ -33,7 +33,14 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
 
   StudyplanModel _getStudyplan;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getStudyplanRequest();
+  }
+
   List _check = [];
 
   bool _showTimeString = false;
@@ -45,34 +52,13 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _getStudyplanRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _getStudyplanRequest();
+    _uid();
   }
 
   _getStudyplanRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_studyplan.json');
-    // var responseBody = json.decode(response);
-    // var _request = StudyplanModel.fromJson(responseBody);
-
     StudyplanModel _request =
-        await Get(uid: uid, studyplanNum: studyplanNum).getData();
+        await Get(context: context, uid: uid, studyplanNum: studyplanNum)
+            .getData();
 
     setState(() {
       _getStudyplan = _request;
@@ -84,21 +70,19 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
+    double _leadingL = _sizing.height(2);
     double _timeHeight =
-        _showTimeString == true ? _subjectListHeight - _height * 0.06 : 0;
+        _showTimeString == true ? _subjectListHeight - _sizing.height(6) : 0;
 
     double _endTimeHeight =
-        _showTimeString == true ? _subjectListHeight - _height * 0.025 : 0;
+        _showTimeString == true ? _subjectListHeight - _sizing.height(2.5) : 0;
 
-    double _appBarSize = _width * 0.058;
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _sizing.width(5.8);
+    double _titleSize = _sizing.height(2.5);
+    double _pSize = _sizing.height(2.3);
+    double _subtitleSize = _sizing.height(2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).accentColor;
@@ -112,19 +96,20 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
           '${_getStudyplan.startTime.hour.toString().padLeft(2, '0')}:${_getStudyplan.startTime.minute.toString().padLeft(2, '0')} - ${_getStudyplan.endTime.hour.toString().padLeft(2, '0')}:${_getStudyplan.endTime.minute.toString().padLeft(2, '0')}';
 
       Widget _timeWidget = Container(
-        margin: EdgeInsets.all(_width * 0.01),
-        height: _height * 0.05,
-        width: _width,
+        margin: EdgeInsets.all(_sizing.width(1)),
+        height: _sizing.height(5),
+        width: _sizing.width(100),
         child: Center(
             child: Text(
           _time,
           style: TextStyle(color: Colors.white, fontSize: _pSize),
         )),
         decoration: BoxDecoration(
-            color: _light, borderRadius: BorderRadius.circular(_height * 0.01)),
+            color: _light,
+            borderRadius: BorderRadius.circular(_sizing.height(1))),
       );
 
-      double _subjectMargin = _showTimeString == true ? _height * 0.04 : 0;
+      double _subjectMargin = _showTimeString == true ? _sizing.height(4) : 0;
 
       _submitCancelSharing() async {
         var submitWidget;
@@ -155,14 +140,18 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
       _selectedItem(BuildContext context, value) async {
         switch (value) {
           case 'edit':
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    EditStudyPlanPage(studyplanNum, null)));
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+                    builder: (context) =>
+                        EditStudyPlanPage(studyplanNum, null)))
+                .then((value) => _getStudyplanRequest());
             break;
           case 'edit_common':
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    EditStudyPlanPage(studyplanNum, groupNum)));
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+                    builder: (context) =>
+                        EditStudyPlanPage(studyplanNum, groupNum)))
+                .then((value) => _getStudyplanRequest());
             break;
           case 'cancel':
             if (await _submitCancelSharing() != true) {
@@ -182,7 +171,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
           return PopupMenuButton<String>(
             offset: Offset(50, 50),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(_height * 0.01)),
+                borderRadius: BorderRadius.circular(_sizing.height(1))),
             icon: Icon(Icons.more_vert),
             itemBuilder: (context) => [
               PopupMenuItem<String>(
@@ -207,7 +196,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
           return PopupMenuButton<String>(
             offset: Offset(50, 50),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(_height * 0.01)),
+                borderRadius: BorderRadius.circular(_sizing.height(1))),
             icon: Icon(Icons.more_vert),
             itemBuilder: (context) => [
               PopupMenuItem<String>(
@@ -232,7 +221,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
           return PopupMenuButton<String>(
             offset: Offset(50, 50),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(_height * 0.01)),
+                borderRadius: BorderRadius.circular(_sizing.height(1))),
             icon: Icon(Icons.more_vert),
             itemBuilder: (context) => [
               PopupMenuItem<String>(
@@ -264,15 +253,15 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
           );
         } else {
           leading = Container(
-              width: _width * 0.08,
-              height: _width * 0.08,
+              width: _sizing.width(8),
+              height: _sizing.width(8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: _darkGrey),
                   color: _darkGrey,
-                  borderRadius: BorderRadius.circular(_height * 0.01)),
+                  borderRadius: BorderRadius.circular(_sizing.height(1))),
               child: Icon(
                 Icons.check,
-                size: _width * 0.06,
+                size: _sizing.width(6),
                 color: Colors.white,
               ));
         }
@@ -294,10 +283,12 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                 child: IconButton(
                   icon: Image.asset(
                     'assets/images/note.png',
-                    height: _width * 1,
+                    height: _sizing.width(100),
                   ),
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CommonNoteDetailPage(noteNum))),
+                  onPressed: () => Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => CommonNoteDetailPage(noteNum)))
+                      .then((value) => _getStudyplanRequest()),
                 ),
               ),
             ),
@@ -313,18 +304,19 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                   child: IconButton(
                     icon: Image.asset(
                       'assets/images/note.png',
-                      height: _width * 1,
+                      height: _sizing.width(100),
                     ),
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
+                    onPressed: () => Navigator.of(context)
+                        .push(MaterialPageRoute(
                             builder: (context) =>
-                                CommonNoteDetailPage(noteNum))),
+                                CommonNoteDetailPage(noteNum)))
+                        .then((value) => _getStudyplanRequest()),
                   ),
                 )),
           );
         } else {
           return Container(
-            height: _height * 0.04,
+            height: _sizing.height(4),
             alignment: Alignment.center,
             margin: EdgeInsets.only(left: _subjectMargin),
             child: Text(
@@ -358,7 +350,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
             return Row(
               children: [
                 Container(
-                    margin: EdgeInsets.only(right: _width * 0.01),
+                    margin: EdgeInsets.only(right: _sizing.width(1)),
                     child: Text(_time)),
                 Expanded(
                   child: Divider(
@@ -377,7 +369,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                 child: ListView(
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: _height * 0.01),
+                  margin: EdgeInsets.only(left: _sizing.height(1)),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -385,8 +377,8 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                         children: [
                           InkWell(
                             child: Container(
-                              width: _height * 0.015,
-                              height: _height * 0.06,
+                              width: _sizing.height(1.5),
+                              height: _sizing.height(6),
                               color: _bule,
                             ),
                             onTap: () {
@@ -401,7 +393,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                             },
                           ),
                           Container(
-                            width: _height * 0.015,
+                            width: _sizing.height(1.5),
                             height: _timeHeight,
                             decoration: BoxDecoration(
                                 color: Colors.white,
@@ -415,18 +407,20 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                             Visibility(
                               visible: _showTimeString,
                               child: Container(
-                                  margin: EdgeInsets.only(left: _height * 0.01),
+                                  margin:
+                                      EdgeInsets.only(left: _sizing.height(1)),
                                   child: Text(
                                       "${'${_getStudyplan.subject[0].subjectStart.hour.toString().padLeft(2, '0')}:${_getStudyplan.subject[0].subjectStart.minute.toString().padLeft(2, '0')}'}")),
                             ),
                             Container(
-                                margin: EdgeInsets.only(left: _height * 0.01),
+                                margin:
+                                    EdgeInsets.only(left: _sizing.height(1)),
                                 child: _subjectList),
                             Visibility(
                               visible: _showTimeString,
                               child: Container(
                                   margin: EdgeInsets.only(
-                                      left: _height * 0.01,
+                                      left: _sizing.height(1),
                                       top: _endTimeHeight),
                                   child: Text(
                                       "${'${_getStudyplan.subject[_getStudyplan.subject.length - 1].subjectEnd.hour.toString().padLeft(2, '0')}:${_getStudyplan.subject[_getStudyplan.subject.length - 1].subjectEnd.minute.toString().padLeft(2, '0')}'}")),
@@ -450,7 +444,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
           child: Scaffold(
               appBar: AppBar(
                 elevation: 0,
-                toolbarHeight: _height * 0.11,
+                toolbarHeight: _sizing.height(11),
                 backgroundColor: _color,
                 title: Container(
                   alignment: Alignment.topLeft,
@@ -463,7 +457,7 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                         children: <WidgetSpan>[
                           WidgetSpan(
                               child: Container(
-                            padding: EdgeInsets.only(top: _height * 0.004),
+                            padding: EdgeInsets.only(top: _sizing.height(0.4)),
                             child: Text(_date,
                                 style: TextStyle(
                                     fontSize: _pSize,
@@ -475,13 +469,13 @@ class _StudyplanDetailPage extends State<StudyplanDetailPage> with RouteAware {
                 actions: [
                   Container(
                       alignment: Alignment.topCenter,
-                      margin: EdgeInsets.only(top: _height * 0.01),
+                      margin: EdgeInsets.only(top: _sizing.height(1)),
                       child: _studyplanAction())
                 ],
                 leading: Container(
                   alignment: Alignment.topCenter,
-                  margin:
-                      EdgeInsets.only(left: _leadingL, top: _height * 0.022),
+                  margin: EdgeInsets.only(
+                      left: _leadingL, top: _sizing.height(2.2)),
                   child: GestureDetector(
                     child: Icon(Icons.chevron_left),
                     onTap: () {

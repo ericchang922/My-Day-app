@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/group_request/edit_group.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/group_request/get.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/group/get_group_model.dart';
 
 class GroupInformationPage extends StatefulWidget {
@@ -21,7 +22,14 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
 
   GetGroupModel _getGroupModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getGroupRequest();
+  }
+
   String _groupName = '';
   String _groupTypeName = '';
 
@@ -43,14 +51,12 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
   @override
   void initState() {
     super.initState();
-    _getGroupRequest();
+    _uid();
   }
 
   _getGroupRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/get_group.json');
-    // var responseBody = json.decode(response);
-
-    GetGroupModel _request = await Get(uid: uid, groupNum: groupNum).getData();
+    GetGroupModel _request =
+        await Get(context: context, uid: uid, groupNum: groupNum).getData();
 
     setState(() {
       _getGroupModel = _request;
@@ -62,23 +68,21 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _width * 0.08;
-    double _subtitleT = _height * 0.005;
+    double _leadingL = _sizing.height(2);
+    double _listPaddingH = _sizing.width(8);
+    double _subtitleT = _sizing.height(0.5);
 
-    double _appBarSize = _width * 0.052;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _iconWidth = _width * 0.05;
-    double _borderRadius = _height * 0.03;
-    double _textLBR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _inkwellH = _height * 0.06;
+    double _appBarSize = _sizing.width(5.2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _iconWidth = _sizing.width(5);
+    double _borderRadius = _sizing.height(3);
+    double _textLBR = _sizing.height(2);
+    double _textFied = _sizing.height(4.5);
+    double _inkwellH = _sizing.height(6);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -115,10 +119,10 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
             backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
-            contentPadding: EdgeInsets.only(top: _height * 0.02),
+            contentPadding: EdgeInsets.only(top: _sizing.height(2)),
             content: Container(
-              width: _width * 0.2,
-              height: _height * 0.24,
+              width: _sizing.width(20),
+              height: _sizing.height(24),
               child: GestureDetector(
                 // 點擊空白處釋放焦點
                 behavior: HitTestBehavior.translucent,
@@ -146,7 +150,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                 left: _textLBR,
                                 right: _textLBR,
                                 bottom: _textLBR,
-                                top: _height * 0.015),
+                                top: _sizing.height(1.5)),
                             child: Text('群組名稱：',
                                 style: TextStyle(fontSize: _pSize)),
                           ),
@@ -160,18 +164,18 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                 style: TextStyle(fontSize: _pSize),
                                 decoration: InputDecoration(
                                     contentPadding: EdgeInsets.symmetric(
-                                        horizontal: _height * 0.01,
-                                        vertical: _height * 0.01),
+                                        horizontal: _sizing.height(1),
+                                        vertical: _sizing.height(1)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
-                                          Radius.circular(_height * 0.01)),
+                                          Radius.circular(_sizing.height(1))),
                                       borderSide: BorderSide(
                                         color: _textFiedBorder,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
-                                          Radius.circular(_height * 0.01)),
+                                          Radius.circular(_sizing.height(1))),
                                       borderSide: BorderSide(color: _bule),
                                     )),
                                 controller: _groupNameController,
@@ -191,8 +195,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                             child: Container(
                               height: _inkwellH,
                               padding: EdgeInsets.only(
-                                  top: _height * 0.015,
-                                  bottom: _height * 0.015),
+                                  top: _sizing.height(1.5),
+                                  bottom: _sizing.height(1.5)),
                               decoration: BoxDecoration(
                                 color: _light,
                                 borderRadius: BorderRadius.only(
@@ -217,8 +221,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                             child: Container(
                               height: _inkwellH,
                               padding: EdgeInsets.only(
-                                  top: _height * 0.015,
-                                  bottom: _height * 0.015),
+                                  top: _sizing.height(1.5),
+                                  bottom: _sizing.height(1.5)),
                               decoration: BoxDecoration(
                                 color: _color,
                                 borderRadius: BorderRadius.only(
@@ -272,10 +276,10 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius:
                         BorderRadius.all(Radius.circular(_borderRadius))),
-                contentPadding: EdgeInsets.only(top: _height * 0.02),
+                contentPadding: EdgeInsets.only(top: _sizing.height(2)),
                 content: Container(
-                  width: _width * 0.2,
-                  height: _height * 0.2,
+                  width: _sizing.width(20),
+                  height: _sizing.height(20),
                   child: Column(
                     children: <Widget>[
                       Expanded(
@@ -299,7 +303,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                   left: _textLBR,
                                   right: _textLBR,
                                   bottom: _textLBR,
-                                  top: _height * 0.03),
+                                  top: _sizing.height(3)),
                               child: Row(
                                 children: [
                                   Text('類別：',
@@ -307,15 +311,15 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                   Container(
                                     height: _textFied,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: _height * 0.01,
+                                        horizontal: _sizing.height(1),
                                         vertical: 0),
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(_height * 0.01),
+                                      borderRadius: BorderRadius.circular(
+                                          _sizing.height(1)),
                                       border: Border.all(
                                           color: _textFiedBorder,
                                           style: BorderStyle.solid,
-                                          width: _width * 0.0015),
+                                          width: _sizing.width(0.15)),
                                     ),
                                     child: DropdownButton<String>(
                                       icon: Icon(
@@ -343,9 +347,10 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                                               children: [
                                                 Container(
                                                     margin: EdgeInsets.only(
-                                                        right: _height * 0.01),
+                                                        right:
+                                                            _sizing.height(1)),
                                                     child: CircleAvatar(
-                                                      radius: _height * 0.01,
+                                                      radius: _sizing.height(1),
                                                       backgroundColor:
                                                           getTypeColor(
                                                               typeNameList
@@ -372,8 +377,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                               child: Container(
                                 height: _inkwellH,
                                 padding: EdgeInsets.only(
-                                    top: _height * 0.015,
-                                    bottom: _height * 0.015),
+                                    top: _sizing.height(1.5),
+                                    bottom: _sizing.height(1.5)),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).primaryColorLight,
                                   borderRadius: BorderRadius.only(
@@ -398,8 +403,8 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
                               child: Container(
                                 height: _inkwellH,
                                 padding: EdgeInsets.only(
-                                    top: _height * 0.015,
-                                    bottom: _height * 0.015),
+                                    top: _sizing.height(1.5),
+                                    bottom: _sizing.height(1.5)),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).primaryColor,
                                   borderRadius: BorderRadius.only(
@@ -434,7 +439,7 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
 
     if (_getGroupModel != null) {
       Widget informationItem = Container(
-        margin: EdgeInsets.only(top: _height * 0.01),
+        margin: EdgeInsets.only(top: _sizing.height(1)),
         child: ListView(
           children: [
             ListTile(

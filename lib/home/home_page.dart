@@ -1,23 +1,24 @@
 // flutter
-import 'package:My_Day_app/models/timetable/section_time_model.dart';
-import 'package:My_Day_app/public/convert.dart';
-import 'package:My_Day_app/public/time_range.dart';
-import 'package:My_Day_app/public/timetable_request/get_section_time.dart';
-import 'package:My_Day_app/public/timetable_request/get_timetable_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
 import 'package:localstorage/localstorage.dart';
 // my day
 import 'package:My_Day_app/my_day_icon.dart';
-import 'package:My_Day_app/public/schedule_request/get_list.dart';
-import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
 import 'package:My_Day_app/home/home_schedule/schedule_table.dart';
-import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/home/home_popup_menu.dart';
+import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/timetable/main_timetable_list_model.dart';
+import 'package:My_Day_app/models/timetable/section_time_model.dart';
+import 'package:My_Day_app/public/schedule_request/get_list.dart';
+import 'package:My_Day_app/public/timetable_request/main_timetable_list.dart';
+import 'package:My_Day_app/public/convert.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/public/time_range.dart';
+import 'package:My_Day_app/public/timetable_request/get_section_time.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -25,16 +26,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  String _uid;
+  _uidLoad() async {
+    String id = await loadUid();
+    setState(() => _uid = id);
+
+    homePageBody = new HomePageBody(
+      futureTimetableData: getTimetableData(),
+      futureScheduleList: getScheduleList(),
+      futureSectionTime: getSectionTime(),
+    );
+  }
+  // 在等待 uid 載入之後才能執行 取得資料
+
   LocalStorage weekStorage = LocalStorage('week');
 
-  String _uid = 'amy123';
+  HomePageBody homePageBody;
 
   Future<MainTimetableListGet> getTimetableData() async {
     MainTimetableList request = MainTimetableList(context: context, uid: _uid);
     MainTimetableListGet _data = await request.getData();
 
-    await weekStorage.setItem('start', _data.timetable[0].startDate.toString());
-    await weekStorage.setItem('end', _data.timetable[0].endDate.toString());
+    if (_data.timetable.length > 0) {
+      await weekStorage.setItem(
+          'start', _data.timetable[0].startDate.toString());
+      await weekStorage.setItem('end', _data.timetable[0].endDate.toString());
+    }
     return _data;
   }
 
@@ -53,23 +70,17 @@ class _HomePage extends State<HomePage> {
   double _fabDimension = 56.0;
 
   @override
+  void initState() {
+    super.initState();
+    _uidLoad();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
-    HomePageBody homePageBody = new HomePageBody(
-      futureTimetableData: getTimetableData(),
-      futureScheduleList: getScheduleList(),
-      futureSectionTime: getSectionTime(),
-    );
 
     return Scaffold(
       body: homePageBody,
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.add),
-      //   onPressed: () => Navigator.pushAndRemoveUntil(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => CreateSchedule()),
-      //       (route) => false),
-      // ),
       floatingActionButton: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (BuildContext context, VoidCallback _) {
@@ -92,26 +103,18 @@ class _HomePage extends State<HomePage> {
             ),
           );
         },
-        onClosed: (value) {
-          homePageBody = new HomePageBody(
-            futureTimetableData: getTimetableData(),
-            futureScheduleList: getScheduleList(),
-          );
-          print(value);
-        },
       ),
     );
   }
 }
 
 AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
+  Sizing sizing = Sizing(context);
   Color color = Theme.of(context).primaryColor;
-  Size _size = MediaQuery.of(context).size;
-  double _height = _size.height;
-  double _width = _size.width;
-  double paddingWidth = _width * 0.05;
-  double _monthSize = _height * 0.023;
-  double _weekSize = _height * 0.015;
+
+  double paddingWidth = sizing.width(5);
+  double _monthSize = sizing.height(2.3);
+  double _weekSize = sizing.height(1.5);
 
   List<Widget> showWeek(String s) {
     List<Widget> showWidget = [
@@ -132,14 +135,24 @@ AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
 
   return AppBar(
     title: Container(
-      child: Row(children: [
-        Padding(
-          padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
-          child: Column(
-            children: showWeek('${ConvertInt.toChineseWeek(weekCount)}'),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: paddingWidth, right: paddingWidth),
+              child: Column(
+                children: showWeek('${ConvertInt.toChineseWeek(weekCount)}'),
+              ),
+            ),
+            Text('${nowMon.year} 年'),
+          ],
+        ),
+        Text(
+          '考試倒數 10 天',
+          style: TextStyle(
+            fontSize: sizing.height(1.5),
           ),
         ),
-        Text('${nowMon.year} 年')
       ]),
     ),
     centerTitle: false,
@@ -270,7 +283,6 @@ class _HomePageBody extends State<HomePageBody> {
           });
         }
       }
-      print(sectionList);
     }
 
     pageList.insert(0, ScheduleTable());

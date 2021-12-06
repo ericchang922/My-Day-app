@@ -1,3 +1,4 @@
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:flutter/material.dart';
 
 class RemindItem extends StatefulWidget {
@@ -13,6 +14,7 @@ class _RemindItem extends State<RemindItem> {
 
   @override
   Widget build(BuildContext context) {
+    Sizing _sizing = Sizing(context);
     String _getTimeText(index) {
       String hourText =
           _list[index].inHours == 0 ? '' : '${_list[index].inHours} 小時';
@@ -23,7 +25,7 @@ class _RemindItem extends State<RemindItem> {
       return '$hourText $minuteText 前';
     }
 
-    var _size = MediaQuery.of(context).size.height * 0.03;
+    double _size = _sizing.height(3);
     return ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
@@ -33,7 +35,8 @@ class _RemindItem extends State<RemindItem> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(_getTimeText(index), style: TextStyle(fontSize: _size*0.9)),
+              Text(_getTimeText(index),
+                  style: TextStyle(fontSize: _size * 0.9)),
               IconButton(
                   icon:
                       Icon(Icons.remove, size: _size * 1.2, color: Colors.red),

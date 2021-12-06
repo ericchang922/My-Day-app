@@ -10,11 +10,11 @@ class GetTimetableNotice {
 
   _request() async {
     Request request = Request();
-    await request.gettimetablenotice(context, data);
+    await request.getTimetableNotice(context, data);
     _response = await request.getTimetableNoticeGet();
   }
 
-  GetTimetableNotice({this.uid}) {
+  GetTimetableNotice({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

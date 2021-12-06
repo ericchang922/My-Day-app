@@ -2,7 +2,7 @@ import 'package:My_Day_app/models/note/note_list_model.dart';
 import 'package:My_Day_app/public/request.dart';
 import 'package:flutter/material.dart';
 
-class GetList {
+class NotShareList {
   BuildContext context;
   String uid;
   Map<String, String> _data;
@@ -10,11 +10,11 @@ class GetList {
 
   _request() async {
     Request request = Request();
-    await request.noteGetList(context, _data);
-    this._response = await request.getNoteList();
+    await request.notShareNoteList(context, _data);
+    this._response = await request.getNotShareNoteList();
   }
 
-  GetList({this.context, this.uid, int noteNum}) {
+  NotShareList({this.uid, int noteNum}) {
     _data = {'uid': uid};
   }
 

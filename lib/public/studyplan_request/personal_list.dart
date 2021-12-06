@@ -16,7 +16,7 @@ class PersonalList {
     this._response = await request.getStudyplanList();
   }
 
-  PersonalList({this.uid, this.studyplanNum}) {
+  PersonalList({this.context, this.uid, this.studyplanNum}) {
     _data = {'uid': uid};
   }
 

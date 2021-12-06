@@ -1,15 +1,18 @@
-import 'package:My_Day_app/models/group/group_list_model.dart';
-import 'package:My_Day_app/public/group_request/group_list.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/models/group/group_list_model.dart';
+import 'package:My_Day_app/public/group_request/group_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class TimetableShareGroupPage extends StatefulWidget {
   int timetableNo;
   TimetableShareGroupPage(this.timetableNo);
 
   @override
-  _TimetableShareGroupWidget createState() => new _TimetableShareGroupWidget(timetableNo);
+  _TimetableShareGroupWidget createState() =>
+      new _TimetableShareGroupWidget(timetableNo);
 }
 
 class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
@@ -18,8 +21,13 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
 
   GroupListModel _groupListModel;
 
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
 
-  String uid = 'lili123';
+    await _groupListRequest();
+  }
 
   List typeColor = <int>[
     0xffF78787,
@@ -32,23 +40,20 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
   ];
 
   Map<int, dynamic> _groupCheck = {};
- 
+
   @override
   void initState() {
     super.initState();
-
-    _groupListRequest();
+    _uid();
   }
-
-  
 
   _groupListRequest() async {
     GroupListModel _request =
-        await GroupList(uid: uid).getData();
+        await GroupList(context: context, uid: uid).getData();
 
     setState(() {
       _groupListModel = _request;
-     
+
       for (int i = 0; i < _groupListModel.groupContent.length; i++) {
         _groupCheck[_groupListModel.groupContent[i].groupId] = false;
       }
@@ -61,63 +66,23 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
       var _group = _groupListModel.groupContent[i];
       if (_groupCheck[_group.groupId] == true) count++;
     }
-    
+
     return count;
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _listPaddingH = _width * 0.06;
-    double _widthSize = _width * 0.01;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _subtitleT = _height * 0.005;
-    double _iconWidth = _width * 0.05;
-    double _appBarSize = _width * 0.052;
-    double _p2Size = _height * 0.02;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _typeSize = _width * 0.045;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
+    Sizing _sizing = Sizing(context);
+    double _listPaddingH = _sizing.width(6);
+    double _iconWidth = _sizing.width(5);
+    double _appBarSize = _sizing.width(5.2);
+    double _titleSize = _sizing.height(2.5);
+    double _typeSize = _sizing.width(4.5);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
 
     Color _light = Theme.of(context).primaryColorLight;
-    Color _bule = Color(0xff7AAAD8);
-    Color _gray = Color(0xff959595);
     Color _color = Theme.of(context).primaryColor;
-
-
-    // _submit() async {
-    //   List<Map<String, dynamic>> friend = [];
-    //   for (int i = 0; i < _friendListModel.friend.length; i++) {
-    //     var _friend = _friendListModel.friend[i];
-    //     if (_friendCheck[_friend.friendId] == true)
-    //       friend.add({'friendId': _friend.friendId});
-    //   }
-    //   for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
-    //     var _friend = _bestFriendListModel.friend[i];
-
-    //     if (_bestFriendCheck[_friend.friendId] == true)
-    //       friend.add({'friendId': _friend.friendId});
-    //   }
-
-    //   var submitWidget;
-    //   _submitWidgetfunc() async {
-    //     return InviteFriend(uid: uid, groupNum: groupNum, friend: friend);
-    //   }
-
-    //   submitWidget = await _submitWidgetfunc();
-    //   if (await submitWidget.getIsError())
-    //     return true;
-    //   else
-    //     return false;
-    // }
-
-    
 
     if (_groupListModel != null) {
       Widget groupList = ListView.separated(
@@ -183,11 +148,10 @@ class _TimetableShareGroupWidget extends State<TimetableShareGroupPage> {
               ),
             ),
             body: Container(
-                  color: Colors.white,
-                  child: Container(
-                    margin: EdgeInsets.only(top: _height * 0.02),
-                    child: groupList
-                  )),
+                color: Colors.white,
+                child: Container(
+                    margin: EdgeInsets.only(top: _sizing.height(2)),
+                    child: groupList)),
             bottomNavigationBar: Container(
               color: Theme.of(context).bottomAppBarColor,
               child: SafeArea(

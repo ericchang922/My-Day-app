@@ -1,5 +1,7 @@
-import 'package:My_Day_app/timetable/timetable_receive_preview.dart';
 import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/timetable/timetable_receive_preview.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -14,29 +16,12 @@ class TimetableImportShare extends State<TimetableImprotSharePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _pSize = _sizing.height(2.3);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
-    Color _light = Theme.of(context).primaryColorLight;
-    Color _bule = Color(0xff7AAAD8);
-    Color _textFiedBorder = Color(0xff707070);
 
     return Scaffold(
         appBar: AppBar(
@@ -45,26 +30,26 @@ class TimetableImportShare extends State<TimetableImprotSharePage> {
         ),
         body: ListView(children: <Widget>[
           Container(
-              margin: EdgeInsets.only(left: _height * 0.06, top: _height * 0.03),
+              margin: EdgeInsets.only(
+                  left: _sizing.height(6), top: _sizing.height(3)),
               child: Row(children: [
                 Image.asset(
                   "assets/images/search.png",
-                  width: _width * 0.06,
+                  width: _sizing.width(6),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: _height * 0.06),
+                  margin: EdgeInsets.only(left: _sizing.height(6)),
                   child:
                       Text('xxxxxx', style: TextStyle(fontSize: _appBarSize)),
                 ),
-                SizedBox(width: _width * 0.2),
+                SizedBox(width: _sizing.width(20)),
                 InkWell(
                   child: Text("刪除", style: TextStyle(fontSize: _pSize)),
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  
                 ),
-                SizedBox(width: _width * 0.05),
+                SizedBox(width: _sizing.width(5)),
                 InkWell(
                   child: Text("接收",
                       style: TextStyle(

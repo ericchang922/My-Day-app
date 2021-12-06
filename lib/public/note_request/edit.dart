@@ -16,7 +16,7 @@ class EditNote {
 
   _request() async {
     Request request = Request();
-    await request.noteedit(context, data);
+    await request.noteEdit(context, data);
     this._isError = await request.getIsError();
   }
 

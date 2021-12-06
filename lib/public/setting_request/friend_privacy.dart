@@ -14,7 +14,7 @@ class FriendPrivacy {
 
   _request() async {
     Request request = Request();
-    await request.friendprivacy(context, data);
+    await request.friendPrivacy(context, data);
     this._isError = await request.getIsError();
   }
 

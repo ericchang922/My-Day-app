@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/schedule_request/edit.dart';
-import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
-import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/schedule_request/create_common.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/common_schedule/common_schedule_list_page.dart';
 import 'package:My_Day_app/schedule/schedule_form.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class CommonScheduleForm extends StatefulWidget {
   int groupNum;
@@ -56,8 +58,11 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
   int _type;
   int scheduleNum;
 
-  DateTime _startDateTime = DateTime.now();
-  DateTime _endDateTime = DateTime.now().add(Duration(hours: 1));
+  DateTime _startDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
+  DateTime _endDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 9, 0);
+
   String _title;
   String _location;
 
@@ -77,33 +82,45 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
   bool _allDay = false;
   bool _isNotCreate = false;
 
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _uid();
+  }
+
   @override
   Widget build(BuildContext context) {
     _titleController.text = _title;
     _locationController.text = _location;
-    if (_startDateTime == null) _startDateTime = DateTime.now();
+    if (_startDateTime == null)
+      _startDateTime = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day + 1, 8, 0);
     if (_endDateTime == null)
-      _endDateTime = DateTime.now().add(Duration(hours: 1));
+      _endDateTime = _startDateTime.add(Duration(hours: 1));
 
     // values ------------------------------------------------------------------------------------------
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _bottomHeight = _height * 0.07;
-    double _bottomIconWidth = _width * 0.05;
+    Sizing _sizing = Sizing(context);
+    double _bottomHeight = _sizing.height(7);
+    double _bottomIconWidth = _sizing.width(5);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
 
-    double _paddingLR = _width * 0.06;
-    double _listPaddingLR = _width * 0.1;
-    double _listItemHeight = _height * 0.08;
+    double _paddingLR = _sizing.width(6);
+    double _listPaddingLR = _sizing.width(10);
+    double _listItemHeight = _sizing.height(8);
 
-    double _iconSize = _height * 0.05;
-    double _h1Size = _height * 0.035;
-    double _h2Size = _height * 0.03;
-    double _pSize = _height * 0.025;
-    double _timeSize = _width * 0.045;
+    double _iconSize = _sizing.height(5);
+    double _h1Size = _sizing.height(3.5);
+    double _h2Size = _sizing.height(3);
+    double _pSize = _sizing.height(2.5);
+    double _timeSize = _sizing.width(4.5);
 
     String _startView = _allDay
         ? '${_startDateTime.month.toString().padLeft(2, '0')} 月 ${_startDateTime.day.toString().padLeft(2, '0')} 日 ${weekdayName[_startDateTime.weekday - 1]}'
@@ -115,7 +132,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
     // _submit -----------------------------------------------------------------------------------------
     _submit() async {
       String _alertTitle = '新增共同行程失敗';
-      String uid = 'lili123';
+
       String title = _titleController.text;
       String startTime;
       String endTime;
@@ -152,6 +169,10 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
 
       if (endTime == null || endTime == '') {
         await alert(context, _alertTitle, '請選擇結束時間');
+        _isNotCreate = true;
+      }
+      if (_startDateTime.isAfter(_endDateTime)) {
+        await alert(context, _alertTitle, '結束時間必須在開始時間之後');
         _isNotCreate = true;
       }
       if (typeId == null || typeId <= 0 || typeId > 8) {
@@ -223,7 +244,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -237,14 +258,13 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                   mode: _mode(),
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
                     if (isStart) {
                       _startDateTime = value;
-                      _endDateTime = value.add(Duration(hours: 1));
                     } else
                       _endDateTime = value;
                   }),
@@ -262,7 +282,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
         // text field ----------------------------------------------------------------------------- title
         Padding(
           padding: EdgeInsets.fromLTRB(
-              _paddingLR, _height * 0.03, _paddingLR, _height * 0.02),
+              _paddingLR, _sizing.height(3), _paddingLR, _sizing.height(2)),
           child: TextField(
             style: TextStyle(fontSize: _h1Size),
             decoration: InputDecoration(
@@ -356,7 +376,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
 
         // 分隔線
         Divider(
-          height: _height * 0.02,
+          height: _sizing.height(2),
           indent: _paddingLR,
           endIndent: _paddingLR,
           color: Colors.grey,
@@ -366,7 +386,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
         // dropdown buttn ------------------------------------------------------------------------- type
         Padding(
           padding: EdgeInsets.fromLTRB(
-              _listPaddingLR, size.height * 0.01, _listPaddingLR, 0),
+              _listPaddingLR, _sizing.height(1), _listPaddingLR, 0),
           child: Container(
             height: _listItemHeight,
             child: Row(
@@ -375,7 +395,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                   flex: 1,
                   child: Image.asset(
                     'assets/images/type.png',
-                    height: _height * 0.05,
+                    height: _sizing.height(5),
                   ),
                 ),
                 Expanded(
@@ -385,7 +405,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 Expanded(
                   flex: 7,
                   child: DropdownButton(
-                    itemHeight: _height * 0.1,
+                    itemHeight: _sizing.height(10),
                     hint: Text('類別',
                         style:
                             TextStyle(fontSize: _h2Size, color: Colors.grey)),
@@ -435,9 +455,9 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 Expanded(
                   flex: 1,
                   child: Container(
-                      height: _height * 0.025,
+                      height: _sizing.height(2.5),
                       child: CircleAvatar(
-                        radius: _height * 0.025,
+                        radius: _sizing.height(2.5),
                         backgroundColor: getTypeColor(_type),
                       )),
                 )
@@ -467,7 +487,13 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 Expanded(
                   flex: 8,
                   child: TextField(
-                    controller: _locationController,
+                    controller: TextEditingController.fromValue(TextEditingValue(
+                        text: _locationController.text,
+                        selection: TextSelection.fromPosition(TextPosition(
+                          affinity: TextAffinity.downstream,
+                          offset: _locationController.text.length
+                        ))
+                      )),
                     style: TextStyle(fontSize: _h2Size),
                     decoration: InputDecoration(
                       hintText: '地點',
@@ -479,6 +505,11 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                     cursorColor: _color,
                     onSubmitted: (_) =>
                         FocusScope.of(context).requestFocus(FocusNode()),
+                    onChanged: (text) {
+                      setState(() {
+                        _location = text;
+                      });
+                    },
                   ),
                 )
               ],

@@ -1,38 +1,26 @@
-import 'package:My_Day_app/account/forget_password.dart';
-import 'package:My_Day_app/account/login.dart';
-import 'package:My_Day_app/account/register.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:My_Day_app/account/login.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/home.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:My_Day_app/account/login_fail.dart';
-import 'package:My_Day_app/public/account_request/login.dart';
 
-// void main() {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   SystemChrome.setPreferredOrientations(
-//       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-//   runApp(MyApp());
-// }
 SharedPreferences prefs;
-var primaryColor = Color(0xffF86D67);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
-  var id = prefs.getString('TestString_Key');
-  print(id);
+  var id = prefs.getString('uid');
+  print('main -- login uid: $id');
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(id == null ? MyApp() : HomeWidget());
 }
 
-RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
-
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,13 +31,8 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate
       ],
       supportedLocales: [const Locale('zh', 'TW')],
-
       debugShowCheckedModeBanner: false,
-      navigatorObservers: [routeObserver],
       home: LoginPage(),
-      // routes: <String, WidgetBuilder>{
-      //   '/login': (BuildContext context) => new LoginPage(),
-      // },
     );
   }
 }
@@ -69,5 +52,3 @@ class HomeWidget extends StatelessWidget {
         home: HomeUpdate(child: Home()));
   }
 }
-
-

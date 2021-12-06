@@ -1,8 +1,8 @@
 // flutter
+import 'package:My_Day_app/public/loadUid.dart';
 import 'package:flutter/material.dart';
 // my day
 import 'package:My_Day_app/common_schedule/common_schedule_form.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
 import 'package:My_Day_app/public/schedule_request/get_common.dart';
 
@@ -15,9 +15,15 @@ class EditCommonSchedulePage extends StatefulWidget {
       _EditCommonSchedulePage(this.scheduleNum);
 }
 
-class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
-    with RouteAware {
-  String uid = 'lili123';
+class _EditCommonSchedulePage extends State<EditCommonSchedulePage>{
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getCommonScheduleRequest();
+  }
+
   int scheduleNum;
   _EditCommonSchedulePage(this.scheduleNum);
 
@@ -27,28 +33,13 @@ class _EditCommonSchedulePage extends State<EditCommonSchedulePage>
   @override
   void initState() {
     super.initState();
-    _getCommonScheduleRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
+    _uid();
   }
 
   _getCommonScheduleRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/get_common_schedule.json');
-    // var responseBody = json.decode(response);
-
     GetCommonScheduleModel _request =
-        await GetCommon(uid: uid, scheduleNum: scheduleNum).getData();
+        await GetCommon(context: context, uid: uid, scheduleNum: scheduleNum)
+            .getData();
 
     setState(() {
       data = _request;

@@ -12,7 +12,7 @@ class PrivacyLocation {
 
   _request() async {
     Request request = Request();
-    await request.privacylocation(context, data);
+    await request.privacyLocation(context, data);
     this._isError = await request.getIsError();
   }
 

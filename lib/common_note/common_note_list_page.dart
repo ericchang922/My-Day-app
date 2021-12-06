@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/common_note/common_note_detail_page.dart';
-import 'package:My_Day_app/public/note_request/cancel_share.dart';
 import 'package:My_Day_app/common_note/share_note_page.dart';
-import 'package:My_Day_app/main.dart';
 import 'package:My_Day_app/models/note/share_note_list_model.dart';
+import 'package:My_Day_app/public/note_request/cancel_share.dart';
 import 'package:My_Day_app/public/note_request/get_group_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class CommonNoteListPage extends StatefulWidget {
   int groupNum;
@@ -15,45 +16,30 @@ class CommonNoteListPage extends StatefulWidget {
   _CommonNoteListWidget createState() => new _CommonNoteListWidget(groupNum);
 }
 
-class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
+class _CommonNoteListWidget extends State<CommonNoteListPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupNoteListRequest();
+  }
+
   int groupNum;
   _CommonNoteListWidget(this.groupNum);
 
   ShareNoteListModel _shareNoteListModel;
 
-  String uid = 'lili123';
-
   @override
   void initState() {
     super.initState();
-    _groupNoteListRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _groupNoteListRequest();
+    _uid();
   }
 
   _groupNoteListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/common_note_list.json');
-    // var responseBody = json.decode(response);
-    // var groupNoteListModel = ShareNoteListModel.fromJson(responseBody);
-
     ShareNoteListModel _request =
-        await GetGroupList(uid: uid, groupNum: groupNum).getData();
+        await GetGroupList(context: context, uid: uid, groupNum: groupNum)
+            .getData();
 
     setState(() {
       _shareNoteListModel = _request;
@@ -62,15 +48,13 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
+    double _leadingL = _sizing.height(2);
 
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
 
@@ -95,7 +79,7 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
         return PopupMenuButton(
           offset: Offset(-40, 0),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_height * 0.01)),
+              borderRadius: BorderRadius.circular(_sizing.height(1))),
           itemBuilder: (context) {
             return [
               PopupMenuItem(
@@ -126,17 +110,20 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
               var note = _shareNoteListModel.note[index];
               return ListTile(
                 contentPadding: EdgeInsets.symmetric(
-                    horizontal: _height * 0.01, vertical: _height * 0.008),
+                    horizontal: _sizing.height(1),
+                    vertical: _sizing.height(0.8)),
                 title: Container(
-                  margin: EdgeInsets.only(left: _height * 0.03),
+                  margin: EdgeInsets.only(left: _sizing.height(3)),
                   child:
                       Text(note.title, style: TextStyle(fontSize: _titleSize)),
                 ),
                 trailing: _popupMenu(note.createId, note.noteNum),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          CommonNoteDetailPage(note.noteNum)));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) =>
+                              CommonNoteDetailPage(note.noteNum)))
+                      .then((value) => _groupNoteListRequest());
                 },
               );
             },
@@ -172,8 +159,10 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> with RouteAware {
               actions: [
                 IconButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ShareNotePage(groupNum)));
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => ShareNotePage(groupNum)))
+                          .then((value) => _groupNoteListRequest());
                     },
                     icon: Icon(Icons.add))
               ],

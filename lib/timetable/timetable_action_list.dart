@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/timetable/timetable_edit_form.dart';
 import 'package:My_Day_app/timetable/timetable_form.dart';
-import 'package:flutter/material.dart';
+
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -15,29 +18,11 @@ class TimetableActionList extends State<TimetableActionListPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
-
-    double _titleSize = _height * 0.025;
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
-    Color _light = Theme.of(context).primaryColorLight;
-    Color _bule = Color(0xff7AAAD8);
-    Color _textFiedBorder = Color(0xff707070);
 
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +39,6 @@ class TimetableActionList extends State<TimetableActionListPage> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-            // ignore: deprecated_member_use
             child: FlatButton(
               height: 60,
               minWidth: double.infinity,
@@ -90,7 +74,6 @@ class TimetableActionList extends State<TimetableActionListPage> {
               )),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-            // ignore: deprecated_member_use
             child: FlatButton(
               height: 60,
               minWidth: double.infinity,

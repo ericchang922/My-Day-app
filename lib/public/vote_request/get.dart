@@ -16,7 +16,7 @@ class Get {
     _response = await request.getVote();
   }
 
-  Get({this.uid, this.voteNum}) {
+  Get({this.context, this.uid, this.voteNum}) {
     data = {'uid': uid, 'voteNum': voteNum.toString()};
   }
 

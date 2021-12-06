@@ -15,7 +15,7 @@ class OneGroupList {
     this._response = await request.getShareStudyplanList();
   }
 
-  OneGroupList({this.uid, this.groupNum}) {
+  OneGroupList({this.context, this.uid, this.groupNum}) {
     _data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

@@ -16,7 +16,7 @@ class GetInvite {
     _response = await request.getTemporaryGroupInviteGet();
   }
 
-  GetInvite({this.uid, this.groupNum}) {
+  GetInvite({this.context, this.uid, this.groupNum}) {
     data = {'uid': uid, 'groupNum': groupNum.toString()};
   }
 

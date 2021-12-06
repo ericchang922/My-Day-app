@@ -10,11 +10,11 @@ class MakeFriendInviteList {
 
   _request() async {
     Request request = Request();
-    await request.makefriendinviteList(context, data);
+    await request.makeFriendInviteList(context, data);
     _response = await request.getMakeFriendInviteListGet();
   }
 
-  MakeFriendInviteList({this.uid}) {
+  MakeFriendInviteList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

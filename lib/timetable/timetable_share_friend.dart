@@ -1,22 +1,33 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/getImage.dart';
+import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
-import 'package:flutter/material.dart';
-
-import 'package:My_Day_app/group/customer_check_box.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class TimetableShareFriendPage extends StatefulWidget {
   int timetableNo;
   TimetableShareFriendPage(this.timetableNo);
 
   @override
-  _TimetableShareFriendWidget createState() => new _TimetableShareFriendWidget(timetableNo);
+  _TimetableShareFriendWidget createState() =>
+      new _TimetableShareFriendWidget(timetableNo);
 }
 
 class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _friendListRequest();
+    _friendNameControlloer();
+  }
+
   int timetableNo;
   _TimetableShareFriendWidget(this.timetableNo);
 
@@ -26,7 +37,6 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
   final _friendNameController = TextEditingController();
 
   String _searchText = "";
-  String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -37,9 +47,7 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
   @override
   void initState() {
     super.initState();
-
-    _friendListRequest();
-    _friendNameControlloer();
+    _uid();
   }
 
   void _friendNameControlloer() {
@@ -57,10 +65,9 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
   }
 
   _friendListRequest() async {
-    FriendListModel _friendRequest =
-        await FriendList(uid: uid).getData();
+    FriendListModel _friendRequest = await FriendList(uid: uid).getData();
     BestFriendListModel _bestFriendRequest =
-        await BestFriendList(uid: uid).getData();
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _friendListModel = _friendRequest;
@@ -73,34 +80,6 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
         _friendCheck[_friendListModel.friend[i].friendId] = false;
       }
     });
-  }
-
-  Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
   }
 
   friendCheckCount() {
@@ -119,23 +98,21 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
+    double _listLR = _sizing.height(2);
+    double _textFied = _sizing.height(4.5);
+    double _borderRadius = _sizing.height(1);
+    double _iconWidth = _sizing.width(5);
+    double _listPaddingH = _sizing.width(6);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
 
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _pSize = _sizing.height(2.3);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -144,38 +121,14 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
 
     Widget friendListWidget;
 
-    // _submit() async {
-    //   List<Map<String, dynamic>> friend = [];
-    //   for (int i = 0; i < _friendListModel.friend.length; i++) {
-    //     var _friend = _friendListModel.friend[i];
-    //     if (_friendCheck[_friend.friendId] == true)
-    //       friend.add({'friendId': _friend.friendId});
-    //   }
-    //   for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
-    //     var _friend = _bestFriendListModel.friend[i];
-
-    //     if (_bestFriendCheck[_friend.friendId] == true)
-    //       friend.add({'friendId': _friend.friendId});
-    //   }
-
-    //   var submitWidget;
-    //   _submitWidgetfunc() async {
-    //     return InviteFriend(uid: uid, groupNum: groupNum, friend: friend);
-    //   }
-
-    //   submitWidget = await _submitWidgetfunc();
-    //   if (await submitWidget.getIsError())
-    //     return true;
-    //   else
-    //     return false;
-    // }
+    GetImage _getImage = GetImage(context);
 
     Widget search = Container(
-      margin: EdgeInsets.only(right: _listLR, left: _height * 0.01),
+      margin: EdgeInsets.only(right: _listLR, left: _sizing.height(1)),
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.only(right: _height * 0.01),
+            margin: EdgeInsets.only(right: _sizing.height(1)),
             child: IconButton(
               icon: Image.asset(
                 'assets/images/search.png',
@@ -192,7 +145,8 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
                 decoration: InputDecoration(
                     hintText: '輸入好友名稱搜尋',
                     contentPadding: EdgeInsets.symmetric(
-                        horizontal: _height * 0.01, vertical: _height * 0.01),
+                        horizontal: _sizing.height(1),
+                        vertical: _sizing.height(1)),
                     border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.all(Radius.circular(_borderRadius)),
@@ -214,7 +168,7 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
     );
 
     Widget checkAll = Container(
-      margin: EdgeInsets.only(right: _width * 0.05),
+      margin: EdgeInsets.only(right: _sizing.width(5)),
       alignment: Alignment.centerRight,
       child: InkWell(
         child: Text('全選', style: TextStyle(fontSize: _subtitleSize)),
@@ -256,7 +210,7 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -297,7 +251,7 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -381,10 +335,8 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName
@@ -445,7 +397,7 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
               child: Container(
                   color: Colors.white,
                   child: Container(
-                    margin: EdgeInsets.only(top: _height * 0.02),
+                    margin: EdgeInsets.only(top: _sizing.height(2)),
                     child: Column(
                       children: [
                         search,
@@ -531,7 +483,10 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    Sizing _sizing = Sizing(context);
+
+    GetImage _getImage = GetImage(context);
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -540,13 +495,13 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
         var friends = _filteredBestFriend[index];
         return ListTile(
           contentPadding: EdgeInsets.symmetric(
-              horizontal: size.width * 0.055, vertical: 0.0),
+              horizontal: _sizing.width(5.5), vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
-            style: TextStyle(fontSize: size.width * 0.041),
+            style: TextStyle(fontSize: _sizing.width(4.1)),
           ),
           trailing: CustomerCheckBox(
             value: _bestFriendCheck[friends.friendId],
@@ -576,7 +531,10 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    Sizing _sizing = Sizing(context);
+
+    GetImage _getImage = GetImage(context);
+
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -585,13 +543,13 @@ class _TimetableShareFriendWidget extends State<TimetableShareFriendPage> {
         var friends = _filteredFriend[index];
         return ListTile(
           contentPadding: EdgeInsets.symmetric(
-              horizontal: size.width * 0.055, vertical: 0.0),
+              horizontal: _sizing.width(5.5), vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
-            style: TextStyle(fontSize: size.width * 0.041),
+            style: TextStyle(fontSize: _sizing.width(4.1)),
           ),
           trailing: CustomerCheckBox(
             value: _friendCheck[friends.friendId],

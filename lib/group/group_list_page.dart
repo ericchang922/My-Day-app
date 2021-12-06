@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/group/group_create_page.dart';
 import 'package:My_Day_app/group/group_join_page.dart';
+import 'package:My_Day_app/group/group_detail_page.dart';
 import 'package:My_Day_app/public/group_request/invite_list.dart';
 import 'package:My_Day_app/public/group_request/group_list.dart';
 import 'package:My_Day_app/public/group_request/member_status.dart';
-import 'package:My_Day_app/group/group_detail_page.dart';
-import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/group/group_invite_list_model.dart';
 import 'package:My_Day_app/models/group/group_list_model.dart';
 
@@ -26,11 +27,18 @@ class GroupListWidget extends StatefulWidget {
   _GroupListState createState() => new _GroupListState();
 }
 
-class _GroupListState extends State<GroupListWidget> with RouteAware {
+class _GroupListState extends State<GroupListWidget> {
   GroupListModel _groupListModel;
   GroupInviteListModel _groupInviteListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupListRequest();
+    await _groupInviteListRequest();
+  }
 
   List typeColor = <int>[
     0xffF78787,
@@ -45,33 +53,12 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   @override
   void initState() {
     super.initState();
-    _groupListRequest();
-    _groupInviteListRequest();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _groupListRequest();
-    _groupInviteListRequest();
+    _uid();
   }
 
   _groupListRequest() async {
-    // var response = await rootBundle.loadString('assets/json/group_list.json');
-    // var responseBody = json.decode(response);
-
-    GroupListModel _request = await GroupList(uid: uid).getData();
+    GroupListModel _request =
+        await GroupList(context: context, uid: uid).getData();
 
     setState(() {
       _groupListModel = _request;
@@ -79,34 +66,29 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
   }
 
   _groupInviteListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/group_invite_list.json');
-    // var responseBody = json.decode(response);
-
-    GroupInviteListModel _request = await InviteList(uid: uid).getData();
+    GroupInviteListModel _request =
+        await InviteList(context: context, uid: uid).getData();
 
     setState(() {
       _groupInviteListModel = _request;
-      print('邀約群組個數：${_groupInviteListModel.groupContent.length}');
+      print('group_list_page -- 邀約群組個數：${_groupInviteListModel.groupContent.length}');
     });
   }
 
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _listPaddingH = _width * 0.06;
-    double _widthSize = _width * 0.01;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _subtitleT = _height * 0.005;
+    Sizing _sizing = Sizing(context);
+    double _listPaddingH = _sizing.width(6);
+    double _widthSize = _sizing.width(1);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _subtitleT = _sizing.height(0.5);
 
-    double _appBarSize = _width * 0.052;
-    double _p2Size = _height * 0.02;
-    double _pSize = _height * 0.023;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _typeSize = _width * 0.045;
+    double _appBarSize = _sizing.width(5.2);
+    double _p2Size = _sizing.height(2);
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _typeSize = _sizing.width(4.5);
 
     Color _bule = Color(0xff7AAAD8);
     Color _gray = Color(0xff959595);
@@ -118,7 +100,11 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
       switch (item) {
         case 0:
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GroupCreatePage()));
+              .push(MaterialPageRoute(builder: (context) => GroupCreatePage()))
+              .then((value) {
+            _groupListRequest();
+            _groupInviteListRequest();
+          });
           break;
         case 1:
           await groupJoinDialog(context).then((value) => _groupListRequest());
@@ -228,14 +214,19 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  settings: RouteSettings(name: '/group_detail'),
-                  builder: (context) => GroupDetailPage(
-                        arguments: {
-                          'groupNum': groupContent.groupId,
-                          'isNotTemporary': true
-                        },
-                      )));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      settings: RouteSettings(name: '/group_detail'),
+                      builder: (context) => GroupDetailPage(
+                            arguments: {
+                              'groupNum': groupContent.groupId,
+                              'isNotTemporary': true
+                            },
+                          )))
+                  .then((value) {
+                _groupListRequest();
+                _groupInviteListRequest();
+              });
             },
             title: Text(
               '${groupContent.title} (${groupContent.peopleCount})',
@@ -277,7 +268,7 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
         );
       } else if (_groupListModel.groupContent.length != 0) {
         groupListWiget = ListView(
-          padding: EdgeInsets.only(top: _width * 0.03),
+          padding: EdgeInsets.only(top: _sizing.width(3)),
           children: [groupList],
         );
       } else
@@ -291,7 +282,7 @@ class _GroupListState extends State<GroupListWidget> with RouteAware {
             PopupMenuButton<int>(
               offset: Offset(50, 50),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(_height * 0.01)),
+                  borderRadius: BorderRadius.circular(_sizing.height(1))),
               icon: Icon(Icons.add),
               itemBuilder: (context) => [
                 PopupMenuItem<int>(

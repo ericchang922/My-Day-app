@@ -14,7 +14,7 @@ class DeleteFriend {
 
   _request() async {
     Request request = Request();
-    await request.frienddelete(context, data);
+    await request.friendDelete(context, data);
     this._isError = await request.getIsError();
   }
 

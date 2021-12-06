@@ -12,7 +12,7 @@ class PrivacyTimetable {
 
   _request() async {
     Request request = Request();
-    await request.privacytimetable(context, data);
+    await request.privacyTimetable(context, data);
     this._isError = await request.getIsError();
   }
 

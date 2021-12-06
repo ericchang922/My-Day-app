@@ -1,68 +1,63 @@
-
 import 'package:flutter/material.dart';
 
-Future<bool> loginfailDialog(BuildContext context,String alertTitle, String alertTxt) async {
- double _height = MediaQuery.of(context).size.height;
+import 'package:My_Day_app/public/sizing.dart';
 
-
-  return showDialog<bool>(
-          context: context,
-        builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(_height * 0.03))),
-          title: Text(alertTitle),
-          content: Text(alertTxt),
-                
-              
-            ),
-      );
-  }
-Future<bool> forgetfailDialog(BuildContext context,String alertTitle, String alertTxt) async {
- double _height = MediaQuery.of(context).size.height;
-
+Future<bool> loginfailDialog(
+    BuildContext context, String alertTitle, String alertTxt) async {
+  Sizing _sizing = Sizing(context);
 
   return showDialog<bool>(
-          context: context,
-        builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(_height * 0.03))),
-          title: Text(alertTitle),
-          content: Text(alertTxt),
-                
-              
-            ),
-      );
-  }
-Future<bool> changefailDialog(BuildContext context,String alertTitle, String alertTxt) async {
- double _height = MediaQuery.of(context).size.height;
+    context: context,
+    builder: (_) => AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(_sizing.height(3)))),
+      title: Text(alertTitle),
+      content: Text(alertTxt),
+    ),
+  );
+}
 
-
-  return showDialog<bool>(
-          context: context,
-        builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(_height * 0.03))),
-          title: Text(alertTitle),
-          content: Text(alertTxt),
-                
-              
-            ),
-      );
-  }
-  Future<bool> codefailDialog(BuildContext context,String alertTitle, String alertTxt) async {
- double _height = MediaQuery.of(context).size.height;
-
+Future<bool> forgetfailDialog(
+    BuildContext context, String alertTitle, String alertTxt) async {
+  Sizing _sizing = Sizing(context);
 
   return showDialog<bool>(
-          context: context,
-        builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(_height * 0.03))),
-          title: Text(alertTitle),
-          content: Text(alertTxt),
-                
-              
-            ),
-      );
-  }
+    context: context,
+    builder: (_) => AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(_sizing.height(3)))),
+      title: Text(alertTitle),
+      content: Text(alertTxt),
+    ),
+  );
+}
 
+Future<bool> changefailDialog(
+    BuildContext context, String alertTitle, String alertTxt) async {
+  Sizing _sizing = Sizing(context);
+
+  return showDialog<bool>(
+    context: context,
+    builder: (_) => AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(_sizing.height(3)))),
+      title: Text(alertTitle),
+      content: Text(alertTxt),
+    ),
+  );
+}
+
+Future<bool> codefailDialog(
+    BuildContext context, String alertTitle, String alertTxt) async {
+  Sizing _sizing = Sizing(context);
+
+  return showDialog<bool>(
+    context: context,
+    builder: (_) => AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(_sizing.height(3)))),
+      title: Text(alertTitle),
+      content: Text(alertTxt),
+    ),
+  );
+}

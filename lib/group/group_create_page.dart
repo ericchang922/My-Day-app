@@ -1,13 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/getImage.dart';
+import 'package:My_Day_app/group/customer_check_box.dart';
 import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/friend_request/best_friend_list.dart';
 import 'package:My_Day_app/public/friend_request/friend_list.dart';
-import 'package:My_Day_app/group/customer_check_box.dart';
-import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/group_request/create_group.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
 
@@ -17,6 +18,16 @@ class GroupCreatePage extends StatefulWidget {
 }
 
 class _GroupCreateWidget extends State<GroupCreatePage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _friendListRequest();
+    await _bestFriendListRequest();
+    _friendNameControlloer();
+  }
+
   FriendListModel _friendListModel;
   BestFriendListModel _bestFriendListModel;
 
@@ -36,7 +47,6 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   String _groupName = "";
   String _searchText = "";
   String _dropdownValue = '讀書';
-  String uid = 'lili123';
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
@@ -49,10 +59,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   @override
   void initState() {
     super.initState();
-
-    _friendListRequest();
-    _bestFriendListRequest();
-    _friendNameControlloer();
+    _uid();
   }
 
   void _friendNameControlloer() {
@@ -70,10 +77,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   _bestFriendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/best_friend_list.json');
-    // var responseBody = json.decode(response);
-
-    BestFriendListModel _request = await BestFriendList(uid: uid).getData();
+    BestFriendListModel _request =
+        await BestFriendList(context: context, uid: uid).getData();
 
     setState(() {
       _bestFriendListModel = _request;
@@ -85,10 +90,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   _friendListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/friend_list.json');
-    // var responseBody = json.decode(response);
-
-    FriendListModel _request = await FriendList(uid: uid).getData();
+    FriendListModel _request =
+        await FriendList(context: context, uid: uid).getData();
 
     setState(() {
       _friendListModel = _request;
@@ -99,53 +102,23 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     });
   }
 
-  Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
+    double _listLR = _sizing.height(2);
+    double _textFied = _sizing.height(4.5);
+    double _borderRadius = _sizing.height(1);
+    double _iconWidth = _sizing.width(5);
+    double _listPaddingH = _sizing.width(6);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
 
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _pSize = _sizing.height(2.3);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -153,6 +126,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     Color _textFiedBorder = Color(0xff707070);
 
     Widget friendListWidget;
+
+    GetImage _getImage = GetImage(context);
 
     Color getTypeColor(value) {
       Color color = value == null ? Color(0xffFFFFFF) : typeColor(value);
@@ -209,7 +184,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
         margin: EdgeInsets.only(
           left: _listLR,
           bottom: _listLR,
-          top: _height * 0.01,
+          top: _sizing.height(1),
           right: _listLR,
         ),
         child: Row(
@@ -222,7 +197,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
                   style: TextStyle(fontSize: _pSize),
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
-                          horizontal: _height * 0.01, vertical: _height * 0.01),
+                          horizontal: _sizing.height(1),
+                          vertical: _sizing.height(1)),
                       border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.all(Radius.circular(_borderRadius)),
@@ -248,20 +224,20 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
 
     Widget groupType = Container(
       margin:
-          EdgeInsets.only(left: size.height * 0.02, right: size.height * 0.02),
+          EdgeInsets.only(left: _sizing.height(2), right: _sizing.height(2)),
       child: Row(
         children: [
           Text('類別：', style: TextStyle(fontSize: _pSize)),
           Container(
             height: _textFied,
             padding:
-                EdgeInsets.symmetric(horizontal: _width * 0.02, vertical: 0),
+                EdgeInsets.symmetric(horizontal: _sizing.width(2), vertical: 0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(_borderRadius),
               border: Border.all(
                   color: _textFiedBorder,
                   style: BorderStyle.solid,
-                  width: _width * 0.0015),
+                  width: _sizing.width(0.15)),
             ),
             child: DropdownButton<String>(
               icon: Icon(
@@ -283,7 +259,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: _height * 0.01),
+                          margin: EdgeInsets.only(right: _sizing.height(1)),
                           child: CircleAvatar(
                               radius: _borderRadius,
                               backgroundColor: getTypeColor(
@@ -308,11 +284,11 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
           child: Text('選擇好友', style: TextStyle(fontSize: _pSize)),
         ),
         Container(
-          margin: EdgeInsets.only(right: _listLR, left: _height * 0.01),
+          margin: EdgeInsets.only(right: _listLR, left: _sizing.height(1)),
           child: Row(
             children: [
               Container(
-                margin: EdgeInsets.only(right: _height * 0.01),
+                margin: EdgeInsets.only(right: _sizing.height(1)),
                 child: IconButton(
                   icon: Image.asset(
                     'assets/images/search.png',
@@ -329,8 +305,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
                     decoration: InputDecoration(
                         hintText: '輸入好友名稱搜尋',
                         contentPadding: EdgeInsets.symmetric(
-                            horizontal: _height * 0.01,
-                            vertical: _height * 0.01),
+                            horizontal: _sizing.height(1),
+                            vertical: _sizing.height(1)),
                         border: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(_borderRadius)),
@@ -354,7 +330,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
     );
 
     Widget checkAll = Container(
-      margin: EdgeInsets.only(right: _width * 0.05),
+      margin: EdgeInsets.only(right: _sizing.width(5)),
       alignment: Alignment.centerRight,
       child: InkWell(
         child: Text('全選', style: TextStyle(fontSize: _subtitleSize)),
@@ -396,7 +372,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -438,7 +414,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(friends.photo),
+              child: _getImage.friend(friends.photo),
             ),
             title: Text(
               friends.friendName,
@@ -519,10 +495,8 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
           friendListWidget = Center(child: Text('目前沒有任何好友!'));
         }
       } else {
-        // ignore: deprecated_member_use
-        _filteredBestFriend = new List();
-        // ignore: deprecated_member_use
-        _filteredFriend = new List();
+        _filteredBestFriend = [];
+        _filteredFriend = [];
 
         for (int i = 0; i < _friendListModel.friend.length; i++) {
           if (_friendListModel.friend[i].friendName
@@ -583,14 +557,14 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
               child: Container(
                   color: Colors.white,
                   child: Container(
-                    margin: EdgeInsets.only(top: _height * 0.02),
+                    margin: EdgeInsets.only(top: _sizing.height(2)),
                     child: Column(
                       children: [
                         groupName,
                         groupType,
-                        SizedBox(height: _height * 0.01),
+                        SizedBox(height: _sizing.height(1)),
                         Divider(),
-                        SizedBox(height: _height * 0.01),
+                        SizedBox(height: _sizing.height(1)),
                         search,
                         checkAll,
                         Expanded(child: friendListWidget),
@@ -674,12 +648,12 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   Widget _buildSearchBestFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
+
+    GetImage _getImage = GetImage(context);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -691,7 +665,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,
@@ -725,12 +699,12 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
   }
 
   Widget _buildSearchFriendList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _listPaddingH = _width * 0.06;
-    double _pSize = _height * 0.023;
+    double _listPaddingH = _sizing.width(6);
+    double _pSize = _sizing.height(2.3);
+
+    GetImage _getImage = GetImage(context);
 
     return ListView.separated(
       shrinkWrap: true,
@@ -742,7 +716,7 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
           contentPadding:
               EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
           leading: ClipOval(
-            child: getImage(friends.photo),
+            child: _getImage.friend(friends.photo),
           ),
           title: Text(
             friends.friendName,

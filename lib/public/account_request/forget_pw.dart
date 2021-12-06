@@ -14,7 +14,7 @@ class ForgetPw {
 
   _request() async {
     Request request = Request();
-    await request.forgetpw(context, data);
+    await request.forgetPw(context, data);
     this._isError = await request.getIsError();
   }
 

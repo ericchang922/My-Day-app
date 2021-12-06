@@ -1,10 +1,12 @@
-import 'package:My_Day_app/common_studyplan/select_note_page.dart';
-import 'package:My_Day_app/public/alert.dart';
-import 'package:My_Day_app/public/studyplan_request/create_studyplan.dart';
-import 'package:My_Day_app/public/studyplan_request/edit_studyplan.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/study/select_note_page.dart';
+import 'package:My_Day_app/public/studyplan_request/create_studyplan.dart';
+import 'package:My_Day_app/public/studyplan_request/edit_studyplan.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:flutter/services.dart';
 
 class StudyPlanForm extends StatefulWidget {
@@ -73,10 +75,15 @@ class StudyPlanForm extends StatefulWidget {
 }
 
 class _StudyPlanForm extends State<StudyPlanForm> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+  }
+
   int studyplanNum;
   int groupNum;
 
-  String uid = 'lili123';
   String _title;
   String _value = '';
   String _submitType;
@@ -126,33 +133,27 @@ class _StudyPlanForm extends State<StudyPlanForm> {
   @override
   void initState() {
     super.initState();
-    // _getStudyPlanRequest();
+    _uid();
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _listLR = _height * 0.02;
-    double _textFied = _height * 0.045;
-    double _borderRadius = _height * 0.01;
-    double _iconWidth = _width * 0.05;
-    double _listPaddingH = _width * 0.06;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _leadingL = _height * 0.02;
-    double _bottomHeight = _height * 0.07;
+    double _listLR = _sizing.height(2);
+    double _textFied = _sizing.height(4.5);
+    double _borderRadius = _sizing.height(1);
+    double _iconWidth = _sizing.width(5);
+    double _leadingL = _sizing.height(2);
+    double _bottomHeight = _sizing.height(7);
 
-    double _pSize = _height * 0.023;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _pSize = _sizing.height(2.3);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
     Color _bule = Color(0xff7AAAD8);
-    Color _textFiedBorder = Color(0xff707070);
 
     // values ------------------------------------------------------------------------------------------
     if (_date == null) _date = DateTime.now().add(Duration(days: 1));
@@ -258,7 +259,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -299,7 +300,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                   mode: CupertinoDatePickerMode.date,
                   initialDateTime: _dateTime,
@@ -319,7 +320,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -351,7 +352,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                   mode: CupertinoDatePickerMode.time,
                   minimumDate:
@@ -377,7 +378,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
-          height: _height * 0.4,
+          height: _sizing.height(40),
           color: Colors.white,
           child: Column(
             children: [
@@ -410,7 +411,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                 ),
               ),
               Container(
-                height: _height * 0.28,
+                height: _sizing.height(28),
                 child: CupertinoDatePicker(
                   mode: CupertinoDatePickerMode.time,
                   minimumDate:
@@ -449,21 +450,17 @@ class _StudyPlanForm extends State<StudyPlanForm> {
     }
 
     Future<String> remarkDialog(BuildContext context, int index) async {
-      Size size = MediaQuery.of(context).size;
-      double _width = size.width;
-      double _height = size.height;
+      Sizing _sizing = Sizing(context);
 
-      double _borderRadius = _height * 0.03;
-      double _textLBR = _height * 0.02;
-      double _iconWidth = _width * 0.05;
-      double _textFied = _height * 0.1;
-      double _inkwellH = _height * 0.06;
+      double _borderRadius = _sizing.height(3);
+      double _textLBR = _sizing.height(2);
+      double _textFied = _sizing.height(10);
+      double _inkwellH = _sizing.height(6);
 
-      double _pSize = _height * 0.023;
-      double _subtitleSize = _height * 0.02;
+      double _pSize = _sizing.height(2.3);
+      double _subtitleSize = _sizing.height(2);
 
       Color _bule = Color(0xff7AAAD8);
-      Color _textFiedBorder = Color(0xff707070);
       Color _color = Theme.of(context).primaryColor;
       Color _light = Theme.of(context).primaryColorLight;
 
@@ -478,10 +475,10 @@ class _StudyPlanForm extends State<StudyPlanForm> {
               shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.all(Radius.circular(_borderRadius))),
-              contentPadding: EdgeInsets.only(top: _height * 0.02),
+              contentPadding: EdgeInsets.only(top: _sizing.height(2)),
               content: Container(
-                width: _width * 0.2,
-                height: _height * 0.23,
+                width: _sizing.width(20),
+                height: _sizing.height(23),
                 child: GestureDetector(
                   // 點擊空白處釋放焦點
                   behavior: HitTestBehavior.translucent,
@@ -500,7 +497,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                               top: _textLBR,
                               left: _textLBR,
                               right: _textLBR,
-                              bottom: _height * 0.01,
+                              bottom: _sizing.height(1),
                             ),
                             height: _textFied,
                             child: TextField(
@@ -509,15 +506,15 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                               maxLines: null,
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
-                                      horizontal: _height * 0.01,
-                                      vertical: _height * 0.01),
+                                      horizontal: _sizing.height(1),
+                                      vertical: _sizing.height(1)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
-                                        Radius.circular(_height * 0.01)),
+                                        Radius.circular(_sizing.height(1))),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
-                                        Radius.circular(_height * 0.01)),
+                                        Radius.circular(_sizing.height(1))),
                                     borderSide: BorderSide(color: _bule),
                                   )),
                               controller: _remarkController,
@@ -532,8 +529,8 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                               child: Container(
                                 height: _inkwellH,
                                 padding: EdgeInsets.only(
-                                    top: _height * 0.015,
-                                    bottom: _height * 0.015),
+                                    top: _sizing.height(1.5),
+                                    bottom: _sizing.height(1.5)),
                                 decoration: BoxDecoration(
                                   color: _light,
                                   borderRadius: BorderRadius.only(
@@ -558,8 +555,8 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                               child: Container(
                                 height: _inkwellH,
                                 padding: EdgeInsets.only(
-                                    top: _height * 0.015,
-                                    bottom: _height * 0.015),
+                                    top: _sizing.height(1.5),
+                                    bottom: _sizing.height(1.5)),
                                 decoration: BoxDecoration(
                                   color: _color,
                                   borderRadius: BorderRadius.only(
@@ -596,7 +593,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
       margin: EdgeInsets.only(
         left: _listLR,
         bottom: _listLR,
-        top: _height * 0.01,
+        top: _sizing.height(1),
         right: _listLR,
       ),
       child: Row(
@@ -609,7 +606,8 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                 style: TextStyle(fontSize: _pSize),
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
-                        horizontal: _height * 0.01, vertical: _height * 0.01),
+                        horizontal: _sizing.height(1),
+                        vertical: _sizing.height(1)),
                     border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.all(Radius.circular(_borderRadius)),
@@ -641,7 +639,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
       margin: EdgeInsets.only(
         left: _listLR,
         bottom: _listLR,
-        top: _height * 0.01,
+        top: _sizing.height(1),
         right: _listLR,
       ),
       child: Row(
@@ -650,12 +648,13 @@ class _StudyPlanForm extends State<StudyPlanForm> {
           Flexible(
             child: Container(
               height: _textFied,
-              width: _width * 0.38,
+              width: _sizing.width(40),
               child: TextField(
                   style: TextStyle(fontSize: _pSize),
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
-                          horizontal: _height * 0.01, vertical: _height * 0.01),
+                          horizontal: _sizing.height(1),
+                          vertical: _sizing.height(1)),
                       border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.all(Radius.circular(_borderRadius)),
@@ -681,22 +680,23 @@ class _StudyPlanForm extends State<StudyPlanForm> {
       margin: EdgeInsets.only(
         left: _listLR,
         bottom: _listLR,
-        top: _height * 0.01,
+        top: _sizing.height(1),
         right: _listLR,
       ),
       child: Row(
         children: [
           Text('時間：', style: TextStyle(fontSize: _pSize)),
           Padding(
-            padding: EdgeInsets.only(right: _width * 0.01),
+            padding: EdgeInsets.only(right: _sizing.width(1)),
             child: Container(
               height: _textFied,
-              width: _width * 0.17,
+              width: _sizing.width(17),
               child: TextField(
                   style: TextStyle(fontSize: _pSize),
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
-                          horizontal: _height * 0.01, vertical: _height * 0.01),
+                          horizontal: _sizing.height(1),
+                          vertical: _sizing.height(1)),
                       border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.all(Radius.circular(_borderRadius)),
@@ -716,15 +716,16 @@ class _StudyPlanForm extends State<StudyPlanForm> {
           ),
           Text('-', style: TextStyle(fontSize: _pSize)),
           Padding(
-            padding: EdgeInsets.only(left: _width * 0.01),
+            padding: EdgeInsets.only(left: _sizing.width(1)),
             child: Container(
               height: _textFied,
-              width: _width * 0.17,
+              width: _sizing.width(17),
               child: TextField(
                   style: TextStyle(fontSize: _pSize),
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
-                          horizontal: _height * 0.01, vertical: _height * 0.01),
+                          horizontal: _sizing.height(1),
+                          vertical: _sizing.height(1)),
                       border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.all(Radius.circular(_borderRadius)),
@@ -767,7 +768,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
           ),
           Text('開', style: TextStyle(fontSize: _pSize)),
           SizedBox(
-            width: _width * 0.01,
+            width: _sizing.width(1),
           ),
           Radio(
             value: false,
@@ -797,10 +798,10 @@ class _StudyPlanForm extends State<StudyPlanForm> {
               '${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}';
           _value = _subjectNameList[index];
           return ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: _height * 0.01, vertical: 0),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: _sizing.height(1), vertical: 0),
             leading: Container(
-              margin: EdgeInsets.only(left: _height * 0.01),
+              margin: EdgeInsets.only(left: _sizing.height(1)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -814,7 +815,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                             _subjectTimePicker(context, index, true);
                         }),
                   ),
-                  SizedBox(height: _height * 0.01),
+                  SizedBox(height: _sizing.height(1)),
                   Expanded(
                     child: InkWell(
                         child:
@@ -828,14 +829,14 @@ class _StudyPlanForm extends State<StudyPlanForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: _height * 0.01),
+                  margin: EdgeInsets.only(top: _sizing.height(1)),
                   height: _textFied,
                   child: TextField(
                     style: TextStyle(fontSize: _pSize),
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
-                            horizontal: _height * 0.01,
-                            vertical: _height * 0.01),
+                            horizontal: _sizing.height(1),
+                            vertical: _sizing.height(1)),
                         border: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(_borderRadius)),
@@ -862,7 +863,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                   ),
                 ),
                 Container(
-                  height: _height * 0.038,
+                  height: _sizing.height(3.8),
                   child: Row(
                     children: [
                       Text('休息：', style: TextStyle(fontSize: _subtitleSize)),
@@ -877,7 +878,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                         groupValue: _restList[index],
                       ),
                       SizedBox(
-                        width: _width * 0.01,
+                        width: _sizing.width(1),
                       ),
                       Text('否', style: TextStyle(fontSize: _subtitleSize)),
                       Radio(
@@ -899,7 +900,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
             trailing: PopupMenuButton(
               offset: Offset(-40, 0),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(_height * 0.01)),
+                  borderRadius: BorderRadius.circular(_sizing.height(1))),
               itemBuilder: (context) {
                 return [
                   PopupMenuItem(
@@ -1041,7 +1042,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                       color: Colors.white,
                       child: ListView(
                         children: [
-                          SizedBox(height: _height * 0.02),
+                          SizedBox(height: _sizing.height(2)),
                           title,
                           date,
                           time,

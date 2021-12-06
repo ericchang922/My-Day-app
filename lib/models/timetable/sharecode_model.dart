@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final sharecodeModel = sharecodeModelFromJson(jsonString);
-
 import 'dart:convert';
 
 SharecodeModel sharecodeModelFromJson(String str) => SharecodeModel.fromJson(json.decode(str));

@@ -1,12 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:date_format/date_format.dart';
 
 import 'package:My_Day_app/public/vote_request/delete.dart';
 import 'package:My_Day_app/models/vote/get_vote_model.dart';
 import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
 import 'package:My_Day_app/public/vote_request/get.dart';
-import 'package:date_format/date_format.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 
 class VoteEndDetailPage extends StatefulWidget {
   int voteNum;
@@ -18,6 +20,15 @@ class VoteEndDetailPage extends StatefulWidget {
 }
 
 class _VoteEndDetailPage extends State<VoteEndDetailPage> {
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _getVoteRequest();
+    await _getGroupMemberRequest();
+  }
+
   int voteNum;
   int groupNum;
   _VoteEndDetailPage(this.voteNum, this.groupNum);
@@ -25,7 +36,6 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
   GetVoteModel _getVoteModel;
   GroupMemberListModel _groupMemberListModel;
 
-  String uid = 'lili123';
   String _deadLine = '';
 
   bool _visibleDeadLine = false;
@@ -39,21 +49,16 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
   @override
   void initState() {
     super.initState();
-
-    _getVoteRequest();
-    _getGroupMemberRequest();
+    _uid();
   }
 
   _getVoteRequest() async {
-    // var response = await rootBundle.loadString('assets/json/get_vote.json');
-    // var responseBody = json.decode(response);
-
-    GetVoteModel _request = await Get(uid: uid, voteNum: voteNum).getData();
+    GetVoteModel _request =
+        await Get(context: context, uid: uid, voteNum: voteNum).getData();
 
     setState(() {
       _getVoteModel = _request;
-      // ignore: deprecated_member_use
-      _voteItemCount = new List();
+      _voteItemCount = [];
       if (_getVoteModel.deadline != "None") {
         DateTime dateTime = DateTime.parse(_getVoteModel.deadline);
         _deadLine = formatDate(
@@ -80,9 +85,6 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
   }
 
   _getGroupMemberRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
-    // var responseBody = json.decode(response);
-
     GroupMemberListModel _request =
         await MemberList(uid: uid, groupNum: groupNum).getData();
 
@@ -99,18 +101,16 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _height = size.height;
+    Sizing _sizing = Sizing(context);
 
-    double _leadingL = _height * 0.02;
-    double _listPaddingH = _height * 0.04;
-    double _listPaddingV = _height * 0.02;
-    double _itemsSize = _height * 0.045;
+    double _leadingL = _sizing.height(2);
+    double _listPaddingH = _sizing.height(4);
+    double _listPaddingV = _sizing.height(2);
+    double _itemsSize = _sizing.height(4.5);
 
-    double _appBarSize = _width * 0.052;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
+    double _appBarSize = _sizing.width(5.2);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
 
     Color _gray = Color(0xff959595);
     Color _color = Theme.of(context).primaryColor;
@@ -133,7 +133,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
         return PopupMenuButton<String>(
             offset: Offset(50, 50),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(_height * 0.01)),
+                borderRadius: BorderRadius.circular(_sizing.height(1))),
             icon: Icon(Icons.more_vert),
             itemBuilder: (context) => [
                   PopupMenuItem<String>(
@@ -162,7 +162,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
       Widget voteSetting = Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: _height * 0.04),
+            margin: EdgeInsets.only(top: _sizing.height(4)),
             child: Text(_getVoteModel.title,
                 style: TextStyle(fontSize: _appBarSize)),
           ),
@@ -170,7 +170,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.only(top: _height * 0.01),
+                margin: EdgeInsets.only(top: _sizing.height(1)),
                 child: Text("建立人：" + _getVoteModel.founderName,
                     style: TextStyle(fontSize: _subtitleSize, color: _gray)),
               ),
@@ -178,7 +178,7 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
                 visible: _visibleAnonymous,
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: _height * 0.01, left: _height * 0.05),
+                      top: _sizing.height(1), left: _sizing.height(5)),
                   child: Text("匿名投票",
                       style: TextStyle(fontSize: _subtitleSize, color: _gray)),
                 ),
@@ -188,13 +188,13 @@ class _VoteEndDetailPage extends State<VoteEndDetailPage> {
           Visibility(
             visible: _visibleDeadLine,
             child: Container(
-              margin: EdgeInsets.only(top: _height * 0.01),
+              margin: EdgeInsets.only(top: _sizing.height(1)),
               child: Text("截止日期：" + _deadLine,
                   style: TextStyle(fontSize: _subtitleSize, color: _gray)),
             ),
           ),
           Container(
-              margin: EdgeInsets.only(top: _height * 0.04),
+              margin: EdgeInsets.only(top: _sizing.height(4)),
               child: Divider(
                 height: 1,
               ))

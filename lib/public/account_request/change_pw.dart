@@ -1,6 +1,5 @@
-
-
 import 'package:flutter/material.dart';
+
 import 'package:My_Day_app/public/request.dart';
 
 class ChangePw {
@@ -14,7 +13,7 @@ class ChangePw {
 
   _request() async {
     Request request = Request();
-    await request.changepw(context, data);
+    await request.changePw(context, data);
     this._isError = await request.getIsError();
   }
 

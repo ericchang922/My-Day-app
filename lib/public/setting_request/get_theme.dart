@@ -10,11 +10,11 @@ class GetThemes {
 
   _request() async {
     Request request = Request();
-    await request.getthemes(context, data);
+    await request.getThemes(context, data);
     _response = await request.getThemesGet();
   }
 
-  GetThemes({this.uid}) {
+  GetThemes({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

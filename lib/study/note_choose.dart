@@ -1,8 +1,6 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
+
+import 'package:My_Day_app/public/sizing.dart';
 
 const PrimaryColor = const Color(0xFFF86D67);
 
@@ -29,9 +27,8 @@ class Theme extends State {
   bool hasBeenPressed = false;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _width = size.width;
-    double _iconWidth = _width * 0.05;
+    Sizing _sizing = Sizing(context);
+    double _iconWidth = _sizing.width(5);
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
@@ -50,13 +47,10 @@ class Theme extends State {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          // ignore: deprecated_member_use
                           Text(
                             '國文 1~3 課',
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
-
-                          // ignore: deprecated_member_use
                           SizedBox(
                             height: 40,
                             width: 20,
@@ -88,17 +82,15 @@ class Theme extends State {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          // ignore: deprecated_member_use
                           Text(
                             '數學 1~3 課',
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
-
-                          // ignore: deprecated_member_use
                           SizedBox(
                             height: 40,
                             width: 20,
                             child: TextButton(
+                                child: Container(),
                                 style: TextButton.styleFrom(
                                   backgroundColor: hasBeenPressed
                                       ? Color(0xffF86D67)
@@ -126,15 +118,15 @@ class Theme extends State {
             bottomNavigationBar: Container(
                 child: Row(children: <Widget>[
               Expanded(
-                // ignore: deprecated_member_use
                 child: SizedBox(
                     height: 50,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: Theme.of(context).primaryColorLight,),
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0)),
+                        backgroundColor: Theme.of(context).primaryColorLight,
+                      ),
                       child: Image.asset(
                         'assets/images/cancel.png',
                         width: _iconWidth,
@@ -145,15 +137,15 @@ class Theme extends State {
                     )),
               ),
               Expanded(
-                // ignore: deprecated_member_use
                 child: SizedBox(
                   height: 50,
                   child: TextButton(
                     style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        backgroundColor: Theme.of(context).primaryColor,),
+                      primary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0)),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
                     child: Image.asset(
                       'assets/images/confirm.png',
                       width: _iconWidth,

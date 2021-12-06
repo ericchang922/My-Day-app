@@ -1,63 +1,49 @@
-import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
+import 'package:flutter/material.dart';
+
+import 'package:date_format/date_format.dart';
+
+import 'package:My_Day_app/study/studyplan_detail_page.dart';
+import 'package:My_Day_app/study/studyplan_form.dart';
 import 'package:My_Day_app/public/studyplan_request/group_list.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_list.dart';
 import 'package:My_Day_app/public/studyplan_request/personal_share_list.dart';
-import 'package:My_Day_app/study/studyplan_detail_page.dart';
-import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
 import 'package:My_Day_app/models/studyplan/studyplan_list_model.dart';
-import 'package:My_Day_app/study/studyplan_form.dart';
-import 'package:date_format/date_format.dart';
-
-import 'package:flutter/material.dart';
+import 'package:My_Day_app/models/studyplan/personal_share_studyplan_model.dart';
 
 class StudyplanListPage extends StatefulWidget {
   @override
   _StudyplanListPage createState() => _StudyplanListPage();
 }
 
-class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
+class _StudyplanListPage extends State<StudyplanListPage> {
   StudyplanListModel _studyplanListModel;
   GroupStudyplanListModel _groupStudyplanListModel;
   PersonalShareStudyplanListModel _shareStudyplanListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _studyplanListRequest();
+    await _groupStudyplanListRequest();
+    await _personalShareStudyplanList();
+  }
+
   List _shareStudyplanNumList = [];
 
   @override
   void initState() {
     super.initState();
-    _studyplanListRequest();
-    _groupStudyplanListRequest();
-    _personalShareStudyplanList();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    routeObserver.unsubscribe(this);
-  }
-
-  @override
-  void didPopNext() {
-    _studyplanListRequest();
-    _groupStudyplanListRequest();
-    _personalShareStudyplanList();
+    _uid();
   }
 
   _studyplanListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = StudyplanListModel.fromJson(responseBody);
-
-    StudyplanListModel _request = await PersonalList(uid: uid).getData();
+    StudyplanListModel _request =
+        await PersonalList(context: context, uid: uid).getData();
 
     setState(() {
       _studyplanListModel = _request;
@@ -65,53 +51,56 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
   }
 
   _groupStudyplanListRequest() async {
-    // var response =
-    //     await rootBundle.loadString('assets/json/group_studyplan_list.json');
-    // var responseBody = json.decode(response);
-    // var _request = GroupStudyplanListModel.fromJson(responseBody);
-
-    GroupStudyplanListModel _request = await GroupList(uid: uid).getData();
+    GroupStudyplanListModel _request =
+        await GroupList(context: context, uid: uid).getData();
 
     setState(() {
       _groupStudyplanListModel = _request;
-    });
-  }
-
-  _personalShareStudyplanList() async {
-    PersonalShareStudyplanListModel _request =
-        await PersonalShareList(uid: uid, shareStatus: 1).getData();
-    setState(() {
-      _shareStudyplanListModel = _request;
       _shareStudyplanNumList = [];
-      for (int i = 0; i < _shareStudyplanListModel.studyplan.length; i++) {
-        var studyplan = _shareStudyplanListModel.studyplan[i];
-        _shareStudyplanNumList.add(studyplan.studyplanNum);
+      for (int i = 0; i < _groupStudyplanListModel.pastStudyplan.length; i++) {
+        var studyplan = _groupStudyplanListModel.pastStudyplan[i];
+        for (int j = 0; j < studyplan.studyplanContent.length; j++) {
+          _shareStudyplanNumList
+              .add(studyplan.studyplanContent[j].studyplanNum);
+        }
+      }
+      for (int i = 0;
+          i < _groupStudyplanListModel.futureStudyplan.length;
+          i++) {
+        var studyplan = _groupStudyplanListModel.futureStudyplan[i];
+        for (int j = 0; j < studyplan.studyplanContent.length; j++) {
+          _shareStudyplanNumList
+              .add(studyplan.studyplanContent[j].studyplanNum);
+        }
       }
     });
     print(_shareStudyplanNumList);
   }
 
+  _personalShareStudyplanList() async {
+    PersonalShareStudyplanListModel _request =
+        await PersonalShareList(context: context, uid: uid, shareStatus: 1)
+            .getData();
+    setState(() {
+      _shareStudyplanListModel = _request;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _heightSize = _height * 0.01;
-    double _widthSize = _width * 0.01;
-    double _leadingL = _height * 0.02;
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.01;
-    double _subtitleT = _height * 0.008;
-    double _tab = _height * 0.04683;
-    double _listLR = _width * 0.06;
+    double _leadingL = _sizing.height(2);
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(1);
+    double _subtitleT = _sizing.height(0.8);
+    double _tab = _sizing.height(4.683);
+    double _listLR = _sizing.width(6);
 
-    double _tabSize = _width * 0.041;
-    double _pSize = _height * 0.023;
-    double _p2Size = _height * 0.02;
-    double _titleSize = _height * 0.025;
-    double _subtitleSize = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    double _pSize = _sizing.height(2.3);
+    double _titleSize = _sizing.height(2.5);
+    double _subtitleSize = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
     Color _gray = Color(0xff959595);
@@ -159,21 +148,27 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                 return InkWell(
                   onTap: () {
                     print(studyplan.studyplanNum);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => StudyplanDetailPage(
-                            studyplan.studyplanNum,
-                            typeId,
-                            null,
-                            _shareStudyplanNumList
-                                .contains(studyplan.studyplanNum))));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (context) => StudyplanDetailPage(
+                                studyplan.studyplanNum,
+                                typeId,
+                                null,
+                                _shareStudyplanNumList
+                                    .contains(studyplan.studyplanNum))))
+                        .then((value) {
+                      _studyplanListRequest();
+                      _groupStudyplanListRequest();
+                      _personalShareStudyplanList();
+                    });
                   },
                   child: Container(
                     margin: EdgeInsets.only(
-                        top: _height * 0.01, bottom: _height * 0.01),
+                        top: _sizing.height(1), bottom: _sizing.height(1)),
                     child: Row(
                       children: [
                         SizedBox(
-                          width: _width * 0.18,
+                          width: _sizing.width(18),
                           child: Container(
                             margin: EdgeInsets.only(left: _listLR),
                             child: Column(
@@ -228,30 +223,42 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               var studyplan;
-              if (typeId == 0)
+              int groupNum;
+              if (typeId == 0) {
                 studyplan = _groupStudyplanListModel
                     .futureStudyplan[value].studyplanContent[index];
-              else
+                groupNum =
+                    _groupStudyplanListModel.futureStudyplan[value].groupNum;
+              } else {
                 studyplan = _groupStudyplanListModel
                     .pastStudyplan[value].studyplanContent[index];
+                groupNum =
+                    _groupStudyplanListModel.pastStudyplan[value].groupNum;
+              }
+
               return InkWell(
                 onTap: () {
-                  print(studyplan.studyplanNum);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => StudyplanDetailPage(
-                          studyplan.studyplanNum,
-                          typeId,
-                          null,
-                          _shareStudyplanNumList
-                              .contains(studyplan.studyplanNum))));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => StudyplanDetailPage(
+                              studyplan.studyplanNum,
+                              typeId,
+                              groupNum,
+                              _shareStudyplanNumList
+                                  .contains(studyplan.studyplanNum))))
+                      .then((value) {
+                    _studyplanListRequest();
+                    _groupStudyplanListRequest();
+                    _personalShareStudyplanList();
+                  });
                 },
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: _height * 0.01, bottom: _height * 0.01),
+                      top: _sizing.height(1), bottom: _sizing.height(1)),
                   child: Row(
                     children: [
                       SizedBox(
-                        width: _width * 0.18,
+                        width: _sizing.width(18),
                         child: Container(
                           margin: EdgeInsets.only(left: _listLR),
                           child: Column(
@@ -291,7 +298,7 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
             separatorBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.only(
-                    left: _height * 0.03, right: _height * 0.03),
+                    left: _sizing.height(3), right: _sizing.height(3)),
                 child: Divider(
                   height: 1,
                   color: _lightGray,
@@ -332,7 +339,7 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                   ),
                   child: ExpansionTile(
                       title: Container(
-                        margin: EdgeInsets.only(left: _height * 0.02),
+                        margin: EdgeInsets.only(left: _sizing.height(2)),
                         child: Text(
                             '${studyplan.groupName} (${studyplan.studyplanCount}) ',
                             style:
@@ -398,17 +405,23 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
               return InkWell(
                 onTap: () {
                   print(studyplan.studyplanNum);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => StudyplanDetailPage(
-                          studyplan.studyplanNum, typeId, null, true)));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => StudyplanDetailPage(
+                              studyplan.studyplanNum, typeId, null, true)))
+                      .then((value) {
+                    _studyplanListRequest();
+                    _groupStudyplanListRequest();
+                    _personalShareStudyplanList();
+                  });
                 },
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: _height * 0.01, bottom: _height * 0.01),
+                      top: _sizing.height(1), bottom: _sizing.height(1)),
                   child: Row(
                     children: [
                       SizedBox(
-                        width: _width * 0.18,
+                        width: _sizing.width(18),
                         child: Container(
                           margin: EdgeInsets.only(left: _listLR),
                           child: Column(
@@ -479,9 +492,14 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                     icon: Icon(Icons.add),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => StudyPlanForm()));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => StudyPlanForm()))
+                          .then((value) {
+                        _studyplanListRequest();
+                        _groupStudyplanListRequest();
+                        _personalShareStudyplanList();
+                      });
                     },
                   ),
                 ],
@@ -496,7 +514,7 @@ class _StudyplanListPage extends State<StudyplanListPage> with RouteAware {
                   labelColor: Colors.white,
                   unselectedLabelColor: _lightGray,
                   indicatorPadding: EdgeInsets.all(0.0),
-                  indicatorWeight: _width * 0.01,
+                  indicatorWeight: _sizing.width(1),
                   labelPadding: EdgeInsets.only(left: 0.0, right: 0.0),
                   tabs: <Widget>[
                     Container(

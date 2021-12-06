@@ -1,10 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
+import 'package:My_Day_app/public/getImage.dart';
 import 'package:My_Day_app/public/group_request/setting_manager.dart';
-import 'package:My_Day_app/models/group/group_member_list_model.dart';
 import 'package:My_Day_app/public/group_request/member_list.dart';
+import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/models/group/group_member_list_model.dart';
 
 class GroupManagerPage extends StatelessWidget {
   int groupNum;
@@ -12,11 +13,9 @@ class GroupManagerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
-    double _leadingL = _height * 0.02;
-    double _appBarSize = _width * 0.052;
+    Sizing _sizing = Sizing(context);
+    double _leadingL = _sizing.height(2);
+    double _appBarSize = _sizing.width(5.2);
 
     Color _color = Theme.of(context).primaryColor;
 
@@ -61,7 +60,13 @@ class _GroupManagerState extends State<GroupManagerWidget> {
 
   GroupMemberListModel _groupMemberListModel;
 
-  String uid = 'lili123';
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+
+    await _groupMemberListRequest();
+  }
 
   List _memberList = [];
   List _managerList = [];
@@ -71,22 +76,17 @@ class _GroupManagerState extends State<GroupManagerWidget> {
   @override
   void initState() {
     super.initState();
-    _groupMemberListRequest();
+    _uid();
   }
 
   _groupMemberListRequest() async {
-    // var reponse = await rootBundle.loadString('assets/json/group_members.json');
-    // var responseBody = json.decode(response);
-
     GroupMemberListModel _request =
         await MemberList(uid: uid, groupNum: groupNum).getData();
 
     setState(() {
       _groupMemberListModel = _request;
-      // ignore: deprecated_member_use
-      _managerList = new List();
-      // ignore: deprecated_member_use
-      _memberList = new List();
+      _managerList = [];
+      _memberList = [];
 
       for (int i = 0; i < _groupMemberListModel.member.length; i++) {
         if (_groupMemberListModel.member[i].statusId == 4) {
@@ -104,51 +104,23 @@ class _GroupManagerState extends State<GroupManagerWidget> {
     });
   }
 
-  Image getImage(String imageString) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _imgSize = _height * 0.045;
-    bool isGetImage;
-
-    Image friendImage = Image.asset(
-      'assets/images/friend_choose.png',
-      width: _imgSize,
-    );
-    const Base64Codec base64 = Base64Codec();
-    Image image = Image.memory(base64.decode(imageString),
-        width: _imgSize, height: _imgSize, fit: BoxFit.fill);
-    var resolve = image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
-      isGetImage = true;
-    }, onError: (Object exception, StackTrace stackTrace) {
-      isGetImage = false;
-      print('error');
-    }));
-
-    if (isGetImage == null) {
-      return image;
-    } else {
-      return friendImage;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double _height = size.height;
-    double _width = size.width;
+    Sizing _sizing = Sizing(context);
 
-    double _textL = _height * 0.03;
-    double _textBT = _height * 0.02;
-    double _listPaddingH = _width * 0.06;
+    double _textL = _sizing.height(3);
+    double _textBT = _sizing.height(2);
+    double _listPaddingH = _sizing.width(6);
 
-    double _pSize = _height * 0.023;
+    double _pSize = _sizing.height(2.3);
 
     Color _bule = Color(0xff7AAAD8);
     Color _gray = Color(0xff959595);
     Color _color = Theme.of(context).primaryColor;
 
     Widget managerWidget;
+
+    GetImage _getImage = GetImage(context);
 
     _submit(bool isAddManager, String friendId) async {
       int statusId;
@@ -215,7 +187,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(members.memberPhoto),
+              child: _getImage.friend(members.memberPhoto),
             ),
             title: Text(
               members.memberName,
@@ -240,7 +212,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             leading: ClipOval(
-              child: getImage(members.memberPhoto),
+              child: _getImage.friend(members.memberPhoto),
             ),
             title: Text(
               members.memberName,
@@ -278,7 +250,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
         managerWidget = ListView(
           children: [
             Container(
-                margin: EdgeInsets.only(top: _height * 0.02),
+                margin: EdgeInsets.only(top: _sizing.height(2)),
                 child: managerList)
           ],
         );
@@ -290,7 +262,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
         return ListView(
           children: [
             Container(
-                margin: EdgeInsets.only(top: _height * 0.02),
+                margin: EdgeInsets.only(top: _sizing.height(2)),
                 child: managerList)
           ],
         );

@@ -10,11 +10,11 @@ class GetProfileList {
 
   _request() async {
     Request request = Request();
-    await request.getprofilelist(context, data);
+    await request.getProfileList(context, data);
     _response = await request.getProfileListGet();
   }
 
-  GetProfileList({this.uid}) {
+  GetProfileList({this.context, this.uid}) {
     data = {'uid': uid};
   }
 

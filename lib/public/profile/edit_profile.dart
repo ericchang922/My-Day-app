@@ -14,7 +14,7 @@ class EditProfile {
 
   _request() async {
     Request request = Request();
-    await request.editprofile(context, data);
+    await request.editProfile(context, data);
     this._isError = await request.getIsError();
   }
 
