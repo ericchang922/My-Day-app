@@ -132,7 +132,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
   @override
   Widget build(BuildContext context) {
     Sizing _sizing = Sizing(context);
-    
+
     double _listTilePadding = _sizing.height(1.8);
     double _textFied = _sizing.height(4.5);
     double _leadingL = _sizing.height(2);
@@ -340,7 +340,14 @@ class _VoteEditWidget extends State<VoteEditPage> {
                     child: Container(
                       margin: EdgeInsets.only(top: _sizing.height(3)),
                       child: TextField(
-                        controller: _voteItemController,
+                        controller: TextEditingController.fromValue(
+                            TextEditingValue(
+                                text: _voteItemController.text,
+                                selection: TextSelection.fromPosition(
+                                    TextPosition(
+                                        affinity: TextAffinity.downstream,
+                                        offset:
+                                            _voteItemController.text.length)))),
                         cursorColor: Colors.black,
                         style: TextStyle(fontSize: _appBarSize),
                         decoration: InputDecoration(
@@ -438,7 +445,11 @@ class _VoteEditWidget extends State<VoteEditPage> {
             left: _sizing.height(5)),
         children: [
           TextField(
-            controller: _voteTitleController,
+            controller: TextEditingController.fromValue(TextEditingValue(
+                text: _voteTitleController.text,
+                selection: TextSelection.fromPosition(TextPosition(
+                    affinity: TextAffinity.downstream,
+                    offset: _voteTitleController.text.length)))),
             cursorColor: Colors.black,
             style: TextStyle(fontSize: _titleSize),
             decoration: InputDecoration(
