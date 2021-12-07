@@ -427,6 +427,7 @@ class _VoteWidget extends State<VotePage> {
                                   true) {
                                 _getVoteRequest();
                                 Navigator.pop(context);
+                                _voteItemName = '';
                               }
                             }
                           },
