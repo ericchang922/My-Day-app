@@ -72,11 +72,7 @@ class _Login extends State {
         return false;
     }
 
-    return WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
-        child: MaterialApp(
+    return MaterialApp(
             debugShowCheckedModeBanner: false,
             home: Container(
               color: _color,
@@ -197,11 +193,14 @@ class _Login extends State {
                                               prefs.setString(
                                                   'uid', myuid.text);
 
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          HomeWidget()));
+                                              Navigator.of(context)
+                                                  .pushAndRemoveUntil(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              HomeWidget()),
+                                                      (Route<dynamic> route) =>
+                                                          false);
+                                             
                                             } else {
                                               await loginfailDialog(context,
                                                   _alertTitle, _alertTxt);
@@ -276,6 +275,6 @@ class _Login extends State {
                           ),
                         ),
                       ])))),
-            )));
+            ));
   }
 }
