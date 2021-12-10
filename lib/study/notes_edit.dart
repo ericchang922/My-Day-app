@@ -26,7 +26,6 @@ class _NotesEditPage extends State<NotesEditPage> {
   int noteNum;
   _NotesEditPage(this.noteNum);
 
-  var _imgPath;
   String uid;
   _uid() async {
     String id = await loadUid();
@@ -36,7 +35,6 @@ class _NotesEditPage extends State<NotesEditPage> {
   }
 
   String _imgString;
-  String noteid = "lili123";
 
   final notetypeName = TextEditingController();
   final notetitle = TextEditingController();
