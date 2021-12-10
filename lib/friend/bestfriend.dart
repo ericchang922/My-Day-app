@@ -1,3 +1,5 @@
+import 'package:My_Day_app/friend/friend_home.dart';
+import 'package:My_Day_app/home/home_Update.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/getImage.dart';
@@ -135,10 +137,19 @@ class _BestfriendWidget extends State<BestfriendPage> {
               leading: ClipOval(
                 child: _getImage.friend(friends.photo),
               ),
-              title: Text(
-                friends.friendName,
-                style: TextStyle(fontSize: _pSize),
-              ),
+              title: TextButton(
+                style: TextButton.styleFrom(primary: Colors.black),
+                child: Text(
+                  friends.friendName,
+                  style: TextStyle(fontSize: _pSize),
+                ),
+                onPressed: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomeUpdate(child: FriendHome(friends.friendId))));
+                }),
               trailing: TextButton(
                   style: TextButton.styleFrom(primary: Color(0xffF86D67)),
                   child: Text(
