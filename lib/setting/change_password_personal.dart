@@ -9,37 +9,10 @@ var primaryColorLight = Color(0xffFFAAA6);
 
 class ChangepwPersonalPage extends StatefulWidget {
   @override
-  ChangepwPersonalWidget createState() => new ChangepwPersonalWidget();
+  _Changepw createState() => new _Changepw();
 }
 
-class ChangepwPersonalWidget extends State<ChangepwPersonalPage> {
-  @override
-  Widget build(BuildContext context) {
-    Sizing _sizing = Sizing(context);
-    double _appBarSize = _sizing.width(5.2);
-    double _leadingL = _sizing.height(2);
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text('更改密碼',
-            style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
-        backgroundColor: primaryColor,
-        leading: Container(
-          margin: EdgeInsets.only(left: _leadingL),
-          child: GestureDetector(
-            child: Icon(Icons.chevron_left),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-      ),
-      body: SafeArea(child: _Changepw()),
-    );
-  }
-}
-
-class _Changepw extends StatelessWidget {
+class _Changepw extends State<ChangepwPersonalPage> {
   get direction => null;
   get border => null;
   get decoration => null;
@@ -60,7 +33,8 @@ class _Changepw extends StatelessWidget {
   Widget build(BuildContext context) {
     _uid();
     Sizing _sizing = Sizing(context);
-
+    double _appBarSize = _sizing.width(5.2);
+    double _leadingL = _sizing.height(2);
     double _listLR = _sizing.height(5);
     double _listB = _sizing.height(1);
     double _borderRadius = _sizing.height(1);
@@ -90,6 +64,20 @@ class _Changepw extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text('更改密碼',
+            style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
+          backgroundColor: primaryColor,
+          leading: Container(
+            margin: EdgeInsets.only(left: _leadingL),
+            child: GestureDetector(
+              child: Icon(Icons.chevron_left),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ),
         body: SafeArea(
           child: GestureDetector(
               // 點擊空白處釋放焦點
