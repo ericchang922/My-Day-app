@@ -363,10 +363,8 @@ class Settings extends State {
                           await SharedPreferences.getInstance();
                       prefs.remove('uid');
                       Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute( builder: (context) =>
-                          LoginPage()),ModalRoute.withName('/'));     
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) => LoginPage()));
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          (route) => false);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

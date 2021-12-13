@@ -43,7 +43,7 @@ class GetImage {
         );
       } else {
         image = Image.memory(base64.decode(imageString),
-            width: _weigth, height: _height, fit: BoxFit.fill);
+            width: _weigth, height: _height, fit: BoxFit.cover);
       }
       var resolve = image.image.resolve(ImageConfiguration.empty);
       resolve.addListener(ImageStreamListener((_, __) {
