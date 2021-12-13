@@ -16,7 +16,6 @@ class ForgetpwPage extends StatefulWidget {
   Forgetpw createState() => new Forgetpw();
 }
 
-
 class Forgetpw extends State<ForgetpwPage> {
   get direction => null;
   get border => null;
@@ -57,7 +56,7 @@ class Forgetpw extends State<ForgetpwPage> {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return Sendcode(uid: uid);
+        return Sendcode(context: context, uid: uid);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -71,202 +70,202 @@ class Forgetpw extends State<ForgetpwPage> {
 
     double _listLR = _sizing.height(5);
     double _listB = _sizing.height(1);
-    double _textFied = _sizing.height(4.5);
     double _borderRadius = _sizing.height(1);
     double _iconWidth = _sizing.width(5);
-    double _listPaddingH = _sizing.width(6);
-    double _textL = _sizing.height(3);
-    double _textBT = _sizing.height(2);
     double _leadingL = _sizing.height(2);
     double _bottomHeight = _sizing.height(7);
     double _titleSize = _sizing.height(2.5);
-    double _pSize = _sizing.height(2.3);
-    double _subtitleSize = _sizing.height(2);
     double _appBarSize = _sizing.width(5.2);
 
     Color _bule = Color(0xff7AAAD8);
-    Color _textFiedBorder = Color(0xff707070);
     Color _color = Color(0xffF86D67);
     Color _light = Color(0xffFFAAA6);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text('忘記密碼',
-            style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
-          backgroundColor: _color,
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: Text('忘記密碼',
+                style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
+            backgroundColor: _color,
+            leading: Container(
+              margin: EdgeInsets.only(left: _leadingL),
+              child: GestureDetector(
+                child: Icon(Icons.chevron_left),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
           ),
-        ),
-        body: GestureDetector(
-            // 點擊空白處釋放焦點
-            behavior: HitTestBehavior.translucent,
-            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-            child: ListView(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(
-                    left: _listLR,
-                    bottom: _listB,
-                    top: _sizing.height(5),
-                    right: _listLR,
+          body: GestureDetector(
+              // 點擊空白處釋放焦點
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: _listLR,
+                      bottom: _listB,
+                      top: _sizing.height(5),
+                      right: _listLR,
+                    ),
+                    child: ListTile(
+                      title:
+                          Text('電子信箱：', style: TextStyle(fontSize: _titleSize)),
+                    ),
                   ),
-                  child: ListTile(
-                    title:
-                        Text('電子信箱：', style: TextStyle(fontSize: _titleSize)),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: _sizing.height(7),
-                    bottom: _listB,
-                    top: _sizing.height(0.01),
-                    right: _sizing.height(7),
-                  ),
-                  child: TextField(
-                    controller: forgetuid,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      filled: true,
-                      isCollapsed: true,
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: _sizing.height(1.5),
-                          vertical: _sizing.height(1.5)),
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(_borderRadius)),
-                        borderSide: BorderSide(color: _bule),
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: _sizing.height(7),
+                      bottom: _listB,
+                      top: _sizing.height(0.01),
+                      right: _sizing.height(7),
+                    ),
+                    child: TextField(
+                      controller: forgetuid,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        isCollapsed: true,
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: _sizing.height(1.5),
+                            vertical: _sizing.height(1.5)),
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(_borderRadius)),
+                          borderSide: BorderSide(color: _bule),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: _sizing.height(25),
-                    right: _sizing.height(7),
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: _sizing.height(25),
+                      right: _sizing.height(7),
+                    ),
+                    child: SizedBox(
+                        height: _bottomHeight,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            primary: _color,
+                          ),
+                          child: Text(
+                            '發送驗證碼',
+                            style: TextStyle(fontSize: _sizing.height(2)),
+                          ),
+                          onPressed: () async {
+                            if (forgetuid.text.isNotEmpty) {
+                              if (await _submitcode() != true) {}
+                            } else {
+                              await codefailDialog(
+                                  context, _alertTitlecode, _alertTxtcode);
+                            }
+                          },
+                        )),
                   ),
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: _listLR,
+                      bottom: _listB,
+                      top: _sizing.height(1),
+                      right: _listLR,
+                    ),
+                    child: ListTile(
+                      title:
+                          Text('驗證碼：', style: TextStyle(fontSize: _titleSize)),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: _sizing.height(7),
+                      bottom: _listB,
+                      top: _sizing.height(0.05),
+                      right: _sizing.height(7),
+                    ),
+                    child: TextField(
+                      controller: forgetcode,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        hintText: '大小寫需一致',
+                        fillColor: Color(0xfff3f3f4),
+                        filled: true,
+                        isCollapsed: true,
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: _sizing.height(1.5),
+                            vertical: _sizing.height(1.5)),
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(_borderRadius)),
+                          borderSide: BorderSide(color: _bule),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+          bottomNavigationBar: Container(
+            color: Theme.of(context).bottomAppBarColor,
+            child: SafeArea(
+              child: Container(
+                  child: Row(children: <Widget>[
+                Expanded(
                   child: SizedBox(
                       height: _bottomHeight,
                       child: TextButton(
                         style: TextButton.styleFrom(
-                          primary: _color,
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0)),
+                          backgroundColor: _light,
                         ),
-                        child: Text(
-                          '發送驗證碼',
-                          style: TextStyle(fontSize: _sizing.height(2)),
+                        child: Image.asset(
+                          'assets/images/cancel.png',
+                          width: _iconWidth,
                         ),
-                        onPressed: () async {
-                          if (forgetuid.text.isNotEmpty) {
-                            if (await _submitcode() != true) {}
-                          } else {
-                            await codefailDialog(
-                                context, _alertTitlecode, _alertTxtcode);
-                          }
+                        onPressed: () {
+                          Navigator.of(context).pop();
                         },
                       )),
                 ),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: _listLR,
-                    bottom: _listB,
-                    top: _sizing.height(1),
-                    right: _listLR,
-                  ),
-                  child: ListTile(
-                    title:
-                        Text('驗證碼：', style: TextStyle(fontSize: _titleSize)),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: _sizing.height(7),
-                    bottom: _listB,
-                    top: _sizing.height(0.05),
-                    right: _sizing.height(7),
-                  ),
-                  child: TextField(
-                    controller: forgetcode,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      hintText: '大小寫需一致',
-                      fillColor: Color(0xfff3f3f4),
-                      filled: true,
-                      isCollapsed: true,
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: _sizing.height(1.5),
-                          vertical: _sizing.height(1.5)),
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(_borderRadius)),
-                        borderSide: BorderSide(color: _bule),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )),
-        bottomNavigationBar: Container(
-            child: Row(children: <Widget>[
-          Expanded(
-            child: SizedBox(
-                height: _bottomHeight,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0)),
-                    backgroundColor: _light,
-                  ),
-                  child: Image.asset(
-                    'assets/images/cancel.png',
-                    width: _iconWidth,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )),
-          ),
-          Expanded(
-            child: SizedBox(
-                height: _bottomHeight,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0)),
-                    backgroundColor: _color,
-                  ),
-                  child: Image.asset(
-                    'assets/images/confirm.png',
-                    width: _iconWidth,
-                  ),
-                  onPressed: () async {
-                    if (forgetuid.text.isNotEmpty &&
-                            forgetcode.text.isNotEmpty) {
-                              if (await _submitforget() != true) {
-                                Navigator.push( context,
-                                  MaterialPageRoute(builder: (context) => ChangepwPage()));
-                                  }else{
-                                    bool action = await forgetfailDialog(
-                                      context, _alertTitle, _alertTxtforget);
-                                  }
+                Expanded(
+                  child: SizedBox(
+                      height: _bottomHeight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0)),
+                          backgroundColor: _color,
+                        ),
+                        child: Image.asset(
+                          'assets/images/confirm.png',
+                          width: _iconWidth,
+                        ),
+                        onPressed: () async {
+                          if (forgetuid.text.isNotEmpty &&
+                              forgetcode.text.isNotEmpty) {
+                            if (await _submitforget() != true) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChangepwPage()));
+                            } else {
+                              bool action = await forgetfailDialog(
+                                  context, _alertTitle, _alertTxtforget);
+                            }
                           } else {
                             bool action = await forgetfailDialog(
                                 context, _alertTitle, _alertTxt);
                           }
-                  },
-                )),
-          ),
-        ]))),
+                        },
+                      )),
+                ),
+              ])),
+            ),
+          )),
     );
   }
 }

@@ -1,7 +1,7 @@
+import 'package:My_Day_app/account/login_fail.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/account/login.dart';
-import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/public/account_request/change_pw.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/sizing.dart';
@@ -68,13 +68,12 @@ class _Changepw extends State<ChangepwPage> {
     }
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-        home: SafeArea(
-          child: Scaffold(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: Text('更改密碼',
-                style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
+                  style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
               backgroundColor: _color,
               leading: Container(
                 margin: EdgeInsets.only(left: _leadingL),
@@ -86,145 +85,151 @@ class _Changepw extends State<ChangepwPage> {
                 ),
               ),
             ),
-            body: GestureDetector(
-                // 點擊空白處釋放焦點
-                behavior: HitTestBehavior.translucent,
-                onTap: () =>
-                    FocusScope.of(context).requestFocus(FocusNode()),
-                child: ListView(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _listLR,
-                        bottom: _listB,
-                        top: _sizing.height(5),
-                        right: _listLR,
+            body: SafeArea(
+              child: GestureDetector(
+                  // 點擊空白處釋放焦點
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _listLR,
+                          bottom: _listB,
+                          top: _sizing.height(5),
+                          right: _listLR,
+                        ),
+                        child: ListTile(
+                          title: Text('新密碼：',
+                              style: TextStyle(fontSize: _titleSize)),
+                        ),
                       ),
-                      child: ListTile(
-                        title: Text('新密碼：',
-                            style: TextStyle(fontSize: _titleSize)),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _sizing.height(7),
-                        bottom: _listB,
-                        top: _sizing.height(0.01),
-                        right: _sizing.height(7),
-                      ),
-                      child: TextField(
-                        controller: newpw,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: _sizing.height(1.5),
-                              vertical: _sizing.height(1.5)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                                _borderRadius)), //设置边框四个角的弧度
-                            borderSide: BorderSide(color: _bule),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _sizing.height(7),
+                          bottom: _listB,
+                          top: _sizing.height(0.01),
+                          right: _sizing.height(7),
+                        ),
+                        child: TextField(
+                          controller: newpw,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            filled: true,
+                            isCollapsed: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: _sizing.height(1.5),
+                                vertical: _sizing.height(1.5)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                              borderSide: BorderSide(color: _bule),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _listLR,
-                        bottom: _listB,
-                        top: _sizing.height(1),
-                        right: _listLR,
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _listLR,
+                          bottom: _listB,
+                          top: _sizing.height(1),
+                          right: _listLR,
+                        ),
+                        child: ListTile(
+                          title: Text('再次輸入密碼：',
+                              style: TextStyle(fontSize: _titleSize)),
+                        ),
                       ),
-                      child: ListTile(
-                        title: Text('再次輸入密碼：',
-                            style: TextStyle(fontSize: _titleSize)),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _sizing.height(7),
-                        bottom: _listB,
-                        top: _sizing.height(0.05),
-                        right: _sizing.height(7),
-                      ),
-                      child: TextField(
-                        controller: confirmpw,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          fillColor: Color(0xfff3f3f4),
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: _sizing.height(1.5),
-                              vertical: _sizing.height(1.5)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                                _borderRadius)), //设置边框四个角的弧度
-                            borderSide: BorderSide(color: _bule),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _sizing.height(7),
+                          bottom: _listB,
+                          top: _sizing.height(0.05),
+                          right: _sizing.height(7),
+                        ),
+                        child: TextField(
+                          controller: confirmpw,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            fillColor: Color(0xfff3f3f4),
+                            filled: true,
+                            isCollapsed: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: _sizing.height(1.5),
+                                vertical: _sizing.height(1.5)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                              borderSide: BorderSide(color: _bule),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                )),
+                    ],
+                  )),
+            ),
             bottomNavigationBar: Container(
-                child: Row(children: <Widget>[
-              Expanded(
-                child: SizedBox(
+              color: Theme.of(context).bottomAppBarColor,
+              child: SafeArea(
+                child: Container(
+                    child: Row(children: <Widget>[
+                  Expanded(
+                    child: SizedBox(
+                        height: _bottomHeight,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0)),
+                              backgroundColor: _light),
+                          child: Image.asset(
+                            'assets/images/cancel.png',
+                            width: _iconWidth,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )),
+                  ),
+                  Expanded(
+                      child: SizedBox(
                     height: _bottomHeight,
                     child: TextButton(
-                      style: TextButton.styleFrom(
+                        style: TextButton.styleFrom(
                           primary: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: _light),
-                      child: Image.asset(
-                        'assets/images/cancel.png',
-                        width: _iconWidth,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )),
-              ),
-              Expanded(
-                  child: SizedBox(
-                height: _bottomHeight,
-                child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0)),
-                      backgroundColor: _color,
-                    ),
-                    child: Image.asset(
-                      'assets/images/confirm.png',
-                      width: _iconWidth,
-                    ),
-                    onPressed: () async {
-                      if (newpw.text.isNotEmpty &&
-                          confirmpw.text.isNotEmpty) {
-                        if (newpw.text == confirmpw.text) {
-                          if (await _submit() != true) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                          backgroundColor: _color,
+                        ),
+                        child: Image.asset(
+                          'assets/images/confirm.png',
+                          width: _iconWidth,
+                        ),
+                        onPressed: () async {
+                          if (newpw.text.isNotEmpty &&
+                              confirmpw.text.isNotEmpty) {
+                            if (newpw.text == confirmpw.text) {
+                              if (await _submit() != true) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()));
+                              } else {
+                                await changefailDialog(
+                                    context, _alertTitle, _alertTxt);
+                              }
+                            } else {
+                              await changefailDialog(
+                                  context, _alertTitle, _alertTxt);
+                            }
                           } else {
                             await changefailDialog(
                                 context, _alertTitle, _alertTxt);
                           }
-                        } else {
-                          await changefailDialog(
-                              context, _alertTitle, _alertTxt);
-                        }
-                      } else {
-                        await changefailDialog(
-                            context, _alertTitle, _alertTxt);
-                      }
-                    }),
-              )),
-            ])))));
+                        }),
+                  )),
+                ])),
+              ),
+            )));
   }
 }
