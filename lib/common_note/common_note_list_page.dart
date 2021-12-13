@@ -64,7 +64,7 @@ class _CommonNoteListWidget extends State<CommonNoteListPage> {
     _submitCancel(int noteNum) async {
       var submitWidget;
       _submitWidgetfunc() async {
-        return CancelShare(uid: uid, noteNum: noteNum);
+        return CancelShare(context: context, uid: uid, noteNum: noteNum);
       }
 
       submitWidget = await _submitWidgetfunc();

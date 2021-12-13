@@ -132,7 +132,7 @@ class _ScheduleForm extends State<ScheduleForm> {
       _startDateTime = DateTime(DateTime.now().year, DateTime.now().month,
           DateTime.now().day + 1, 8, 0);
     if (_endDateTime == null)
-      _endDateTime = DateTime.now().add(Duration(hours: 1));
+      _endDateTime = _startDateTime.add(Duration(hours: 1));
     if (_remindTimeList == null) _remindTimeList = [];
     // values ------------------------------------------------------------------------------------------
     Sizing _sizing = Sizing(context);
@@ -438,24 +438,24 @@ class _ScheduleForm extends State<ScheduleForm> {
                           setState(() {
                             DateTime _semesterStartDate = getMon(_semesterStart)
                                 .add(Duration(days: value * 7));
-                            _startDateTime = DateTime(
-                                _semesterStartDate.year,
-                                _semesterStartDate.month,
-                                _semesterStartDate.day,
-                                _startDateTime.hour,
-                                _startDateTime.minute,
-                                _startDateTime.second);
-                            _endDateTime = DateTime(
-                                _semesterStartDate.year,
-                                _semesterStartDate.month,
-                                _semesterStartDate.day,
-                                _endDateTime.hour,
-                                _endDateTime.minute,
-                                _endDateTime.second);
                             if (isStart) {
                               _startWeek = ConvertInt.toChineseWeek(value);
+                              _startDateTime = DateTime(
+                                  _semesterStartDate.year,
+                                  _semesterStartDate.month,
+                                  _semesterStartDate.day,
+                                  _startDateTime.hour,
+                                  _startDateTime.minute,
+                                  _startDateTime.second);
                             } else {
                               _endWeek = ConvertInt.toChineseWeek(value);
+                              _endDateTime = DateTime(
+                                  _semesterStartDate.year,
+                                  _semesterStartDate.month,
+                                  _semesterStartDate.day,
+                                  _endDateTime.hour,
+                                  _endDateTime.minute,
+                                  _endDateTime.second);
                             }
                           });
                         },

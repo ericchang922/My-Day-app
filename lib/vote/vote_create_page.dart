@@ -113,18 +113,7 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
                       child: Text('確定', style: TextStyle(color: _color)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          _voteDateValues[index] = _dateFormat(_dateTime);
-                          _voteDateFormat[index] = _dateTime;
-                          int count = _voteCount();
-                          if (count == 0) {
-                            _voteDateValues.add("");
-                            _voteDateFormat.add("");
-                          }
-                        });
-                      }),
+                      onPressed: () => Navigator.of(context).pop()),
                 ),
               ),
               Container(
@@ -135,6 +124,13 @@ class _VoteCreateWidget extends State<VoteCreatePage>
                     onDateTimeChanged: (value) {
                       setState(() {
                         _dateTime = value;
+                        _voteDateValues[index] = _dateFormat(_dateTime);
+                        _voteDateFormat[index] = _dateTime;
+                        int count = _voteCount();
+                        if (count == 0) {
+                          _voteDateValues.add("");
+                          _voteDateFormat.add("");
+                        }
                       });
                     }),
               ),
