@@ -131,6 +131,7 @@ class _GroupManagerState extends State<GroupManagerWidget> {
         statusId = 1;
       _submitWidgetfunc() async {
         return SettingManager(
+            context: context,
             uid: uid,
             friendId: friendId,
             groupNum: groupNum,

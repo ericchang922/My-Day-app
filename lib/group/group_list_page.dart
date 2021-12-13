@@ -71,7 +71,8 @@ class _GroupListState extends State<GroupListWidget> {
 
     setState(() {
       _groupInviteListModel = _request;
-      print('group_list_page -- 邀約群組個數：${_groupInviteListModel.groupContent.length}');
+      print(
+          'group_list_page -- 邀約群組個數：${_groupInviteListModel.groupContent.length}');
     });
   }
 
@@ -120,7 +121,8 @@ class _GroupListState extends State<GroupListWidget> {
       else
         statusId = 3;
       _submitWidgetfunc() async {
-        return MemberStatus(uid: uid, groupNum: groupNum, statusId: statusId);
+        return MemberStatus(
+            context: context, uid: uid, groupNum: groupNum, statusId: statusId);
       }
 
       submitWidget = await _submitWidgetfunc();
