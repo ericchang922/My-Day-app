@@ -168,7 +168,11 @@ class _GroupCreateWidget extends State<GroupCreatePage> {
         var submitWidget;
         _submitWidgetfunc() async {
           return CreateGroup(
-              uid: uid, groupName: groupName, type: type, friend: friend);
+              context: context,
+              uid: uid,
+              groupName: groupName,
+              type: type,
+              friend: friend);
         }
 
         submitWidget = await _submitWidgetfunc();

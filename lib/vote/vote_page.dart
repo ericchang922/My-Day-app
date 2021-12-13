@@ -55,7 +55,8 @@ class _VoteWidget extends State<VotePage> {
   List _voteAddItemCheck = [];
   List _managerList = [];
 
-  DateTime _dateTime = DateTime.now();
+  DateTime _dateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 8, 0);
 
   final _voteItemNameController = TextEditingController();
 
@@ -148,7 +149,7 @@ class _VoteWidget extends State<VotePage> {
     _submitDelete() async {
       var submitWidget;
       _submitWidgetfunc() async {
-        return Delete(uid: uid, voteNum: voteNum);
+        return Delete(context: context, uid: uid, voteNum: voteNum);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -165,7 +166,8 @@ class _VoteWidget extends State<VotePage> {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return AddItems(uid: uid, voteNum: voteNum, voteItems: voteItems);
+        return AddItems(
+            context: context, uid: uid, voteNum: voteNum, voteItems: voteItems);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -183,7 +185,11 @@ class _VoteWidget extends State<VotePage> {
       print(voteItemNum);
       var submitWidget;
       _submitWidgetfunc() async {
-        return Vote(uid: uid, voteNum: voteNum, voteItemNum: voteItemNum);
+        return Vote(
+            context: context,
+            uid: uid,
+            voteNum: voteNum,
+            voteItemNum: voteItemNum);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -291,8 +297,6 @@ class _VoteWidget extends State<VotePage> {
                   child: CupertinoButton(
                       child: Text('確定', style: TextStyle(color: _color)),
                       onPressed: () async {
-                        _voteItemName = _dateTime.toString();
-                        print(_voteItemName);
                         if (await _submitAddItems(_voteItemName) != true) {
                           _getVoteRequest();
                           Navigator.pop(context);
@@ -304,10 +308,12 @@ class _VoteWidget extends State<VotePage> {
                 height: _sizing.height(28),
                 child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.dateAndTime,
-                    initialDateTime: DateTime.now(),
-                    onDateTimeChanged: (value) {
+                    initialDateTime: _dateTime,
+                    onDateTimeChanged: (value) async {
                       setState(() {
                         _dateTime = value;
+                        _voteItemName = _dateTime.toString();
+                        print(_voteItemName);
                       });
                     }),
               ),

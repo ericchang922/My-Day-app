@@ -191,6 +191,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
           switch (_submitMap[_submitType]) {
             case 1:
               return CreateCommon(
+                context: context,
                 uid: uid,
                 groupNum: groupNum,
                 title: title,
@@ -201,6 +202,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
               );
             case 2:
               return Edit(
+                  context: context,
                   uid: uid,
                   scheduleNum: scheduleNum,
                   title: title,
@@ -487,13 +489,12 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 Expanded(
                   flex: 8,
                   child: TextField(
-                    controller: TextEditingController.fromValue(TextEditingValue(
-                        text: _locationController.text,
-                        selection: TextSelection.fromPosition(TextPosition(
-                          affinity: TextAffinity.downstream,
-                          offset: _locationController.text.length
-                        ))
-                      )),
+                    controller: TextEditingController.fromValue(
+                        TextEditingValue(
+                            text: _locationController.text,
+                            selection: TextSelection.fromPosition(TextPosition(
+                                affinity: TextAffinity.downstream,
+                                offset: _locationController.text.length)))),
                     style: TextStyle(fontSize: _h2Size),
                     decoration: InputDecoration(
                       hintText: '地點',

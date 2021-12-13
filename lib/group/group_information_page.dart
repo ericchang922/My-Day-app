@@ -101,7 +101,11 @@ class _GroupInformationWidget extends State<GroupInformationPage> {
       var submitWidget;
       _submitWidgetfunc() async {
         return EditGroup(
-            uid: uid, groupNum: groupNum, title: title, typeId: typeId);
+            context: context,
+            uid: uid,
+            groupNum: groupNum,
+            title: title,
+            typeId: typeId);
       }
 
       submitWidget = await _submitWidgetfunc();

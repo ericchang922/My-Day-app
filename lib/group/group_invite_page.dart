@@ -140,7 +140,8 @@ class _GroupInviteWidget extends State<GroupInvitePage> {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return InviteFriend(uid: uid, groupNum: groupNum, friend: friend);
+        return InviteFriend(
+            context: context, uid: uid, groupNum: groupNum, friend: friend);
       }
 
       submitWidget = await _submitWidgetfunc();

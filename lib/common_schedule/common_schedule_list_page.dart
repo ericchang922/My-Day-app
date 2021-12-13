@@ -80,7 +80,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
     _submitDelete(int scheduleNum) async {
       var submitWidget;
       _submitWidgetfunc() async {
-        return Delete(uid: uid, scheduleNum: scheduleNum);
+        return Delete(context: context, uid: uid, scheduleNum: scheduleNum);
       }
 
       submitWidget = await _submitWidgetfunc();
