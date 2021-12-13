@@ -80,8 +80,6 @@ class _friendWidget extends State<friendPage> {
 
     setState(() {
       _timetable = _request;
-      print(_timetable);
-      print("_timetable");
     });
   }
 
@@ -174,7 +172,7 @@ class _friendWidget extends State<friendPage> {
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
                   setState(() {
-                    _friendCheck[friends.friendId] = value;
+                    _bestFriendCheck[friends.friendId] = value;
                   });
                 }
               },
@@ -438,7 +436,7 @@ class _friendWidget extends State<friendPage> {
             onChanged: (value) async {
               if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
-                  _friendCheck[friends.friendId] = value;
+                  _bestFriendCheck[friends.friendId] = value;
                 });
               }
             },

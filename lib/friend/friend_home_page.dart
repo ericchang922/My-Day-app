@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
-import 'package:My_Day_app/home/home_schedule/schedule_table.dart';
+import 'package:My_Day_app/friend/friend_home_schedule/schedule_table.dart';//
 import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
