@@ -139,15 +139,16 @@ AppBar homePageAppBar(
   getHomePageCountdown() {
     int mini = 0;
     if (countdownList != null) {
-      for (int i = 1; countdownList.schedule.length < i; i++) {
+      for (int i = 1; countdownList.schedule.length > i; i++) {
         if (countdownList.schedule[mini].countdownDate >
             countdownList.schedule[i].countdownDate) {
           mini = i;
         }
       }
       return '${countdownList.schedule[mini].title} 倒數 ${countdownList.schedule[mini].countdownDate}天';
+    } else {
+      return '';
     }
-    return '';
   }
 
   return AppBar(
