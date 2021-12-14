@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+
+import 'package:animations/animations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/public/alert.dart';
 import 'package:My_Day_app/public/convert.dart';
@@ -7,9 +12,6 @@ import 'package:My_Day_app/public/type_color.dart';
 import 'package:My_Day_app/public/schedule_request/delete.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/schedule/edit_schedule.dart';
-import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> scheduleDialog(
     BuildContext context, DateTime date, ScheduleGetList scheduleList) {
@@ -67,8 +69,8 @@ Future<void> scheduleDialog(
                     child: Container(
                         height: _sizing.height(35),
                         child: ListView(
-                            children: listItems(
-                                context, date, scheduleList, _sizing.height(100), _sizing.width(100)))),
+                            children: listItems(context, date, scheduleList,
+                                _sizing.height(100), _sizing.width(100)))),
                   )
                 ],
               ),
@@ -111,13 +113,13 @@ Future<void> scheduleDialog(
 
 List<Widget> listItems(BuildContext context, DateTime date,
     ScheduleGetList scheduleList, double height, double width) {
-
+  Sizing _sizing = Sizing(context);
   String _uid;
   _uidLoad() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _uid = prefs.getString('uid');
   }
-  
+
   _uidLoad();
   List<Widget> itemList = [];
   DateTime dayStart = DateTime.utc(date.year, date.month, date.day, 0, 0, 0);
@@ -158,25 +160,25 @@ List<Widget> listItems(BuildContext context, DateTime date,
 
     if (showStart != null && showEnd != null) {
       itemList.add(Container(
-        width: width * 0.06,
+        width: _sizing.width(6),
         child: TextButton(
             child: Row(
               children: [
                 Container(
-                  height: height * 0.025,
+                  height: _sizing.height(2.5),
                   child: CircleAvatar(
-                    radius: height * 0.025,
+                    radius: _sizing.height(2.5),
                     backgroundColor: typeColor(s.typeId),
                   ),
                 ),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(
-                    width: width * 0.4,
+                    width: _sizing.width(40),
                     child: Text(
                       s.title,
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: height * 0.025,
+                          fontSize: _sizing.height(2.5),
                           fontWeight: FontWeight.normal,
                           fontStyle: FontStyle.normal),
                       textAlign: TextAlign.left,
@@ -202,9 +204,7 @@ List<Widget> listItems(BuildContext context, DateTime date,
                         ))),
             onLongPress: () => msgBox(context, '警告', '確定要刪除行程嗎？', () async {
                   Delete delete = Delete(
-                      context: context,
-                      uid: _uid,
-                      scheduleNum: s.scheduleNum);
+                      context: context, uid: _uid, scheduleNum: s.scheduleNum);
                   bool isError = await delete.getIsError();
                   if (isError) {
                     toast(context, '刪除行程錯誤');

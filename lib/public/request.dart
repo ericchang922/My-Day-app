@@ -11,6 +11,7 @@ import 'package:My_Day_app/public/toast.dart';
 import 'package:My_Day_app/models/schedule/schedule_model.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
+import 'package:My_Day_app/models/schedule/countdown_list_model.dart';
 //  friend
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
@@ -80,7 +81,7 @@ class Request {
     'get_common': '${path['schedule']}/get_common/',
     'common_list': '${path['schedule']}/common_list/',
     'common_hidden': '$host${path['schedule']}/common_hidden/',
-    'countdown_list': '$host${path['schedule']}/countdown_list/',
+    'countdown_list': '${path['schedule']}/countdown_list/',
   };
   static Map groupUrl = {
     'create_group': '$host${path['group']}/create_group/',
@@ -189,6 +190,7 @@ class Request {
   ScheduleGetList _scheduleGetList;
   GetCommonScheduleModel _commenSchedule;
   CommonScheduleListModel _commonScheduleList;
+  CountdownList _countdownList;
 
   GroupListModel _groupList;
   GroupInviteListModel _groupInviteList;
@@ -240,6 +242,7 @@ class Request {
   getScheduleGetList() => _scheduleGetList;
   getCommenScheduleGet() => _commenSchedule;
   getCommonScheduleListGet() => _commonScheduleList;
+  getCountdownList() => _countdownList;
 
   getGroupListGet() => _groupList;
   getGroupInviteListGet() => _groupInviteList;
@@ -440,6 +443,15 @@ class Request {
     await httpGet(context, data, _url, 'scheduleCommonList');
     if (_responseBody != null) {
       _commonScheduleList = CommonScheduleListModel.fromJson(_responseBody);
+    }
+  }
+
+// countdown_list ---------------------------------------------------------------------------------
+  countdownList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = scheduleUrl['countdown_list'];
+    await httpGet(context, data, _url, 'countdownList');
+    if (_responseBody != null) {
+      _countdownList = CountdownList.fromJson(_responseBody);
     }
   }
 
