@@ -135,6 +135,7 @@ class Request {
     'delete_best': '$host${path['friend']}/delete_best/'
   };
   static Map timetableUrl = {
+    'create_timetable': '$host${path['timetable']}/create_timetable',
     'main_timetable_list': '${path['timetable']}/main_timetable_list/',
     'get_timetable_list': '${path['timetable']}/get_timetable_list/',
     'get_timetable': '${path['timetable']}/get_timetable/',
@@ -650,6 +651,12 @@ class Request {
   }
 
   // TIMETABLE =========================================================================================
+  // create_timetable -----------------------------------------------------------------------------
+  createTimetable(BuildContext context, Map<String, dynamic> data) async {
+    String _url = timetableUrl['create_timetable'];
+    await httpPost(context, data, _url, '新增成功', 'createTimetable');
+  }
+
   // mainTimetableGet -----------------------------------------------------------------------------
   mainTimetableListGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = timetableUrl['main_timetable_list'];
