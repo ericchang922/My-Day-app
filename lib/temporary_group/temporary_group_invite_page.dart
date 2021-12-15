@@ -53,27 +53,30 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
     GetTemporaryGroupInviteModel _request =
         await GetInvite(context: context, uid: uid, groupNum: groupNum)
             .getData();
-    setState(
-      () {
-        _memberList = [];
-        _inviteMemberList = [];
+    setState(() {
+      _memberList = [];
+      _inviteMemberList = [];
 
-        _getTemporaryGroupInviteModel = _request;
-        _startTime = _dateFormat(_getTemporaryGroupInviteModel.startTime);
-        _endTime = _dateFormat(_getTemporaryGroupInviteModel.endTime);
+      _getTemporaryGroupInviteModel = _request;
+      _startTime = _dateFormat(_getTemporaryGroupInviteModel.startTime);
+      _endTime = _dateFormat(_getTemporaryGroupInviteModel.endTime);
 
-        for (int i = 0; i < _getTemporaryGroupInviteModel.member.length; i++) {
-          if (_getTemporaryGroupInviteModel.member[i].statusId == 2) {
-            _inviteMemberList.add(_getTemporaryGroupInviteModel.member[i]);
-          }
-          if (_getTemporaryGroupInviteModel.member[i].statusId == 1 &&
+      for (int i = 0; i < _getTemporaryGroupInviteModel.member.length; i++) {
+        if (_getTemporaryGroupInviteModel.member[i].statusId == 2) {
+          _inviteMemberList.add(_getTemporaryGroupInviteModel.member[i]);
+        }
+        if (_getTemporaryGroupInviteModel.member[i].statusId == 1 &&
+            _getTemporaryGroupInviteModel.member[i].memberName !=
+                _getTemporaryGroupInviteModel.founderName) {
+          _memberList.add(_getTemporaryGroupInviteModel.member[i]);
+          if (_getTemporaryGroupInviteModel.member[i].statusId == 4 &&
               _getTemporaryGroupInviteModel.member[i].memberName !=
                   _getTemporaryGroupInviteModel.founderName) {
             _memberList.add(_getTemporaryGroupInviteModel.member[i]);
           }
         }
-      },
-    );
+      }
+    });
   }
 
   @override
@@ -169,6 +172,7 @@ class TemporaryGroupInviteWidget extends State<TemporaryGroupInvitePage> {
             ),
             trailing: Text("建立者", style: TextStyle(fontSize: _pSize)),
           ),
+          if (_memberList.length != 0) Divider(),
           ListView.separated(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
