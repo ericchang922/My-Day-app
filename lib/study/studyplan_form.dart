@@ -410,8 +410,10 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                       (DateTime(_date.year, _date.month, _date.day, 24, 0)),
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
-                    if (isStart && value.isBefore(_subjectTimeList[index].last))
+                    if (isStart &&
+                        value.isBefore(_subjectTimeList[index].last)) {
                       _dateTime = value;
+                    }
                     if (index == _subjectTimeList.length - 1 &&
                         value.isAfter(_subjectTimeList[index].first)) {
                       _dateTime = value;
@@ -422,7 +424,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                         _addSubject = true;
                     } else if (!isStart &&
                         value.isAfter(_subjectTimeList[index].first) &&
-                        value.isBefore(_subjectTimeList[index].last)) {
+                        value.isBefore(_subjectTimeList[index + 1].last)) {
                       _dateTime = value;
                       if (_dateTime ==
                           (DateTime(_date.year, _date.month, _date.day, 24, 0)))
@@ -563,7 +565,10 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  _remarkList[index] = _remarkController.text;
+                                  if (_remarkController.text == '')
+                                    _remarkList[index] = null;
+                                  else
+                                    _remarkList[index] = _remarkController.text;
                                 });
                                 Navigator.of(context).pop();
                               },
