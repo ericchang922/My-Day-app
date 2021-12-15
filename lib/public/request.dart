@@ -623,7 +623,7 @@ class Request {
   // add_friend -----------------------------------------------------------------------------------
   addFriend(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['add'];
-    await httpPost(context, data, _url, '新增成功', 'addFriend');
+    await httpPost(context, data, _url, '已發出交友邀請', 'addFriend');
   }
 
   // add_bestfriend -------------------------------------------------------------------------------
