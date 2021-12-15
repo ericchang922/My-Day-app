@@ -10,7 +10,6 @@ import 'package:My_Day_app/models/studyplan/common_studyplan_list_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/sizing.dart';
 
-
 class CommonStudyPlanListPage extends StatefulWidget {
   int groupNum;
   CommonStudyPlanListPage(this.groupNum);
@@ -139,6 +138,8 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
             }
           },
         );
+      } else {
+        return Container();
       }
     }
 
