@@ -10,6 +10,8 @@ import 'package:My_Day_app/home.dart';
 
 SharedPreferences prefs;
 
+RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
@@ -19,6 +21,7 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp(id));
 }
+
 
 class MyApp extends StatelessWidget {
   String uid;
@@ -44,6 +47,7 @@ class MyApp extends StatelessWidget {
       ),
       supportedLocales: [const Locale('zh', 'TW')],
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [routeObserver],
       home: page,
     );
   }

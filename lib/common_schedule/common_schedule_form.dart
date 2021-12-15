@@ -58,10 +58,8 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
   int _type;
   int scheduleNum;
 
-  DateTime _startDateTime = DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
-  DateTime _endDateTime = DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 9, 0);
+  DateTime _startDateTime;
+  DateTime _endDateTime;
 
   String _title;
   String _location;
@@ -242,7 +240,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
       if (isStart)
         _dateTime = _startDateTime;
       else
-        _dateTime = _startDateTime.add(Duration(hours: 1));
+        _dateTime = _endDateTime;
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
