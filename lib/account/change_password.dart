@@ -7,16 +7,20 @@ import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/sizing.dart';
 
 class ChangepwPage extends StatefulWidget {
+  String uid;
+  ChangepwPage(this.uid);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(debugShowCheckedModeBanner: false);
   }
 
   @override
-  _Changepw createState() => new _Changepw();
+  _Changepw createState() => new _Changepw(uid);
 }
 
 class _Changepw extends State<ChangepwPage> {
+  String uid;
+  _Changepw(this.uid);
   get direction => null;
   get border => null;
   get decoration => null;
@@ -29,15 +33,8 @@ class _Changepw extends State<ChangepwPage> {
   final newpw = TextEditingController();
   final confirmpw = TextEditingController();
 
-  String uid;
-  _uid() async {
-    uid = await loadUid();
-  }
-
   @override
   Widget build(BuildContext context) {
-    _uid();
-
     Sizing _sizing = Sizing(context);
     double _appBarSize = _sizing.width(5.2);
     double _leadingL = _sizing.height(2);
@@ -87,8 +84,7 @@ class _Changepw extends State<ChangepwPage> {
             ),
             body: GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () =>
-                    FocusScope.of(context).requestFocus(FocusNode()),
+                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
                 child: ListView(
                   children: <Widget>[
                     Container(
@@ -120,24 +116,31 @@ class _Changepw extends State<ChangepwPage> {
                               horizontal: _sizing.height(1.5),
                               vertical: _sizing.height(1.5)),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                                _borderRadius)), 
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(_borderRadius)),
                             borderSide: BorderSide(color: _bule),
-                          ),
                           ),
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          left: _listLR,
-                          bottom: _listB,
-                          top: _sizing.height(1),
-                          right: _listLR,
-                        ),
-                        child: ListTile(
-                          title: Text('再次輸入密碼：',
-                              style: TextStyle(fontSize: _titleSize)),
-                        ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                        left: _listLR,
+                        bottom: _listB,
+                        top: _sizing.height(1),
+                        right: _listLR,
+                      ),
+                      child: ListTile(
+                        title: Text('再次輸入密碼：',
+                            style: TextStyle(fontSize: _titleSize)),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                        left: _sizing.height(7),
+                        bottom: _listB,
+                        top: _sizing.height(0.01),
+                        right: _sizing.height(7),
                       ),
                       child: TextField(
                         controller: confirmpw,
@@ -150,15 +153,15 @@ class _Changepw extends State<ChangepwPage> {
                               horizontal: _sizing.height(1.5),
                               vertical: _sizing.height(1.5)),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                                _borderRadius)), 
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(_borderRadius)),
                             borderSide: BorderSide(color: _bule),
                           ),
                         ),
                       ),
-                    ],
-                  )),
-            ),
+                    )
+                  ],
+                )),
             bottomNavigationBar: Container(
               color: Theme.of(context).bottomAppBarColor,
               child: SafeArea(
@@ -197,14 +200,13 @@ class _Changepw extends State<ChangepwPage> {
                           width: _iconWidth,
                         ),
                         onPressed: () async {
+                          
                           if (newpw.text.isNotEmpty &&
                               confirmpw.text.isNotEmpty) {
                             if (newpw.text == confirmpw.text) {
                               if (await _submit() != true) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage()));
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (context) =>LoginPage()),(route) => false);      
                               } else {
                                 await changefailDialog(
                                     context, _alertTitle, _alertTxt);

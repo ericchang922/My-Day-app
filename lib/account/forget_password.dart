@@ -99,7 +99,7 @@ class Forgetpw extends State<ForgetpwPage> {
               ),
             ),
           ),
-        ),
+        
         body: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
@@ -111,7 +111,7 @@ class Forgetpw extends State<ForgetpwPage> {
                     bottom: _listB,
                     top: _sizing.height(5),
                     right: _listLR,
-                  ),
+                  )),
                   Container(
                     margin: EdgeInsets.only(
                       left: _sizing.height(7),
@@ -199,72 +199,10 @@ class Forgetpw extends State<ForgetpwPage> {
                       ),
                     ),
                   ),
-                ],
+                
+        ],
               )),
-          bottomNavigationBar: Container(
-            color: Theme.of(context).bottomAppBarColor,
-            child: SafeArea(
-              child: Container(
-                  child: Row(children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                      height: _bottomHeight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: _light,
-                        ),
-                        child: Image.asset(
-                          'assets/images/cancel.png',
-                          width: _iconWidth,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      )),
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: _listLR,
-                    bottom: _listB,
-                    top: _sizing.height(1),
-                    right: _listLR,
-                  ),
-                  child: ListTile(
-                    title:
-                        Text('驗證碼：', style: TextStyle(fontSize: _titleSize)),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: _sizing.height(7),
-                    bottom: _listB,
-                    top: _sizing.height(0.05),
-                    right: _sizing.height(7),
-                  ),
-                  child: TextField(
-                    controller: forgetcode,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      hintText: '大小寫需一致',
-                      fillColor: Color(0xfff3f3f4),
-                      filled: true,
-                      isCollapsed: true,
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: _sizing.height(1.5),
-                          vertical: _sizing.height(1.5)),
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(_borderRadius)),
-                        borderSide: BorderSide(color: _bule),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )),
+          
         bottomNavigationBar: Container(
             child: Row(children: <Widget>[
           Expanded(
@@ -301,21 +239,20 @@ class Forgetpw extends State<ForgetpwPage> {
                     width: _iconWidth,
                   ),
                   onPressed: () async {
-                    Navigator.push( context,
-                                   MaterialPageRoute(builder: (context) => ChangepwPage()));
-                    // if (forgetuid.text.isNotEmpty &&
-                    //         forgetcode.text.isNotEmpty) {
-                    //           if (await _submitforget() != true) {
-                    //             Navigator.push( context,
-                    //               MaterialPageRoute(builder: (context) => ChangepwPage()));
-                    //               }else{
-                    //                 bool action = await forgetfailDialog(
-                    //                   context, _alertTitle, _alertTxtforget);
-                    //               }
-                    //       } else {
-                    //         bool action = await forgetfailDialog(
-                    //             context, _alertTitle, _alertTxt);
-                    //       }
+                    
+                    if (forgetuid.text.isNotEmpty &&
+                            forgetcode.text.isNotEmpty) {
+                              if (await _submitforget() != true) {
+                                Navigator.push( context,
+                                  MaterialPageRoute(builder: (context) => ChangepwPage(forgetuid.text)));
+                                  }else{
+                                    bool action = await forgetfailDialog(
+                                      context, _alertTitle, _alertTxtforget);
+                                  }
+                          } else {
+                            bool action = await forgetfailDialog(
+                                context, _alertTitle, _alertTxt);
+                          }
                   },
                 )),
           ),

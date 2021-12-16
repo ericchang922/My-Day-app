@@ -169,43 +169,9 @@ class _Login extends State {
                                   right: _sizing.height(7),
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _listLR,
-                              top: _sizing.height(2),
-                              right: _listLR,
-                            ),
-                            child: ListTile(
-                              title: Text('密碼：',
-                                  style: TextStyle(fontSize: _titleSize)),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _sizing.height(7),
-                              top: _sizing.height(0.01),
-                              right: _sizing.height(7),
-                            ),
-                            child: TextField(
-                              controller: mypw,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                fillColor: Color(0xfff3f3f4),
-                                filled: true,
-                                isCollapsed: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: _sizing.height(1.5),
-                                    vertical: _sizing.height(1.5)),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(_borderRadius)),
-                                  borderSide: BorderSide(color: _bule),
-                                ),
-                              ),
-                            ),
-                          ),
+                            
+                          
+                  
                           Container(
                             margin: EdgeInsets.only(
                               left: _sizing.height(7),
