@@ -15,7 +15,7 @@ import 'package:My_Day_app/models/schedule/countdown_list_model.dart';
 //  friend
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
-import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
+import 'package:My_Day_app/models/friend/make_friend_invite_list_model.dart';
 //  group
 import 'package:My_Day_app/models/group/common_schedule_list_model.dart';
 import 'package:My_Day_app/models/group/get_common_schedule_model.dart';
