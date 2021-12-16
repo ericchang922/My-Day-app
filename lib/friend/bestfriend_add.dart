@@ -145,15 +145,7 @@ class _BestFriendAddWidget extends State<BestFriendAddPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () async {
-                await friendsAddDialog(context);
-              },
-            ),
-          ],
+          )
         ),
         body: SafeArea(
           bottom: false,
