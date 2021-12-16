@@ -1,16 +1,27 @@
 # My_Day_app
+## Group
+Group number:  
+* 110504
 
-A new Flutter project.
+Members:  
+* 10656004 張哲瑋  
+* 10656003 吳東陽  
+* 10656009 林哲卉  
+* 10656025 林欣儀  
+* 10656035 吳乙萱  
 
-## Getting Started
+## Instruction
+This is our graduate project.  
+We are from National Taipei University of Business Department of Information Management.  
 
-This project is a starting point for a Flutter application.
+## Using framework
+We use Flutter in our APP project. Flutter is produce by Google. It can run on different platforms. We use it to build a iOS APP and an Android APP.  
 
-A few resources to get you started if this is your first Flutter project:
+## About our project
+We are My Day 我的天. My Day is a schedule APP for students. Students can use our APP to enjoy there school life.  
+There are some parts in our APP. include timetable of school, friend, group and our favorite one is "玩聚".  
+"玩聚" means play together. It is a temporary group. Users can use it to invite other users and have a meal or travel with friends.  
+In our APP you can see all your schedules on your homepage the feature is our timeline is timetable. It shows the sections of the user's school timetable.  
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Want to know more about?
+Using My Day and you will know well.  
