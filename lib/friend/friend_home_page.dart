@@ -1,9 +1,12 @@
 // flutter
+import 'package:My_Day_app/main.dart';
+import 'package:My_Day_app/models/setting/get_timetable.dart';
+import 'package:My_Day_app/public/setting_request/get_timetable.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
 // my day
-import 'package:My_Day_app/friend/friend_home_schedule/schedule_table.dart';//
+import 'package:My_Day_app/friend/friend_home_schedule/schedule_table.dart';
 import 'package:My_Day_app/schedule/create_schedule.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
@@ -24,8 +27,9 @@ class FriendHomePage extends StatefulWidget {
 }
 
 class _FriendHomePage extends State<FriendHomePage> {
+
   String friendId;
-  _FriendHomePage(this.friendId);
+  _FriendHomePage( this.friendId);
 
   Future<MainTimetableListGet> getTimetableData() async {
     MainTimetableList request =
@@ -130,20 +134,25 @@ class FriendHomePageBody extends StatefulWidget {
   Future<ScheduleGetList> futureScheduleList;
   Future<SectionTime> futureSectionTime;
 
+
   FriendHomePageBody(
       {this.futureTimetableData,
       this.futureScheduleList,
-      this.futureSectionTime});
+      this.futureSectionTime,
+    });
   @override
   State<FriendHomePageBody> createState() => _FriendHomePageBody();
 }
 
 class _FriendHomePageBody extends State<FriendHomePageBody> {
+
   Future<bool> _isOk;
 
   MainTimetableListGet _data;
   ScheduleGetList _scheduleList;
   SectionTime _sectionTime;
+
+  GetTimetableModel _timetable;
 
   DateTime now = DateTime.now();
   int homeIndex = 4;
@@ -163,6 +172,18 @@ class _FriendHomePageBody extends State<FriendHomePageBody> {
   FloatingActionButton _floatingActionButton;
 
   @override
+  _getTimetableRequest() async {
+    String uid = prefs.getString('uid');
+    GetTimetableModel _request =
+        await GetTimetable(context: context, uid: uid).getData();
+
+    setState(() {
+      _timetable = _request;
+      
+      print(_timetable.timetable);
+      print("_timetable123");
+    });
+  }
   _getMon(DateTime today) {
     int daysAfter = today.weekday - 1;
     return DateTime.utc(today.year, today.month, today.day - daysAfter);
@@ -248,6 +269,9 @@ class _FriendHomePageBody extends State<FriendHomePageBody> {
     return true;
   }
 
+  
+  
+
   @override
   void initState() {
     super.initState();
@@ -255,6 +279,7 @@ class _FriendHomePageBody extends State<FriendHomePageBody> {
     pageController.addListener(() {});
 
     setState(() {
+      
       mondayList = [
         _getLastWeek(_getLastWeek(_getLastWeek(now))),
         _getLastWeek(_getLastWeek(now)),
@@ -264,6 +289,7 @@ class _FriendHomePageBody extends State<FriendHomePageBody> {
       ];
 
       _isOk = setTable();
+      _getTimetableRequest();
     });
   }
 
@@ -273,20 +299,25 @@ class _FriendHomePageBody extends State<FriendHomePageBody> {
         future: _isOk,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            return Stack(children: [
-              PageView(
-                onPageChanged: _onPageChaged,
-                children: pageList,
-                controller: pageController,
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.only(start: 20.0, bottom: 16.0),
-                child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: _floatingActionButton),
-              )
-            ]);
-          } else {
+            if(_timetable.timetable==false||_timetable.timetable==null){
+              return Center(child: Text("你沒有權限觀看好友課表"));
+            }else{
+              return Stack(children: [
+                PageView(
+                  onPageChanged: _onPageChaged,
+                  children: pageList,
+                  controller: pageController,
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.only(start: 20.0, bottom: 16.0),
+                  child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: _floatingActionButton),
+                )
+              ]); 
+            }
+            
+          }else {
             return Center(child: CircularProgressIndicator());
           }
         });
