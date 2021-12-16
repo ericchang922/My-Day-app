@@ -57,7 +57,7 @@ class _friendWidget extends State<friendPage> {
     await _getTimetableRequest();
     await _getFriendPrivacyRequest();
 
-    if (_timetable == null) {
+    if (_timetable.timetable == null) {
       _isCheck = false;
     } else {
       _isCheck = _timetable.timetable;
@@ -251,7 +251,13 @@ class _friendWidget extends State<friendPage> {
         if (_bestFriendListModel.friend.length != 0 &&
             _friendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [bestFriendList, friendList],
+            children: [
+              bestFriendList,
+              if (_bestFriendListModel.friend.length != 0 ||
+                  _friendListModel.friend.length != 0)
+                Divider(),
+              friendList
+            ],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
@@ -448,10 +454,12 @@ class _friendWidget extends State<friendPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredBestFriend[index];
         return ListTile(
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-          leading: ClipOval(
-            child: _getImage.friend(friends.photo),
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+          leading: Container(
+            margin: EdgeInsets.only(left: _listPaddingH),
+            child: ClipOval(
+              child: _getImage.friend(friends.photo),
+            ),
           ),
           title: Text(
             friends.friendName,
@@ -507,10 +515,12 @@ class _friendWidget extends State<friendPage> {
       itemBuilder: (BuildContext context, int index) {
         var friends = _filteredFriend[index];
         return ListTile(
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-          leading: ClipOval(
-            child: _getImage.friend(friends.photo),
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+          leading: Container(
+            margin: EdgeInsets.only(left: _listPaddingH),
+            child: ClipOval(
+              child: _getImage.friend(friends.photo),
+            ),
           ),
           title: Text(
             friends.friendName,

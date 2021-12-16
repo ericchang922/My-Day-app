@@ -50,7 +50,6 @@ class _friendWidget extends State<friendPage> {
 
     await _friendListRequest();
     await _bestFriendListRequest();
-    await _getFriendPrivacyRequest();
     _isCheck = false;
   }
 
@@ -70,15 +69,7 @@ class _friendWidget extends State<friendPage> {
     _uid();
   }
 
-  _getFriendPrivacyRequest() async {
-    GetFriendPrivacyModel _request =
-        await GetFriendPrivacy(context: context, uid: uid, friendId: friendId)
-            .getData();
-
-    setState(() {
-      _friendprivacy = _request;
-    });
-  }
+ 
 
   void _friendNameControlloer() {
     _friendNameController.addListener(() {
@@ -325,7 +316,13 @@ class _friendWidget extends State<friendPage> {
         if (_bestFriendListModel.friend.length != 0 &&
             _friendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [bestFriendList, friendList],
+            children: [
+              bestFriendList,
+              if (_bestFriendListModel.friend.length != 0 ||
+                  _friendListModel.friend.length != 0)
+                Divider(),
+              friendList
+            ],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(

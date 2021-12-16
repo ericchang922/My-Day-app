@@ -129,6 +129,7 @@ class _friendWidget extends State<friendPage> {
       }
     });
   }
+
   _getFriendPrivacyRequest() async {
     for (int i = 0; i < _friendId.length; i++) {
       GetFriendPrivacyModel _request = await GetFriendPrivacy(
@@ -258,7 +259,13 @@ class _friendWidget extends State<friendPage> {
         if (_bestFriendListModel.friend.length != 0 &&
             _friendListModel.friend.length != 0) {
           friendListWidget = ListView(
-            children: [bestFriendList, friendList],
+            children: [
+              bestFriendList,
+              if (_bestFriendListModel.friend.length != 0 ||
+                  _friendListModel.friend.length != 0)
+                Divider(),
+              friendList
+            ],
           );
         } else if (_bestFriendListModel.friend.length != 0) {
           friendListWidget = ListView(
