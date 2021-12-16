@@ -1,3 +1,5 @@
+import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
+import 'package:My_Day_app/public/setting_request/get_friend_privacy.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
@@ -45,6 +47,7 @@ class _friendWidget extends State<friendPage> {
     await _bestFriendListRequest();
     _friendNameControlloer();
     await _getNoticeRequest();
+    await _getFriendPrivacyRequest();
     if (_notice == null) {
       _isCheck = false;
     } else {
@@ -55,6 +58,7 @@ class _friendWidget extends State<friendPage> {
   FriendListModel _friendListModel;
   BestFriendListModel _bestFriendListModel;
   GetNoticeModel _notice;
+  GetFriendPrivacyModel _friendPrivacy;
 
   final _friendNameController = TextEditingController();
 
@@ -62,6 +66,10 @@ class _friendWidget extends State<friendPage> {
 
   Map<String, dynamic> _friendCheck = {};
   Map<String, dynamic> _bestFriendCheck = {};
+
+  List<String> _friendId = [];
+  Map<String, dynamic> _isPublicTimetable = {};
+  Map<String, dynamic> _isTemporaryGroup = {};
 
   List _filteredFriend = [];
   List _filteredBestFriend = [];
@@ -105,7 +113,7 @@ class _friendWidget extends State<friendPage> {
       _bestFriendListModel = _request;
 
       for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
-        _bestFriendCheck[_bestFriendListModel.friend[i].friendId] = false;
+        _friendId.add(_bestFriendListModel.friend[i].friendId);
       }
     });
   }
@@ -117,9 +125,26 @@ class _friendWidget extends State<friendPage> {
       _friendListModel = _request;
 
       for (int i = 0; i < _friendListModel.friend.length; i++) {
-        _friendCheck[_friendListModel.friend[i].friendId] = false;
+        _friendId.add(_friendListModel.friend[i].friendId);
       }
     });
+  }
+  _getFriendPrivacyRequest() async {
+    for (int i = 0; i < _friendId.length; i++) {
+      GetFriendPrivacyModel _request = await GetFriendPrivacy(
+              context: context, uid: uid, friendId: _friendId[i])
+          .getData();
+
+      setState(() {
+        _friendPrivacy = _request;
+        _isPublicTimetable[_friendId[i]] = _friendPrivacy.isPublicTimetable;
+        _isTemporaryGroup[_friendId[i]] = _friendPrivacy.isTemporaryGroup;
+
+        print(_isPublicTimetable[_friendId[i]]);
+        print(_isTemporaryGroup[_friendId[i]]);
+        print("_isTemporaryGroup");
+      });
+    }
   }
 
   @override
@@ -176,11 +201,11 @@ class _friendWidget extends State<friendPage> {
               style: TextStyle(fontSize: _pSize),
             ),
             trailing: Switch(
-              value: _bestFriendCheck[friends.friendId],
+              value: _isTemporaryGroup[friends.friendId],
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
                   setState(() {
-                    _friendCheck[friends.friendId] = value;
+                    _isTemporaryGroup[friends.friendId] = value;
                   });
                 }
               },
@@ -211,11 +236,11 @@ class _friendWidget extends State<friendPage> {
               style: TextStyle(fontSize: _pSize),
             ),
             trailing: Switch(
-              value: _friendCheck[friends.friendId],
+              value: _isTemporaryGroup[friends.friendId],
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
                   setState(() {
-                    _friendCheck[friends.friendId] = value;
+                    _isTemporaryGroup[friends.friendId] = value;
                   });
                 }
               },
@@ -314,13 +339,13 @@ class _friendWidget extends State<friendPage> {
                               for (int i = 0;
                                   i < _friendListModel.friend.length;
                                   i++) {
-                                _friendCheck[
+                                _isTemporaryGroup[
                                     _friendListModel.friend[i].friendId] = true;
                               }
                               for (int i = 0;
                                   i < _bestFriendListModel.friend.length;
                                   i++) {
-                                _bestFriendCheck[_bestFriendListModel
+                                _isTemporaryGroup[_bestFriendListModel
                                     .friend[i].friendId] = true;
                               }
                             } else {
@@ -328,13 +353,13 @@ class _friendWidget extends State<friendPage> {
                               for (int i = 0;
                                   i < _friendListModel.friend.length;
                                   i++) {
-                                _friendCheck[_friendListModel
+                                _isTemporaryGroup[_friendListModel
                                     .friend[i].friendId] = false;
                               }
                               for (int i = 0;
                                   i < _bestFriendListModel.friend.length;
                                   i++) {
-                                _bestFriendCheck[_bestFriendListModel
+                                _isTemporaryGroup[_bestFriendListModel
                                     .friend[i].friendId] = false;
                               }
                             }
@@ -440,11 +465,11 @@ class _friendWidget extends State<friendPage> {
             style: TextStyle(fontSize: _pSize),
           ),
           trailing: Switch(
-            value: _bestFriendCheck[friends.friendId],
+            value: _isTemporaryGroup[friends.friendId],
             onChanged: (value) async {
               if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
-                  _friendCheck[friends.friendId] = value;
+                  _isTemporaryGroup[friends.friendId] = value;
                 });
               }
             },
@@ -499,11 +524,11 @@ class _friendWidget extends State<friendPage> {
             style: TextStyle(fontSize: _pSize),
           ),
           trailing: Switch(
-            value: _friendCheck[friends.friendId],
+            value: _isTemporaryGroup[friends.friendId],
             onChanged: (value) async {
               if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
-                  _friendCheck[friends.friendId] = value;
+                  _isTemporaryGroup[friends.friendId] = value;
                 });
               }
             },

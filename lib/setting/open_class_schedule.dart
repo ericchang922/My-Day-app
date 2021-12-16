@@ -1,3 +1,5 @@
+import 'package:My_Day_app/models/setting/get_friend_privacy.dart';
+import 'package:My_Day_app/public/setting_request/get_friend_privacy.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
@@ -40,6 +42,7 @@ class _friendWidget extends State<friendPage> {
   FriendListModel _friendListModel;
   BestFriendListModel _bestFriendListModel;
   GetTimetableModel _timetable;
+  GetFriendPrivacyModel _friendPrivacy;
 
   final _friendNameController = TextEditingController();
 
@@ -52,6 +55,7 @@ class _friendWidget extends State<friendPage> {
     await _friendListRequest();
     await _bestFriendListRequest();
     await _getTimetableRequest();
+    await _getFriendPrivacyRequest();
 
     if (_timetable == null) {
       _isCheck = false;
@@ -65,6 +69,10 @@ class _friendWidget extends State<friendPage> {
 
   List _filteredFriend = [];
   List _filteredBestFriend = [];
+
+  List<String> _friendId = [];
+  Map<String, dynamic> _isPublicTimetable = {};
+  Map<String, dynamic> _isTemporaryGroup = {};
 
   bool _isCheck;
 
@@ -91,7 +99,7 @@ class _friendWidget extends State<friendPage> {
       _bestFriendListModel = _request;
 
       for (int i = 0; i < _bestFriendListModel.friend.length; i++) {
-        _bestFriendCheck[_bestFriendListModel.friend[i].friendId] = false;
+        _friendId.add(_bestFriendListModel.friend[i].friendId);
       }
     });
   }
@@ -103,9 +111,26 @@ class _friendWidget extends State<friendPage> {
       _friendListModel = _request;
 
       for (int i = 0; i < _friendListModel.friend.length; i++) {
-        _friendCheck[_friendListModel.friend[i].friendId] = false;
+        _friendId.add(_friendListModel.friend[i].friendId);
       }
     });
+  }
+
+  _getFriendPrivacyRequest() async {
+    for (int i = 0; i < _friendId.length; i++) {
+      GetFriendPrivacyModel _request = await GetFriendPrivacy(
+              context: context, uid: uid, friendId: _friendId[i])
+          .getData();
+
+      setState(() {
+        _friendPrivacy = _request;
+        _isPublicTimetable[_friendId[i]] = _friendPrivacy.isPublicTimetable;
+        _isTemporaryGroup[_friendId[i]] = _friendPrivacy.isTemporaryGroup;
+      });
+    }
+    if (_isCheck = false) {
+      _friendPrivacy.isPublicTimetable = false;
+    }
   }
 
   @override
@@ -121,11 +146,12 @@ class _friendWidget extends State<friendPage> {
     GetImage _getImage = GetImage(context);
 
     _submitTimetable() async {
-      bool isPublic = _isCheck;
+      print(_isCheck);
+      print("_isCheck");
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return PrivacyTimetable(uid: uid, isPublic: isPublic);
+        return PrivacyTimetable(uid: uid, isPublic: _isCheck);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -136,7 +162,7 @@ class _friendWidget extends State<friendPage> {
     }
 
     _submitfriend(String friendId) async {
-      bool isPublic = _isCheck;
+      bool isPublic = _friendPrivacy.isPublicTimetable;
 
       var submitWidget;
       _submitWidgetfunc() async {
@@ -168,11 +194,11 @@ class _friendWidget extends State<friendPage> {
               style: TextStyle(fontSize: _pSize),
             ),
             trailing: Switch(
-              value: _bestFriendCheck[friends.friendId],
+              value: _isPublicTimetable[friends.friendId],
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
                   setState(() {
-                    _bestFriendCheck[friends.friendId] = value;
+                    _isPublicTimetable[friends.friendId] = value;
                   });
                 }
               },
@@ -203,11 +229,11 @@ class _friendWidget extends State<friendPage> {
               style: TextStyle(fontSize: _pSize),
             ),
             trailing: Switch(
-              value: _friendCheck[friends.friendId],
+              value: _isPublicTimetable[friends.friendId],
               onChanged: (value) async {
                 if (await _submitfriend(friends.friendId) != true) {
                   setState(() {
-                    _friendCheck[friends.friendId] = value;
+                    _isPublicTimetable[friends.friendId] = value;
                   });
                 }
               },
@@ -306,13 +332,13 @@ class _friendWidget extends State<friendPage> {
                               for (int i = 0;
                                   i < _friendListModel.friend.length;
                                   i++) {
-                                _friendCheck[
+                                _isPublicTimetable[
                                     _friendListModel.friend[i].friendId] = true;
                               }
                               for (int i = 0;
                                   i < _bestFriendListModel.friend.length;
                                   i++) {
-                                _bestFriendCheck[_bestFriendListModel
+                                _isPublicTimetable[_bestFriendListModel
                                     .friend[i].friendId] = true;
                               }
                             } else {
@@ -320,13 +346,13 @@ class _friendWidget extends State<friendPage> {
                               for (int i = 0;
                                   i < _friendListModel.friend.length;
                                   i++) {
-                                _friendCheck[_friendListModel
+                                _isPublicTimetable[_friendListModel
                                     .friend[i].friendId] = false;
                               }
                               for (int i = 0;
                                   i < _bestFriendListModel.friend.length;
                                   i++) {
-                                _bestFriendCheck[_bestFriendListModel
+                                _isPublicTimetable[_bestFriendListModel
                                     .friend[i].friendId] = false;
                               }
                             }
@@ -432,11 +458,11 @@ class _friendWidget extends State<friendPage> {
             style: TextStyle(fontSize: _pSize),
           ),
           trailing: Switch(
-            value: _bestFriendCheck[friends.friendId],
+            value: _isPublicTimetable[friends.friendId],
             onChanged: (value) async {
               if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
-                  _bestFriendCheck[friends.friendId] = value;
+                  _isPublicTimetable[friends.friendId] = value;
                 });
               }
             },
@@ -491,11 +517,11 @@ class _friendWidget extends State<friendPage> {
             style: TextStyle(fontSize: _pSize),
           ),
           trailing: Switch(
-            value: _friendCheck[friends.friendId],
+            value: _isPublicTimetable[friends.friendId],
             onChanged: (value) async {
               if (await _submitfriend(friends.friendId) != true) {
                 setState(() {
-                  _friendCheck[friends.friendId] = value;
+                  _isPublicTimetable[friends.friendId] = value;
                 });
               }
             },
