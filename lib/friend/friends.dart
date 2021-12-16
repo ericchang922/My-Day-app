@@ -175,60 +175,6 @@ class _FriendWidget extends State<FriendPage> {
         },
       );
 
-      Widget bestFriendList = ListView.separated(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: _bestFriendListModel.friend.length,
-        itemBuilder: (BuildContext context, int index) {
-          var friends = _bestFriendListModel.friend[index];
-          return ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-            leading: Container(
-              margin: EdgeInsets.only(left: _listPaddingH),
-              child: ClipOval(
-                child: _getImage.friend(friends.photo),
-              ),
-            ),
-            title: InkWell(
-                child: Text(
-                  friends.friendName,
-                  style: TextStyle(fontSize: _pSize),
-                ),
-                onTap: () async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              HomeUpdate(child: FriendHome(friends.friendId))));
-                }),
-            trailing: PopupMenuButton(
-                offset: Offset(-40, 0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(_sizing.height(1))),
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(
-                      value: 1,
-                      child: Container(
-                          alignment: Alignment.center,
-                          child:
-                              Text("刪除", style: TextStyle(fontSize: _pSize))),
-                    ),
-                  ];
-                },
-                onSelected: (int value) async {
-                  if (await _submitDelete(friends.friendId) != true) {
-                    _friendListRequest();
-                  }
-                }),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider();
-        },
-      );
-
       return Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
@@ -253,10 +199,6 @@ class _FriendWidget extends State<FriendPage> {
             friendItem,
             SizedBox(height: _sizing.height(1)),
             friendList,
-            if (_bestFriendListModel.friend.length != 0 ||
-                _friendListModel.friend.length != 0)
-              Divider(),
-            bestFriendList,
           ]));
     } else {
       return Scaffold(
