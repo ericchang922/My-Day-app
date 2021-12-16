@@ -74,94 +74,104 @@ class _Login extends State {
     }
 
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Container(
-          color: _color,
-          child: SafeArea(
-              child: Scaffold(
-                  appBar: AppBar(
-                    title: Text("登入",
-                        style: TextStyle(
-                            color: Colors.white, fontSize: _appBarSize)),
-                    backgroundColor: _color,
-                  ),
-                  body: GestureDetector(
-                      // 點擊空白處釋放焦點
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () =>
-                          FocusScope.of(context).requestFocus(FocusNode()),
-                      child: ListView(
-                        physics: NeverScrollableScrollPhysics(),
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _listLR,
-                              top: _sizing.height(10),
-                              right: _listLR,
-                            ),
-                            child: ListTile(
-                              title: Text('帳號：',
-                                  style: TextStyle(fontSize: _titleSize)),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _sizing.height(7),
-                              top: _sizing.height(0.01),
-                              right: _sizing.height(7),
-                            ),
-                            child: TextField(
-                              controller: myuid,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                filled: true,
-                                isCollapsed: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: _sizing.height(1.5),
-                                    vertical: _sizing.height(1.5)),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(_borderRadius)),
-                                  borderSide: BorderSide(color: _bule),
+            debugShowCheckedModeBanner: false,
+            home: Container(
+              color: _color,
+              child: SafeArea(
+                  child: Scaffold(
+                      appBar: AppBar(
+                        title: Text("登入",
+                            style: TextStyle(
+                                color: Colors.white, fontSize: _appBarSize)),
+                        backgroundColor: _color,
+                      ),
+                      body: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () =>
+                              FocusScope.of(context).requestFocus(FocusNode()),
+                          child: ListView(
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(
+                                  left: _listLR,
+                                  top: _sizing.height(10),
+                                  right: _listLR,
+                                ),
+                                child: ListTile(
+                                  title: Text('帳號：',
+                                      style: TextStyle(fontSize: _titleSize)),
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _listLR,
-                              top: _sizing.height(2),
-                              right: _listLR,
-                            ),
-                            child: ListTile(
-                              title: Text('密碼：',
-                                  style: TextStyle(fontSize: _titleSize)),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _sizing.height(7),
-                              top: _sizing.height(0.01),
-                              right: _sizing.height(7),
-                            ),
-                            child: TextField(
-                              controller: mypw,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                fillColor: Color(0xfff3f3f4),
-                                filled: true,
-                                isCollapsed: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: _sizing.height(1.5),
-                                    vertical: _sizing.height(1.5)),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(_borderRadius)),
-                                  borderSide: BorderSide(color: _bule),
+                              Container(
+                                margin: EdgeInsets.only(
+                                  left: _sizing.height(7),
+                                  top: _sizing.height(0.01),
+                                  right: _sizing.height(7),
+                                ),
+                                child: TextField(
+                                  controller: myuid,
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    isCollapsed: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: _sizing.height(1.5),
+                                        vertical: _sizing.height(1.5)),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              _borderRadius)), 
+                                      borderSide: BorderSide(color: _bule),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                  left: _listLR,
+                                  top: _sizing.height(2),
+                                  right: _listLR,
+                                ),
+                                child: ListTile(
+                                  title: Text('密碼：',
+                                      style: TextStyle(fontSize: _titleSize)),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                  left: _sizing.height(7),
+                                  top: _sizing.height(0.01),
+                                  right: _sizing.height(7),
+                                ),
+                                child: TextField(
+                                  controller: mypw,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    fillColor: Color(0xfff3f3f4),
+                                    filled: true,
+                                    isCollapsed: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: _sizing.height(1.5),
+                                        vertical: _sizing.height(1.5)),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              _borderRadius)), 
+                                      borderSide: BorderSide(color: _bule),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                  left: _sizing.height(7),
+                                  top: _sizing.height(5),
+                                  right: _sizing.height(7),
+                                ),
+                              ),
+                            
+                          
+                  
                           Container(
                             margin: EdgeInsets.only(
                               left: _sizing.height(7),

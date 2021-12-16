@@ -100,24 +100,19 @@ class Forgetpw extends State<ForgetpwPage> {
               ),
             ),
           ),
-          body: GestureDetector(
-              // 點擊空白處釋放焦點
-              behavior: HitTestBehavior.translucent,
-              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-              child: ListView(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(
-                      left: _listLR,
-                      bottom: _listB,
-                      top: _sizing.height(5),
-                      right: _listLR,
-                    ),
-                    child: ListTile(
-                      title:
-                          Text('電子信箱：', style: TextStyle(fontSize: _titleSize)),
-                    ),
-                  ),
+        
+        body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(
+                    left: _listLR,
+                    bottom: _listB,
+                    top: _sizing.height(5),
+                    right: _listLR,
+                  )),
                   Container(
                     margin: EdgeInsets.only(
                       left: _sizing.height(7),
@@ -205,68 +200,64 @@ class Forgetpw extends State<ForgetpwPage> {
                       ),
                     ),
                   ),
-                ],
+                
+        ],
               )),
-          bottomNavigationBar: Container(
-            color: Theme.of(context).bottomAppBarColor,
-            child: SafeArea(
-              child: Container(
-                  child: Row(children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                      height: _bottomHeight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: _light,
-                        ),
-                        child: Image.asset(
-                          'assets/images/cancel.png',
-                          width: _iconWidth,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      )),
-                ),
-                Expanded(
-                  child: SizedBox(
-                      height: _bottomHeight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: _color,
-                        ),
-                        child: Image.asset(
-                          'assets/images/confirm.png',
-                          width: _iconWidth,
-                        ),
-                        onPressed: () async {
-                          if (forgetuid.text.isNotEmpty &&
-                              forgetcode.text.isNotEmpty) {
-                            if (await _submitforget() != true) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ChangepwPage()));
-                            } else {
-                              bool action = await forgetfailDialog(
-                                  context, _alertTitle, _alertTxtforget);
-                            }
+          
+        bottomNavigationBar: Container(
+            child: Row(children: <Widget>[
+          Expanded(
+            child: SizedBox(
+                height: _bottomHeight,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                    backgroundColor: _light,
+                  ),
+                  child: Image.asset(
+                    'assets/images/cancel.png',
+                    width: _iconWidth,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )),
+          ),
+          Expanded(
+            child: SizedBox(
+                height: _bottomHeight,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                    backgroundColor: _color,
+                  ),
+                  child: Image.asset(
+                    'assets/images/confirm.png',
+                    width: _iconWidth,
+                  ),
+                  onPressed: () async {
+                    
+                    if (forgetuid.text.isNotEmpty &&
+                            forgetcode.text.isNotEmpty) {
+                              if (await _submitforget() != true) {
+                                Navigator.push( context,
+                                  MaterialPageRoute(builder: (context) => ChangepwPage(forgetuid.text)));
+                                  }else{
+                                    bool action = await forgetfailDialog(
+                                      context, _alertTitle, _alertTxtforget);
+                                  }
                           } else {
                             bool action = await forgetfailDialog(
                                 context, _alertTitle, _alertTxt);
                           }
-                        },
-                      )),
-                ),
-              ])),
-            ),
-          )),
+                  },
+                )),
+          ),
+        ]))),
     );
   }
 }

@@ -37,7 +37,7 @@ class _Notice extends State {
       });
     }
   }
-  // 載入 uid 之後才可執行 取得資料
+
 
   bool _isCheckSchedule;
   bool _isCheckCountdown;

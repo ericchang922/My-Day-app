@@ -1,3 +1,4 @@
+
 import 'package:My_Day_app/friend/friend_home.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:flutter/material.dart';
@@ -142,7 +143,9 @@ class _BestfriendWidget extends State<BestfriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                await bestfriendsAddDialog(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BestFriendAddPage()));
+                // await bestfriendsAddDialog(context);
               },
             ),
           ],
@@ -175,7 +178,9 @@ class _BestfriendWidget extends State<BestfriendPage> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                await friendsAddDialog(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BestFriendAddPage()));
+                // await bestfriendsAddDialog(context);
               },
             ),
           ],
