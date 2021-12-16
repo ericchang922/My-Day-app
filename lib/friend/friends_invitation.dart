@@ -134,7 +134,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                     child: InkWell(
                         child: Text(
                           '確認',
-                          style: TextStyle(fontSize: _pSize, color: _gray),
+                          style: TextStyle(fontSize: _pSize, color: _color),
                         ),
                         onTap: () async {
                           if (await _submitconfirm(friends.friendId) != true) {
@@ -148,7 +148,7 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
                   child: InkWell(
                       child: Text(
                         '刪除',
-                        style: TextStyle(fontSize: _pSize, color: _color),
+                        style: TextStyle(fontSize: _pSize, color: _gray),
                       ),
                       onTap: () async {
                         if (await _submitcancel(friends.friendId) != true) {
@@ -163,63 +163,21 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         },
       );
 
-      if (_searchText.isEmpty) {
-        if (_makefriendinviteListModel.friend.length != 0) {
-          friendListWidget = ListView(
-            children: [friendList],
-          );
-        } else {
-          friendListWidget = Center(child: Text('目前沒有任何好友邀請!'));
-        }
-      } else {
-        _filteredFriend = [];
-
-        for (int i = 0; i < _makefriendinviteListModel.friend.length; i++) {
-          if (_makefriendinviteListModel.friend[i].friendName
-              .toLowerCase()
-              .contains(_searchText.toLowerCase())) {
-            _filteredFriend.add(_makefriendinviteListModel.friend[i]);
-          }
-        }
-
-        if (_filteredFriend.length > 0) {
-          friendListWidget = ListView(
-            children: [Divider(), _buildSearchFriendList(context)],
-          );
-        } else {
-          friendListWidget = ListView(
-            children: [
-              if (_filteredFriend.length > 0) _buildSearchFriendList(context)
-            ],
-          );
-        }
-      }
-
       return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('交友邀請', style: TextStyle(fontSize: _titleSize)),
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-        body: SafeArea(
-          child: GestureDetector(
-              child: Container(
-            margin: EdgeInsets.only(top: _sizing.height(2)),
-            child: Column(
-              children: [
-                SizedBox(height: _sizing.height(1)),
-                Expanded(child: friendListWidget),
-              ],
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text('交友邀請', style: TextStyle(fontSize: _titleSize)),
+            leading: IconButton(
+              icon: Icon(Icons.chevron_left),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-          )),
-        ),
-      );
+          ),
+          body: Container(
+              margin: EdgeInsets.only(top: _sizing.height(2)),
+              child: friendList));
     } else {
       return Scaffold(
         appBar: AppBar(
@@ -238,93 +196,5 @@ class _FriendInvitationWidget extends State<FriendInvitationPage> {
         ),
       );
     }
-  }
-
-  Widget _buildSearchFriendList(BuildContext context) {
-    Sizing _sizing = Sizing(context);
-    double _widthSize = _sizing.width(1);
-    double _pSize = _sizing.height(2.3);
-
-    Color _color = Theme.of(context).primaryColor;
-    Color _gray = Color(0xff959595);
-    double _listPaddingH = _sizing.width(6);
-
-    GetImage _getImage = GetImage(context);
-
-    _submitconfirm(String friendId) async {
-      var submitWidget;
-      _submitWidgetfunc() async {
-        return AddFriendReply(uid: uid, friendId: friendId, relationId: 1);
-      }
-
-      submitWidget = await _submitWidgetfunc();
-      if (await submitWidget.getIsError())
-        return true;
-      else
-        return false;
-    }
-
-    _submitcancel(String friendId) async {
-      var submitWidget;
-      _submitWidgetfunc() async {
-        return AddFriendReply(uid: uid, friendId: friendId, relationId: 5);
-      }
-
-      submitWidget = await _submitWidgetfunc();
-      if (await submitWidget.getIsError())
-        return true;
-      else
-        return false;
-    }
-
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _filteredFriend.length,
-      itemBuilder: (BuildContext context, int index) {
-        var friends = _filteredFriend[index];
-        return ListTile(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
-            leading: ClipOval(
-              child: _getImage.friend(friends.photo),
-            ),
-            title: Text(
-              friends.friendName,
-              style: TextStyle(fontSize: _pSize),
-            ),
-            trailing: Column(children: [
-              Expanded(
-                  child: InkWell(
-                      child: Text(
-                        '確認',
-                        style: TextStyle(fontSize: _pSize, color: _gray),
-                      ),
-                      onTap: () async {
-                        if (await _submitconfirm(friends.friendId) != true) {
-                          _makefriendinviteListRequest();
-                        }
-                      })),
-              SizedBox(
-                height: _widthSize,
-              ),
-              Expanded(
-                child: InkWell(
-                    child: Text(
-                      '刪除',
-                      style: TextStyle(fontSize: _pSize, color: _color),
-                    ),
-                    onTap: () async {
-                      if (await _submitcancel(friends.friendId) != true) {
-                        _makefriendinviteListRequest();
-                      }
-                    }),
-              )
-            ]));
-      },
-      separatorBuilder: (context, index) {
-        return Divider();
-      },
-    );
   }
 }
