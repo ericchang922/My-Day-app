@@ -41,7 +41,8 @@ class Forgetpw extends State<ForgetpwPage> {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return ForgetPw(uid: uid, verificationCode: verificationCode);
+        return ForgetPw(
+            context: context, uid: uid, verificationCode: verificationCode);
       }
 
       submitWidget = await _submitWidgetfunc();

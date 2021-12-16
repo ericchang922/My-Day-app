@@ -54,7 +54,7 @@ class _Changepw extends State<ChangepwPage> {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return ChangePw(uid: uid, password: password);
+        return ChangePw(context: context, uid: uid, password: password);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -64,165 +64,163 @@ class _Changepw extends State<ChangepwPage> {
         return false;
     }
 
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              title: Text('更改密碼',
-                  style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
-              backgroundColor: _color,
-              leading: Container(
-                margin: EdgeInsets.only(left: _leadingL),
-                child: GestureDetector(
-                  child: Icon(Icons.chevron_left),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
+    return Container(
+      color: _color,
+      child: SafeArea(
+          child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text('更改密碼',
+              style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
+          backgroundColor: _color,
+          leading: Container(
+            margin: EdgeInsets.only(left: _leadingL),
+            child: GestureDetector(
+              child: Icon(Icons.chevron_left),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
             ),
-            body: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-                child: ListView(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _listLR,
-                        bottom: _listB,
-                        top: _sizing.height(5),
-                        right: _listLR,
-                      ),
-                      child: ListTile(
-                        title: Text('新密碼：',
-                            style: TextStyle(fontSize: _titleSize)),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _sizing.height(7),
-                        bottom: _listB,
-                        top: _sizing.height(0.01),
-                        right: _sizing.height(7),
-                      ),
-                      child: TextField(
-                        controller: newpw,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: _sizing.height(1.5),
-                              vertical: _sizing.height(1.5)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(_borderRadius)),
-                            borderSide: BorderSide(color: _bule),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _listLR,
-                        bottom: _listB,
-                        top: _sizing.height(1),
-                        right: _listLR,
-                      ),
-                      child: ListTile(
-                        title: Text('再次輸入密碼：',
-                            style: TextStyle(fontSize: _titleSize)),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _sizing.height(7),
-                        bottom: _listB,
-                        top: _sizing.height(0.01),
-                        right: _sizing.height(7),
-                      ),
-                      child: TextField(
-                        controller: confirmpw,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          fillColor: Color(0xfff3f3f4),
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: _sizing.height(1.5),
-                              vertical: _sizing.height(1.5)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(_borderRadius)),
-                            borderSide: BorderSide(color: _bule),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
-            bottomNavigationBar: Container(
-              color: Theme.of(context).bottomAppBarColor,
-              child: SafeArea(
-                child: Container(
-                    child: Row(children: <Widget>[
-                  Expanded(
-                    child: SizedBox(
-                        height: _bottomHeight,
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(0)),
-                              backgroundColor: _light),
-                          child: Image.asset(
-                            'assets/images/cancel.png',
-                            width: _iconWidth,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        )),
+          ),
+        ),
+        body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(
+                    left: _listLR,
+                    bottom: _listB,
+                    top: _sizing.height(5),
+                    right: _listLR,
                   ),
-                  Expanded(
-                      child: SizedBox(
-                    height: _bottomHeight,
-                    child: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: _color,
-                        ),
-                        child: Image.asset(
-                          'assets/images/confirm.png',
-                          width: _iconWidth,
-                        ),
-                        onPressed: () async {
-                          
-                          if (newpw.text.isNotEmpty &&
-                              confirmpw.text.isNotEmpty) {
-                            if (newpw.text == confirmpw.text) {
-                              if (await _submit() != true) {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(builder: (context) =>LoginPage()),(route) => false);      
-                              } else {
-                                await changefailDialog(
-                                    context, _alertTitle, _alertTxt);
-                              }
-                            } else {
-                              await changefailDialog(
-                                  context, _alertTitle, _alertTxt);
-                            }
-                          } else {
-                            await changefailDialog(
-                                context, _alertTitle, _alertTxt);
-                          }
-                        }),
+                  child: ListTile(
+                    title: Text('新密碼：', style: TextStyle(fontSize: _titleSize)),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    left: _sizing.height(7),
+                    bottom: _listB,
+                    top: _sizing.height(0.01),
+                    right: _sizing.height(7),
+                  ),
+                  child: TextField(
+                    controller: newpw,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      filled: true,
+                      isCollapsed: true,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: _sizing.height(1.5),
+                          vertical: _sizing.height(1.5)),
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(_borderRadius)),
+                        borderSide: BorderSide(color: _bule),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    left: _listLR,
+                    bottom: _listB,
+                    top: _sizing.height(1),
+                    right: _listLR,
+                  ),
+                  child: ListTile(
+                    title:
+                        Text('再次輸入密碼：', style: TextStyle(fontSize: _titleSize)),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    left: _sizing.height(7),
+                    bottom: _listB,
+                    top: _sizing.height(0.01),
+                    right: _sizing.height(7),
+                  ),
+                  child: TextField(
+                    controller: confirmpw,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      fillColor: Color(0xfff3f3f4),
+                      filled: true,
+                      isCollapsed: true,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: _sizing.height(1.5),
+                          vertical: _sizing.height(1.5)),
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(_borderRadius)),
+                        borderSide: BorderSide(color: _bule),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )),
+        bottomNavigationBar: Container(
+          color: Theme.of(context).bottomAppBarColor,
+          child: SafeArea(
+              child: Row(children: <Widget>[
+            Expanded(
+              child: SizedBox(
+                  height: _bottomHeight,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0)),
+                        backgroundColor: _light),
+                    child: Image.asset(
+                      'assets/images/cancel.png',
+                      width: _iconWidth,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   )),
-                ])),
-              ),
-            )));
+            ),
+            Expanded(
+                child: SizedBox(
+              height: _bottomHeight,
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                    backgroundColor: _color,
+                  ),
+                  child: Image.asset(
+                    'assets/images/confirm.png',
+                    width: _iconWidth,
+                  ),
+                  onPressed: () async {
+                    if (newpw.text.isNotEmpty && confirmpw.text.isNotEmpty) {
+                      if (newpw.text == confirmpw.text) {
+                        if (await _submit() != true) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                              (route) => false);
+                        } else {
+                          await changefailDialog(
+                              context, _alertTitle, _alertTxt);
+                        }
+                      } else {
+                        await changefailDialog(context, _alertTitle, _alertTxt);
+                      }
+                    } else {
+                      await changefailDialog(context, _alertTitle, _alertTxt);
+                    }
+                  }),
+            )),
+          ])),
+        ),
+      )),
+    );
   }
 }
