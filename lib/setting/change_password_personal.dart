@@ -80,7 +80,6 @@ class _Changepw extends State<ChangepwPersonalPage> {
         ),
         body: SafeArea(
           child: GestureDetector(
-              // 點擊空白處釋放焦點
               behavior: HitTestBehavior.translucent,
               onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
               child: ListView(
@@ -106,7 +105,7 @@ class _Changepw extends State<ChangepwPersonalPage> {
                     ),
                     child: TextField(
                       controller: newpw,
-                      obscureText: false,
+                      obscureText: true,
                       decoration: InputDecoration(
                         filled: true,
                         isCollapsed: true,
@@ -115,7 +114,7 @@ class _Changepw extends State<ChangepwPersonalPage> {
                             vertical: _sizing.height(1.5)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                              Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                              Radius.circular(_borderRadius)), 
                           borderSide: BorderSide(color: _bule),
                         ),
                       ),
@@ -152,7 +151,7 @@ class _Changepw extends State<ChangepwPersonalPage> {
                             vertical: _sizing.height(1.5)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
-                              Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                              Radius.circular(_borderRadius)), 
                           borderSide: BorderSide(color: _bule),
                         ),
                       ),

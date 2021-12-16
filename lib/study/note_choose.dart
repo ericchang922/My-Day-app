@@ -5,7 +5,6 @@ import 'package:My_Day_app/public/sizing.dart';
 const PrimaryColor = const Color(0xFFF86D67);
 
 class ReadPlanChoose extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return SafeArea(

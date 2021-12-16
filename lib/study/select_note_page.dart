@@ -268,7 +268,7 @@ class _SelectNotePage extends State<SelectNotePage> {
                           fillColor: _light,
                           onPressed: () => Navigator.pop(context, noteNum)),
                     ),
-                  ), // 取消按鈕
+                  ), 
                   Expanded(
                     child: SizedBox(
                       height: _bottomHeight,

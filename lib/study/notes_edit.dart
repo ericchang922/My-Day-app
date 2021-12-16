@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:My_Day_app/public/note_request/edit.dart';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -36,11 +37,12 @@ class _NotesEditPage extends State<NotesEditPage> {
 
   String _imgString;
 
+
   final notetypeName = TextEditingController();
   final notetitle = TextEditingController();
   final notecontent = TextEditingController();
 
-  String _alertTitle = '新增失敗';
+  String _alertTitle = '編輯失敗';
   String _alertTxt = '請確認是否有填寫欄位';
   List<Asset> images;
 
@@ -61,6 +63,10 @@ class _NotesEditPage extends State<NotesEditPage> {
     setState(() {
       _futureGetNote = futureNote;
       _getNote = note;
+
+      notetitle.text = _getNote.title;
+      notetypeName.text = _getNote.typeName;
+      _imgString = note.content;
     });
   }
 
@@ -94,8 +100,12 @@ class _NotesEditPage extends State<NotesEditPage> {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return CreateNewNote(
-            uid: uid, typeName: typeName, title: title, content: content);
+        return EditNote(
+            uid: uid,
+            noteNum: noteNum,
+            typeName: typeName,
+            title: title,
+            content: content);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -124,7 +134,6 @@ class _NotesEditPage extends State<NotesEditPage> {
               ),
               body: SafeArea(
                 child: GestureDetector(
-                    // 點擊空白處釋放焦點
                     behavior: HitTestBehavior.translucent,
                     onTap: () =>
                         FocusScope.of(context).requestFocus(FocusNode()),
@@ -139,25 +148,37 @@ class _NotesEditPage extends State<NotesEditPage> {
                                   Text('標題: ', style: TextStyle(fontSize: 20)),
                                   Flexible(
                                       child: TextFormField(
-                                    controller: notetitle,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 20,
-                                    minLines: 1,
-                                    decoration: InputDecoration(
-                                      isCollapsed: true,
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 10),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)), //设置边框四个角的弧度
-                                        borderSide: BorderSide(
-                                          //用来配置边框的样式
-                                          color: Color(0xff707070), //设置边框的颜色
-                                          width: 2.0, //设置边框的粗细
-                                        ),
-                                      ),
-                                    ),
-                                  )),
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: 20,
+                                          minLines: 1,
+                                          decoration: InputDecoration(
+                                            isCollapsed: true,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 10),
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                              borderSide: BorderSide(
+                                                color: Color(0xff707070),
+                                                width: 2.0,
+                                              ),
+                                            ),
+                                          ),
+                                          controller: TextEditingController.fromValue(TextEditingValue(
+                                            text:notetitle.text,
+                                            // 保持光標在最後
+                                            selection: TextSelection.fromPosition(TextPosition(
+                                                affinity: TextAffinity.downstream,
+                                                offset: notetitle.text.length)))),
+                                          
+                                          onChanged: (text) {
+                                            setState(() {
+                                              notetitle.text = text;
+                                            });
+                                          },
+                                          )),
                                 ],
                               )),
                           Container(
@@ -166,26 +187,36 @@ class _NotesEditPage extends State<NotesEditPage> {
                                 children: [
                                   Text('分類: ', style: TextStyle(fontSize: 20)),
                                   Flexible(
-                                      child: TextField(
-                                    controller: notetypeName,
-                                    focusNode: focusNode,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 20,
-                                    minLines: 1,
-                                    decoration: InputDecoration(
-                                      isCollapsed: true,
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 10),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)), //设置边框四个角的弧度
-                                        borderSide: BorderSide(
-                                          //用来配置边框的样式
-                                          color: Color(0xff707070), //设置边框的颜色
-                                          width: 2.0, //设置边框的粗细
+                                    child: TextField(
+                                      focusNode: focusNode,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: 20,
+                                      minLines: 1,
+                                      decoration: InputDecoration(
+                                        isCollapsed: true,
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 10),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10)),
+                                          borderSide: BorderSide(
+                                            color: Color(0xff707070),
+                                            width: 2.0,
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      controller: TextEditingController.fromValue(TextEditingValue(
+                                        text:notetypeName.text,
+                                        // 保持光標在最後
+                                        selection: TextSelection.fromPosition(TextPosition(
+                                            affinity: TextAffinity.downstream,
+                                            offset: notetypeName.text.length)))),
+                                      
+                                      onChanged: (text) {
+                                        setState(() {
+                                          notetypeName.text = text;
+                                        });
+                                      },
                                   )),
                                 ],
                               )),
@@ -207,7 +238,7 @@ class _NotesEditPage extends State<NotesEditPage> {
                                 onPressed: _openGallery,
                               )),
                           Expanded(
-                            child: _getImage.note(_getNote.content),
+                            child: _getImage.note(_imgString),
                           ),
                         ])),
               ),
@@ -249,7 +280,7 @@ class _NotesEditPage extends State<NotesEditPage> {
                             width: _iconWidth,
                           ),
                           onPressed: () async {
-                            if (notetypeName.text.isNotEmpty &&
+                            if (notetypeName.text.isNotEmpty ||
                                 notetitle.text.isNotEmpty) {
                               if (await _submit() != true) {
                                 Navigator.of(context).pop();

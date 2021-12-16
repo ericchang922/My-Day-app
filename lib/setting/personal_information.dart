@@ -120,7 +120,6 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                 width: _sizing.width(20),
                 height: _sizing.height(24),
                 child: GestureDetector(
-                  // 點擊空白處釋放焦點
                   behavior: HitTestBehavior.translucent,
                   onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
                   child: Column(

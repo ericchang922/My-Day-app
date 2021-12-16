@@ -13,44 +13,12 @@ class RegisterPage extends StatefulWidget {
   }
 
   @override
-  RegisterWidget createState() => new RegisterWidget();
+  _Register createState() => new _Register();
 }
 
-class RegisterWidget extends State<RegisterPage> {
-  @override
-  Widget build(BuildContext context) {
-    Sizing _sizing = Sizing(context);
-    double _appBarSize = _sizing.width(5.2);
-    double _leadingL = _sizing.height(2);
 
-    Color _color = Color(0xffF86D67);
 
-    return Container(
-      color: _color,
-      child: SafeArea(
-          child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text('註冊',
-              style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
-          backgroundColor: _color,
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ),
-        body: _Register(),
-      )),
-    );
-  }
-}
-
-class _Register extends StatelessWidget {
+class _Register extends State<RegisterPage> {
   get direction => null;
   get border => null;
   get decoration => null;
@@ -114,8 +82,21 @@ class _Register extends StatelessWidget {
       child: SafeArea(
           child: Scaffold(
               resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+          title: Text('註冊',
+              style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
+          backgroundColor: _color,
+          leading: Container(
+            margin: EdgeInsets.only(left: _leadingL),
+            child: GestureDetector(
+              child: Icon(Icons.chevron_left),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ),
               body: GestureDetector(
-                  // 點擊空白處釋放焦點
                   behavior: HitTestBehavior.translucent,
                   onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
                   child: ListView(
@@ -152,7 +133,7 @@ class _Register extends StatelessWidget {
                                 vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                                  Radius.circular(_borderRadius)), 
                               borderSide: BorderSide(color: _bule),
                             ),
                           ),
@@ -188,7 +169,7 @@ class _Register extends StatelessWidget {
                                 vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                                  Radius.circular(_borderRadius)), 
                               borderSide: BorderSide(color: _bule),
                             ),
                           ),
@@ -224,7 +205,7 @@ class _Register extends StatelessWidget {
                                 vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                                  Radius.circular(_borderRadius)), 
                               borderSide: BorderSide(color: _bule),
                             ),
                           ),
@@ -260,7 +241,7 @@ class _Register extends StatelessWidget {
                                 vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_borderRadius)), //设置边框四个角的弧度
+                                  Radius.circular(_borderRadius)), 
                               borderSide: BorderSide(color: _bule),
                             ),
                           ),

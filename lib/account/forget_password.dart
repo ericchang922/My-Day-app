@@ -108,7 +108,6 @@ class Forgetpw extends State<ForgetpwPage> {
           ),
         ),
         body: GestureDetector(
-            // 點擊空白處釋放焦點
             behavior: HitTestBehavior.translucent,
             onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
             child: ListView(
@@ -250,19 +249,21 @@ class Forgetpw extends State<ForgetpwPage> {
                     width: _iconWidth,
                   ),
                   onPressed: () async {
-                    if (forgetuid.text.isNotEmpty &&
-                            forgetcode.text.isNotEmpty) {
-                              if (await _submitforget() != true) {
-                                Navigator.push( context,
-                                  MaterialPageRoute(builder: (context) => ChangepwPage()));
-                                  }else{
-                                    bool action = await forgetfailDialog(
-                                      context, _alertTitle, _alertTxtforget);
-                                  }
-                          } else {
-                            bool action = await forgetfailDialog(
-                                context, _alertTitle, _alertTxt);
-                          }
+                    Navigator.push( context,
+                                   MaterialPageRoute(builder: (context) => ChangepwPage()));
+                    // if (forgetuid.text.isNotEmpty &&
+                    //         forgetcode.text.isNotEmpty) {
+                    //           if (await _submitforget() != true) {
+                    //             Navigator.push( context,
+                    //               MaterialPageRoute(builder: (context) => ChangepwPage()));
+                    //               }else{
+                    //                 bool action = await forgetfailDialog(
+                    //                   context, _alertTitle, _alertTxtforget);
+                    //               }
+                    //       } else {
+                    //         bool action = await forgetfailDialog(
+                    //             context, _alertTitle, _alertTxt);
+                    //       }
                   },
                 )),
           ),

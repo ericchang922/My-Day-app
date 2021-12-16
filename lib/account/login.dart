@@ -85,7 +85,6 @@ class _Login extends State {
                         backgroundColor: _color,
                       ),
                       body: GestureDetector(
-                          // 點擊空白處釋放焦點
                           behavior: HitTestBehavior.translucent,
                           onTap: () =>
                               FocusScope.of(context).requestFocus(FocusNode()),
@@ -120,7 +119,7 @@ class _Login extends State {
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(
-                                              _borderRadius)), //设置边框四个角的弧度
+                                              _borderRadius)), 
                                       borderSide: BorderSide(color: _bule),
                                     ),
                                   ),
@@ -156,7 +155,7 @@ class _Login extends State {
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(
-                                              _borderRadius)), //设置边框四个角的弧度
+                                              _borderRadius)), 
                                       borderSide: BorderSide(color: _bule),
                                     ),
                                   ),
