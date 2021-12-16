@@ -1,4 +1,4 @@
-import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
+import 'package:My_Day_app/models/friend/make_friend_invite_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:My_Day_app/public/request.dart';
 

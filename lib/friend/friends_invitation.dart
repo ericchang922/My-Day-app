@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/public/getImage.dart';
-import 'package:My_Day_app/models/friend/make-friend-invite-list_model.dart';
+import 'package:My_Day_app/models/friend/make_friend_invite_list_model.dart';
 import 'package:My_Day_app/public/friend_request/add-friend-reply.dart';
 import 'package:My_Day_app/public/friend_request/make_friend_invite_list.dart';
 import 'package:My_Day_app/public/loadUid.dart';
