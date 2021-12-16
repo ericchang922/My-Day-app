@@ -119,6 +119,10 @@ class _CommonStudyPlanListWidget extends State<CommonStudyPlanListPage> {
       if (id == uid) {
         return PopupMenuButton(
           offset: Offset(-40, 0),
+          icon: Icon(
+            Icons.more_vert,
+            color: _gray,
+          ),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(_sizing.height(1))),
           itemBuilder: (context) {
