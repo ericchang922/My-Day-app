@@ -37,7 +37,6 @@ class _NotesEditPage extends State<NotesEditPage> {
 
   String _imgString;
 
-
   final notetypeName = TextEditingController();
   final notetitle = TextEditingController();
   final notecontent = TextEditingController();
@@ -101,6 +100,7 @@ class _NotesEditPage extends State<NotesEditPage> {
       var submitWidget;
       _submitWidgetfunc() async {
         return EditNote(
+            context: context,
             uid: uid,
             noteNum: noteNum,
             typeName: typeName,
@@ -148,37 +148,39 @@ class _NotesEditPage extends State<NotesEditPage> {
                                   Text('標題: ', style: TextStyle(fontSize: 20)),
                                   Flexible(
                                       child: TextFormField(
-                                          keyboardType: TextInputType.multiline,
-                                          maxLines: 20,
-                                          minLines: 1,
-                                          decoration: InputDecoration(
-                                            isCollapsed: true,
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                    vertical: 10),
-                                            border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10)),
-                                              borderSide: BorderSide(
-                                                color: Color(0xff707070),
-                                                width: 2.0,
-                                              ),
-                                            ),
-                                          ),
-                                          controller: TextEditingController.fromValue(TextEditingValue(
-                                            text:notetitle.text,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: 20,
+                                    minLines: 1,
+                                    decoration: InputDecoration(
+                                      isCollapsed: true,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 10),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10)),
+                                        borderSide: BorderSide(
+                                          color: Color(0xff707070),
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                    ),
+                                    controller: TextEditingController.fromValue(
+                                        TextEditingValue(
+                                            text: notetitle.text,
                                             // 保持光標在最後
-                                            selection: TextSelection.fromPosition(TextPosition(
-                                                affinity: TextAffinity.downstream,
-                                                offset: notetitle.text.length)))),
-                                          
-                                          onChanged: (text) {
-                                            setState(() {
-                                              notetitle.text = text;
-                                            });
-                                          },
-                                          )),
+                                            selection:
+                                                TextSelection.fromPosition(
+                                                    TextPosition(
+                                                        affinity: TextAffinity
+                                                            .downstream,
+                                                        offset: notetitle
+                                                            .text.length)))),
+                                    onChanged: (text) {
+                                      setState(() {
+                                        notetitle.text = text;
+                                      });
+                                    },
+                                  )),
                                 ],
                               )),
                           Container(
@@ -187,36 +189,40 @@ class _NotesEditPage extends State<NotesEditPage> {
                                 children: [
                                   Text('分類: ', style: TextStyle(fontSize: 20)),
                                   Flexible(
-                                    child: TextField(
-                                      focusNode: focusNode,
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: 20,
-                                      minLines: 1,
-                                      decoration: InputDecoration(
-                                        isCollapsed: true,
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 10),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                          borderSide: BorderSide(
-                                            color: Color(0xff707070),
-                                            width: 2.0,
-                                          ),
+                                      child: TextField(
+                                    focusNode: focusNode,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: 20,
+                                    minLines: 1,
+                                    decoration: InputDecoration(
+                                      isCollapsed: true,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 10),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10)),
+                                        borderSide: BorderSide(
+                                          color: Color(0xff707070),
+                                          width: 2.0,
                                         ),
                                       ),
-                                      controller: TextEditingController.fromValue(TextEditingValue(
-                                        text:notetypeName.text,
-                                        // 保持光標在最後
-                                        selection: TextSelection.fromPosition(TextPosition(
-                                            affinity: TextAffinity.downstream,
-                                            offset: notetypeName.text.length)))),
-                                      
-                                      onChanged: (text) {
-                                        setState(() {
-                                          notetypeName.text = text;
-                                        });
-                                      },
+                                    ),
+                                    controller: TextEditingController.fromValue(
+                                        TextEditingValue(
+                                            text: notetypeName.text,
+                                            // 保持光標在最後
+                                            selection:
+                                                TextSelection.fromPosition(
+                                                    TextPosition(
+                                                        affinity: TextAffinity
+                                                            .downstream,
+                                                        offset: notetypeName
+                                                            .text.length)))),
+                                    onChanged: (text) {
+                                      setState(() {
+                                        notetypeName.text = text;
+                                      });
+                                    },
                                   )),
                                 ],
                               )),
@@ -280,14 +286,8 @@ class _NotesEditPage extends State<NotesEditPage> {
                             width: _iconWidth,
                           ),
                           onPressed: () async {
-                            if (notetypeName.text.isNotEmpty ||
-                                notetitle.text.isNotEmpty) {
-                              if (await _submit() != true) {
-                                Navigator.of(context).pop();
-                              }
-                            } else {
-                              await notefailDialog(
-                                  context, _alertTitle, _alertTxt);
+                            if (await _submit() != true) {
+                              Navigator.of(context).pop();
                             }
                           },
                         ),
@@ -298,7 +298,9 @@ class _NotesEditPage extends State<NotesEditPage> {
               ),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Container(
+                color: Colors.white,
+                child: Center(child: CircularProgressIndicator()));
           }
         });
   }

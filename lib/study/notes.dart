@@ -71,8 +71,10 @@ class _NoteListState extends State<NoteListWidget> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: _listPaddingH, vertical: 0.0),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => NoteDetailPage(uid, note.noteNum)));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) => NoteDetailPage(uid, note.noteNum)))
+                  .then((value) => _uid());
             },
             title: Text(
               '${note.title} ',

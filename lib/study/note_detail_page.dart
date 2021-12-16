@@ -17,7 +17,7 @@ class NoteDetailPage extends StatefulWidget {
   _NoteDetailPage createState() => new _NoteDetailPage(uid, noteNum);
 }
 
-class _NoteDetailPage extends State<NoteDetailPage>{
+class _NoteDetailPage extends State<NoteDetailPage> {
   String uid;
   _uid() async {
     String id = await loadUid();
@@ -75,9 +75,10 @@ class _NoteDetailPage extends State<NoteDetailPage>{
           break;
 
         case 'delete':
-          await _submitDelete();
-          print('刪除');
-          Navigator.of(context).pop();
+          if (await _submitDelete() != true) {
+            Navigator.of(context).pop();
+            _getNoteRequest();
+          }
           break;
       }
     }
