@@ -74,7 +74,6 @@ class TimetableCreate extends State {
                       fillColor: Theme.of(context).primaryColor,
                       onPressed: () {
                         Navigator.of(context).pop();
-                        Navigator.of(context).pop();
                       }),
                 ),
               )

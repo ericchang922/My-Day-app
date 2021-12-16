@@ -24,7 +24,7 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
   get left => null;
 
   String _name = '';
-  TextEditingController get _NameController =>
+  TextEditingController get _nameController =>
       TextEditingController(text: _name);
 
   GetProfileListModel _getProfileList;
@@ -111,20 +111,21 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(_borderRadius))),
-              contentPadding: EdgeInsets.only(top: _sizing.height(2)),
-              content: Container(
-                width: _sizing.width(20),
-                height: _sizing.height(24),
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-                  child: Column(
-                    children: <Widget>[
-                      ListView(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(_borderRadius))),
+            contentPadding: EdgeInsets.only(top: _sizing.height(2)),
+            content: Container(
+              width: _sizing.width(20),
+              height: _sizing.height(24),
+              child: GestureDetector(
+                // 點擊空白處釋放焦點
+                behavior: HitTestBehavior.translucent,
+                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         children: [
@@ -145,7 +146,7 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                                 right: _textLBR,
                                 bottom: _textLBR,
                                 top: _sizing.height(1.5)),
-                            child: Text('姓名名稱：',
+                            child: Text('姓名：',
                                 style: TextStyle(fontSize: _pSize)),
                           ),
                           Container(
@@ -172,86 +173,91 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                                           Radius.circular(_sizing.height(1))),
                                       borderSide: BorderSide(color: _bule),
                                     )),
-                                controller: _NameController,
+                                controller: _nameController,
                                 onChanged: (text) {
-                                  _name = text;
+                                  setState(() {
+                                    _name = text;
+                                  });
                                 },
                               )),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              child: Container(
-                                height: _inkwellH,
-                                padding: EdgeInsets.only(
-                                    top: _sizing.height(1.5),
-                                    bottom: _sizing.height(1.5)),
-                                decoration: BoxDecoration(
-                                  color: _light,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(_borderRadius),
-                                  ),
-                                ),
-                                child: Text(
-                                  "取消",
-                                  style: TextStyle(
-                                      fontSize: _subtitleSize,
-                                      color: Colors.white),
-                                  textAlign: TextAlign.center,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              height: _inkwellH,
+                              padding: EdgeInsets.only(
+                                  top: _sizing.height(1.5),
+                                  bottom: _sizing.height(1.5)),
+                              decoration: BoxDecoration(
+                                color: _light,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(_borderRadius),
                                 ),
                               ),
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
+                              child: Text(
+                                "取消",
+                                style: TextStyle(
+                                    fontSize: _subtitleSize,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
                           ),
-                          Expanded(
-                            child: InkWell(
-                                child: Container(
-                                  height: _inkwellH,
-                                  padding: EdgeInsets.only(
-                                      top: _sizing.height(1.5),
-                                      bottom: _sizing.height(1.5)),
-                                  decoration: BoxDecoration(
-                                    color: _color,
-                                    borderRadius: BorderRadius.only(
-                                        bottomRight:
-                                            Radius.circular(_borderRadius)),
-                                  ),
-                                  child: Text(
-                                    "確認",
-                                    style: TextStyle(
-                                        fontSize: _subtitleSize,
-                                        color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                onTap: () async {
-                                  if (_NameController.text.isEmpty) {
-                                    if (await _submit() != true) {
-                                      setState(() {
-                                        _name = _name;
-                                        Navigator.of(context).pop();
-                                      });
-                                    }
-                                  } else {
-                                    if (await _submit() != true) {
-                                      setState(() {
-                                        _NameController.text = _name;
-                                        Navigator.of(context).pop();
-                                      });
-                                    }
-                                  }
-                                }),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            child: Container(
+                              height: _inkwellH,
+                              padding: EdgeInsets.only(
+                                  top: _sizing.height(1.5),
+                                  bottom: _sizing.height(1.5)),
+                              decoration: BoxDecoration(
+                                color: _color,
+                                borderRadius: BorderRadius.only(
+                                    bottomRight:
+                                        Radius.circular(_borderRadius)),
+                              ),
+                              child: Text(
+                                "確認",
+                                style: TextStyle(
+                                    fontSize: _subtitleSize,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            onTap: () async {
+                              if (_nameController.text.isEmpty) {
+                                if (await _submit() != true) {
+                                  setState(() {
+                                    _name = _name;
+                                    Navigator.of(context).pop();
+                                  });
+                                }
+                              } else {
+                                if (await _submit() != true) {
+                                  setState(() {
+                                    _nameController.text = _name;
+                                    Navigator.of(context).pop();
+                                  });
+                                }
+                              }
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-              ));
+              ),
+            ),
+          );
         },
       );
     }

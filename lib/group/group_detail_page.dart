@@ -150,7 +150,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
     _submit() async {
       var submitWidget;
       _submitWidgetfunc() async {
-        return QuitGroup(uid: uid, groupNum: groupNum);
+        return QuitGroup(context: context, uid: uid, groupNum: groupNum);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -276,7 +276,7 @@ class _GroupDetailWidget extends State<GroupDetailPage> with RouteAware {
               height: 1,
             ),
             PopupMenuItem<int>(
-                value: 5,
+                value: 3,
                 height: _itemsSize,
                 child: Container(
                     alignment: Alignment.center,

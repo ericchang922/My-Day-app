@@ -32,7 +32,10 @@ Future<bool> groupJoinDialog(BuildContext context) async {
     print('group_join_page -- join group: ${int.parse(_groupNum)}');
     _submitWidgetfunc() async {
       return MemberStatus(
-          uid: uid, groupNum: int.parse(_groupNum), statusId: statusId);
+          context: context,
+          uid: uid,
+          groupNum: int.parse(_groupNum),
+          statusId: statusId);
     }
 
     submitWidget = await _submitWidgetfunc();

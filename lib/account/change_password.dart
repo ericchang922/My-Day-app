@@ -1,7 +1,7 @@
+import 'package:My_Day_app/account/login_fail.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/account/login.dart';
-import 'package:My_Day_app/account/login_fail.dart';
 import 'package:My_Day_app/public/account_request/change_pw.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/sizing.dart';
@@ -68,13 +68,12 @@ class _Changepw extends State<ChangepwPage> {
     }
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-        home: SafeArea(
-          child: Scaffold(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: Text('更改密碼',
-                style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
+                  style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
               backgroundColor: _color,
               leading: Container(
                 margin: EdgeInsets.only(left: _leadingL),
@@ -125,27 +124,20 @@ class _Changepw extends State<ChangepwPage> {
                                 _borderRadius)), 
                             borderSide: BorderSide(color: _bule),
                           ),
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _listLR,
-                        bottom: _listB,
-                        top: _sizing.height(1),
-                        right: _listLR,
-                      ),
-                      child: ListTile(
-                        title: Text('再次輸入密碼：',
-                            style: TextStyle(fontSize: _titleSize)),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: _sizing.height(7),
-                        bottom: _listB,
-                        top: _sizing.height(0.05),
-                        right: _sizing.height(7),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: _listLR,
+                          bottom: _listB,
+                          top: _sizing.height(1),
+                          right: _listLR,
+                        ),
+                        child: ListTile(
+                          title: Text('再次輸入密碼：',
+                              style: TextStyle(fontSize: _titleSize)),
+                        ),
                       ),
                       child: TextField(
                         controller: confirmpw,
@@ -164,66 +156,71 @@ class _Changepw extends State<ChangepwPage> {
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                )),
+                    ],
+                  )),
+            ),
             bottomNavigationBar: Container(
-                child: Row(children: <Widget>[
-              Expanded(
-                child: SizedBox(
+              color: Theme.of(context).bottomAppBarColor,
+              child: SafeArea(
+                child: Container(
+                    child: Row(children: <Widget>[
+                  Expanded(
+                    child: SizedBox(
+                        height: _bottomHeight,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0)),
+                              backgroundColor: _light),
+                          child: Image.asset(
+                            'assets/images/cancel.png',
+                            width: _iconWidth,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )),
+                  ),
+                  Expanded(
+                      child: SizedBox(
                     height: _bottomHeight,
                     child: TextButton(
-                      style: TextButton.styleFrom(
+                        style: TextButton.styleFrom(
                           primary: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: _light),
-                      child: Image.asset(
-                        'assets/images/cancel.png',
-                        width: _iconWidth,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )),
-              ),
-              Expanded(
-                  child: SizedBox(
-                height: _bottomHeight,
-                child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0)),
-                      backgroundColor: _color,
-                    ),
-                    child: Image.asset(
-                      'assets/images/confirm.png',
-                      width: _iconWidth,
-                    ),
-                    onPressed: () async {
-                      if (newpw.text.isNotEmpty &&
-                          confirmpw.text.isNotEmpty) {
-                        if (newpw.text == confirmpw.text) {
-                          if (await _submit() != true) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                          backgroundColor: _color,
+                        ),
+                        child: Image.asset(
+                          'assets/images/confirm.png',
+                          width: _iconWidth,
+                        ),
+                        onPressed: () async {
+                          if (newpw.text.isNotEmpty &&
+                              confirmpw.text.isNotEmpty) {
+                            if (newpw.text == confirmpw.text) {
+                              if (await _submit() != true) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()));
+                              } else {
+                                await changefailDialog(
+                                    context, _alertTitle, _alertTxt);
+                              }
+                            } else {
+                              await changefailDialog(
+                                  context, _alertTitle, _alertTxt);
+                            }
                           } else {
                             await changefailDialog(
                                 context, _alertTitle, _alertTxt);
                           }
-                        } else {
-                          await changefailDialog(
-                              context, _alertTitle, _alertTxt);
-                        }
-                      } else {
-                        await changefailDialog(
-                            context, _alertTitle, _alertTxt);
-                      }
-                    }),
-              )),
-            ])))));
+                        }),
+                  )),
+                ])),
+              ),
+            )));
   }
 }

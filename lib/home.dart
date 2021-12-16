@@ -1,4 +1,6 @@
 // flutter
+import 'package:My_Day_app/models/schedule/countdown_list_model.dart';
+import 'package:My_Day_app/public/schedule_request/countdown_list.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
@@ -10,6 +12,7 @@ import 'package:My_Day_app/home/home_page.dart';
 import 'package:My_Day_app/home/home_Update.dart';
 import 'package:My_Day_app/temporary_group/temporary_group_list_page.dart';
 import 'package:My_Day_app/public/sizing.dart';
+import 'package:My_Day_app/public/loadUid.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -17,6 +20,26 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
+  CountdownList countdownList;
+  String uid;
+  _uid() async {
+    String id = await loadUid();
+    setState(() => uid = id);
+    await getCountdown();
+  }
+
+  getCountdown() async {
+    GetCountdownList request = GetCountdownList(context: context, uid: uid);
+    CountdownList _data = await request.getData();
+    setState(() => countdownList = _data);
+  }
+
+  @override
+  initState() {
+    super.initState();
+    _uid();
+  }
+
   int _index = 0;
 
   final _pages = <Widget>[
@@ -37,7 +60,7 @@ class _Home extends State<Home> {
     DateTime nowMon = HomeInherited.of(context).nowMon;
     int weekCount = HomeInherited.of(context).weekCount;
     final _appBars = <Widget>[
-      homePageAppBar(context, nowMon, weekCount),
+      homePageAppBar(context, nowMon, weekCount, countdownList),
       groupListAppBar(context),
       temporaryGroupListAppBar(context),
       studyAppBar(context)

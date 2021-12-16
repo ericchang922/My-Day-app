@@ -1,3 +1,4 @@
+import 'package:My_Day_app/main.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/group/group_detail_page.dart';
@@ -42,7 +43,8 @@ class TemporaryGroupListWidget extends StatefulWidget {
   _TemporaryGroupListState createState() => new _TemporaryGroupListState();
 }
 
-class _TemporaryGroupListState extends State<TemporaryGroupListWidget> {
+class _TemporaryGroupListState extends State<TemporaryGroupListWidget>
+    with RouteAware {
   TemporaryGroupListModel _temporaryGroupListModel;
   TemporaryGroupListModel _temporaryGroupInviteListModel;
 
@@ -68,6 +70,23 @@ class _TemporaryGroupListState extends State<TemporaryGroupListWidget> {
   @override
   void initState() {
     super.initState();
+    _uid();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
+
+  @override
+  void didPopNext() {
     _uid();
   }
 

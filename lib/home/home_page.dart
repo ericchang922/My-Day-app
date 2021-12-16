@@ -1,8 +1,12 @@
 // flutter
+import 'package:My_Day_app/home/home_schedule/countdown_dialog.dart';
+import 'package:My_Day_app/models/schedule/countdown_list_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
+import 'package:My_Day_app/public/schedule_request/countdown_list.dart';
 import 'package:flutter/material.dart';
 // therd
 import 'package:animations/animations.dart';
+import 'package:http/http.dart';
 import 'package:localstorage/localstorage.dart';
 // my day
 import 'package:My_Day_app/my_day_icon.dart';
@@ -37,11 +41,11 @@ class _HomePage extends State<HomePage> {
       futureSectionTime: getSectionTime(),
     );
   }
+
   // 在等待 uid 載入之後才能執行 取得資料
-
-  LocalStorage weekStorage = LocalStorage('week');
-
+  double _fabDimension = 56.0;
   HomePageBody homePageBody;
+  LocalStorage weekStorage = LocalStorage('week');
 
   Future<MainTimetableListGet> getTimetableData() async {
     MainTimetableList request = MainTimetableList(context: context, uid: _uid);
@@ -66,8 +70,6 @@ class _HomePage extends State<HomePage> {
     SectionTime _data = await request.getData();
     return _data;
   }
-
-  double _fabDimension = 56.0;
 
   @override
   void initState() {
@@ -108,7 +110,8 @@ class _HomePage extends State<HomePage> {
   }
 }
 
-AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
+AppBar homePageAppBar(
+    context, DateTime nowMon, int weekCount, CountdownList countdownList) {
   Sizing sizing = Sizing(context);
   Color color = Theme.of(context).primaryColor;
 
@@ -133,6 +136,25 @@ AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
     return showWidget;
   }
 
+  getHomePageCountdown() {
+    int mini = 0;
+    if (countdownList != null) {
+      if (countdownList.schedule.length > 0) {
+        for (int i = 1; countdownList.schedule.length > i; i++) {
+          if (countdownList.schedule[mini].countdownDate >
+              countdownList.schedule[i].countdownDate) {
+            mini = i;
+          }
+        }
+        return '${countdownList.schedule[mini].title} 倒數 ${countdownList.schedule[mini].countdownDate}天';
+      }else{
+        return '';
+      }
+    } else {
+      return '';
+    }
+  }
+
   return AppBar(
     title: Container(
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -147,12 +169,17 @@ AppBar homePageAppBar(context, DateTime nowMon, int weekCount) {
             Text('${nowMon.year} 年'),
           ],
         ),
-        Text(
-          '考試倒數 10 天',
-          style: TextStyle(
-            fontSize: sizing.height(1.5),
-          ),
-        ),
+        TextButton(
+            child: Text(
+              getHomePageCountdown(),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: sizing.height(1.5),
+              ),
+            ),
+            onPressed: () {
+              countdownDialog(context, countdownList);
+            }),
       ]),
     ),
     centerTitle: false,

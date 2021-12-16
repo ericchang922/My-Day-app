@@ -112,6 +112,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
       var submitWidget;
       _submitWidgetfunc() async {
         return CreateNew(
+            context: context,
             uid: uid,
             groupNum: groupNum,
             optionTypeId: optionTypeId,
@@ -142,13 +143,9 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
-                      child: Text('確定', style: TextStyle(color: _color)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          _deadLineValue = _dateFormat(_deadLine);
-                        });
-                      }),
+                    child: Text('確定', style: TextStyle(color: _color)),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
                 ),
               ),
               Container(
@@ -159,6 +156,7 @@ class _VoteSettingWidget extends State<VoteSettingPage> {
                     onDateTimeChanged: (value) {
                       setState(() {
                         _deadLine = value;
+                        _deadLineValue = _dateFormat(_deadLine);
                       });
                     }),
               ),

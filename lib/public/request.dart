@@ -11,6 +11,7 @@ import 'package:My_Day_app/public/toast.dart';
 import 'package:My_Day_app/models/schedule/schedule_model.dart';
 import 'package:My_Day_app/models/schedule/schedule_list_model.dart';
 import 'package:My_Day_app/models/schedule/group_studyplan_list_model.dart';
+import 'package:My_Day_app/models/schedule/countdown_list_model.dart';
 //  friend
 import 'package:My_Day_app/models/friend/best_friend_list_model.dart';
 import 'package:My_Day_app/models/friend/friend_list_model.dart';
@@ -80,7 +81,7 @@ class Request {
     'get_common': '${path['schedule']}/get_common/',
     'common_list': '${path['schedule']}/common_list/',
     'common_hidden': '$host${path['schedule']}/common_hidden/',
-    'countdown_list': '$host${path['schedule']}/countdown_list/',
+    'countdown_list': '${path['schedule']}/countdown_list/',
   };
   static Map groupUrl = {
     'create_group': '$host${path['group']}/create_group/',
@@ -134,6 +135,7 @@ class Request {
     'delete_best': '$host${path['friend']}/delete_best/'
   };
   static Map timetableUrl = {
+    'create_timetable': '$host${path['timetable']}/create_timetable',
     'main_timetable_list': '${path['timetable']}/main_timetable_list/',
     'get_timetable_list': '${path['timetable']}/get_timetable_list/',
     'get_timetable': '${path['timetable']}/get_timetable/',
@@ -189,6 +191,7 @@ class Request {
   ScheduleGetList _scheduleGetList;
   GetCommonScheduleModel _commenSchedule;
   CommonScheduleListModel _commonScheduleList;
+  CountdownList _countdownList;
 
   GroupListModel _groupList;
   GroupInviteListModel _groupInviteList;
@@ -240,6 +243,7 @@ class Request {
   getScheduleGetList() => _scheduleGetList;
   getCommenScheduleGet() => _commenSchedule;
   getCommonScheduleListGet() => _commonScheduleList;
+  getCountdownList() => _countdownList;
 
   getGroupListGet() => _groupList;
   getGroupInviteListGet() => _groupInviteList;
@@ -443,6 +447,15 @@ class Request {
     }
   }
 
+// countdown_list ---------------------------------------------------------------------------------
+  countdownList(BuildContext context, Map<String, dynamic> data) async {
+    String _url = scheduleUrl['countdown_list'];
+    await httpGet(context, data, _url, 'countdownList');
+    if (_responseBody != null) {
+      _countdownList = CountdownList.fromJson(_responseBody);
+    }
+  }
+
 // GROUP ===============================================================================================
 // goup_list --------------------------------------------------------------------------------------
   groupList(BuildContext context, Map<String, dynamic> data) async {
@@ -610,7 +623,7 @@ class Request {
   // add_friend -----------------------------------------------------------------------------------
   addFriend(BuildContext context, Map<String, dynamic> data) async {
     String _url = friendUrl['add'];
-    await httpPost(context, data, _url, '送出邀請', 'addFriend');
+    await httpPost(context, data, _url, '已發出交友邀請', 'addFriend');
   }
 
   // add_bestfriend -------------------------------------------------------------------------------
@@ -638,6 +651,12 @@ class Request {
   }
 
   // TIMETABLE =========================================================================================
+  // create_timetable -----------------------------------------------------------------------------
+  createTimetable(BuildContext context, Map<String, dynamic> data) async {
+    String _url = timetableUrl['create_timetable'];
+    await httpPost(context, data, _url, '新增成功', 'createTimetable');
+  }
+
   // mainTimetableGet -----------------------------------------------------------------------------
   mainTimetableListGet(BuildContext context, Map<String, dynamic> data) async {
     String _url = timetableUrl['main_timetable_list'];

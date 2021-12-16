@@ -1,3 +1,4 @@
+import 'package:My_Day_app/home/home_Update.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,7 +63,7 @@ class _Login extends State {
 
       var submitWidget;
       _submitWidgetfunc() async {
-        return Login(uid: uid, password: password);
+        return Login(context: context, uid: uid, password: password);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -167,113 +168,142 @@ class _Login extends State {
                                   top: _sizing.height(5),
                                   right: _sizing.height(7),
                                 ),
-                                child: SizedBox(
-                                    height: _bottomHeight,
-                                    child: TextButton(
-                                        style: TextButton.styleFrom(
-                                            primary: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        _borderRadius)),
-                                            backgroundColor: _color),
-                                        child: Text(
-                                          '登入',
-                                          style:
-                                              TextStyle(fontSize: _titleSize),
-                                        ),
-                                        onPressed: () async {
-                                          if (myuid.text.isNotEmpty &&
-                                              mypw.text.isNotEmpty) {
-                                            if (await _submit() != true) {
-                                              SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
-                                              prefs.setString(
-                                                  'uid', myuid.text);
-
-                                              Navigator.of(context)
-                                                  .pushAndRemoveUntil(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              HomeWidget()),
-                                                      (Route<dynamic> route) =>
-                                                          false);
-                                             
-                                            } else {
-                                              await loginfailDialog(context,
-                                                  _alertTitle, _alertTxt);
-                                            }
-                                          } else {
-                                            await loginfailDialog(context,
-                                                _alertTitle, _alertTxt);
-                                          }
-                                        })),
                               ),
-                            ],
-                          )),
-                      bottomNavigationBar: Container(
-                          child: Row(children: <Widget>[
-                        Expanded(
-                          child: Container(
+                            ),
+                          ),
+                          Container(
                             margin: EdgeInsets.only(
                               left: _listLR,
-                              bottom: _listB,
-                            ),
-                            child: SizedBox(
-                                height: _bottomHeight,
-                                child: TextButton(
-                                  child: Text('忘記密碼',
-                                      style: TextStyle(
-                                          fontSize: _sizing.height(2))),
-                                  style: TextButton.styleFrom(
-                                    primary: _color,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(0)),
-                                  ),
-                                  onPressed: () async {
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    prefs.remove('uid');
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ForgetpwPage()));
-                                  },
-                                )),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(
+                              top: _sizing.height(2),
                               right: _listLR,
-                              bottom: _listB,
+                            ),
+                            child: ListTile(
+                              title: Text('密碼：',
+                                  style: TextStyle(fontSize: _titleSize)),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: _sizing.height(7),
+                              top: _sizing.height(0.01),
+                              right: _sizing.height(7),
+                            ),
+                            child: TextField(
+                              controller: mypw,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                fillColor: Color(0xfff3f3f4),
+                                filled: true,
+                                isCollapsed: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: _sizing.height(1.5),
+                                    vertical: _sizing.height(1.5)),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(_borderRadius)),
+                                  borderSide: BorderSide(color: _bule),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: _sizing.height(7),
+                              top: _sizing.height(5),
+                              right: _sizing.height(7),
                             ),
                             child: SizedBox(
                                 height: _bottomHeight,
                                 child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    primary: _color,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(0)),
-                                  ),
-                                  child: Text(
-                                    '我要註冊',
-                                    style:
-                                        TextStyle(fontSize: _sizing.height(2)),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterPage()));
-                                  },
-                                )),
+                                    style: TextButton.styleFrom(
+                                        primary: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                _borderRadius)),
+                                        backgroundColor: _color),
+                                    child: Text(
+                                      '登入',
+                                      style: TextStyle(fontSize: _titleSize),
+                                    ),
+                                    onPressed: () async {
+                                      if (myuid.text.isNotEmpty &&
+                                          mypw.text.isNotEmpty &&
+                                          await _submit() != true) {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        prefs.setString('uid', myuid.text);
+
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HomeUpdate(child: Home())),
+                                                (route) => false);
+                                      }
+                                    })),
                           ),
+                        ],
+                      )),
+                  bottomNavigationBar: Container(
+                      child: Row(children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          left: _listLR,
+                          bottom: _listB,
                         ),
-                      ])))),
-            ));
+                        child: SizedBox(
+                            height: _bottomHeight,
+                            child: TextButton(
+                              child: Text('忘記密碼',
+                                  style:
+                                      TextStyle(fontSize: _sizing.height(2))),
+                              style: TextButton.styleFrom(
+                                primary: _color,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0)),
+                              ),
+                              onPressed: () async {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.remove('uid');
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ForgetpwPage()));
+                              },
+                            )),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          right: _listLR,
+                          bottom: _listB,
+                        ),
+                        child: SizedBox(
+                            height: _bottomHeight,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                primary: _color,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0)),
+                              ),
+                              child: Text(
+                                '我要註冊',
+                                style: TextStyle(fontSize: _sizing.height(2)),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RegisterPage()));
+                              },
+                            )),
+                      ),
+                    ),
+                  ])))),
+        ));
   }
 }

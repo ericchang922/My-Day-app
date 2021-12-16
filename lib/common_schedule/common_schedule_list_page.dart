@@ -80,7 +80,7 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
     _submitDelete(int scheduleNum) async {
       var submitWidget;
       _submitWidgetfunc() async {
-        return Delete(uid: uid, scheduleNum: scheduleNum);
+        return Delete(context: context, uid: uid, scheduleNum: scheduleNum);
       }
 
       submitWidget = await _submitWidgetfunc();
@@ -173,6 +173,10 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
                     ),
                     Expanded(
                       child: PopupMenuButton<int>(
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: _gray,
+                        ),
                         offset: Offset(-40, 0),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(_heightSize)),
@@ -269,6 +273,10 @@ class _CommonScheduleListWidget extends State<CommonScheduleListPage> {
                     Expanded(
                       child: PopupMenuButton<int>(
                         offset: Offset(-40, 0),
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: _gray,
+                        ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(_heightSize)),
                         itemBuilder: (context) {

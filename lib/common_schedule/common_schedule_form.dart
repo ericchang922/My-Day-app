@@ -58,10 +58,8 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
   int _type;
   int scheduleNum;
 
-  DateTime _startDateTime = DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
-  DateTime _endDateTime = DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 9, 0);
+  DateTime _startDateTime;
+  DateTime _endDateTime;
 
   String _title;
   String _location;
@@ -191,6 +189,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
           switch (_submitMap[_submitType]) {
             case 1:
               return CreateCommon(
+                context: context,
                 uid: uid,
                 groupNum: groupNum,
                 title: title,
@@ -201,6 +200,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
               );
             case 2:
               return Edit(
+                  context: context,
                   uid: uid,
                   scheduleNum: scheduleNum,
                   title: title,
@@ -240,7 +240,7 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
       if (isStart)
         _dateTime = _startDateTime;
       else
-        _dateTime = _startDateTime.add(Duration(hours: 1));
+        _dateTime = _endDateTime;
       showCupertinoModalPopup(
         context: context,
         builder: (_) => Container(
@@ -487,13 +487,12 @@ class _CommonScheduleForm extends State<CommonScheduleForm> {
                 Expanded(
                   flex: 8,
                   child: TextField(
-                    controller: TextEditingController.fromValue(TextEditingValue(
-                        text: _locationController.text,
-                        selection: TextSelection.fromPosition(TextPosition(
-                          affinity: TextAffinity.downstream,
-                          offset: _locationController.text.length
-                        ))
-                      )),
+                    controller: TextEditingController.fromValue(
+                        TextEditingValue(
+                            text: _locationController.text,
+                            selection: TextSelection.fromPosition(TextPosition(
+                                affinity: TextAffinity.downstream,
+                                offset: _locationController.text.length)))),
                     style: TextStyle(fontSize: _h2Size),
                     decoration: InputDecoration(
                       hintText: '地點',

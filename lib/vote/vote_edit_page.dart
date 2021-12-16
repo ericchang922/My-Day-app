@@ -208,6 +208,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
         var submitWidget;
         _submitWidgetfunc() async {
           return Edit(
+              context: context,
               uid: uid,
               voteNum: voteNum,
               title: title,
@@ -239,12 +240,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
                       child: Text('確定', style: TextStyle(color: _color)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          _deadLineValue = _dateFormat(_deadLine);
-                        });
-                      }),
+                      onPressed: () => Navigator.of(context).pop()),
                 ),
               ),
               Container(
@@ -255,6 +251,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                     onDateTimeChanged: (value) {
                       setState(() {
                         _deadLine = value;
+                        _deadLineValue = _dateFormat(_deadLine);
                       });
                     }),
               ),
@@ -282,24 +279,7 @@ class _VoteEditWidget extends State<VoteEditPage> {
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
                       child: Text('確定', style: TextStyle(color: _color)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          int count = 0;
-                          _voteValues[index] = _dateFormat(_dateTime);
-                          _voteDate[index] = _dateTime;
-                          for (int i = 0; i < _voteValues.length; i++) {
-                            if (_voteValues[i] == "") {
-                              count++;
-                            }
-                          }
-                          print(count);
-                          if (count == 0) {
-                            _voteValues.add("");
-                            _voteDate.add("");
-                          }
-                        });
-                      }),
+                      onPressed: () => Navigator.of(context).pop()),
                 ),
               ),
               Container(
@@ -310,6 +290,19 @@ class _VoteEditWidget extends State<VoteEditPage> {
                     onDateTimeChanged: (value) {
                       setState(() {
                         _dateTime = value;
+                        int count = 0;
+                        _voteValues[index] = _dateFormat(_dateTime);
+                        _voteDate[index] = _dateTime;
+                        for (int i = 0; i < _voteValues.length; i++) {
+                          if (_voteValues[i] == "") {
+                            count++;
+                          }
+                        }
+                        print(count);
+                        if (count == 0) {
+                          _voteValues.add("");
+                          _voteDate.add("");
+                        }
                       });
                     }),
               ),

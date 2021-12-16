@@ -228,6 +228,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
           switch (_submitMap[_submitType]) {
             case '編輯':
               return EditStudyplan(
+                  context: context,
                   uid: uid,
                   studyplanNum: studyplanNum,
                   scheduleName: scheduleName,
@@ -237,6 +238,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                   subjects: subjects);
             case '新增':
               return CreateStudyplan(
+                  context: context,
                   uid: uid,
                   scheduleNum: null,
                   scheduleName: scheduleName,
@@ -268,34 +270,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
                     child: Text('確定', style: TextStyle(color: _color)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      setState(() {
-                        _date = _dateTime;
-                        _startDateTime = DateTime(
-                            _date.year,
-                            _date.month,
-                            _date.day,
-                            _startDateTime.hour,
-                            _startDateTime.minute);
-                        _endDateTime = DateTime(_date.year, _date.month,
-                            _date.day, _endDateTime.hour, _endDateTime.minute);
-                        for (int i = 0; i < _subjectTimeList.length; i++) {
-                          _subjectTimeList[i].first = DateTime(
-                              _date.year,
-                              _date.month,
-                              _date.day,
-                              _subjectTimeList[i].first.hour,
-                              _subjectTimeList[i].first.minute);
-                          _subjectTimeList[i].last = DateTime(
-                              _date.year,
-                              _date.month,
-                              _date.day,
-                              _subjectTimeList[i].last.hour,
-                              _subjectTimeList[i].last.minute);
-                        }
-                      });
-                    },
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
               ),
@@ -306,6 +281,25 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
                     _dateTime = value;
+                    _date = _dateTime;
+                    _startDateTime = DateTime(_date.year, _date.month,
+                        _date.day, _startDateTime.hour, _startDateTime.minute);
+                    _endDateTime = DateTime(_date.year, _date.month, _date.day,
+                        _endDateTime.hour, _endDateTime.minute);
+                    for (int i = 0; i < _subjectTimeList.length; i++) {
+                      _subjectTimeList[i].first = DateTime(
+                          _date.year,
+                          _date.month,
+                          _date.day,
+                          _subjectTimeList[i].first.hour,
+                          _subjectTimeList[i].first.minute);
+                      _subjectTimeList[i].last = DateTime(
+                          _date.year,
+                          _date.month,
+                          _date.day,
+                          _subjectTimeList[i].last.hour,
+                          _subjectTimeList[i].last.minute);
+                    }
                   }),
                 ),
               ),
@@ -329,25 +323,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                   alignment: Alignment.centerRight,
                   child: CupertinoButton(
                     child: Text('確定', style: TextStyle(color: _color)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      setState(() {
-                        if (isStart) {
-                          if (_dateTime.isBefore(_subjectTimeList[0].last)) {
-                            _startDateTime = _dateTime;
-                            _subjectTimeList[0].first = _dateTime;
-                          }
-                        } else {
-                          if (_dateTime.isAfter(
-                              _subjectTimeList[_subjectTimeList.length - 1]
-                                  .first)) {
-                            _endDateTime = _dateTime;
-                            _subjectTimeList[_subjectTimeList.length - 1].last =
-                                _dateTime;
-                          }
-                        }
-                      });
-                    },
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
               ),
@@ -362,6 +338,20 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
                     _dateTime = value;
+                    if (isStart) {
+                      if (_dateTime.isBefore(_subjectTimeList[0].last)) {
+                        _startDateTime = _dateTime;
+                        _subjectTimeList[0].first = _dateTime;
+                      }
+                    } else {
+                      if (_dateTime.isAfter(
+                          _subjectTimeList[_subjectTimeList.length - 1]
+                              .first)) {
+                        _endDateTime = _dateTime;
+                        _subjectTimeList[_subjectTimeList.length - 1].last =
+                            _dateTime;
+                      }
+                    }
                   }),
                 ),
               ),
@@ -420,8 +410,10 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                       (DateTime(_date.year, _date.month, _date.day, 24, 0)),
                   initialDateTime: _dateTime,
                   onDateTimeChanged: (value) => setState(() {
-                    if (isStart && value.isBefore(_subjectTimeList[index].last))
+                    if (isStart &&
+                        value.isBefore(_subjectTimeList[index].last)) {
                       _dateTime = value;
+                    }
                     if (index == _subjectTimeList.length - 1 &&
                         value.isAfter(_subjectTimeList[index].first)) {
                       _dateTime = value;
@@ -432,7 +424,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                         _addSubject = true;
                     } else if (!isStart &&
                         value.isAfter(_subjectTimeList[index].first) &&
-                        value.isBefore(_subjectTimeList[index].last)) {
+                        value.isBefore(_subjectTimeList[index + 1].last)) {
                       _dateTime = value;
                       if (_dateTime ==
                           (DateTime(_date.year, _date.month, _date.day, 24, 0)))
@@ -573,7 +565,10 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  _remarkList[index] = _remarkController.text;
+                                  if (_remarkController.text == '')
+                                    _remarkList[index] = null;
+                                  else
+                                    _remarkList[index] = _remarkController.text;
                                 });
                                 Navigator.of(context).pop();
                               },
@@ -665,7 +660,7 @@ class _StudyPlanForm extends State<StudyPlanForm> {
                         borderSide: BorderSide(color: _bule),
                       )),
                   focusNode: _contentFocusNode,
-                  controller: _dateController,
+                  controller: _dateController..text,
                   onTap: () {
                     _contentFocusNode.unfocus();
                     _datePicker(context);
