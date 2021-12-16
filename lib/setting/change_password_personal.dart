@@ -161,59 +161,62 @@ class _Changepw extends State<ChangepwPersonalPage> {
               )),
         ),
         bottomNavigationBar: Container(
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: SizedBox(
-                    height: _bottomHeight,
-                    child: TextButton(
+          color: Theme.of(context).bottomAppBarColor,
+          child: SafeArea(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: SizedBox(
+                      height: _bottomHeight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0)),
+                            backgroundColor: primaryColorLight),
+                        child: Image.asset(
+                          'assets/images/cancel.png',
+                          width: _iconWidth,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )),
+                ),
+                Expanded(
+                    child: SizedBox(
+                  height: _bottomHeight,
+                  child: TextButton(
                       style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: primaryColorLight),
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0)),
+                        backgroundColor: primaryColor,
+                      ),
                       child: Image.asset(
-                        'assets/images/cancel.png',
+                        'assets/images/confirm.png',
                         width: _iconWidth,
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )),
-              ),
-              Expanded(
-                  child: SizedBox(
-                height: _bottomHeight,
-                child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0)),
-                      backgroundColor: primaryColor,
-                    ),
-                    child: Image.asset(
-                      'assets/images/confirm.png',
-                      width: _iconWidth,
-                    ),
-                    onPressed: () async {
-                      if (newpw.text.isNotEmpty && confirmpw.text.isNotEmpty) {
-                        if (newpw.text == confirmpw.text) {
-                          if (await _submit() != true) {
-                            Navigator.of(context).pop();
+                      onPressed: () async {
+                        if (newpw.text.isNotEmpty && confirmpw.text.isNotEmpty) {
+                          if (newpw.text == confirmpw.text) {
+                            if (await _submit() != true) {
+                              Navigator.of(context).pop();
+                            } else {
+                              await changefailDialog(
+                                  context, _alertTitle, _alertTxt);
+                            }
                           } else {
                             await changefailDialog(
                                 context, _alertTitle, _alertTxt);
                           }
                         } else {
-                          await changefailDialog(
-                              context, _alertTitle, _alertTxt);
+                          await changefailDialog(context, _alertTitle, _alertTxt);
                         }
-                      } else {
-                        await changefailDialog(context, _alertTitle, _alertTxt);
-                      }
-                    }),
-              )),
-            ],
+                      }),
+                )),
+              ],
+            ),
           ),
         ),
       ),
