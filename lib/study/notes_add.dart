@@ -109,7 +109,6 @@ class _NotesAddPage extends State<NotesAddPage> {
                 ),
               ),
               body: GestureDetector(
-                  // 點擊空白處釋放焦點
                   behavior: HitTestBehavior.translucent,
                   onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
                   child: Column(
@@ -213,7 +212,7 @@ class _NotesAddPage extends State<NotesAddPage> {
                                 Navigator.pop(context);
                               }),
                         ),
-                      ), // 取消按鈕
+                      ),  
                       Expanded(
                         child: SizedBox(
                           height: _bottomHeight,
