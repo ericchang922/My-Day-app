@@ -144,8 +144,7 @@ class _BestfriendWidget extends State<BestfriendPage> {
               icon: Icon(Icons.add),
               onPressed: () async {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => BestFriendAddPage()));
-                // await bestfriendsAddDialog(context);
+                    MaterialPageRoute(builder: (context) => BestFriendAddPage())).then((value) => _uid());
               },
             ),
           ],
