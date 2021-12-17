@@ -89,123 +89,126 @@ class _Login extends State {
                       behavior: HitTestBehavior.translucent,
                       onTap: () =>
                           FocusScope.of(context).requestFocus(FocusNode()),
-                      child: ListView(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _listLR,
-                              top: _sizing.height(10),
-                              right: _listLR,
+                      child: Container(
+                        color: Colors.white,
+                        child: ListView(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _listLR,
+                                top: _sizing.height(10),
+                                right: _listLR,
+                              ),
+                              child: ListTile(
+                                title: Text('帳號：',
+                                    style: TextStyle(fontSize: _titleSize)),
+                              ),
                             ),
-                            child: ListTile(
-                              title: Text('帳號：',
-                                  style: TextStyle(fontSize: _titleSize)),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _sizing.height(7),
-                              top: _sizing.height(0.01),
-                              right: _sizing.height(7),
-                            ),
-                            child: TextField(
-                              controller: myuid,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                filled: true,
-                                isCollapsed: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: _sizing.height(1.5),
-                                    vertical: _sizing.height(1.5)),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(_borderRadius)),
-                                  borderSide: BorderSide(color: _bule),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _sizing.height(7),
+                                top: _sizing.height(0.01),
+                                right: _sizing.height(7),
+                              ),
+                              child: TextField(
+                                controller: myuid,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  isCollapsed: true,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: _sizing.height(1.5),
+                                      vertical: _sizing.height(1.5)),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(_borderRadius)),
+                                    borderSide: BorderSide(color: _bule),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _listLR,
-                              top: _sizing.height(2),
-                              right: _listLR,
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _listLR,
+                                top: _sizing.height(2),
+                                right: _listLR,
+                              ),
+                              child: ListTile(
+                                title: Text('密碼：',
+                                    style: TextStyle(fontSize: _titleSize)),
+                              ),
                             ),
-                            child: ListTile(
-                              title: Text('密碼：',
-                                  style: TextStyle(fontSize: _titleSize)),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _sizing.height(7),
-                              top: _sizing.height(0.01),
-                              right: _sizing.height(7),
-                            ),
-                            child: TextField(
-                              controller: mypw,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                fillColor: Color(0xfff3f3f4),
-                                filled: true,
-                                isCollapsed: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: _sizing.height(1.5),
-                                    vertical: _sizing.height(1.5)),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(_borderRadius)),
-                                  borderSide: BorderSide(color: _bule),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _sizing.height(7),
+                                top: _sizing.height(0.01),
+                                right: _sizing.height(7),
+                              ),
+                              child: TextField(
+                                controller: mypw,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  fillColor: Color(0xfff3f3f4),
+                                  filled: true,
+                                  isCollapsed: true,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: _sizing.height(1.5),
+                                      vertical: _sizing.height(1.5)),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(_borderRadius)),
+                                    borderSide: BorderSide(color: _bule),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _sizing.height(7),
-                              top: _sizing.height(5),
-                              right: _sizing.height(7),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _sizing.height(7),
+                                top: _sizing.height(5),
+                                right: _sizing.height(7),
+                              ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: _sizing.height(7),
-                              top: _sizing.height(5),
-                              right: _sizing.height(7),
-                            ),
-                            child: SizedBox(
-                                height: _bottomHeight,
-                                child: TextButton(
-                                    style: TextButton.styleFrom(
-                                        primary: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                _borderRadius)),
-                                        backgroundColor: _color),
-                                    child: Text(
-                                      '登入',
-                                      style: TextStyle(fontSize: _titleSize),
-                                    ),
-                                    onPressed: () async {
-                                      if (myuid.text.isNotEmpty &&
-                                          mypw.text.isNotEmpty &&
-                                          await _submit() != true) {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        prefs.setString('uid', myuid.text);
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: _sizing.height(7),
+                                top: _sizing.height(5),
+                                right: _sizing.height(7),
+                              ),
+                              child: SizedBox(
+                                  height: _bottomHeight,
+                                  child: TextButton(
+                                      style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  _borderRadius)),
+                                          backgroundColor: _color),
+                                      child: Text(
+                                        '登入',
+                                        style: TextStyle(fontSize: _titleSize),
+                                      ),
+                                      onPressed: () async {
+                                        if (myuid.text.isNotEmpty &&
+                                            mypw.text.isNotEmpty &&
+                                            await _submit() != true) {
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          prefs.setString('uid', myuid.text);
 
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HomeUpdate(
-                                                            child: Home())),
-                                                (route) => false);
-                                      }
-                                    })),
-                          ),
-                        ],
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HomeUpdate(
+                                                              child: Home())),
+                                                  (route) => false);
+                                        }
+                                      })),
+                            ),
+                          ],
+                        ),
                       )),
                   bottomNavigationBar: Container(
                       color: Colors.white,
