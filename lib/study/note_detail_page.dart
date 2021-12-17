@@ -77,7 +77,6 @@ class _NoteDetailPage extends State<NoteDetailPage> {
         case 'delete':
           if (await _submitDelete() != true) {
             Navigator.of(context).pop();
-            _getNoteRequest();
           }
           break;
       }
