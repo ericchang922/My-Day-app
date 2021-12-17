@@ -33,16 +33,22 @@ Widget homePopupMenu(BuildContext context) {
       onSelected: (value) {
         switch (value) {
           case 'manage':
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TimetableActionListPage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TimetableActionListPage()));
             break;
           case 'share':
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TimetableChooseSharePage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TimetableChooseSharePage()));
             break;
           case 'accept':
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TimetableReceivePage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TimetableReceivePage()));
             break;
           default:
             HomeInherited.of(context).updateSelected(value);
@@ -53,6 +59,7 @@ Widget homePopupMenu(BuildContext context) {
                 padding: EdgeInsets.only(left: _sizing.width(18)),
                 child: Container(
                   width: _sizing.width(20),
+                  margin: EdgeInsets.only(left: _sizing.width(8)),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
