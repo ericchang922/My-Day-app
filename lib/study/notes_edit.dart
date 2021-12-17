@@ -249,51 +249,54 @@ class _NotesEditPage extends State<NotesEditPage> {
                         ])),
               ),
               bottomNavigationBar: Container(
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: SizedBox(
+                color: Theme.of(context).bottomAppBarColor,
+                child: SafeArea(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: SizedBox(
+                            height: 50,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0)),
+                                backgroundColor:
+                                    Theme.of(context).primaryColorLight,
+                              ),
+                              child: Image.asset(
+                                'assets/images/cancel.png',
+                                width: _iconWidth,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )),
+                      ),
+                      Expanded(
+                        child: SizedBox(
                           height: 50,
                           child: TextButton(
                             style: TextButton.styleFrom(
                               primary: Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(0)),
-                              backgroundColor:
-                                  Theme.of(context).primaryColorLight,
+                              backgroundColor: Theme.of(context).primaryColor,
                             ),
                             child: Image.asset(
-                              'assets/images/cancel.png',
+                              'assets/images/confirm.png',
                               width: _iconWidth,
                             ),
-                            onPressed: () {
-                              Navigator.pop(context);
+                            onPressed: () async {
+                              if (await _submit() != true) {
+                                Navigator.of(context).pop();
+                              }
                             },
-                          )),
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 50,
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            primary: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0)),
-                            backgroundColor: Theme.of(context).primaryColor,
                           ),
-                          child: Image.asset(
-                            'assets/images/confirm.png',
-                            width: _iconWidth,
-                          ),
-                          onPressed: () async {
-                            if (await _submit() != true) {
-                              Navigator.of(context).pop();
-                            }
-                          },
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             );

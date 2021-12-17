@@ -115,47 +115,51 @@ class Theme extends State {
               ],
             ),
             bottomNavigationBar: Container(
-                child: Row(children: <Widget>[
-              Expanded(
-                child: SizedBox(
-                    height: 50,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        backgroundColor: Theme.of(context).primaryColorLight,
-                      ),
-                      child: Image.asset(
-                        'assets/images/cancel.png',
-                        width: _iconWidth,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )),
-              ),
-              Expanded(
-                child: SizedBox(
-                  height: 50,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0)),
-                      backgroundColor: Theme.of(context).primaryColor,
+                color: Theme.of(context).bottomAppBarColor,
+                child: SafeArea(
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: SizedBox(
+                          height: 50,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0)),
+                              backgroundColor:
+                                  Theme.of(context).primaryColorLight,
+                            ),
+                            child: Image.asset(
+                              'assets/images/cancel.png',
+                              width: _iconWidth,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )),
                     ),
-                    child: Image.asset(
-                      'assets/images/confirm.png',
-                      width: _iconWidth,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              )
-            ]))));
+                    Expanded(
+                      child: SizedBox(
+                        height: 50,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            primary: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0)),
+                            backgroundColor: Theme.of(context).primaryColor,
+                          ),
+                          child: Image.asset(
+                            'assets/images/confirm.png',
+                            width: _iconWidth,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    )
+                  ]),
+                ))));
   }
 
   static of(BuildContext context) {}

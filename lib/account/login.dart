@@ -74,104 +74,99 @@ class _Login extends State {
     }
 
     return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Container(
-              color: _color,
-              child: SafeArea(
-                  child: Scaffold(
-                      appBar: AppBar(
-                        title: Text("登入",
-                            style: TextStyle(
-                                color: Colors.white, fontSize: _appBarSize)),
-                        backgroundColor: _color,
-                      ),
-                      body: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () =>
-                              FocusScope.of(context).requestFocus(FocusNode()),
-                          child: ListView(
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(
-                                  left: _listLR,
-                                  top: _sizing.height(10),
-                                  right: _listLR,
-                                ),
-                                child: ListTile(
-                                  title: Text('帳號：',
-                                      style: TextStyle(fontSize: _titleSize)),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  left: _sizing.height(7),
-                                  top: _sizing.height(0.01),
-                                  right: _sizing.height(7),
-                                ),
-                                child: TextField(
-                                  controller: myuid,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    isCollapsed: true,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: _sizing.height(1.5),
-                                        vertical: _sizing.height(1.5)),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                              _borderRadius)), 
-                                      borderSide: BorderSide(color: _bule),
-                                    ),
-                                  ),
+        debugShowCheckedModeBanner: false,
+        home: Container(
+          color: _color,
+          child: SafeArea(
+              child: Scaffold(
+                  appBar: AppBar(
+                    title: Text("登入",
+                        style: TextStyle(
+                            color: Colors.white, fontSize: _appBarSize)),
+                    backgroundColor: _color,
+                  ),
+                  body: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () =>
+                          FocusScope.of(context).requestFocus(FocusNode()),
+                      child: ListView(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: _listLR,
+                              top: _sizing.height(10),
+                              right: _listLR,
+                            ),
+                            child: ListTile(
+                              title: Text('帳號：',
+                                  style: TextStyle(fontSize: _titleSize)),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: _sizing.height(7),
+                              top: _sizing.height(0.01),
+                              right: _sizing.height(7),
+                            ),
+                            child: TextField(
+                              controller: myuid,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                filled: true,
+                                isCollapsed: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: _sizing.height(1.5),
+                                    vertical: _sizing.height(1.5)),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(_borderRadius)),
+                                  borderSide: BorderSide(color: _bule),
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  left: _listLR,
-                                  top: _sizing.height(2),
-                                  right: _listLR,
-                                ),
-                                child: ListTile(
-                                  title: Text('密碼：',
-                                      style: TextStyle(fontSize: _titleSize)),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  left: _sizing.height(7),
-                                  top: _sizing.height(0.01),
-                                  right: _sizing.height(7),
-                                ),
-                                child: TextField(
-                                  controller: mypw,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    fillColor: Color(0xfff3f3f4),
-                                    filled: true,
-                                    isCollapsed: true,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: _sizing.height(1.5),
-                                        vertical: _sizing.height(1.5)),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                              _borderRadius)), 
-                                      borderSide: BorderSide(color: _bule),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  left: _sizing.height(7),
-                                  top: _sizing.height(5),
-                                  right: _sizing.height(7),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: _listLR,
+                              top: _sizing.height(2),
+                              right: _listLR,
+                            ),
+                            child: ListTile(
+                              title: Text('密碼：',
+                                  style: TextStyle(fontSize: _titleSize)),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: _sizing.height(7),
+                              top: _sizing.height(0.01),
+                              right: _sizing.height(7),
+                            ),
+                            child: TextField(
+                              controller: mypw,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                fillColor: Color(0xfff3f3f4),
+                                filled: true,
+                                isCollapsed: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: _sizing.height(1.5),
+                                    vertical: _sizing.height(1.5)),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(_borderRadius)),
+                                  borderSide: BorderSide(color: _bule),
                                 ),
                               ),
-                            
-                          
-                  
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: _sizing.height(7),
+                              top: _sizing.height(5),
+                              right: _sizing.height(7),
+                            ),
+                          ),
                           Container(
                             margin: EdgeInsets.only(
                               left: _sizing.height(7),
@@ -204,7 +199,8 @@ class _Login extends State {
                                             .pushAndRemoveUntil(
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        HomeUpdate(child: Home())),
+                                                        HomeUpdate(
+                                                            child: Home())),
                                                 (route) => false);
                                       }
                                     })),
@@ -212,64 +208,72 @@ class _Login extends State {
                         ],
                       )),
                   bottomNavigationBar: Container(
-                      child: Row(children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                          left: _listLR,
-                          bottom: _listB,
-                        ),
-                        child: SizedBox(
-                            height: _bottomHeight,
-                            child: TextButton(
-                              child: Text('忘記密碼',
-                                  style:
-                                      TextStyle(fontSize: _sizing.height(2))),
-                              style: TextButton.styleFrom(
-                                primary: _color,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(0)),
+                      color: Theme.of(context).bottomAppBarColor,
+                      child: SafeArea(
+                        child: Row(children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                left: _listLR,
+                                bottom: _listB,
                               ),
-                              onPressed: () async {
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                prefs.remove('uid');
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ForgetpwPage()));
-                              },
-                            )),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                          right: _listLR,
-                          bottom: _listB,
-                        ),
-                        child: SizedBox(
-                            height: _bottomHeight,
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                primary: _color,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(0)),
+                              child: SizedBox(
+                                  height: _bottomHeight,
+                                  child: TextButton(
+                                    child: Text('忘記密碼',
+                                        style: TextStyle(
+                                            fontSize: _sizing.height(2))),
+                                    style: TextButton.styleFrom(
+                                      primary: _color,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(0)),
+                                    ),
+                                    onPressed: () async {
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      prefs.remove('uid');
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ForgetpwPage()));
+                                    },
+                                  )),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                right: _listLR,
+                                bottom: _listB,
                               ),
-                              child: Text(
-                                '我要註冊',
-                                style: TextStyle(fontSize: _sizing.height(2)),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => RegisterPage()));
-                              },
-                            )),
-                      ),
-                    ),
-                  ])))),
+                              child: SizedBox(
+                                  height: _bottomHeight,
+                                  child: TextButton(
+                                    style: TextButton.styleFrom(
+                                      primary: _color,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(0)),
+                                    ),
+                                    child: Text(
+                                      '我要註冊',
+                                      style: TextStyle(
+                                          fontSize: _sizing.height(2)),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterPage()));
+                                    },
+                                  )),
+                            ),
+                          ),
+                        ]),
+                      )))),
         ));
   }
 }

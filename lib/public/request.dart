@@ -904,28 +904,24 @@ class Request {
     await httpPost(context, data, _url, '登入成功', 'login');
   }
 
-  // ACCOUNT ===========================================================================================
   // register -------------------------------------------------------------------------------------
   register(BuildContext context, Map<String, dynamic> data) async {
     String _url = accountUrl['register'];
     await httpPost(context, data, _url, '註冊成功', 'register');
   }
 
-  // ACCOUNT ===========================================================================================
   // change_pw ------------------------------------------------------------------------------------
   changePw(BuildContext context, Map<String, dynamic> data) async {
     String _url = accountUrl['change_pw'];
     await httpPost(context, data, _url, '更改成功', 'changePw');
   }
 
-  // ACCOUNT ===========================================================================================
   // forget_pw ------------------------------------------------------------------------------------
   forgetPw(BuildContext context, Map<String, dynamic> data) async {
     String _url = accountUrl['forget_pw'];
     await httpPost(context, data, _url, '驗證成功', 'forgetPw');
   }
 
-  // ACCOUNT ===========================================================================================
   // send_code ------------------------------------------------------------------------------------
   sendCode(BuildContext context, Map<String, dynamic> data) async {
     String _url = accountUrl['send_code'];
@@ -939,7 +935,6 @@ class Request {
     await httpPost(context, data, _url, '好友隱私設定成功', 'friendPrivacy');
   }
 
-  // SETTING ===========================================================================================
   // notice ---------------------------------------------------------------------------------------
   notice(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['notice'];
@@ -952,7 +947,6 @@ class Request {
     await httpPost(context, data, _url, '通知設定成功', 'noticeTemporary');
   }
 
-  // SETTING ===========================================================================================
   // privacy-location -----------------------------------------------------------------------------
   privacyLocation(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['privacy_location'];
@@ -965,7 +959,6 @@ class Request {
     await httpPost(context, data, _url, '隱私設定成功', 'privacyTimetable');
   }
 
-  // SETTING ===========================================================================================
   // theme ----------------------------------------------------------------------------------------
   themes(BuildContext context, Map<String, dynamic> data) async {
     String _url = settingUrl['themes'];
@@ -1026,7 +1019,7 @@ class Request {
     }
   }
 
-  // profile ===========================================================================================
+  // PROFILE ===========================================================================================
   // edit-profile ---------------------------------------------------------------------------------
   editProfile(BuildContext context, Map<String, dynamic> data) async {
     String _url = profileUrl['edit_profile'];

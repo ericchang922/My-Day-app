@@ -16,8 +16,6 @@ class RegisterPage extends StatefulWidget {
   _Register createState() => new _Register();
 }
 
-
-
 class _Register extends State<RegisterPage> {
   get direction => null;
   get border => null;
@@ -83,19 +81,20 @@ class _Register extends State<RegisterPage> {
           child: Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
-          title: Text('註冊',
-              style: TextStyle(color: Colors.white, fontSize: _appBarSize)),
-          backgroundColor: _color,
-          leading: Container(
-            margin: EdgeInsets.only(left: _leadingL),
-            child: GestureDetector(
-              child: Icon(Icons.chevron_left),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ),
+                title: Text('註冊',
+                    style:
+                        TextStyle(color: Colors.white, fontSize: _appBarSize)),
+                backgroundColor: _color,
+                leading: Container(
+                  margin: EdgeInsets.only(left: _leadingL),
+                  child: GestureDetector(
+                    child: Icon(Icons.chevron_left),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ),
               body: GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
@@ -133,7 +132,7 @@ class _Register extends State<RegisterPage> {
                                 vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_borderRadius)), 
+                                  Radius.circular(_borderRadius)),
                               borderSide: BorderSide(color: _bule),
                             ),
                           ),
@@ -169,7 +168,7 @@ class _Register extends State<RegisterPage> {
                                 vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_borderRadius)), 
+                                  Radius.circular(_borderRadius)),
                               borderSide: BorderSide(color: _bule),
                             ),
                           ),
@@ -205,7 +204,7 @@ class _Register extends State<RegisterPage> {
                                 vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_borderRadius)), 
+                                  Radius.circular(_borderRadius)),
                               borderSide: BorderSide(color: _bule),
                             ),
                           ),
@@ -241,7 +240,7 @@ class _Register extends State<RegisterPage> {
                                 vertical: _sizing.height(1.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
-                                  Radius.circular(_borderRadius)), 
+                                  Radius.circular(_borderRadius)),
                               borderSide: BorderSide(color: _bule),
                             ),
                           ),
@@ -250,61 +249,64 @@ class _Register extends State<RegisterPage> {
                     ],
                   )),
               bottomNavigationBar: Container(
-                  child: Row(children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                      height: _bottomHeight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: _light,
-                        ),
-                        child: Image.asset(
-                          'assets/images/cancel.png',
-                          width: _iconWidth,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      )),
-                ),
-                Expanded(
-                  child: SizedBox(
-                      height: _bottomHeight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          backgroundColor: _color,
-                        ),
-                        child: Image.asset(
-                          'assets/images/confirm.png',
-                          width: _iconWidth,
-                        ),
-                        onPressed: () async {
-                          if (registeruid.text.isNotEmpty &&
-                              registeruserName.text.isNotEmpty &&
-                              registerpw.text.isNotEmpty &&
-                              confirmpw.text.isNotEmpty) {
-                            if (registerpw.text == confirmpw.text) {
-                              if (await _submit() != true) {
+                  color: Theme.of(context).bottomAppBarColor,
+                  child: SafeArea(
+                    child: Row(children: <Widget>[
+                      Expanded(
+                        child: SizedBox(
+                            height: _bottomHeight,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0)),
+                                backgroundColor: _light,
+                              ),
+                              child: Image.asset(
+                                'assets/images/cancel.png',
+                                width: _iconWidth,
+                              ),
+                              onPressed: () {
                                 Navigator.of(context).pop();
-                              }
-                            } else {
-                              await registerfailDialog(
-                                  context, _alertTitlepw, _alertTxtpw);
-                            }
-                          } else {
-                            await registerfailDialog(
-                                context, _alertTitle, _alertTxt);
-                          }
-                        },
-                      )),
-                ),
-              ])))),
+                              },
+                            )),
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                            height: _bottomHeight,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0)),
+                                backgroundColor: _color,
+                              ),
+                              child: Image.asset(
+                                'assets/images/confirm.png',
+                                width: _iconWidth,
+                              ),
+                              onPressed: () async {
+                                if (registeruid.text.isNotEmpty &&
+                                    registeruserName.text.isNotEmpty &&
+                                    registerpw.text.isNotEmpty &&
+                                    confirmpw.text.isNotEmpty) {
+                                  if (registerpw.text == confirmpw.text) {
+                                    if (await _submit() != true) {
+                                      Navigator.of(context).pop();
+                                    }
+                                  } else {
+                                    await registerfailDialog(
+                                        context, _alertTitlepw, _alertTxtpw);
+                                  }
+                                } else {
+                                  await registerfailDialog(
+                                      context, _alertTitle, _alertTxt);
+                                }
+                              },
+                            )),
+                      ),
+                    ]),
+                  )))),
     );
   }
 }
