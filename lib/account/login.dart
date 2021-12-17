@@ -208,7 +208,7 @@ class _Login extends State {
                         ],
                       )),
                   bottomNavigationBar: Container(
-                      color: Theme.of(context).bottomAppBarColor,
+                      color: Colors.white,
                       child: SafeArea(
                         child: Row(children: <Widget>[
                           Expanded(
