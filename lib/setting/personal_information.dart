@@ -13,6 +13,7 @@ import 'package:My_Day_app/public/profile/edit_profile.dart';
 import 'package:My_Day_app/public/profile/profile_list.dart';
 import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/setting/change_password_personal.dart';
+import 'package:My_Day_app/public/alert.dart';
 
 class PersonalInformationPage extends StatefulWidget {
   @override
@@ -61,13 +62,19 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     String content = await imageToBase64(image);
     setState(() {
-      _imgString = content;
+      if (content != null) {
+        _imgString = content;
+      }
     });
   }
 
   Future imageToBase64(File file) async {
-    List<int> imageBytes = await file.readAsBytes();
-    return base64Encode(imageBytes);
+    try {
+      List<int> imageBytes = await file.readAsBytes();
+      return base64Encode(imageBytes);
+    } catch (e) {
+      alert(context, '請選擇圖片', '尚未選擇圖片');
+    }
   }
 
   @override
@@ -82,7 +89,6 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
     double _textLBR = _sizing.height(2);
     double _textFied = _sizing.height(4.5);
     double _inkwellH = _sizing.height(6);
-    double _bottomHeight = _sizing.height(7);
     double _imgSize = _sizing.height(20);
     Color _color = Theme.of(context).primaryColor;
     Color _light = Theme.of(context).primaryColorLight;
@@ -146,8 +152,8 @@ class _PersonalInformationWidget extends State<PersonalInformationPage> {
                                 right: _textLBR,
                                 bottom: _textLBR,
                                 top: _sizing.height(1.5)),
-                            child: Text('姓名：',
-                                style: TextStyle(fontSize: _pSize)),
+                            child:
+                                Text('姓名：', style: TextStyle(fontSize: _pSize)),
                           ),
                           Container(
                               height: _textFied,

@@ -11,6 +11,7 @@ import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/note_request/create_new.dart';
 import 'package:My_Day_app/public/sizing.dart';
 import 'package:My_Day_app/study/note_fail.dart';
+import 'package:My_Day_app/public/alert.dart';
 
 class NotesAddPage extends StatefulWidget {
   @override
@@ -56,13 +57,19 @@ class _NotesAddPage extends State<NotesAddPage> {
   _openGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      _imgPath = image;
+      if (_imgPath != null) {
+        _imgPath = image;
+      }
     });
   }
 
   Future imageToBase64(File file) async {
-    List<int> imageBytes = await file.readAsBytes();
-    return base64Encode(imageBytes);
+    try {
+      List<int> imageBytes = await file.readAsBytes();
+      return base64Encode(imageBytes);
+    } catch (e) {
+      alert(context, '請選擇圖片', '尚未選擇圖片');
+    }
   }
 
   @override
@@ -212,7 +219,7 @@ class _NotesAddPage extends State<NotesAddPage> {
                                 Navigator.pop(context);
                               }),
                         ),
-                      ),  
+                      ),
                       Expanded(
                         child: SizedBox(
                           height: _bottomHeight,

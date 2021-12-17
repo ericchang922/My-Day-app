@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:My_Day_app/public/note_request/edit.dart';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -10,10 +9,10 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:My_Day_app/models/note/get_note_model.dart';
 import 'package:My_Day_app/public/loadUid.dart';
 import 'package:My_Day_app/public/getImage.dart';
-import 'package:My_Day_app/public/note_request/create_new.dart';
 import 'package:My_Day_app/public/note_request/get.dart';
 import 'package:My_Day_app/public/sizing.dart';
-import 'package:My_Day_app/study/note_fail.dart';
+import 'package:My_Day_app/public/alert.dart';
+import 'package:My_Day_app/public/note_request/edit.dart';
 
 class NotesEditPage extends StatefulWidget {
   int noteNum;
@@ -41,8 +40,6 @@ class _NotesEditPage extends State<NotesEditPage> {
   final notetitle = TextEditingController();
   final notecontent = TextEditingController();
 
-  String _alertTitle = '編輯失敗';
-  String _alertTxt = '請確認是否有填寫欄位';
   List<Asset> images;
 
   Future<GetNoteModel> _futureGetNote;
@@ -73,13 +70,19 @@ class _NotesEditPage extends State<NotesEditPage> {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     String imgString = await imageToBase64(image);
     setState(() {
-      _imgString = imgString;
+      if (imgString != null) {
+        _imgString = imgString;
+      }
     });
   }
 
   Future imageToBase64(File file) async {
-    List<int> imageBytes = await file.readAsBytes();
-    return base64Encode(imageBytes);
+    try {
+      List<int> imageBytes = await file.readAsBytes();
+      return base64Encode(imageBytes);
+    } catch (e) {
+      alert(context, '請選擇圖片', '尚未選擇圖片');
+    }
   }
 
   final FocusNode focusNode = FocusNode();
