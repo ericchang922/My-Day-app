@@ -73,7 +73,10 @@ class _EditSchedule extends State<EditSchedule> {
             remark: _remark,
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              color: Colors.white,
+              child:
+                  SafeArea(child: Center(child: CircularProgressIndicator())));
         }
       },
     );
