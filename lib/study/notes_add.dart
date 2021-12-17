@@ -57,7 +57,7 @@ class _NotesAddPage extends State<NotesAddPage> {
   _openGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      if (_imgPath != null) {
+      if (image != null) {
         _imgPath = image;
       }
     });
