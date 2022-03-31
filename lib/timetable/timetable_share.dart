@@ -1,3 +1,4 @@
+import 'package:My_Day_app/public/timetable_request/get_sharecode.dart';
 import 'package:flutter/material.dart';
 
 import 'package:My_Day_app/timetable/timetable_share_friend.dart';
@@ -94,7 +95,7 @@ Future<bool> timetableShare(
                         child: Padding(
                           padding: EdgeInsets.all(_sizing.height(1)),
                           child: Text(
-                            'NoMz2onE',
+                            sharecode,
                             style: TextStyle(fontSize: _sizing.height(2)),
                           ),
                         ),

@@ -117,11 +117,10 @@ class TimetableChooseShare extends State<TimetableChooseSharePage> {
                           ),
                           onTap: () async {
                             _sharecodeRequest(timetable.timetableNo);
-                            await timetableShare(context,
-                                '_sharecode.sharecode', timetable.timetableNo);
-                            // if (_sharecode != null) {
-                            //   await timetableShare(context, _sharecode.sharecode,timetable.timetableNo);
-                            // }
+                            if (_sharecode != null) {
+                              await timetableShare(context,
+                                  _sharecode.sharecode, timetable.timetableNo);
+                            }
                           }),
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
